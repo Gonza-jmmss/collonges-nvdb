@@ -1,0 +1,236 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+  schemas  = ["Core", "Courses", "Persons", "Students"]
+}
+
+model Accommodations {
+  AccommodationId Int        @id(map: "PK__Accommod__DBB30A519E5B949C") @default(autoincrement())
+  Name            String?    @db.NVarChar(50)
+  Abbreviation    String?    @db.NVarChar(10)
+  Students        Students[]
+
+  @@schema("Core")
+}
+
+model Alumins {
+  AlumniId  Int      @id(map: "PK__Alumins__9336246AA15F7EC9") @default(autoincrement())
+  Name      String   @db.NVarChar(50)
+  StudentId Int
+  DiplomaId Int
+  Diplomas  Diplomas @relation(fields: [DiplomaId], references: [DiplomaId], onUpdate: NoAction, map: "FK_Alumins_Diplomas")
+  Students  Students @relation(fields: [StudentId], references: [StudentId], onUpdate: NoAction, map: "FK_Alumins_Students")
+
+  @@schema("Students")
+}
+
+model Colleges {
+  CollegeId    Int        @id(map: "PK__Colleges__29409539FE28E65B") @default(autoincrement())
+  Name         String?    @db.NVarChar(50)
+  Abbreviation String?    @db.NVarChar(10)
+  Students     Students[]
+
+  @@schema("Core")
+}
+
+model Contacts {
+  ContactId                           Int
+  PersonId                            Int
+  ContactTypeId                       Int
+  Persons_Contacts_ContactIdToPersons Persons      @relation("Contacts_ContactIdToPersons", fields: [ContactId], references: [PersonId], onUpdate: NoAction, map: "FK_Contacts_ContactPersons")
+  ContactTypes                        ContactTypes @relation(fields: [ContactTypeId], references: [ContactTypeId], onUpdate: NoAction, map: "FK_Contacts_ContactTypes")
+  Persons_Contacts_PersonIdToPersons  Persons      @relation("Contacts_PersonIdToPersons", fields: [PersonId], references: [PersonId], onUpdate: NoAction, map: "FK_Contacts_Persons")
+
+  @@id([ContactId, PersonId], map: "PK__Contacts__16C4DA259B578370")
+  @@schema("Persons")
+}
+
+model ContactTypes {
+  ContactTypeId Int        @id(map: "PK__ContactT__17E1EE12F1060007") @default(autoincrement())
+  Name          String     @db.NVarChar(50)
+  Contacts      Contacts[]
+
+  @@schema("Persons")
+}
+
+model Countries {
+  CountryId       Int               @id(map: "PK__Countrie__10D1609FF8C41E7A") @default(autoincrement())
+  Name            String            @db.NVarChar(50)
+  ISO2            String?           @db.NVarChar(5)
+  ISO3            String?           @db.NVarChar(5)
+  PhoneCode       String?           @db.NVarChar(50)
+  NameEnglish     String?           @db.NVarChar(50)
+  PersonCountries PersonCountries[]
+
+  @@schema("Core")
+}
+
+model Courses {
+  CoursId        Int              @id(map: "PK__Courses__DA537785C1FC6AFA") @default(autoincrement())
+  Name           String           @db.NVarChar(50)
+  EnglishName    String           @db.NVarChar(50)
+  CourseCode     String?          @db.NVarChar(50)
+  CreditAmount   Int
+  CoursPeriodId  Int
+  PeriodNumber   Int?
+  CoursesTypeId  Int
+  IsEnabled      Boolean?
+  CoursPeriods   CoursPeriods     @relation(fields: [CoursPeriodId], references: [CoursPeriodId], onUpdate: NoAction, map: "FK_Courses_CoursPeriods")
+  StudentCourses StudentCourses[]
+
+  @@schema("Courses")
+}
+
+model CoursesTypes {
+  CoursTypeId Int    @id(map: "PK__CoursesT__56A57B3E62FBA2B7") @default(autoincrement())
+  Name        String @db.NVarChar(50)
+
+  @@schema("Courses")
+}
+
+model CoursPeriods {
+  CoursPeriodId Int       @id(map: "PK__CoursPer__EACACD3ABDE3E123") @default(autoincrement())
+  Name          String    @db.NVarChar(50)
+  MonthAmount   Int
+  Courses       Courses[]
+
+  @@schema("Courses")
+}
+
+model Departments {
+  DepartmentId Int     @id(map: "PK__Departme__B2079BED8B2D5595") @default(autoincrement())
+  Name         String? @db.NVarChar(50)
+
+  @@schema("Core")
+}
+
+model Diplomas {
+  DiplomaId Int       @id(map: "PK__Diplomas__048740506CA0A920") @default(autoincrement())
+  Name      String    @db.NVarChar(50)
+  Alumins   Alumins[]
+
+  @@schema("Students")
+}
+
+model Matriculations {
+  MatriculationId Int       @id(map: "PK__Matricul__F3FC131F20872CBB") @default(autoincrement())
+  FromDate        DateTime  @db.Date
+  ToDate          DateTime? @db.Date
+  StudentId       Int
+  Students        Students  @relation(fields: [StudentId], references: [StudentId], onUpdate: NoAction, map: "FK_Matriculations_Students")
+
+  @@schema("Students")
+}
+
+model PersonCountries {
+  PersonCountryId Int       @id(map: "PK__PersonCo__8E05EF06E195278C") @default(autoincrement())
+  PersonId        Int
+  CountryId       Int
+  Countries       Countries @relation(fields: [CountryId], references: [CountryId], onUpdate: NoAction, map: "FK_PersonCountries_Countries")
+  Persons         Persons   @relation(fields: [PersonId], references: [PersonId], onUpdate: NoAction, map: "FK_PersonCountries_Persons")
+
+  @@schema("Persons")
+}
+
+model Persons {
+  PersonId                             Int               @id(map: "PK__Persons__AA2FFBE545B07A2A") @default(autoincrement())
+  FirstName                            String?           @db.NVarChar(50)
+  LastName                             String?           @db.NVarChar(50)
+  AlternativeName                      String?           @db.NVarChar(100)
+  BirthDate                            DateTime?         @db.Date
+  Sex                                  Int?
+  Telephone                            String?           @db.NVarChar(20)
+  WorkTelephone                        String?           @db.NVarChar(20)
+  CivilStatus                          Int?
+  ReligionId                           Int?
+  Profession                           String?           @db.NVarChar(50)
+  BirthCity                            String?           @db.NVarChar(50)
+  Address1                             String?           @db.NVarChar(100)
+  Address2                             String?           @db.NVarChar(100)
+  Address3                             String?           @db.NVarChar(100)
+  CountryId                            Int?
+  BirthCountryId                       Int?
+  Email                                String?           @db.NVarChar(50)
+  DBaseCode                            String?           @db.NVarChar(10)
+  Contacts_Contacts_ContactIdToPersons Contacts[]        @relation("Contacts_ContactIdToPersons")
+  Contacts_Contacts_PersonIdToPersons  Contacts[]        @relation("Contacts_PersonIdToPersons")
+  PersonCountries                      PersonCountries[]
+  Religions                            Religions?        @relation(fields: [ReligionId], references: [ReligionId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Persons_Religions")
+  Students                             Students[]
+
+  @@schema("Persons")
+}
+
+model Regimes {
+  RegimeId Int        @id(map: "PK__Regimes__B8947F98B9F34A5C") @default(autoincrement())
+  Name     String?    @db.NVarChar(50)
+  Students Students[]
+
+  @@schema("Core")
+}
+
+model Religions {
+  ReligionId   Int       @id(map: "PK__Religion__D3ADAB6A4C69A528") @default(autoincrement())
+  Name         String    @db.NVarChar(50)
+  Abbreviation String?   @db.NVarChar(5)
+  Persons      Persons[]
+
+  @@schema("Core")
+}
+
+model ScholarYears {
+  ScholarYearId  Int              @id(map: "PK__ScholarY__C79D4AB8314891EB") @default(autoincrement())
+  Name           String           @db.NVarChar(50)
+  FromDate       DateTime?        @db.Date
+  ToDate         DateTime?        @db.Date
+  StudentCourses StudentCourses[]
+
+  @@schema("Courses")
+}
+
+model StudentCourses {
+  StudentCoursId Int          @id(map: "PK__StudentC__79F228C2995AE57D") @default(autoincrement())
+  StudentId      Int
+  CoursId        Int
+  Note           String       @db.NVarChar(5)
+  ScholarYearId  Int
+  Courses        Courses      @relation(fields: [CoursId], references: [CoursId], onUpdate: NoAction, map: "FK_StudentCourses_Courses")
+  ScholarYears   ScholarYears @relation(fields: [ScholarYearId], references: [ScholarYearId], onUpdate: NoAction, map: "FK_StudentCourses_ScholarYears")
+  Students       Students     @relation(fields: [StudentId], references: [StudentId], onUpdate: NoAction, map: "FK_StudentCourses_Students")
+
+  @@schema("Courses")
+}
+
+model Students {
+  StudentId       Int              @id(map: "PK__Students__32C52B99C6A081B4") @default(autoincrement())
+  PersonId        Int
+  StudentTypeId   Int
+  IsACA           Boolean
+  DepartmentId    Int?
+  CollegeId       Int?
+  RegimeId        Int?
+  AccommodationId Int?
+  Alumins         Alumins[]
+  Matriculations  Matriculations[]
+  StudentCourses  StudentCourses[]
+  Accommodations  Accommodations?  @relation(fields: [AccommodationId], references: [AccommodationId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Students_Accommodations")
+  Colleges        Colleges?        @relation(fields: [CollegeId], references: [CollegeId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Students_Colleges")
+  Persons         Persons          @relation(fields: [PersonId], references: [PersonId], onUpdate: NoAction, map: "FK_Students_Persons")
+  Regimes         Regimes?         @relation(fields: [RegimeId], references: [RegimeId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Students_Regimes")
+  StudentTypes    StudentTypes     @relation(fields: [StudentTypeId], references: [StudentTypeId], onUpdate: NoAction, map: "FK_Students_StudentTypes")
+
+  @@schema("Students")
+}
+
+model StudentTypes {
+  StudentTypeId Int        @id(map: "PK__StudentT__42041DBAD33305DF") @default(autoincrement())
+  Name          String     @db.NVarChar(50)
+  Students      Students[]
+
+  @@schema("Students")
+}

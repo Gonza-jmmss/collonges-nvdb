@@ -1,13 +1,13 @@
-import { db } from "@/db/client";
-import { usersTable } from "@/db/schema/user";
-import UserTable from "./user-table";
+// import { db } from "@/db/client";
+// import { usersTable } from "@/db/schema/user";
+// import UserTable from "./user-table";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import enUS from "@/lang/en-US";
 
 export default async function Users() {
   const t = enUS;
-  const users = await db.select().from(usersTable);
+  // const users = await db.select().from(usersTable);
 
   // const newUser = {
   //   name:'Jodas',
@@ -32,7 +32,7 @@ export default async function Users() {
             </Link>
           </Button>
         </div>
-        <UserTable userData={users} />
+        {/* <UserTable userData={users} /> */}
       </div>
       {/* <pre>{JSON.stringify(users, null, 2)}</pre> */}
     </main>
