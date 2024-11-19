@@ -94,15 +94,21 @@ const paginationValues = [
 //   return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
 // };
 
-export default function TableComponent({
+type OnRowClick<T> = (row: T) => void;
+
+interface TableProps<T> {
+  // columns: ColumnType[];
+  columns: any;
+  data: T[];
+  onRowClick?: (row: any) => void;
+  className?: string;
+}
+export default function TableComponent<T>({
   columns,
   data,
+  onRowClick,
   className,
-}: {
-  columns: any;
-  data: any;
-  className?: string;
-}) {
+}: TableProps<T>) {
   // const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -252,6 +258,7 @@ export default function TableComponent({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  onClick={() => onRowClick?.(row.original)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

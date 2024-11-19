@@ -14,7 +14,8 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 
   const sidebarElements = [
     { name: "Home", path: "/", icon: "MdHome" },
-    { name: "Users", path: "/users", icon: "MdPeopleOutline" },
+    { name: "Students", path: "/students", icon: "MdSchool" },
+    { name: "Reports", path: "/reports", icon: "MdDvr" },
   ];
 
   return (
@@ -37,7 +38,9 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                     <div className="flex justify-center space-x-3">
                       <Icon
                         name={
-                          isValidIconName(element.icon) ? element.icon : "MdOutlineNotInterested"
+                          isValidIconName(element.icon)
+                            ? element.icon
+                            : "MdOutlineNotInterested"
                         }
                         className="text-xl"
                       />
@@ -46,7 +49,9 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                   ) : (
                     <Icon
                       name={
-                        isValidIconName(element.icon) ? element.icon : "MdOutlineNotInterested"
+                        isValidIconName(element.icon)
+                          ? element.icon
+                          : "MdOutlineNotInterested"
                       }
                       className="text-xl"
                     />
@@ -66,7 +71,9 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                     >
                       <Icon
                         name={
-                          isValidIconName(element.icon) ? element.icon : "MdOutlineNotInterested"
+                          isValidIconName(element.icon)
+                            ? element.icon
+                            : "MdOutlineNotInterested"
                         }
                         className="text-xl"
                       />{" "}
@@ -77,7 +84,9 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                       {
                         <Icon
                           name={
-                            isValidIconName(element.icon) ? element.icon : "MdOutlineNotInterested"
+                            isValidIconName(element.icon)
+                              ? element.icon
+                              : "MdOutlineNotInterested"
                           }
                           className="text-xl"
                         />

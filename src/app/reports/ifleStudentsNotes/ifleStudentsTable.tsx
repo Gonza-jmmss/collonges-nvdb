@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import { Students } from "@prisma/client";
+import { useRouter } from "next/navigation";
 import enUS from "@/lang/en-US";
 
 export default function StudentsTable({
@@ -13,6 +14,7 @@ export default function StudentsTable({
   studentsData: Students[];
 }) {
   const t = enUS;
+  const router = useRouter();
 
   const columns = useMemo<ColumnDef<Students, any>[]>(
     () => [
@@ -63,7 +65,15 @@ export default function StudentsTable({
 
   return (
     <main className="">
-      <Table columns={columns} data={studentsData} className="" />
+      <Table
+        columns={columns}
+        data={studentsData}
+        className=""
+        onRowClick={(row) =>
+          router.push(`/reports/ifleStudentsNotes/${row.StudentId}`)
+        }
+        // onRowClick={(row) => console.log("onClick", row)}
+      />
     </main>
   );
 }
