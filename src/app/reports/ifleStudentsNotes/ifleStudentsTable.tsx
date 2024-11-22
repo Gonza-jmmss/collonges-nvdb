@@ -53,12 +53,12 @@ export default function StudentsTable({
         header: () => <Header text={t.student.columns.isACA} />,
         filterFn: "includesStringSensitive",
       },
-      {
-        accessorKey: "actions",
-        id: "actions",
-        header: () => <Header text={t.student.columns.actions} />,
-        cell: () => <div>Notes</div>,
-      },
+      // {
+      //   accessorKey: "actions",
+      //   id: "actions",
+      //   header: () => <Header text={t.student.columns.actions} />,
+      //   cell: () => <div>Notes</div>,
+      // },
     ],
     [],
   );

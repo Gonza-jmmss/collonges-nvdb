@@ -102,12 +102,14 @@ interface TableProps<T> {
   data: T[];
   onRowClick?: (row: any) => void;
   className?: string;
+  minimalMode?: boolean;
 }
 export default function TableComponent<T>({
   columns,
   data,
   onRowClick,
   className,
+  minimalMode,
 }: TableProps<T>) {
   // const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] =
@@ -150,140 +152,230 @@ export default function TableComponent<T>({
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
-        <div>
-          <DebouncedInput
-            value={globalFilter ?? ""}
-            onChange={(value) => setGlobalFilter(String(value))}
-            placeholder="Search all columns..."
-            className="w-[30vw]"
-          />
-        </div>
-        <div
-          className={`mx-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border`}
-          onClick={() => setIsColumnSearch(!isColumnSearch)}
-        >
-          <Icon
-            name={"MdManageSearch"}
-            className={`text-xl ${isColumnSearch ? "text-primary hover:text-neutral-700" : "text-neutral-700 hover:text-primary"}`}
-          />
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value: any) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    // <TableHead key={header.id}>
-                    //   {header.isPlaceholder
-                    //     ? null
-                    //     : flexRender(
-                    //         header.column.columnDef.header,
-                    //         header.getContext(),
-                    //       )}
-                    // </TableHead>
-                    <TableHead key={header.id}>
-                      <div
-                        {...{
-                          className: header.column.getCanSort()
-                            ? "cursor-pointer select-none flex items-center min-h-10"
-                            : "",
-                          onClick: header.column.getToggleSortingHandler(),
-                        }}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {{
-                          asc: (
-                            <Icon
-                              name={"MdOutlineNorth"}
-                              // size={13}
-                              className="ml-0.5"
-                            />
-                          ),
-                          desc: (
-                            <Icon
-                              name={"MdSouth"}
-                              // size={13}
-                              className="ml-0.5"
-                            />
-                          ),
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                      {isColumnSearch && header.column.getCanFilter() ? (
-                        <div className="pb-1">
-                          <Filter column={header.column} table={table} />
+      {minimalMode ? (
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      // <TableHead key={header.id}>
+                      //   {header.isPlaceholder
+                      //     ? null
+                      //     : flexRender(
+                      //         header.column.columnDef.header,
+                      //         header.getContext(),
+                      //       )}
+                      // </TableHead>
+                      <TableHead key={header.id}>
+                        <div
+                          {...{
+                            className: header.column.getCanSort()
+                              ? "cursor-pointer select-none flex items-center min-h-10"
+                              : "",
+                            onClick: header.column.getToggleSortingHandler(),
+                          }}
+                        >
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                          {{
+                            asc: (
+                              <Icon
+                                name={"MdOutlineNorth"}
+                                // size={13}
+                                className="ml-0.5"
+                              />
+                            ),
+                            desc: (
+                              <Icon
+                                name={"MdSouth"}
+                                // size={13}
+                                className="ml-0.5"
+                              />
+                            ),
+                          }[header.column.getIsSorted() as string] ?? null}
                         </div>
-                      ) : null}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  onClick={() => onRowClick?.(row.original)}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
+                        {isColumnSearch && header.column.getCanFilter() ? (
+                          <div className="pb-1">
+                            <Filter column={header.column} table={table} />
+                          </div>
+                        ) : null}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      {/* <div className="flex items-center justify-end space-x-2 py-4">
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    onClick={() => onRowClick?.(row.original)}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <>
+          <div className="flex items-center py-4">
+            <div>
+              <DebouncedInput
+                value={globalFilter ?? ""}
+                onChange={(value) => setGlobalFilter(String(value))}
+                placeholder="Search all columns..."
+                className="w-[30vw]"
+              />
+            </div>
+            <div
+              className={`mx-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border`}
+              onClick={() => setIsColumnSearch(!isColumnSearch)}
+            >
+              <Icon
+                name={"MdManageSearch"}
+                className={`text-xl ${isColumnSearch ? "text-primary hover:text-neutral-700" : "text-neutral-700 hover:text-primary"}`}
+              />
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value: any) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        // <TableHead key={header.id}>
+                        //   {header.isPlaceholder
+                        //     ? null
+                        //     : flexRender(
+                        //         header.column.columnDef.header,
+                        //         header.getContext(),
+                        //       )}
+                        // </TableHead>
+                        <TableHead key={header.id}>
+                          <div
+                            {...{
+                              className: header.column.getCanSort()
+                                ? "cursor-pointer select-none flex items-center min-h-10"
+                                : "",
+                              onClick: header.column.getToggleSortingHandler(),
+                            }}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                            {{
+                              asc: (
+                                <Icon
+                                  name={"MdOutlineNorth"}
+                                  // size={13}
+                                  className="ml-0.5"
+                                />
+                              ),
+                              desc: (
+                                <Icon
+                                  name={"MdSouth"}
+                                  // size={13}
+                                  className="ml-0.5"
+                                />
+                              ),
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
+                          {isColumnSearch && header.column.getCanFilter() ? (
+                            <div className="pb-1">
+                              <Filter column={header.column} table={table} />
+                            </div>
+                          ) : null}
+                        </TableHead>
+                      );
+                    })}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      onClick={() => onRowClick?.(row.original)}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          {/* <div className="flex items-center justify-end space-x-2 py-4">
         <div className="space-x-2">
           <Button
             variant="outline"
@@ -303,73 +395,75 @@ export default function TableComponent<T>({
           </Button>
         </div>
       </div> */}
-      <div className="mt-3 flex items-center justify-end gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.firstPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <div className="flex -space-x-3">
-            <Icon name={"MdChevronLeft"} className="text-xl" />
-            <Icon name={"MdChevronLeft"} className="text-xl" />
+          <div className="mt-3 flex items-center justify-end gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.firstPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              <div className="flex -space-x-3">
+                <Icon name={"MdChevronLeft"} className="text-xl" />
+                <Icon name={"MdChevronLeft"} className="text-xl" />
+              </div>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              <Icon name={"MdChevronLeft"} className="text-xl" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              <Icon name={"MdChevronRight"} className="text-xl" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.lastPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              <div className="flex -space-x-3">
+                <Icon name={"MdChevronRight"} className="text-xl" />
+                <Icon name={"MdChevronRight"} className="text-xl" />
+              </div>
+            </Button>
+            <span className="flex items-center gap-1">
+              <div>Page</div>
+              <strong>
+                {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getPageCount().toLocaleString()}
+              </strong>
+            </span>
+            <span className="flex items-center gap-1">
+              | Go to page:
+              <Input
+                type="number"
+                defaultValue={table.getState().pagination.pageIndex + 1}
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  table.setPageIndex(page);
+                }}
+                className="w-10 justify-center p-1"
+              />
+            </span>
+            <Combobox
+              options={paginationValues}
+              textAttribute="key"
+              valueAttribute="value"
+              placeholder="rows"
+              itemSelected={rowsNumber}
+              setItemSelected={setRowsNumber}
+            />
           </div>
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <Icon name={"MdChevronLeft"} className="text-xl" />
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <Icon name={"MdChevronRight"} className="text-xl" />
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.lastPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <div className="flex -space-x-3">
-            <Icon name={"MdChevronRight"} className="text-xl" />
-            <Icon name={"MdChevronRight"} className="text-xl" />
-          </div>
-        </Button>
-        <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount().toLocaleString()}
-          </strong>
-        </span>
-        <span className="flex items-center gap-1">
-          | Go to page:
-          <Input
-            type="number"
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              table.setPageIndex(page);
-            }}
-            className="w-10 justify-center p-1"
-          />
-        </span>
-        <Combobox
-          options={paginationValues}
-          textAttribute="key"
-          valueAttribute="value"
-          placeholder="rows"
-          itemSelected={rowsNumber}
-          setItemSelected={setRowsNumber}
-        />
-      </div>
+        </>
+      )}
     </div>
   );
 }
