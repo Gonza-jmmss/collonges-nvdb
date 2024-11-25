@@ -41,6 +41,40 @@ export default {
         note: "Note/20",
         quarter: "Quarter",
       },
+      dpf: {
+        titleInstitute: "Institut de francais langue etrangere",
+        nomCampus: "Campus Adventiste du Saleve",
+        bp74: "B. P. 74",
+        address: "74165 Collonges-Sous-Saleve Cedex, France",
+        titleReport: "Releve Officiel des Cours et des Notes",
+        titleWarning:
+          "Ce document n'est pas valable sans le timbre sec officiel a empreinte",
+        secretariat: "Le secrétariat :",
+        date: "Date :",
+        data: {
+          studentName: "Nom de l'etudiant(e) :",
+          dbaseId: "No ID :",
+          birthdate: "Né(e) le :",
+          emitionDate: "Date d'émission du relevé :",
+          place: "Lieu :",
+          country: "Pays :",
+        },
+        columns: {
+          scholarYear: "Année",
+          quarter: "Tr.",
+          courseCode: "No cours",
+          coursName: "Nom des cours",
+          creditAmount: "Valeur",
+          note: "Note/20",
+        },
+        text: {
+          title: "Notes :",
+          noteText:
+            "I = Incomplet, W = Retrait des cours, P = Passable U = Nom satisfaisant, AU = Auditeur, F = Echec",
+          descText:
+            "Une unité de valeur équivaut à une heure de cours par semaine pendant un trimestre",
+        },
+      },
     },
   },
 };

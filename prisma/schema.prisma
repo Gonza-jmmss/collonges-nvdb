@@ -13,18 +13,22 @@ model Accommodations {
   AccommodationId Int        @id(map: "PK__Accommod__DBB30A519E5B949C") @default(autoincrement())
   Name            String?    @db.NVarChar(50)
   Abbreviation    String?    @db.NVarChar(10)
+  UpdatedAt       DateTime?  @updatedAt
+  CreatedAt       DateTime   @default(now())
   Students        Students[]
 
   @@schema("Core")
 }
 
 model Alumins {
-  AlumniId  Int      @id(map: "PK__Alumins__9336246AA15F7EC9") @default(autoincrement())
-  Name      String   @db.NVarChar(50)
+  AlumniId  Int       @id(map: "PK__Alumins__9336246AA15F7EC9") @default(autoincrement())
+  Name      String    @db.NVarChar(50)
   StudentId Int
   DiplomaId Int
-  Diplomas  Diplomas @relation(fields: [DiplomaId], references: [DiplomaId], onUpdate: NoAction, map: "FK_Alumins_Diplomas")
-  Students  Students @relation(fields: [StudentId], references: [StudentId], onUpdate: NoAction, map: "FK_Alumins_Students")
+  UpdatedAt DateTime? @updatedAt
+  CreatedAt DateTime  @default(now())
+  Diplomas  Diplomas  @relation(fields: [DiplomaId], references: [DiplomaId], onUpdate: NoAction, map: "FK_Alumins_Diplomas")
+  Students  Students  @relation(fields: [StudentId], references: [StudentId], onUpdate: NoAction, map: "FK_Alumins_Students")
 
   @@schema("Students")
 }
@@ -33,6 +37,8 @@ model Colleges {
   CollegeId    Int        @id(map: "PK__Colleges__29409539FE28E65B") @default(autoincrement())
   Name         String?    @db.NVarChar(50)
   Abbreviation String?    @db.NVarChar(10)
+  UpdatedAt    DateTime?  @updatedAt
+  CreatedAt    DateTime   @default(now())
   Students     Students[]
 
   @@schema("Core")
@@ -42,6 +48,8 @@ model Contacts {
   ContactId                           Int
   PersonId                            Int
   ContactTypeId                       Int
+  UpdatedAt                           DateTime?    @updatedAt
+  CreatedAt                           DateTime     @default(now())
   Persons_Contacts_ContactIdToPersons Persons      @relation("Contacts_ContactIdToPersons", fields: [ContactId], references: [PersonId], onUpdate: NoAction, map: "FK_Contacts_ContactPersons")
   ContactTypes                        ContactTypes @relation(fields: [ContactTypeId], references: [ContactTypeId], onUpdate: NoAction, map: "FK_Contacts_ContactTypes")
   Persons_Contacts_PersonIdToPersons  Persons      @relation("Contacts_PersonIdToPersons", fields: [PersonId], references: [PersonId], onUpdate: NoAction, map: "FK_Contacts_Persons")
@@ -53,6 +61,8 @@ model Contacts {
 model ContactTypes {
   ContactTypeId Int        @id(map: "PK__ContactT__17E1EE12F1060007") @default(autoincrement())
   Name          String     @db.NVarChar(50)
+  UpdatedAt     DateTime?  @updatedAt
+  CreatedAt     DateTime   @default(now())
   Contacts      Contacts[]
 
   @@schema("Persons")
@@ -65,6 +75,8 @@ model Countries {
   ISO3            String?           @db.NVarChar(5)
   PhoneCode       String?           @db.NVarChar(50)
   NameEnglish     String?           @db.NVarChar(50)
+  UpdatedAt       DateTime?         @updatedAt
+  CreatedAt       DateTime          @default(now())
   PersonCountries PersonCountries[]
   Persons         Persons[]
 
@@ -81,6 +93,8 @@ model Courses {
   PeriodNumber   Int?
   CoursesTypeId  Int
   IsEnabled      Boolean?
+  UpdatedAt      DateTime?        @updatedAt
+  CreatedAt      DateTime         @default(now())
   CoursPeriods   CoursPeriods     @relation(fields: [CoursPeriodId], references: [CoursPeriodId], onUpdate: NoAction, map: "FK_Courses_CoursPeriods")
   StudentCourses StudentCourses[]
 
@@ -88,8 +102,10 @@ model Courses {
 }
 
 model CoursesTypes {
-  CoursTypeId Int    @id(map: "PK__CoursesT__56A57B3E62FBA2B7") @default(autoincrement())
-  Name        String @db.NVarChar(50)
+  CoursTypeId Int       @id(map: "PK__CoursesT__56A57B3E62FBA2B7") @default(autoincrement())
+  Name        String    @db.NVarChar(50)
+  UpdatedAt   DateTime? @updatedAt
+  CreatedAt   DateTime  @default(now())
 
   @@schema("Courses")
 }
@@ -98,14 +114,18 @@ model CoursPeriods {
   CoursPeriodId Int       @id(map: "PK__CoursPer__EACACD3ABDE3E123") @default(autoincrement())
   Name          String    @db.NVarChar(50)
   MonthAmount   Int
+  UpdatedAt     DateTime? @updatedAt
+  CreatedAt     DateTime  @default(now())
   Courses       Courses[]
 
   @@schema("Courses")
 }
 
 model Departments {
-  DepartmentId Int     @id(map: "PK__Departme__B2079BED8B2D5595") @default(autoincrement())
-  Name         String? @db.NVarChar(50)
+  DepartmentId Int       @id(map: "PK__Departme__B2079BED8B2D5595") @default(autoincrement())
+  Name         String?   @db.NVarChar(50)
+  UpdatedAt    DateTime? @updatedAt
+  CreatedAt    DateTime  @default(now())
 
   @@schema("Core")
 }
@@ -113,6 +133,8 @@ model Departments {
 model Diplomas {
   DiplomaId Int       @id(map: "PK__Diplomas__048740506CA0A920") @default(autoincrement())
   Name      String    @db.NVarChar(50)
+  UpdatedAt DateTime? @updatedAt
+  CreatedAt DateTime  @default(now())
   Alumins   Alumins[]
 
   @@schema("Students")
@@ -123,6 +145,8 @@ model Matriculations {
   FromDate        DateTime  @db.Date
   ToDate          DateTime? @db.Date
   StudentId       Int
+  UpdatedAt       DateTime? @updatedAt
+  CreatedAt       DateTime  @default(now())
   Students        Students  @relation(fields: [StudentId], references: [StudentId], onUpdate: NoAction, map: "FK_Matriculations_Students")
 
   @@schema("Students")
@@ -132,6 +156,8 @@ model PersonCountries {
   PersonCountryId Int       @id(map: "PK__PersonCo__8E05EF06E195278C") @default(autoincrement())
   PersonId        Int
   CountryId       Int
+  UpdatedAt       DateTime? @updatedAt
+  CreatedAt       DateTime  @default(now())
   Countries       Countries @relation(fields: [CountryId], references: [CountryId], onUpdate: NoAction, map: "FK_PersonCountries_Countries")
   Persons         Persons   @relation(fields: [PersonId], references: [PersonId], onUpdate: NoAction, map: "FK_PersonCountries_Persons")
 
@@ -158,6 +184,8 @@ model Persons {
   BirthCountryId                       Int?
   Email                                String?           @db.NVarChar(50)
   DBaseCode                            String?           @db.NVarChar(10)
+  UpdatedAt                            DateTime?         @updatedAt
+  CreatedAt                            DateTime          @default(now())
   Contacts_Contacts_ContactIdToPersons Contacts[]        @relation("Contacts_ContactIdToPersons")
   Contacts_Contacts_PersonIdToPersons  Contacts[]        @relation("Contacts_PersonIdToPersons")
   Religions                            Religions?        @relation(fields: [ReligionId], references: [ReligionId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Persons_Religions")
@@ -169,9 +197,11 @@ model Persons {
 }
 
 model Regimes {
-  RegimeId Int        @id(map: "PK__Regimes__B8947F98B9F34A5C") @default(autoincrement())
-  Name     String?    @db.NVarChar(50)
-  Students Students[]
+  RegimeId  Int        @id(map: "PK__Regimes__B8947F98B9F34A5C") @default(autoincrement())
+  Name      String?    @db.NVarChar(50)
+  UpdatedAt DateTime?  @updatedAt
+  CreatedAt DateTime   @default(now())
+  Students  Students[]
 
   @@schema("Core")
 }
@@ -180,6 +210,8 @@ model Religions {
   ReligionId   Int       @id(map: "PK__Religion__D3ADAB6A4C69A528") @default(autoincrement())
   Name         String    @db.NVarChar(50)
   Abbreviation String?   @db.NVarChar(5)
+  UpdatedAt    DateTime? @updatedAt
+  CreatedAt    DateTime  @default(now())
   Persons      Persons[]
 
   @@schema("Core")
@@ -190,6 +222,8 @@ model ScholarYears {
   Name           String           @db.NVarChar(50)
   FromDate       DateTime?        @db.Date
   ToDate         DateTime?        @db.Date
+  UpdatedAt      DateTime?        @updatedAt
+  CreatedAt      DateTime         @default(now())
   StudentCourses StudentCourses[]
 
   @@schema("Courses")
@@ -201,6 +235,8 @@ model StudentCourses {
   CoursId        Int
   Note           String       @db.NVarChar(5)
   ScholarYearId  Int
+  UpdatedAt      DateTime?    @updatedAt
+  CreatedAt      DateTime     @default(now())
   Courses        Courses      @relation(fields: [CoursId], references: [CoursId], onUpdate: NoAction, map: "FK_StudentCourses_Courses")
   ScholarYears   ScholarYears @relation(fields: [ScholarYearId], references: [ScholarYearId], onUpdate: NoAction, map: "FK_StudentCourses_ScholarYears")
   Students       Students     @relation(fields: [StudentId], references: [StudentId], onUpdate: NoAction, map: "FK_StudentCourses_Students")
@@ -217,6 +253,8 @@ model Students {
   CollegeId       Int?
   RegimeId        Int?
   AccommodationId Int?
+  UpdatedAt       DateTime?        @updatedAt
+  CreatedAt       DateTime         @default(now())
   Alumins         Alumins[]
   Matriculations  Matriculations[]
   StudentCourses  StudentCourses[]
@@ -232,6 +270,8 @@ model Students {
 model StudentTypes {
   StudentTypeId Int        @id(map: "PK__StudentT__42041DBAD33305DF") @default(autoincrement())
   Name          String     @db.NVarChar(50)
+  UpdatedAt     DateTime?  @updatedAt
+  CreatedAt     DateTime   @default(now())
   Students      Students[]
 
   @@schema("Students")
