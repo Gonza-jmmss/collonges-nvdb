@@ -25,6 +25,7 @@ export default {
     pageTitle: "Reports",
     ifleStudentsNotes: {
       title: "IFLE Students Notes",
+      titlePage: "IFLE Students Notes of",
       data: {
         studentName: "Student name",
         birthdate: "Birthdate",
@@ -58,6 +59,14 @@ export default {
           emitionDate: "Date d'émission du relevé :",
           place: "Lieu :",
           country: "Pays :",
+        },
+        dataEnglish: {
+          studentName: "Student Name :",
+          dbaseId: "No ID :",
+          birthdate: "Birthdate :",
+          emitionDate: "Emition Date :",
+          place: "Place :",
+          country: "Country :",
         },
         columns: {
           scholarYear: "Année",

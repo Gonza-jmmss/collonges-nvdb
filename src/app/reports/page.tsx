@@ -1,5 +1,6 @@
 import enUS from "@/lang/en-US";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default async function StudentsPage() {
   const t = enUS;
@@ -12,9 +13,15 @@ export default async function StudentsPage() {
         </div>
         <div className="mt-10 grid grid-cols-3">
           <Link href={"/reports/ifleStudentsNotes"}>
-            <div className="rounded-md border-2 p-4">
-              {t.reports.ifleStudentsNotes.title}
-            </div>
+            <Button
+              variant={"outline"}
+              size={"lg"}
+              className="h-16 w-full justify-start border-2 p-4"
+            >
+              <span className="text-base">
+                {t.reports.ifleStudentsNotes.title}
+              </span>
+            </Button>
           </Link>
         </div>
       </div>

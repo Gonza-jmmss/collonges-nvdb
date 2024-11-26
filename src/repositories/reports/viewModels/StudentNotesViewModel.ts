@@ -11,7 +11,7 @@ export type StudentNotesViewModel = {
 export type QuarterNotesResultViewModel = {
   StudentName: string | null;
   DBaseCode: string | null;
-  BirthDate: Date | null;
+  Birthdate: Date | null;
   BirthCountry: string | null | undefined;
   BirthCity: string | null;
   CourseNotes: {

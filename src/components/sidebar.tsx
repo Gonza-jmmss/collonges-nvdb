@@ -21,7 +21,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative flex">
       <aside
-        className={`h-full min-h-[95vh] border-r ${isMouseOver ? "w-56" : "w-16"} duration-300`}
+        className={`h-full min-h-[95vh] border-r ${isMouseOver ? "w-48" : "w-16"} fixed z-50 bg-background duration-300`}
         onMouseEnter={() => setIsMouseOver(true)}
         onMouseLeave={() => setIsMouseOver(false)}
       >
@@ -31,7 +31,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
               {element.path === pathname ? (
                 <Button
                   key={index}
-                  className="w-[85%] cursor-default bg-accent"
+                  className="w-[85%] cursor-default bg-accent duration-300"
                   variant="ghost"
                 >
                   {isMouseOver ? (
@@ -99,7 +99,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
           ))}
         </div>
       </aside>
-      <div className="w-full px-10">{children}</div>
+      <div className={`ml-16 w-full px-10`}>{children}</div>
     </div>
   );
 }

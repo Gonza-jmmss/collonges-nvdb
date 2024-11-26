@@ -46,7 +46,7 @@ export class getQuarterNotesByStudentId
     return {
       StudentName: result?.Persons.AlternativeName,
       DBaseCode: result?.Persons.DBaseCode,
-      BirthDate: result?.Persons.BirthDate,
+      Birthdate: result?.Persons.BirthDate,
       BirthCountry: result?.Persons.Countries?.Name,
       BirthCity: result?.Persons.BirthCity,
       CourseNotes: result?.StudentCourses.map((studentCourse) => ({
