@@ -1,9 +1,9 @@
-import enUS from "@/lang/en-US";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import frFR from "@/lang/fr-FR";
 
 export default async function StudentsPage() {
-  const t = enUS;
+  const t = frFR;
 
   return (
     <main className="">

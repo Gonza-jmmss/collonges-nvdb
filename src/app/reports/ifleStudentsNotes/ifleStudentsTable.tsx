@@ -6,25 +6,25 @@ import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import { Students } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import enUS from "@/lang/en-US";
+import frFR from "@/lang/fr-FR";
 
 export default function StudentsTable({
   studentsData,
 }: {
   studentsData: Students[];
 }) {
-  const t = enUS;
+  const t = frFR;
   const router = useRouter();
 
   const columns = useMemo<ColumnDef<Students, any>[]>(
     () => [
-      {
-        accessorKey: "StudentId",
-        id: "StudentId",
-        header: () => <Header text={t.student.columns.id} />,
-        // cell: (info) => info.getValue(),
-        filterFn: "equalsString",
-      },
+      // {
+      //   accessorKey: "StudentId",
+      //   id: "StudentId",
+      //   header: () => <Header text={t.student.columns.id} />,
+      //   // cell: (info) => info.getValue(),
+      //   filterFn: "equalsString",
+      // },
       {
         accessorKey: "DBaseCode",
         id: "DBaseCode",

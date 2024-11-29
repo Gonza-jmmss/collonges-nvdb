@@ -6,6 +6,7 @@ export type StudentNotesViewModel = {
   ScholarYear: string | null;
   CreditAmount: number | null;
   Note: string | null;
+  AmericanNote: string | null;
 };
 
 export type QuarterNotesResultViewModel = {
@@ -22,5 +23,6 @@ export type QuarterNotesResultViewModel = {
     ScholarYear: string | null;
     CreditAmount: number | null;
     Note: string | null;
+    AmericanNote: string | null;
   }[];
 };

@@ -5,14 +5,14 @@ import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import { Students } from "@prisma/client";
-import enUS from "@/lang/en-US";
+import frFR from "@/lang/fr-FR";
 
 export default function StudentsTable({
   studentsData,
 }: {
   studentsData: Students[];
 }) {
-  const t = enUS;
+  const t = frFR;
 
   const columns = useMemo<ColumnDef<Students, any>[]>(
     () => [

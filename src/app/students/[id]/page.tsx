@@ -1,7 +1,7 @@
-import enUS from "@/lang/en-US";
+import frFR from "@/lang/fr-FR";
 
 export default function Student() {
-  const t = enUS;
+  const t = frFR;
   return (
     <main className="">
       <div className="mt-3 w-[80vw]">

@@ -6,19 +6,14 @@ import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import { StudentNotesViewModel } from "@/repositories/reports/viewModels/StudentNotesViewModel";
 import formatDBCode from "@/functions/formatDBCode";
-// import { Students } from "@prisma/client";
-import enUS from "@/lang/en-US";
+import frFR from "@/lang/fr-FR";
 
 export default function StudentsTable({
   studentNotesData,
 }: {
   studentNotesData: StudentNotesViewModel[];
 }) {
-  const t = enUS;
-
-  // const formatDBCode = (input: string) => {
-  //   return input.replace(/([A-Za-z])(\d)/, "$1 $2");
-  // };
+  const t = frFR;
 
   const columns = useMemo<ColumnDef<StudentNotesViewModel, any>[]>(
     () => [
@@ -28,7 +23,6 @@ export default function StudentsTable({
         header: () => (
           <Header text={t.reports.ifleStudentsNotes.columns.scholarYear} />
         ),
-        // cell: (info) => info.getValue(),
         filterFn: "equalsString",
       },
       {
@@ -37,7 +31,6 @@ export default function StudentsTable({
         header: () => (
           <Header text={t.reports.ifleStudentsNotes.columns.quarter} />
         ),
-        // cell: (info) => info.getValue(),
         filterFn: "equalsString",
       },
       {
@@ -55,7 +48,6 @@ export default function StudentsTable({
         header: () => (
           <Header text={t.reports.ifleStudentsNotes.columns.coursName} />
         ),
-        // cell: (info) => info.getValue(),
         filterFn: "equalsString",
       },
       {
@@ -64,24 +56,24 @@ export default function StudentsTable({
         header: () => (
           <Header text={t.reports.ifleStudentsNotes.columns.creditAmount} />
         ),
-        // cell: (info) => info.getValue(),
         filterFn: "equalsString",
       },
       {
         accessorKey: "Note",
         id: "Note",
-        // cell: (x) => (x.getValue() == 1 ? t.shared.yes : t.shared.no),
         header: () => (
           <Header text={t.reports.ifleStudentsNotes.columns.note} />
         ),
         filterFn: "equalsString",
       },
-      //   {
-      //     accessorKey: "actions",
-      //     id: "actions",
-      //     header: () => <Header text={t.student.columns.actions} />,
-      //     cell: () => <div>Notes</div>,
-      //   },
+      {
+        accessorKey: "AmericanNote",
+        id: "AmericanNote",
+        header: () => (
+          <Header text={t.reports.ifleStudentsNotes.columns.americanNote} />
+        ),
+        filterFn: "equalsString",
+      },
     ],
     [],
   );
@@ -94,7 +86,6 @@ export default function StudentsTable({
           data={studentNotesData}
           className=""
           minimalMode
-          // onRowClick={(row) => console.log("onClick", row)}
         />
       </div>
     </main>

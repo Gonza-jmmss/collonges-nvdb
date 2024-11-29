@@ -1,9 +1,9 @@
 import StudentsTable from "./studentsTable";
 import { getAllStudentsQuery } from "@/repositories/students/queries/getAllStudentsQuery";
-import enUS from "@/lang/en-US";
+import frFR from "@/lang/fr-FR";
 
 export default async function StudentsPage() {
-  const t = enUS;
+  const t = frFR;
 
   const studentsQuery = new getAllStudentsQuery();
   const students = await studentsQuery.execute();

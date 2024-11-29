@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Query } from "@/interfaces/query";
 import { QuarterNotesResultViewModel } from "@/repositories/reports/viewModels/StudentNotesViewModel";
+import translateGrade from "@/functions/translateGrade";
 
 const prisma = new PrismaClient();
 
@@ -57,6 +58,7 @@ export class getQuarterNotesByStudentId
         ScholarYear: studentCourse.ScholarYears.Name,
         CreditAmount: studentCourse.Courses.CreditAmount,
         Note: studentCourse.Note,
+        AmericanNote: translateGrade(studentCourse.Note),
       })),
     };
   }

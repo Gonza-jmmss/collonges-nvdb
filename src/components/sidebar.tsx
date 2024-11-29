@@ -4,18 +4,35 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
-import { usePathname } from "next/navigation";
 import isValidIconName from "@/functions/isValidIconName";
+import { useSelectedLayoutSegments } from "next/navigation";
+import frFR from "@/lang/fr-FR";
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+  const t = frFR;
+  const segments = useSelectedLayoutSegments();
 
   const [isMouseOver, setIsMouseOver] = useState(false);
 
   const sidebarElements = [
-    { name: "Home", path: "/", icon: "MdHome" },
-    { name: "Students", path: "/students", icon: "MdSchool" },
-    { name: "Reports", path: "/reports", icon: "MdDvr" },
+    {
+      name: t.SidebarElements.home,
+      segmentName: t.SidebarElements.homeSegment,
+      path: "/",
+      icon: "MdHome",
+    },
+    {
+      name: t.SidebarElements.students,
+      segmentName: t.SidebarElements.studentsSegment,
+      path: "/students",
+      icon: "MdSchool",
+    },
+    {
+      name: t.SidebarElements.reports,
+      segmentName: t.SidebarElements.reportsSegment,
+      path: "/reports",
+      icon: "MdDvr",
+    },
   ];
 
   return (
@@ -28,14 +45,15 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
         <div className={`flex flex-col items-center space-y-3 py-3`}>
           {sidebarElements.map((element, index) => (
             <>
-              {element.path === pathname ? (
+              {element.segmentName.toLowerCase() ===
+              (segments.length === 0 ? "home" : segments[0].toLowerCase()) ? (
                 <Button
                   key={index}
-                  className="w-[85%] cursor-default bg-accent duration-300"
+                  className="w-[85%] cursor-default duration-300 hover:bg-transparent"
                   variant="ghost"
                 >
                   {isMouseOver ? (
-                    <div className="flex justify-center space-x-3">
+                    <div className="flex justify-center space-x-3 text-primary">
                       <Icon
                         name={
                           isValidIconName(element.icon)
@@ -53,7 +71,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                           ? element.icon
                           : "MdOutlineNotInterested"
                       }
-                      className="text-xl"
+                      className="text-xl text-primary"
                     />
                   )}
                 </Button>
