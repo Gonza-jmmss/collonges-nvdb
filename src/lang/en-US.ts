@@ -1,13 +1,20 @@
-import { columns } from "mssql";
-
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
+  SidebarElements: {
+    home: "Home",
+    homeSegment: "home",
+    students: "Students",
+    studentsSegment: "students",
+    reports: "Reports",
+    reportsSegment: "reports",
+  },
   shared: {
     save: "Save",
     cancel: "Cancel",
     yes: "Yes",
     no: "No",
     exportPDF: "Export PDF",
+    welcome: "Welcome !",
   },
   student: {
     pageTitle: "Students page",
@@ -40,9 +47,19 @@ export default {
         scholarYear: "Scholar Year",
         creditAmount: "Credits",
         note: "Note/20",
+        americanNote: "American",
         quarter: "Quarter",
       },
-      dpf: {
+      StudentData: {
+        studentName: "Student Name :",
+        dbaseId: "No ID :",
+        birthdate: "Birthdate :",
+        issueDate: "Issue date :",
+        place: "Place :",
+        country: "Country :",
+      },
+      dpfFrench: {
+        exportPDF: "French PDF",
         titleInstitute: "Institut de francais langue etrangere",
         nomCampus: "Campus Adventiste du Saleve",
         bp74: "B. P. 74",
@@ -56,17 +73,9 @@ export default {
           studentName: "Nom de l'etudiant(e) :",
           dbaseId: "No ID :",
           birthdate: "Né(e) le :",
-          emitionDate: "Date d'émission du relevé :",
+          issueDate: "Date d'émission du relevé :",
           place: "Lieu :",
           country: "Pays :",
-        },
-        dataEnglish: {
-          studentName: "Student Name :",
-          dbaseId: "No ID :",
-          birthdate: "Birthdate :",
-          emitionDate: "Emition Date :",
-          place: "Place :",
-          country: "Country :",
         },
         columns: {
           scholarYear: "Année",
@@ -82,6 +91,44 @@ export default {
             "I = Incomplet, W = Retrait des cours, P = Passable U = Nom satisfaisant, AU = Auditeur, F = Echec",
           descText:
             "Une unité de valeur équivaut à une heure de cours par semaine pendant un trimestre",
+        },
+      },
+      dpfEnglish: {
+        exportPDF: "American PDF",
+        titleInstitute: "Institut de francais langue etrangere",
+        nomCampus: "Campus Adventiste du Saleve",
+        bp74: "B. P. 74",
+        address: "74165 Collonges-Sous-Saleve Cedex, France",
+        titleReport: "Official transcript of records",
+        titleWarning: "Not valid without the official embossed stamp",
+        secretariat: "The Registrar :",
+        date: "Date :",
+        data: {
+          studentName: "Student's name :",
+          dbaseId: "No ID :",
+          birthdate: "Birth date :",
+          issueDate: "Date of issue :",
+          dateFormat: "(dd/mm/yy)",
+          place: "Place :",
+          country: "Country :",
+          issuedTo: "Transcript issued to :",
+          credits: "Credits :",
+        },
+        columns: {
+          scholarYear: "Year/Quart.",
+          courseCode: "Course No",
+          coursName: "Title",
+          creditAmount: "Credit Hours",
+          note: "Grade",
+        },
+        text: {
+          title: "Grades :",
+          noteText1:
+            "A = Superior, B = Above average, C = Average, D = Below average, F = Failure, I = Incomplete",
+          noteText2:
+            "AU = Auditor, W = Withdrawal, P = Passing, U = Non satisfactory.",
+          descText:
+            "One quarter credit is equivalent to one hour of class per week. Dates are DD/MM/YY.",
         },
       },
     },
