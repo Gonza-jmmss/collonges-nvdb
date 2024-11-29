@@ -134,6 +134,7 @@ export default function TableComponent<T>({
     state: {
       columnFilters,
       globalFilter,
+      columnVisibility,
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
@@ -216,6 +217,7 @@ export default function TableComponent<T>({
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                     onClick={() => onRowClick?.(row.original)}
+                    className={`${onRowClick != null && "cursor-pointer"}`}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
@@ -351,6 +353,7 @@ export default function TableComponent<T>({
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
                       onClick={() => onRowClick?.(row.original)}
+                      className={`${onRowClick != null && "cursor-pointer"}`}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
