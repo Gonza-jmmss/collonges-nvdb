@@ -18,20 +18,57 @@ const config = {
       },
     },
     extend: {
+      // colors: {
+      //   border: "hsl(var(--border))",
+      //   input: "hsl(var(--input))",
+      //   ring: "hsl(var(--ring))",
+      //   background: "hsl(var(--background))",
+      //   foreground: "hsl(var(--foreground))",
+      //   textPrimary: "#FFFF",
+      //   textSecundary: "#CCCC",
+      //   primary: {
+      //     DEFAULT: "#AF1740",
+      //     foreground: "hsl(var(--primary-foreground))",
+      //   },
+      //   secondary: {
+      //     DEFAULT: "hsl(var(--secondary))",
+      //     foreground: "hsl(var(--secondary-foreground))",
+      //   },
+      //   destructive: {
+      //     DEFAULT: "hsl(var(--destructive))",
+      //     foreground: "hsl(var(--destructive-foreground))",
+      //   },
+      //   muted: {
+      //     DEFAULT: "hsl(var(--muted))",
+      //     foreground: "hsl(var(--muted-foreground))",
+      //   },
+      //   accent: {
+      //     DEFAULT: "hsl(var(--accent))",
+      //     foreground: "hsl(var(--accent-foreground))",
+      //   },
+      //   popover: {
+      //     DEFAULT: "hsl(var(--popover))",
+      //     foreground: "hsl(var(--popover-foreground))",
+      //   },
+      //   card: {
+      //     DEFAULT: "hsl(var(--card))",
+      //     foreground: "hsl(var(--card-foreground))",
+      //   },
+      // },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
+        background: "#09090b",
         foreground: "hsl(var(--foreground))",
         textPrimary: "#FFFF",
         textSecundary: "#CCCC",
         primary: {
-          DEFAULT: "#AF1740",
+          DEFAULT: "#973d4d",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT: "#18181a",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
@@ -55,6 +92,7 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
