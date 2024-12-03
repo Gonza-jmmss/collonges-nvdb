@@ -7,6 +7,7 @@ import { Column } from "@/functions/formatTablePDF";
 import formatDBCode from "@/functions/formatDBCode";
 import formatTablePDF from "@/functions/formatTablePDF";
 import formatDate from "@/functions/formatDate";
+import { signatureMarta, logoIFLE, logoCollonge } from "@/lib/imagesBase64";
 import autoTable from "jspdf-autotable";
 import { jsPDF } from "jspdf";
 import frFR from "@/lang/fr-FR";
@@ -53,7 +54,7 @@ export default function ifleStudentNotesAmericanPDF({
     ...studentNotesData.CourseNotes,
   ];
 
-  const exportToPDF = () => {
+  const exportToPDF = async () => {
     try {
       const tablePDF = formatTablePDF(columnsToExport, studentNotesDataForPdf);
       const doc = new jsPDF("p", "mm", "a4");
@@ -65,8 +66,8 @@ export default function ifleStudentNotesAmericanPDF({
       const pageWidth = doc.internal.pageSize.getWidth();
 
       // // Only for desing face ///////////////////
-      //   doc.line(leftmargin, 0, leftmargin, 800);
-      //   doc.line(rightmargin, 0, rightmargin, 800);
+      // doc.line(leftmargin, 0, leftmargin, 800);
+      // doc.line(rightmargin, 0, rightmargin, 800);
       // // Only for desing face ///////////////////
 
       //titleInstitute
@@ -135,23 +136,39 @@ export default function ifleStudentNotesAmericanPDF({
           doc.internal.scaleFactor +
         leftmargin +
         2;
-      const studentName = studentNotesData.StudentName?.toUpperCase() || "";
+      const studentName =
+        `${studentNotesData.StudentLastName?.toUpperCase()}, ${studentNotesData.StudentLastName?.toUpperCase()}` ||
+        ""; // Apellidos, Nombres
       doc.setFont("helvetica", "normal");
       doc.text(studentName, studentNameTextWithMargin, currentY);
+      //Right Side
       //dbaseId
       doc.setFont("helvetica", "bold");
+      //dbaseId - texts
       const dbaseIdText = t.reports.ifleStudentsNotes.dpfEnglish.data.dbaseId;
-      doc.text(dbaseIdText, 173, currentY);
+      const dBaseCodeText = studentNotesData.DBaseCode || "";
+      //dbaseId - dbaseIdTexstWith
+      const dbaseIdTextWith =
+        (doc.getStringUnitWidth(dbaseIdText) * doc.getFontSize()) /
+        doc.internal.scaleFactor;
+      const dBaseCodeTextWith =
+        (doc.getStringUnitWidth(dBaseCodeText) * doc.getFontSize()) /
+        doc.internal.scaleFactor;
+      const dbaseIdhRightMarginPosition =
+        rightmargin - (dbaseIdTextWith + dBaseCodeTextWith + 2);
+      //dbaseId - doc.text
+      doc.text(dbaseIdText, dbaseIdhRightMarginPosition, currentY);
       const dbaseIdTextWithMargin =
         (doc.getStringUnitWidth(dbaseIdText) * doc.getFontSize()) /
           doc.internal.scaleFactor +
-        173 +
+        dbaseIdhRightMarginPosition +
         2;
-      const dbaseId = studentNotesData.DBaseCode || "";
+      //dbaseId - dBaseCodeText - doc.text
       doc.setFont("helvetica", "normal");
-      doc.text(dbaseId, dbaseIdTextWithMargin, currentY);
+      doc.text(dBaseCodeText, dbaseIdTextWithMargin, currentY);
       currentY += 5;
 
+      //Left Side
       //birthdate
       doc.setFont("helvetica", "bold");
       const birthdateText =
@@ -174,21 +191,35 @@ export default function ifleStudentNotesAmericanPDF({
       const dateFormatText =
         t.reports.ifleStudentsNotes.dpfEnglish.data.dateFormat;
       doc.text(dateFormatText, birthdateWithMargin, currentY);
+      //Right Side
       //issueDate
       doc.setFont("helvetica", "bold");
+      //issueDate - texts
       const issueDateText =
         t.reports.ifleStudentsNotes.dpfEnglish.data.issueDate;
-      doc.text(issueDateText, 156.5, currentY);
+      const issueDateNowText = formatDate(new Date());
+      //issueDate - issueDateTexstWith
+      const issueDateTextWith =
+        (doc.getStringUnitWidth(issueDateText) * doc.getFontSize()) /
+        doc.internal.scaleFactor;
+      const issueDateNowTextWith =
+        (doc.getStringUnitWidth(issueDateNowText) * doc.getFontSize()) /
+        doc.internal.scaleFactor;
+      const issueDatehRightMarginPosition =
+        rightmargin - (issueDateTextWith + issueDateNowTextWith + 2);
+      //issueDate - doc.text
+      doc.text(issueDateText, issueDatehRightMarginPosition, currentY);
       const issueDateTextWithMargin =
         (doc.getStringUnitWidth(issueDateText) * doc.getFontSize()) /
           doc.internal.scaleFactor +
-        156.5 +
+        issueDatehRightMarginPosition +
         2;
-      const issueDate = formatDate(new Date());
+      //issueDate - issueDateNowText - doc.text
       doc.setFont("helvetica", "normal");
-      doc.text(issueDate, issueDateTextWithMargin, currentY);
+      doc.text(issueDateNowText, issueDateTextWithMargin, currentY);
       currentY += 5;
 
+      //Left Side
       //place
       doc.setFont("helvetica", "bold");
       const placeText = t.reports.ifleStudentsNotes.dpfEnglish.data.place;
@@ -201,20 +232,35 @@ export default function ifleStudentNotesAmericanPDF({
       const place = studentNotesData.BirthCity || "";
       doc.setFont("helvetica", "normal");
       doc.text(place, placeTextWithMargin, currentY);
+      //Right Side
       //issuedTo
       doc.setFont("helvetica", "bold");
+      //issuedTo - texts
       const issuedToText = t.reports.ifleStudentsNotes.dpfEnglish.data.issuedTo;
-      doc.text(issuedToText, 156.5, currentY);
+      const CollegeAbbreviationText =
+        studentNotesData.CollegeAbbreviation || "";
+      //issuedTo - issuedToTexstWith
+      const issuedToTextWith =
+        (doc.getStringUnitWidth(issuedToText) * doc.getFontSize()) /
+        doc.internal.scaleFactor;
+      const CollegeAbbreviationTextWith =
+        (doc.getStringUnitWidth(CollegeAbbreviationText) * doc.getFontSize()) /
+        doc.internal.scaleFactor;
+      const issuedTohRightMarginPosition =
+        rightmargin - (issuedToTextWith + CollegeAbbreviationTextWith + 2);
+      //issuedTo - doc.text
+      doc.text(issuedToText, issuedTohRightMarginPosition, currentY);
       const issuedToTextWithMargin =
         (doc.getStringUnitWidth(issuedToText) * doc.getFontSize()) /
           doc.internal.scaleFactor +
-        156.5 +
+        issuedTohRightMarginPosition +
         2;
-      //
+      //issuedTo - CollegeAbbreviationText - doc.text
       doc.setFont("helvetica", "normal");
-      doc.text("", issuedToTextWithMargin, currentY);
+      doc.text(CollegeAbbreviationText, issuedToTextWithMargin, currentY);
       currentY += 5;
 
+      //Left Side
       //country
       doc.setFont("helvetica", "bold");
       const countryText = t.reports.ifleStudentsNotes.dpfEnglish.data.country;
@@ -224,21 +270,34 @@ export default function ifleStudentNotesAmericanPDF({
           doc.internal.scaleFactor +
         leftmargin +
         2;
-      const country = studentNotesData.BirthCountry || "";
+      const country = studentNotesData.BirthCountryEn || "";
       doc.setFont("helvetica", "normal");
       doc.text(country, countryTextWithMargin, currentY);
+      //Right Side
       //credits
       doc.setFont("helvetica", "bold");
+      //credits - texts
       const creditsText = t.reports.ifleStudentsNotes.dpfEnglish.data.credits;
-      doc.text(creditsText, 156.5, currentY);
+      const creditsValueText = "UNIVERSITARY";
+      //credits - creditsTexstWith
+      const creditsTextWith =
+        (doc.getStringUnitWidth(creditsText) * doc.getFontSize()) /
+        doc.internal.scaleFactor;
+      const creditsValueTextWith =
+        (doc.getStringUnitWidth(creditsValueText) * doc.getFontSize()) /
+        doc.internal.scaleFactor;
+      const creditshRightMarginPosition =
+        rightmargin - (creditsTextWith + creditsValueTextWith + 2);
+      //credits - doc.text
+      doc.text(creditsText, creditshRightMarginPosition, currentY);
       const creditsTextWithMargin =
         (doc.getStringUnitWidth(creditsText) * doc.getFontSize()) /
           doc.internal.scaleFactor +
-        156.5 +
+        creditshRightMarginPosition +
         2;
-      //
+      //credits - creditsValueText - doc.text
       doc.setFont("helvetica", "normal");
-      doc.text("", creditsTextWithMargin, currentY);
+      doc.text(creditsValueText, creditsTextWithMargin, currentY);
       currentY += 7;
 
       //Table
@@ -333,17 +392,52 @@ export default function ifleStudentNotesAmericanPDF({
         140,
         currentY,
       );
+      //secretariatName
+      doc.setTextColor(141, 154, 208);
+      doc.setFont("helvetica", "normal");
+      doc.text(t.reports.ifleStudentsNotes.secretariatName, 160, currentY + 40);
+      doc.setTextColor(0, 0, 0);
       currentY += 10;
 
       //date
+      const dateText = t.reports.ifleStudentsNotes.dpfEnglish.date;
       doc.text(
         t.reports.ifleStudentsNotes.dpfEnglish.date,
         leftmargin,
         currentY,
       );
+      const dateTextWithMargin =
+        (doc.getStringUnitWidth(dateText) * doc.getFontSize()) /
+          doc.internal.scaleFactor +
+        leftmargin +
+        2;
+      const date = formatDate(new Date());
+      doc.setFont("helvetica", "normal");
+      doc.text(date, dateTextWithMargin, currentY);
 
-      //   const fileName = `Reporte`;
+      //img signatureMarta
+      doc.addImage(signatureMarta, "PNG", 140, currentY - 8, 40, 35);
+      //img logoCollonge
+      doc.addImage(logoCollonge, "PNG", leftmargin, 11, 30, 30);
+      //img logoIFLE
+      doc.addImage(logoIFLE, "PNG", rightmargin - 30, 10, 30, 30);
+
+      // // guideLine for the logos /////////////////////////
+      // doc.line(leftmargin, 30, leftmargin + 5, 30);
+      // doc.line(leftmargin + 5, 10, leftmargin + 5, 43);
+
+      // doc.line(leftmargin + 5, 10, rightmargin - 5, 10);
+      // doc.line(leftmargin + 5, 12, rightmargin - 5, 12);
+      // doc.line(leftmargin + 5, 32.5, rightmargin - 5, 32.5);
+      // doc.line(leftmargin + 5, 43, rightmargin - 5, 43);
+
+      // doc.line(rightmargin - 5, 30, rightmargin, 30);
+      // doc.line(rightmargin - 5, 10, rightmargin - 5, 43);
+      // // guideLine for the logos /////////////////////////
+
+      const fileName = `English transcript ${studentName} ${studentNotesData.CourseNotes[0].ScholarYear} ${studentNotesData.CourseNotes[0].Quarter}`;
       doc.output("dataurlnewwindow");
+      // doc.save(fileName);
     } catch (error) {
       console.log(error);
     }

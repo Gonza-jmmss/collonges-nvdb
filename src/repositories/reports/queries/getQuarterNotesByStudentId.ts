@@ -19,6 +19,7 @@ export class getQuarterNotesByStudentId
             Countries: true,
           },
         },
+        Colleges: true,
         StudentCourses: {
           include: {
             Courses: {
@@ -46,10 +47,14 @@ export class getQuarterNotesByStudentId
 
     return {
       StudentName: result?.Persons.AlternativeName,
+      StudentFirstName: result?.Persons.FirstName,
+      StudentLastName: result?.Persons.LastName,
       DBaseCode: result?.Persons.DBaseCode,
       Birthdate: result?.Persons.BirthDate,
-      BirthCountry: result?.Persons.Countries?.Name,
+      BirthCountryFr: result?.Persons.Countries?.Name,
+      BirthCountryEn: result?.Persons.Countries?.NameEnglish,
       BirthCity: result?.Persons.BirthCity,
+      CollegeAbbreviation: result?.Colleges?.Abbreviation,
       CourseNotes: result?.StudentCourses.map((studentCourse) => ({
         CourseCode: studentCourse.Courses.CourseCode,
         Quarter: studentCourse.Courses.PeriodNumber,

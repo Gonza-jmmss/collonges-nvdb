@@ -33,6 +33,7 @@ export default {
     ifleStudentsNotes: {
       title: "Notes des étudiants IFLE",
       titlePage: "Notes des étudiants IFLE de",
+      secretariatName: "Marta Oliver",
       data: {
         studentName: "Nom de l'étudiant",
         birthdate: "Date de naissance",
@@ -50,14 +51,6 @@ export default {
         americanNote: "Américaine",
         quarter: "Trimestre",
       },
-      StudentData: {
-        studentName: "Nom de l'étudiant :",
-        dbaseId: "N° ID :",
-        birthdate: "Date de naissance :",
-        issueDate: "Date d'émission :",
-        place: "Lieu :",
-        country: "Pays :",
-      },
       dpfFrench: {
         exportPDF: "French PDF",
         titleInstitute: "Institut de francais langue etrangere",
@@ -71,7 +64,7 @@ export default {
         date: "Date :",
         data: {
           studentName: "Nom de l'etudiant(e) :",
-          dbaseId: "No ID :",
+          dbaseId: "N° ID :",
           birthdate: "Né(e) le :",
           issueDate: "Date d'émission du relevé :",
           place: "Lieu :",
@@ -80,7 +73,7 @@ export default {
         columns: {
           scholarYear: "Année",
           quarter: "Tr.",
-          courseCode: "No cours",
+          courseCode: "N° cours",
           coursName: "Nom des cours",
           creditAmount: "Valeur",
           note: "Note/20",
@@ -105,7 +98,7 @@ export default {
         date: "Date :",
         data: {
           studentName: "Student's name :",
-          dbaseId: "No ID :",
+          dbaseId: "N° ID :",
           birthdate: "Birth date :",
           issueDate: "Date of issue :",
           dateFormat: "(dd/mm/yy)",
@@ -116,7 +109,7 @@ export default {
         },
         columns: {
           scholarYear: "Year/Quart.",
-          courseCode: "Course No",
+          courseCode: "Course N°",
           coursName: "Title",
           creditAmount: "Credit Hours",
           note: "Grade",

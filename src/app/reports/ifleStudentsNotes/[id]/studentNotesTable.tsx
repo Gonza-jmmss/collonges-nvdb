@@ -10,18 +10,22 @@ import frFR from "@/lang/fr-FR";
 
 export default function StudentsTable({
   studentNotesData,
+  transcriptType,
 }: {
   studentNotesData: StudentNotesViewModel[];
+  transcriptType: "french" | "american";
 }) {
   const t = frFR;
 
-  const columns = useMemo<ColumnDef<StudentNotesViewModel, any>[]>(
+  const frenchColumns = useMemo<ColumnDef<StudentNotesViewModel, any>[]>(
     () => [
       {
         accessorKey: "ScholarYear",
         id: "ScholarYear",
         header: () => (
-          <Header text={t.reports.ifleStudentsNotes.columns.scholarYear} />
+          <Header
+            text={t.reports.ifleStudentsNotes.dpfFrench.columns.scholarYear}
+          />
         ),
         filterFn: "equalsString",
       },
@@ -29,7 +33,9 @@ export default function StudentsTable({
         accessorKey: "Quarter",
         id: "Quarter",
         header: () => (
-          <Header text={t.reports.ifleStudentsNotes.columns.quarter} />
+          <Header
+            text={t.reports.ifleStudentsNotes.dpfFrench.columns.quarter}
+          />
         ),
         filterFn: "equalsString",
       },
@@ -37,7 +43,9 @@ export default function StudentsTable({
         accessorKey: "CourseCode",
         id: "CourseCode",
         header: () => (
-          <Header text={t.reports.ifleStudentsNotes.columns.courseCode} />
+          <Header
+            text={t.reports.ifleStudentsNotes.dpfFrench.columns.courseCode}
+          />
         ),
         cell: (x) => formatDBCode(x.getValue()).slice(0, -2),
         filterFn: "equalsString",
@@ -46,7 +54,9 @@ export default function StudentsTable({
         accessorKey: "CourseName",
         id: "CourseName",
         header: () => (
-          <Header text={t.reports.ifleStudentsNotes.columns.coursName} />
+          <Header
+            text={t.reports.ifleStudentsNotes.dpfFrench.columns.coursName}
+          />
         ),
         filterFn: "equalsString",
       },
@@ -54,7 +64,9 @@ export default function StudentsTable({
         accessorKey: "CreditAmount",
         id: "CreditAmount",
         header: () => (
-          <Header text={t.reports.ifleStudentsNotes.columns.creditAmount} />
+          <Header
+            text={t.reports.ifleStudentsNotes.dpfFrench.columns.creditAmount}
+          />
         ),
         filterFn: "equalsString",
       },
@@ -62,7 +74,59 @@ export default function StudentsTable({
         accessorKey: "Note",
         id: "Note",
         header: () => (
-          <Header text={t.reports.ifleStudentsNotes.columns.note} />
+          <Header text={t.reports.ifleStudentsNotes.dpfFrench.columns.note} />
+        ),
+        filterFn: "equalsString",
+      },
+    ],
+    [],
+  );
+  const AmericanColumns = useMemo<ColumnDef<StudentNotesViewModel, any>[]>(
+    () => [
+      {
+        accessorKey: "ScholarYear",
+        id: "ScholarYear",
+        header: () => (
+          <Header
+            text={t.reports.ifleStudentsNotes.dpfEnglish.columns.scholarYear}
+          />
+        ),
+        cell: (row) => (
+          <div className="flex space-x-4">
+            <span>{row.row.original.ScholarYear}</span>
+            <span>{row.row.original.Quarter}</span>
+          </div>
+        ),
+        filterFn: "equalsString",
+      },
+      {
+        accessorKey: "CourseCode",
+        id: "CourseCode",
+        header: () => (
+          <Header
+            text={t.reports.ifleStudentsNotes.dpfEnglish.columns.courseCode}
+          />
+        ),
+        cell: (x) => formatDBCode(x.getValue()).slice(0, -2),
+        filterFn: "equalsString",
+      },
+      {
+        accessorKey: "CourseName",
+        id: "CourseName",
+        header: () => (
+          <Header
+            text={t.reports.ifleStudentsNotes.dpfEnglish.columns.coursName}
+          />
+        ),
+        filterFn: "equalsString",
+      },
+      {
+        accessorKey: "CreditAmount",
+        id: "CreditAmount",
+        header: () => (
+          <Header
+            text={t.reports.ifleStudentsNotes.dpfEnglish.columns.creditAmount}
+          />
         ),
         filterFn: "equalsString",
       },
@@ -70,8 +134,9 @@ export default function StudentsTable({
         accessorKey: "AmericanNote",
         id: "AmericanNote",
         header: () => (
-          <Header text={t.reports.ifleStudentsNotes.columns.americanNote} />
+          <Header text={t.reports.ifleStudentsNotes.dpfEnglish.columns.note} />
         ),
+        // cell: (row) => <div className="text-center">{row.getValue()}</div>,
         filterFn: "equalsString",
       },
     ],
@@ -82,7 +147,9 @@ export default function StudentsTable({
     <main className="">
       <div className="mt-5">
         <Table
-          columns={columns}
+          columns={
+            transcriptType === "french" ? frenchColumns : AmericanColumns
+          }
           data={studentNotesData}
           className=""
           minimalMode

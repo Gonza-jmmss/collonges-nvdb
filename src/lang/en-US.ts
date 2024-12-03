@@ -39,10 +39,10 @@ export default {
         place: "Place",
         country: "Country",
         emissionDate: "Emission date",
-        studentId: "No ID",
+        studentId: "N° ID",
       },
       columns: {
-        courseCode: "No. Cours",
+        courseCode: "N° Cours",
         coursName: "Cours Name",
         scholarYear: "Scholar Year",
         creditAmount: "Credits",
@@ -52,7 +52,7 @@ export default {
       },
       StudentData: {
         studentName: "Student Name :",
-        dbaseId: "No ID :",
+        dbaseId: "N° ID :",
         birthdate: "Birthdate :",
         issueDate: "Issue date :",
         place: "Place :",
@@ -71,7 +71,7 @@ export default {
         date: "Date :",
         data: {
           studentName: "Nom de l'etudiant(e) :",
-          dbaseId: "No ID :",
+          dbaseId: "N° ID :",
           birthdate: "Né(e) le :",
           issueDate: "Date d'émission du relevé :",
           place: "Lieu :",
@@ -80,7 +80,7 @@ export default {
         columns: {
           scholarYear: "Année",
           quarter: "Tr.",
-          courseCode: "No cours",
+          courseCode: "N° cours",
           coursName: "Nom des cours",
           creditAmount: "Valeur",
           note: "Note/20",
@@ -105,7 +105,7 @@ export default {
         date: "Date :",
         data: {
           studentName: "Student's name :",
-          dbaseId: "No ID :",
+          dbaseId: "N° ID :",
           birthdate: "Birth date :",
           issueDate: "Date of issue :",
           dateFormat: "(dd/mm/yy)",
@@ -116,7 +116,7 @@ export default {
         },
         columns: {
           scholarYear: "Year/Quart.",
-          courseCode: "Course No",
+          courseCode: "Course N°",
           coursName: "Title",
           creditAmount: "Credit Hours",
           note: "Grade",
