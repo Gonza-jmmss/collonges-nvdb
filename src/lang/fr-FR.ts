@@ -8,6 +8,9 @@ export default {
     reports: "Rapports",
     reportsSegment: "reports",
   },
+  shortcuts: {
+    transcripts: "Transcripts",
+  },
   shared: {
     save: "Enregistrer",
     cancel: "Annuler",
@@ -15,6 +18,7 @@ export default {
     no: "Non",
     exportPDF: "Exporter en PDF",
     welcome: "Bienvenu !",
+    shortcut: "Raccourcis",
   },
   student: {
     pageTitle: "Page des étudiants",
