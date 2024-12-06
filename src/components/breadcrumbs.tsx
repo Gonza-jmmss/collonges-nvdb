@@ -27,7 +27,9 @@ export default function Breadcrumbs() {
             <Fragment key={index}>
               <BreadcrumbItem>
                 {index === breadcrumbElements.length - 1 ? (
-                  <BreadcrumbPage>{segment}</BreadcrumbPage>
+                  <BreadcrumbPage className={`text-primary`}>
+                    {segment}
+                  </BreadcrumbPage>
                 ) : (
                   <>
                     <BreadcrumbLink
