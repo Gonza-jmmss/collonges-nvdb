@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/context/themeProvider";
 import Breadcrumbs from "@/components/breadcrumbs";
 import Sidebar from "@/components/sidebar";
 import "./globals.css";
@@ -19,12 +20,19 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={inter.className}>
-        <Sidebar>
-          <>
-            <Breadcrumbs />
-            {children}
-          </>
-        </Sidebar>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Sidebar>
+            <>
+              <Breadcrumbs />
+              {children}
+            </>
+          </Sidebar>
+        </ThemeProvider>
       </body>
     </html>
   );
