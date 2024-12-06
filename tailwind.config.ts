@@ -59,16 +59,14 @@ const config = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "#09090b",
+        background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        textPrimary: "#FFFF",
-        textSecundary: "#CCCC",
         primary: {
-          DEFAULT: "#973d4d",
+          DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#18181a",
+          DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
