@@ -4,17 +4,17 @@ import { useState, useEffect, useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
-import { Students } from "@prisma/client";
+import { StudentsViewModel } from "@/repositories/students/studentsViewModel";
 import frFR from "@/lang/fr-FR";
 
 export default function StudentsTable({
   studentsData,
 }: {
-  studentsData: Students[];
+  studentsData: StudentsViewModel[];
 }) {
   const t = frFR;
 
-  const columns = useMemo<ColumnDef<Students, any>[]>(
+  const columns = useMemo<ColumnDef<StudentsViewModel, any>[]>(
     () => [
       {
         accessorKey: "StudentId",

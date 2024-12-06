@@ -30,3 +30,19 @@ export type QuarterNotesResultViewModel = {
     AmericanNote: string | null;
   }[];
 };
+
+export type StudentCourseMapViewModel = {
+  Courses: {
+    Name: string;
+    EnglishName: string;
+    CourseCode: string | null;
+    CreditAmount: number;
+    PeriodNumber: number | null;
+  };
+  ScholarYears: {
+    Name: string;
+  };
+  StudentId: number;
+  UpdatedAt: Date | null;
+  Note: string;
+};

@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { Query } from "@/interfaces/query";
-import { QuarterNotesResultViewModel } from "@/repositories/reports/viewModels/StudentNotesViewModel";
+import {
+  QuarterNotesResultViewModel,
+  StudentCourseMapViewModel,
+} from "@/repositories/reports/viewModels/StudentNotesViewModel";
 import translateGrade from "@/functions/translateGrade";
 
 const prisma = new PrismaClient();
@@ -55,33 +58,18 @@ export class getQuarterNotesByStudentId
       BirthCountryEn: result?.Persons.Countries?.NameEnglish,
       BirthCity: result?.Persons.BirthCity,
       CollegeAbbreviation: result?.Colleges?.Abbreviation,
-      CourseNotes: result?.StudentCourses.map((studentCourse) => ({
-        CourseCode: studentCourse.Courses.CourseCode,
-        Quarter: studentCourse.Courses.PeriodNumber,
-        CourseName: studentCourse.Courses.Name,
-        CoursEnglishName: studentCourse.Courses.EnglishName,
-        ScholarYear: studentCourse.ScholarYears.Name,
-        CreditAmount: studentCourse.Courses.CreditAmount,
-        Note: studentCourse.Note,
-        AmericanNote: translateGrade(studentCourse.Note),
-      })),
+      CourseNotes: result?.StudentCourses.map(
+        (studentCourse: StudentCourseMapViewModel) => ({
+          CourseCode: studentCourse.Courses.CourseCode,
+          Quarter: studentCourse.Courses.PeriodNumber,
+          CourseName: studentCourse.Courses.Name,
+          CoursEnglishName: studentCourse.Courses.EnglishName,
+          ScholarYear: studentCourse.ScholarYears.Name,
+          CreditAmount: studentCourse.Courses.CreditAmount,
+          Note: studentCourse.Note,
+          AmericanNote: translateGrade(studentCourse.Note),
+        }),
+      ),
     };
   }
 }
-
-// return result.map((student) => ({
-//   StudentName: student.Persons.AlternativeName,
-//   DBaseCode: student.Persons.DBaseCode,
-//   BirthDate: student.Persons.BirthDate,
-//   BirthCountry: student.Persons.Countries?.Name,
-//   BirthCity: student.Persons.BirthCity,
-//   CourseNotes: student.StudentCourses.map((studentCourse) => ({
-//     CourseCode: studentCourse.Courses.CourseCode,
-//     Quarter: studentCourse.Courses.PeriodNumber,
-//     CourseName: studentCourse.Courses.Name,
-//     CoursEnglishName: studentCourse.Courses.EnglishName,
-//     ScholarYear: studentCourse.ScholarYears.Name,
-//     CreditAmount: studentCourse.Courses.CreditAmount,
-//     Note: studentCourse.Note,
-//   })),
-// }));

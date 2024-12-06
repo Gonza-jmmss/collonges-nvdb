@@ -7,7 +7,12 @@ import { Column } from "@/functions/formatTablePDF";
 import formatDBCode from "@/functions/formatDBCode";
 import formatTablePDF from "@/functions/formatTablePDF";
 import formatDate from "@/functions/formatDate";
-import { signatureMarta, logoIFLE, logoCollonge } from "@/lib/imagesBase64";
+import {
+  signatureMarta,
+  logoIFLE,
+  logoCollonge,
+  tamponIFLE,
+} from "@/lib/imagesBase64";
 import autoTable from "jspdf-autotable";
 import { jsPDF } from "jspdf";
 import frFR from "@/lang/fr-FR";
@@ -357,6 +362,8 @@ export default function ifleStudentNotesPDF({
       doc.addImage(logoCollonge, "PNG", leftmargin, 11, 30, 30);
       //img logoIFLE
       doc.addImage(logoIFLE, "PNG", rightmargin - 30, 10, 30, 30);
+      //img tamponeIFLE
+      doc.addImage(tamponIFLE, "PNG", 80, 275, 50, 10);
 
       // // guideLine for the logos /////////////////////////
       // doc.line(leftmargin, 30, leftmargin + 5, 30);
