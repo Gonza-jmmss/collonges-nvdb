@@ -1,3 +1,5 @@
+import { Breadcrumb } from "@/components/ui/breadcrumb";
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   SidebarElements: {
@@ -7,6 +9,12 @@ export default {
     studentsSegment: "students",
     reports: "Rapports",
     reportsSegment: "reports",
+  },
+  breadcrumbs: {
+    home: "Accueil",
+    students: "Etudiants",
+    reports: "Rapports",
+    ifleStudentsNotes: "Notes des étudiants IFLE",
   },
   shortcuts: {
     transcripts: "Transcripts",

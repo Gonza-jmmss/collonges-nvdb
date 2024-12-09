@@ -10,8 +10,10 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Fragment } from "react";
+import frFR from "@/lang/fr-FR";
 
 export default function Breadcrumbs() {
+  const t = frFR;
   const segments = useSelectedLayoutSegments();
   const breadcrumbElements = ["home"].concat(segments);
   console.log(
@@ -23,19 +25,19 @@ export default function Breadcrumbs() {
     <div className="mt-3 w-full">
       <Breadcrumb>
         <BreadcrumbList>
-          {breadcrumbElements.map((segment, index) => (
+          {breadcrumbElements.map((segment: string, index: number) => (
             <Fragment key={index}>
               <BreadcrumbItem>
                 {index === breadcrumbElements.length - 1 ? (
                   <BreadcrumbPage className={`text-primary`}>
-                    {segment}
+                    {`${t.breadcrumbs[segment as keyof typeof t.breadcrumbs]}`}
                   </BreadcrumbPage>
                 ) : (
                   <>
                     <BreadcrumbLink
                       href={`/${breadcrumbElements.slice(1, index + 1).join("/")}`}
                     >
-                      {segment}
+                      {`${t.breadcrumbs[segment as keyof typeof t.breadcrumbs]}`}
                     </BreadcrumbLink>
                   </>
                 )}
