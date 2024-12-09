@@ -11,7 +11,7 @@ export default function FrenchTranscript({
   const t = frFR;
   return (
     <div>
-      <div className="mt-5 rounded-md border p-4">
+      <div className="mt-5 rounded-md border bg-muted/50 p-3">
         <div className="flex flex-col space-y-2">
           <div className="flex justify-between space-x-3">
             <div className="flex space-x-2">
