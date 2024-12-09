@@ -255,6 +255,7 @@ model Students {
   AccommodationId Int?
   UpdatedAt       DateTime?
   CreatedAt       DateTime         @default(now())
+  IsEnabled       Boolean
   Alumins         Alumins[]
   Matriculations  Matriculations[]
   StudentCourses  StudentCourses[]
