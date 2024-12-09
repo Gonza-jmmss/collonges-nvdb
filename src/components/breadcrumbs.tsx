@@ -30,14 +30,14 @@ export default function Breadcrumbs() {
               <BreadcrumbItem>
                 {index === breadcrumbElements.length - 1 ? (
                   <BreadcrumbPage className={`text-primary`}>
-                    {`${t.breadcrumbs[segment as keyof typeof t.breadcrumbs]}`}
+                    {`${isNaN(Number(segment)) ? t.breadcrumbs[segment as keyof typeof t.breadcrumbs] : segment}`}
                   </BreadcrumbPage>
                 ) : (
                   <>
                     <BreadcrumbLink
                       href={`/${breadcrumbElements.slice(1, index + 1).join("/")}`}
                     >
-                      {`${t.breadcrumbs[segment as keyof typeof t.breadcrumbs]}`}
+                      {`${isNaN(Number(segment)) ? t.breadcrumbs[segment as keyof typeof t.breadcrumbs] : segment}`}
                     </BreadcrumbLink>
                   </>
                 )}
