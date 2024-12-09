@@ -25,6 +25,9 @@ export class getQuarterNotesByStudentId
         },
         Colleges: true,
         StudentCourses: {
+          where: {
+            Note: { not: null },
+          },
           include: {
             Courses: {
               select: {
