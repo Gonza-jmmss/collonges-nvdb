@@ -23,6 +23,7 @@ export type StudentsMapViewModel = {
   CollegeId: number | null;
   RegimeId: number | null;
   AccommodationId: number | null;
+  IsEnabled: boolean;
   UpdatedAt: Date | null;
   CreatedAt: Date;
   Persons?: {

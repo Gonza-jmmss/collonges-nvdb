@@ -15,6 +15,7 @@ export class getQuarterNotesByStudentId
     const result = await prisma.students.findUnique({
       where: {
         StudentId: studentId,
+        IsEnabled: true,
       },
       include: {
         Persons: {
