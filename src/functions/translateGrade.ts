@@ -3,7 +3,7 @@ const translateGrade = (frenchGrade: string): string => {
   if (!isNumberString) return frenchGrade;
 
   const frenchGradeNumber: number = +frenchGrade;
-  if (isNumberString && (frenchGradeNumber <= 0 || frenchGradeNumber >= 20)) {
+  if (isNumberString && (frenchGradeNumber < 0 || frenchGradeNumber > 20)) {
     throw new Error("Invalid grade. Grade must be between 0 and 20.");
   }
 
