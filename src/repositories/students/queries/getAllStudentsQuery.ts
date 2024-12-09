@@ -7,6 +7,16 @@ const prisma = new PrismaClient();
 export class getAllStudentsQuery implements Query<StudentsViewModel[]> {
   async execute(): Promise<StudentsViewModel[]> {
     const result = await prisma.students.findMany({
+      orderBy: [
+        {
+          IsACA: "desc",
+        },
+        {
+          Persons: {
+            LastName: "asc",
+          },
+        },
+      ],
       include: {
         Persons: {
           select: {
