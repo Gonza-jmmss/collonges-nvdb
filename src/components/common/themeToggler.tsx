@@ -1,20 +1,22 @@
 "use client";
 
-import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Icon from "@/components/common/icon";
-import { useTheme } from "next-themes";
-
 import { Button } from "@/components/ui/button";
+import { useTheme } from "next-themes";
 
 const ThemeToggler = () => {
   const { setTheme } = useTheme();
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
 
     if (savedTheme) {
-      if (savedTheme === "dark") {
+      const isDark = savedTheme === "dark";
+      setIsDarkTheme(isDark);
+
+      if (isDark) {
         document.documentElement.classList.add("dark");
       } else {
         document.documentElement.classList.remove("dark");
@@ -22,26 +24,25 @@ const ThemeToggler = () => {
     }
   }, []);
 
+  const toggleTheme = () => {
+    const newTheme = isDarkTheme ? "light" : "dark";
+    setTheme(newTheme);
+    setIsDarkTheme(!isDarkTheme);
+    localStorage.setItem("theme", newTheme);
+  };
+
   return (
-    <>
-      {localStorage.getItem("theme") === "dark" ? (
-        <Button
-          className="flex justify-center"
-          variant={"ghost"}
-          onClick={() => setTheme("light")}
-        >
-          <Icon name="MdSunny" className="text-2xl" />
-        </Button>
+    <Button
+      className="flex justify-center"
+      variant={"ghost"}
+      onClick={toggleTheme}
+    >
+      {isDarkTheme ? (
+        <Icon name="MdSunny" className="text-2xl" />
       ) : (
-        <Button
-          className="flex justify-center"
-          variant={"ghost"}
-          onClick={() => setTheme("dark")}
-        >
-          <Icon name="MdDarkMode" className="text-2xl" />
-        </Button>
+        <Icon name="MdDarkMode" className="text-2xl" />
       )}
-    </>
+    </Button>
   );
 };
 
