@@ -71,7 +71,10 @@ export class getQuarterNotesByStudentId
           ScholarYear: studentCourse.ScholarYears.Name,
           CreditAmount: studentCourse.Courses.CreditAmount,
           Note: studentCourse.Note,
-          AmericanNote: translateGrade(studentCourse.Note),
+          AmericanNote:
+            studentCourse.Note != null
+              ? translateGrade(studentCourse.Note)
+              : null,
         }),
       ),
     };

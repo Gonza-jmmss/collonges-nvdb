@@ -111,8 +111,8 @@ export default function StudentsTable({
         filterFn: "equalsString",
       },
       {
-        accessorKey: "CourseName",
-        id: "CourseName",
+        accessorKey: "CoursEnglishName",
+        id: "CoursEnglishName",
         header: () => (
           <Header
             text={t.reports.ifleStudentsNotes.dpfEnglish.columns.coursName}

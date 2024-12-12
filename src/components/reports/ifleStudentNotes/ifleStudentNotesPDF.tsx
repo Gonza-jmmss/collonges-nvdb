@@ -139,7 +139,7 @@ export default function ifleStudentNotesPDF({
         leftmargin +
         2;
       const studentName =
-        `${studentNotesData.StudentLastName?.toUpperCase()}, ${studentNotesData.StudentLastName?.toUpperCase()}` ||
+        `${studentNotesData.StudentLastName?.toUpperCase()}, ${studentNotesData.StudentFirstName?.toUpperCase()}` ||
         ""; // Apellidos, Nombres
       doc.setFont("helvetica", "normal");
       doc.text(studentName, studentNameTextWithMargin, currentY);
@@ -363,7 +363,8 @@ export default function ifleStudentNotesPDF({
       //img logoIFLE
       doc.addImage(logoIFLE, "PNG", rightmargin - 30, 10, 30, 30);
       //img tamponeIFLE
-      doc.addImage(tamponIFLE, "PNG", 80, 275, 50, 10);
+      // doc.addImage(tamponIFLE, "PNG", 80, 275, 50, 10);
+      doc.addImage(tamponIFLE, "PNG", 60, currentY + 15, 50, 10);
 
       // // guideLine for the logos /////////////////////////
       // doc.line(leftmargin, 30, leftmargin + 5, 30);
@@ -377,7 +378,8 @@ export default function ifleStudentNotesPDF({
       // doc.line(rightmargin - 5, 10, rightmargin - 5, 43);
       // // guideLine for the logos /////////////////////////
 
-      const fileName = `Transcript francais ${studentName} ${studentNotesData.CourseNotes[0].ScholarYear} ${studentNotesData.CourseNotes[0].Quarter}`;
+      // const fileName = `Transcript francais ${studentName} ${studentNotesData.CourseNotes[0].ScholarYear} ${studentNotesData.CourseNotes[0].Quarter}`;
+      const fileName = `Transcript T${studentNotesData.CourseNotes[0].Quarter} ${studentNotesData.CourseNotes[0].ScholarYear}  ${studentName}`;
       doc.output("dataurlnewwindow");
       doc.save(fileName);
     } catch (error) {

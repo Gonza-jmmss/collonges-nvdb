@@ -42,7 +42,7 @@ export default function ifleStudentNotesAmericanPDF({
         formatDBCode(row.CourseCode || "").slice(0, -2),
     },
     {
-      value: "CourseName",
+      value: "CoursEnglishName",
       name: t.reports.ifleStudentsNotes.dpfEnglish.columns.coursName,
     },
     {
@@ -142,7 +142,7 @@ export default function ifleStudentNotesAmericanPDF({
         leftmargin +
         2;
       const studentName =
-        `${studentNotesData.StudentLastName?.toUpperCase()}, ${studentNotesData.StudentLastName?.toUpperCase()}` ||
+        `${studentNotesData.StudentLastName?.toUpperCase()}, ${studentNotesData.StudentFirstName?.toUpperCase()}` ||
         ""; // Apellidos, Nombres
       doc.setFont("helvetica", "normal");
       doc.text(studentName, studentNameTextWithMargin, currentY);
@@ -427,7 +427,8 @@ export default function ifleStudentNotesAmericanPDF({
       //img logoIFLE
       doc.addImage(logoIFLE, "PNG", rightmargin - 30, 10, 30, 30);
       //img tamponeIFLE
-      doc.addImage(tamponIFLE, "PNG", 80, 275, 50, 10);
+      // doc.addImage(tamponIFLE, "PNG", 80, 275, 50, 10);
+      doc.addImage(tamponIFLE, "PNG", 60, currentY + 15, 50, 10);
 
       // // guideLine for the logos /////////////////////////
       // doc.line(leftmargin, 30, leftmargin + 5, 30);
@@ -442,7 +443,8 @@ export default function ifleStudentNotesAmericanPDF({
       // doc.line(rightmargin - 5, 10, rightmargin - 5, 43);
       // // guideLine for the logos /////////////////////////
 
-      const fileName = `English transcript ${studentName} ${studentNotesData.CourseNotes[0].ScholarYear} ${studentNotesData.CourseNotes[0].Quarter}`;
+      // const fileName = `English transcript ${studentName} ${studentNotesData.CourseNotes[0].ScholarYear} ${studentNotesData.CourseNotes[0].Quarter}`;
+      const fileName = `Transcript T${studentNotesData.CourseNotes[0].Quarter} ${studentNotesData.CourseNotes[0].ScholarYear}  ${studentName} ${CollegeAbbreviationText}`;
       doc.output("dataurlnewwindow");
       doc.save(fileName);
     } catch (error) {
