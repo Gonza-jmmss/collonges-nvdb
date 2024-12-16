@@ -1,3 +1,5 @@
+"use client";
+
 import StudentNotesTable from "@/app/reports/ifleStudentsNotes/[id]/studentNotesTable";
 import { QuarterNotesResultViewModel } from "@/repositories/reports/viewModels/StudentNotesViewModel";
 import formatDate from "@/functions/formatDate";
