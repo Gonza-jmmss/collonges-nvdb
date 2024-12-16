@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
+import UserIcon from "@/components/sidebar/userIcon";
 import isValidIconName from "@/functions/isValidIconName";
 import { useSelectedLayoutSegments } from "next/navigation";
-import ThemeToggler from "@/components/common/themeToggler";
+import { logout } from "@/lib/actions";
 import frFR from "@/lang/fr-FR";
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
@@ -46,7 +47,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
         <div className="flex h-full flex-col justify-between">
           <div className={`flex flex-col items-center space-y-3 py-3`}>
             {sidebarElements.map((element, index) => (
-              <>
+              <Fragment key={index}>
                 {element.segmentName.toLowerCase() ===
                 (segments.length === 0 ? "home" : segments[0].toLowerCase()) ? (
                   <Button
@@ -115,11 +116,39 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                     )}
                   </Button>
                 )}
-              </>
+              </Fragment>
             ))}
           </div>
-          <div className="flex w-full justify-center pb-5">
-            <ThemeToggler />
+          <div className="flex w-full flex-col items-center justify-center space-y-2 pb-5">
+            <UserIcon isMouseOver={isMouseOver} />
+            {isMouseOver ? (
+              <Button
+                variant={"ghost"}
+                className="flex w-[85%] justify-center space-x-3"
+                onClick={() => logout()}
+              >
+                <Icon
+                  name={
+                    isValidIconName("MdLogout")
+                      ? "MdLogout"
+                      : "MdOutlineNotInterested"
+                  }
+                  className="text-xl"
+                />
+                <span>{t.shared.logout}</span>
+              </Button>
+            ) : (
+              <Button variant={"ghost"} onClick={() => logout()}>
+                <Icon
+                  name={
+                    isValidIconName("MdLogout")
+                      ? "MdLogout"
+                      : "MdOutlineNotInterested"
+                  }
+                  className="text-xl"
+                />
+              </Button>
+            )}
           </div>
         </div>
       </aside>
