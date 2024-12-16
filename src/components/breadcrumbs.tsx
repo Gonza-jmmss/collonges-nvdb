@@ -9,6 +9,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import ThemeToggle from "./common/themeToggle";
 import { Fragment } from "react";
 import frFR from "@/lang/fr-FR";
 
@@ -16,13 +17,9 @@ export default function Breadcrumbs() {
   const t = frFR;
   const segments = useSelectedLayoutSegments();
   const breadcrumbElements = ["home"].concat(segments);
-  console.log(
-    "segments",
-    segments.map((x) => `/${x}`),
-  );
 
   return (
-    <div className="mt-3 w-full">
+    <div className="mt-3 flex w-full justify-between">
       <Breadcrumb>
         <BreadcrumbList>
           {breadcrumbElements.map((segment: string, index: number) => (
@@ -50,6 +47,7 @@ export default function Breadcrumbs() {
           ))}
         </BreadcrumbList>
       </Breadcrumb>
+      <ThemeToggle />
     </div>
   );
 }
