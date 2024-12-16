@@ -27,6 +27,7 @@ export default {
     exportPDF: "Exporter en PDF",
     welcome: "Bienvenu !",
     shortcut: "Raccourcis",
+    logout: "Déconnexion",
   },
   student: {
     pageTitle: "Page des étudiants",
