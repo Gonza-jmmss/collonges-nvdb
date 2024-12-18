@@ -4,27 +4,18 @@ import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
 import frFR from "@/lang/fr-FR";
 
-export default async function Home() {
+export default function Settings() {
   const t = frFR;
-
-  const sidebarElements = [
-    { name: t.SidebarElements.students, path: "/students", icon: "MdSchool" },
-    { name: t.SidebarElements.reports, path: "/reports", icon: "MdDvr" },
-    {
-      name: t.SidebarElements.settings,
-      path: "/settings",
-      icon: "MdSettings",
-    },
-  ];
-
   return (
     <main className="mt-6 flex w-full justify-center">
       <div className="mt-3 w-[80vw]">
         <div className="flex justify-center">
-          <span className="text-4xl font-bold">{t.shared.welcome}</span>
+          <span className="text-4xl font-bold">
+            {t.SidebarElements.settings}
+          </span>
         </div>
         <div className={`mt-10 flex justify-center space-x-8`}>
-          {sidebarElements.map((element, index) => (
+          {/* {sidebarElements.map((element, index) => (
             <Button
               key={index}
               asChild
@@ -46,26 +37,31 @@ export default async function Home() {
                 <span className="text-lg">{element.name}</span>
               </Link>
             </Button>
-          ))}
-        </div>
-        <div className="mt-10 flex w-full items-center space-x-3">
-          <div className="w-full border-b" />
-          <div className="text-lg font-semibold">{t.shared.shortcut}</div>
-          <div className="w-full border-b" />
-        </div>
-        <div className={`mt-8 flex justify-center space-x-8`}>
-          <Button className={`h-[4rem] w-[10rem]`} variant="outline">
-            <Link
-              href={`/reports/ifleStudentsNotes`}
-              className="flex space-x-2"
-            >
+          ))} */}
+          <Button asChild className={`h-[10rem] w-[10rem]`} variant="outline">
+            <Link href={`/settings/users`} className="flex flex-col space-y-2">
               <Icon
                 name={
-                  isValidIconName("MdDvr") ? "MdDvr" : "MdOutlineNotInterested"
+                  isValidIconName("MdPerson")
+                    ? "MdPerson"
+                    : "MdOutlineNotInterested"
                 }
-                className="text-2xl"
+                className="text-3xl"
               />
-              <span className="text-base">{t.shortcuts.transcripts}</span>
+              <span className="text-lg">{t.users.title}</span>
+            </Link>
+          </Button>
+          <Button asChild className={`h-[10rem] w-[10rem]`} variant="outline">
+            <Link href={`/settings/roles`} className="flex flex-col space-y-2">
+              <Icon
+                name={
+                  isValidIconName("MdGppGood")
+                    ? "MdGppGood"
+                    : "MdOutlineNotInterested"
+                }
+                className="text-3xl"
+              />
+              <span className="text-lg">{t.roles.title}</span>
             </Link>
           </Button>
         </div>

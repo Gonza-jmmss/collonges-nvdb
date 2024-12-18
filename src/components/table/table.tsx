@@ -169,7 +169,12 @@ export default function TableComponent<T>({
                       //         header.getContext(),
                       //       )}
                       // </TableHead>
-                      <TableHead key={header.id}>
+                      <TableHead
+                        key={header.id}
+                        style={{
+                          width: header.column.columnDef.size || "auto",
+                        }}
+                      >
                         <div
                           {...{
                             className: header.column.getCanSort()
@@ -220,7 +225,13 @@ export default function TableComponent<T>({
                     className={`${onRowClick != null && "cursor-pointer"}`}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell
+                        key={cell.id}
+                        style={{
+                          width: cell.column.columnDef.size || "auto",
+                        }}
+                        onClick={(event) => event.stopPropagation()}
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext(),
@@ -305,7 +316,12 @@ export default function TableComponent<T>({
                         //         header.getContext(),
                         //       )}
                         // </TableHead>
-                        <TableHead key={header.id}>
+                        <TableHead
+                          key={header.id}
+                          style={{
+                            width: header.column.columnDef.size || "auto",
+                          }}
+                        >
                           <div
                             {...{
                               className: header.column.getCanSort()
@@ -356,7 +372,12 @@ export default function TableComponent<T>({
                       className={`${onRowClick != null && "cursor-pointer"}`}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
+                        <TableCell
+                          key={cell.id}
+                          style={{
+                            width: cell.column.columnDef.size || "auto",
+                          }}
+                        >
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext(),

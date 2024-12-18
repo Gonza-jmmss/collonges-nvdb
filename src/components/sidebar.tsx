@@ -35,6 +35,12 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
       path: "/reports",
       icon: "MdDvr",
     },
+    {
+      name: t.SidebarElements.settings,
+      segmentName: t.SidebarElements.settings,
+      path: "/settings",
+      icon: "MdSettings",
+    },
   ];
 
   return (

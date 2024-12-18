@@ -1,5 +1,3 @@
-import { Breadcrumb } from "@/components/ui/breadcrumb";
-
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   SidebarElements: {
@@ -9,12 +7,16 @@ export default {
     studentsSegment: "students",
     reports: "Rapports",
     reportsSegment: "reports",
+    settings: "paramètres",
   },
   breadcrumbs: {
     home: "Accueil",
     students: "Etudiants",
     reports: "Rapports",
     ifleStudentsNotes: "Notes des étudiants IFLE",
+    settings: "Paramètres",
+    users: "Utilisateurs",
+    roles: "Rôles",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -28,6 +30,49 @@ export default {
     welcome: "Bienvenu !",
     shortcut: "Raccourcis",
     logout: "Déconnexion",
+    login: "Se connecter",
+    create: "Créer",
+    edit: "Modifier",
+    delete: "Supprimer",
+    view: "Visualiser",
+  },
+  login: {
+    user: "Utilisateur",
+    password: "Mot de passe",
+  },
+  users: {
+    title: "Utilisateurs",
+    pageTitle: "Page des utilisateurs",
+    columns: {
+      userId: "ID",
+      userName: "Utilisateur",
+    },
+    form: {
+      userName: "Nom d'utilisateur",
+      password: "Mot de passe",
+      repeatePassword: "Répéter le mot de passe",
+    },
+  },
+  roles: {
+    title: "Rôles",
+    role: "Rôle",
+    pageTitle: "Page des Rôles",
+    create: "créer un rôle",
+    columns: {
+      roleId: "ID",
+      name: "Nom du rôle",
+    },
+    form: {
+      name: "Nom du rôle",
+    },
+    notifications: {
+      createSuccess: "",
+      createError: "",
+      updateSuccess: "",
+      updateError: "",
+      deleteSuccess: "",
+      deleteError: "",
+    },
   },
   student: {
     pageTitle: "Page des étudiants",

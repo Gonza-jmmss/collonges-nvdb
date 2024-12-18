@@ -2,6 +2,7 @@
 
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/context/themeProvider";
+import { Toaster } from "@/components/ui/toaster";
 import Breadcrumbs from "@/components/breadcrumbs";
 import Sidebar from "@/components/sidebar";
 import "./globals.css";
@@ -39,6 +40,7 @@ export default function RootLayout({
               <>
                 <Breadcrumbs />
                 {children}
+                <Toaster />
               </>
             </Sidebar>
           </ThemeProvider>
