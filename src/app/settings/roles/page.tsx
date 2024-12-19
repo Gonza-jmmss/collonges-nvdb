@@ -11,22 +11,20 @@ export default async function RolesPage() {
   const roles = await rolesQuery.execute();
 
   return (
-    <main className="">
-      <div className="mt-3 w-[80vw]">
-        <div className="flex justify-between space-x-3">
-          <span className="text-xl font-semibold">{t.roles.pageTitle}</span>
-          <Button asChild variant="outlineColored">
-            <Link
-              href={`/settings/roles/null?action="create"`}
-              className="flex flex-col space-y-2"
-            >
-              <span>{t.roles.create}</span>
-            </Link>
-          </Button>
-        </div>
-        <RolesTable rolesData={roles} />
-        {/* <pre>{JSON.stringify(users, null, 2)}</pre> */}
+    <main className="mt-3 w-[80vw]">
+      <div className="flex justify-between space-x-3">
+        <span className="text-xl font-semibold">{t.roles.pageTitle}</span>
+        <Button asChild variant="outlineColored">
+          <Link
+            href={`/settings/roles/null?action="create"`}
+            className="flex flex-col space-y-2"
+          >
+            <span>{t.roles.create}</span>
+          </Link>
+        </Button>
       </div>
+      <RolesTable rolesData={roles} />
+      {/* <pre>{JSON.stringify(users, null, 2)}</pre> */}
     </main>
   );
 }

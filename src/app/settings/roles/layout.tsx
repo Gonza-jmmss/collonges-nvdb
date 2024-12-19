@@ -1,4 +1,4 @@
-export default function UsersLayout({
+export default function RolesLayout({
   children,
   modal,
 }: {
