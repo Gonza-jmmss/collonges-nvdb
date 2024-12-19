@@ -123,7 +123,11 @@ export default function TableComponent<T>({
 
   const [isColumnSearch, setIsColumnSearch] = React.useState(false);
 
-  const [rowsNumber, setRowsNumber] = React.useState(10);
+  const [rowsNumber, setRowsNumber] = React.useState({ key: "10", value: 10 });
+
+  React.useEffect(() => {
+    table.setPageSize(rowsNumber.value);
+  }, [rowsNumber]);
 
   const table = useReactTable({
     data,
@@ -477,14 +481,16 @@ export default function TableComponent<T>({
                 className="w-10 justify-center p-1"
               />
             </span>
-            <Combobox
-              options={paginationValues}
-              textAttribute="key"
-              valueAttribute="value"
-              placeholder="rows"
-              itemSelected={rowsNumber}
-              setItemSelected={setRowsNumber}
-            />
+            <div className="w-min">
+              <Combobox
+                options={paginationValues}
+                textAttribute="key"
+                valueAttribute="value"
+                placeholder="rows"
+                itemSelected={rowsNumber}
+                setItemSelected={setRowsNumber}
+              />
+            </div>
           </div>
         </>
       )}

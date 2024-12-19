@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
-import { getUser } from "@/repositories/users/queries/getUSerQuery";
+import { getUserByUserNameQuery } from "@/repositories/users/queries/getUserByUserNameQuery";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 
@@ -36,7 +36,7 @@ export const authConfig = {
             const { username, password } = parsedCredentials.data;
 
             // User query
-            const usersQuery = new getUser();
+            const usersQuery = new getUserByUserNameQuery();
             const user = await usersQuery.execute(username);
 
             // Validate user exists

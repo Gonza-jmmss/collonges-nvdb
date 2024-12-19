@@ -42,7 +42,9 @@ export default {
   },
   users: {
     title: "Utilisateurs",
+    user: "Utilisateur",
     pageTitle: "Page des utilisateurs",
+    create: "Créer un utilisateur",
     columns: {
       userId: "ID",
       userName: "Utilisateur",
@@ -51,13 +53,14 @@ export default {
       userName: "Nom d'utilisateur",
       password: "Mot de passe",
       repeatePassword: "Répéter le mot de passe",
+      role: "Rôle",
     },
   },
   roles: {
     title: "Rôles",
     role: "Rôle",
     pageTitle: "Page des Rôles",
-    create: "créer un rôle",
+    create: "Créer un rôle",
     columns: {
       roleId: "ID",
       name: "Nom du rôle",

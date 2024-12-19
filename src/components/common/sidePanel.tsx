@@ -46,7 +46,10 @@ export function SidePanel({
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
-      router.back();
+      setIsOpen(false);
+      setTimeout(() => {
+        router.back();
+      }, 1000);
     }
   };
 
