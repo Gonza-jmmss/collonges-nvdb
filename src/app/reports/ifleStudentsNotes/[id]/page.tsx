@@ -1,4 +1,4 @@
-import { getQuarterNotesByStudentId } from "@/repositories/reports/queries/getQuarterNotesByStudentId";
+import getQuarterNotesByStudentId from "@/repositories/reports/queries/getQuarterNotesByStudentId";
 import IFLEStudentNotesPDF from "@/components/reports/ifleStudentNotes/ifleStudentNotesPDF";
 import IFLEStudentNotesAmericanPDF from "@/components/reports/ifleStudentNotes/ifleStudentNotesAmericanPDF";
 import { TabsComponent } from "@/components/common/tabs";
@@ -13,8 +13,8 @@ export default async function ifleStudentsNotesPage({
 }) {
   const t = frFR;
 
-  const studentNotesQuery = new getQuarterNotesByStudentId();
-  const studentNotes = await studentNotesQuery.execute(parseInt(params.id));
+  const studentNotes = await getQuarterNotesByStudentId(parseInt(params.id));
+  // const studentNotes = await studentNotesQuery.execute(parseInt(params.id));
 
   const tabs = [
     {
