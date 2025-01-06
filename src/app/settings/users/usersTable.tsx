@@ -4,7 +4,8 @@ import { useState, useEffect, useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
-import { UsersViewModel } from "@/repositories/users/usersViewModel";
+// import { UsersViewModel } from "@/repositories/users/usersViewModel";
+import { getAllUsersQueryViewModel } from "@/repositories/users/usersViewModel";
 import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
 import { useRouter } from "next/navigation";
@@ -13,12 +14,12 @@ import frFR from "@/lang/fr-FR";
 export default function UsersTable({
   usersData,
 }: {
-  usersData: UsersViewModel[];
+  usersData: getAllUsersQueryViewModel[];
 }) {
   const t = frFR;
   const router = useRouter();
 
-  const columns = useMemo<ColumnDef<UsersViewModel, any>[]>(
+  const columns = useMemo<ColumnDef<getAllUsersQueryViewModel, any>[]>(
     () => [
       {
         accessorKey: "UserId",
@@ -31,6 +32,13 @@ export default function UsersTable({
         accessorKey: "UserName",
         id: "UserName",
         header: () => <Header text={t.users.columns.userName} />,
+        // cell: (info) => info.getValue(),
+        filterFn: "equalsString",
+      },
+      {
+        accessorKey: "RoleName",
+        id: "RoleName",
+        header: () => <Header text={t.users.columns.roleName} />,
         // cell: (info) => info.getValue(),
         filterFn: "equalsString",
       },

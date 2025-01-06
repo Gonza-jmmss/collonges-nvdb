@@ -1,11 +1,8 @@
-export type UserViewModel = {
+export type getAllUsersQueryViewModel = {
   UserId: number;
   UserName: string;
-  Password: string;
   RoleId: number;
   RoleName: string;
-  UpdatedAt?: Date | null;
-  CreatedAt?: Date | null;
 };
 
 export type UsersViewModel = {
@@ -18,6 +15,25 @@ export type UsersViewModel = {
     CreatedAt: Date;
   };
 };
+
+export type UserViewModel = {
+  UserId: number;
+  UserName: string;
+  RoleId: number;
+  RoleName: string;
+} | null;
+
+///////
+
+// export type UserViewModel = {
+//   UserId: number;
+//   UserName: string;
+//   Password: string;
+//   RoleId: number;
+//   RoleName: string;
+//   UpdatedAt?: Date | null;
+//   CreatedAt?: Date | null;
+// };
 
 export type UserCreateViewModel = {
   UserId: number;

@@ -48,6 +48,7 @@ export default {
     columns: {
       userId: "ID",
       userName: "Utilisateur",
+      roleName: "Rôle",
     },
     form: {
       userName: "Nom d'utilisateur",

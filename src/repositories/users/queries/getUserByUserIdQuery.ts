@@ -1,23 +1,24 @@
 import { PrismaClient } from "@prisma/client";
-import { Query } from "@/interfaces/query";
-import { UserViewModel } from "@/repositories/users/usersViewModel";
 
 const prisma = new PrismaClient();
 
-export class getUserByUserIdQuery implements Query<UserViewModel, number> {
-  async execute(userId: number): Promise<UserViewModel> {
-    const result = await prisma.users.findFirstOrThrow({
-      where: { UserId: userId },
-      include: {
-        Roles: true,
-      },
-    });
-    return {
-      UserId: result.UserId,
-      UserName: result.UserName,
-      Password: "",
-      RoleId: result.Roles.RoleId,
-      RoleName: result.Roles.Name,
-    };
-  }
-}
+const getUserByUserIdQuery = async (userId: number) => {
+  const query = await prisma.users.findFirstOrThrow({
+    where: { UserId: userId },
+    include: {
+      Roles: true,
+    },
+  });
+
+  const res = {
+    UserId: query.UserId,
+    UserName: query.UserName,
+    RoleId: query.Roles.RoleId,
+    RoleName: query.Roles.Name,
+  };
+
+  console.log("getUserByUserIdQuery", res);
+  return res;
+};
+
+export default getUserByUserIdQuery;
