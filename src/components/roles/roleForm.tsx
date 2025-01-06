@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import createRoleCommand from "@/repositories/roles/commands/createRoleCommand";
+import updateRoleCommand from "@/repositories/roles/commands/updateRoleCommand";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RoleViewModel } from "@/repositories/roles/rolesViewModel";
@@ -10,6 +12,7 @@ import { z } from "zod";
 import frFR from "@/lang/fr-FR";
 
 const RoleSchema = z.object({
+  RoleId: z.number(),
   Name: z.string(),
 });
 
@@ -28,6 +31,7 @@ export default function RoleForm({
 
   const [isPending, setIsPending] = useState(false);
   const [formData, setFormData] = useState<RoleFormData>({
+    RoleId: 0,
     Name: "",
   });
 
@@ -42,23 +46,18 @@ export default function RoleForm({
 
   const createRole = async () => {
     try {
-      const response = await fetch("/api/roles/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await createRoleCommand(formData);
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error("Échec de la création du rôle");
       }
-      const role = await response.json();
       toast({
         title: `Rôle créé avec succès`,
-        description: `${t.roles.title} : ${role.Name}`,
+        description: `${t.roles.title} : ${response.Name}`,
       });
-      router.back();
+
+      router.refresh();
+      router.push("/settings/roles", { scroll: false });
     } catch (error) {
       toast({
         variant: "destructive",
@@ -72,23 +71,17 @@ export default function RoleForm({
 
   const updateRole = async () => {
     try {
-      const response = await fetch("/api/roles/update", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await updateRoleCommand(formData);
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error("Échec de la modification du rôle");
       }
-      const role = await response.json();
       toast({
         title: `Rôle modifié avec succès`,
-        description: `${t.roles.title} : ${role.Name}`,
+        description: `${t.roles.title} : ${response.Name}`,
       });
-      router.back();
+
+      router.push("/settings/roles");
     } catch (error) {
       toast({
         variant: "destructive",

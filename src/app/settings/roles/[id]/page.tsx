@@ -1,4 +1,4 @@
-import { getRoleByRoleIdQuery } from "@/repositories/roles/queries/getRoleByRoleIdQuery";
+import getRoleByRoleIdQuery from "@/repositories/roles/queries/getRoleByRoleIdQuery";
 import RoleForm from "@/components/roles/roleForm";
 import frFR from "@/lang/fr-FR";
 
@@ -13,9 +13,9 @@ export default async function RolePage({
   let role;
   const action = searchParams.action?.replace(/"/g, "");
 
-  if (params.id != "null") {
-    const roleQuery = new getRoleByRoleIdQuery();
-    role = await roleQuery.execute(Number(params.id));
+  if (params.id != "create") {
+    role = await getRoleByRoleIdQuery(Number(params.id));
+    // role = await roleQuery.execute(Number(params.id));
   } else {
     role = null;
   }

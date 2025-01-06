@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import deleteRoleCommand from "@/repositories/roles/commands/deleteRoleCommand";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
@@ -78,21 +79,21 @@ export default function RolesTable({
   const deleteRole = async (roleId: number) => {
     try {
       const roleToDelete = { RoleId: roleId };
-      const response = await fetch("/api/roles/delete", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(roleToDelete),
-      });
+      // const response = await fetch("/api/roles/delete", {
+      //   method: "DELETE",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(roleToDelete),
+      // });
+      const response = await deleteRoleCommand(roleToDelete);
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error("Échec de la suppression du rôle");
       }
-      const role = await response.json();
       toast({
         title: `Rôle supprimé avec succès`,
-        description: `${t.roles.title} : ${role.Name}`,
+        description: `${t.roles.title} : ${response.Name}`,
       });
       router.refresh();
     } catch (error) {
