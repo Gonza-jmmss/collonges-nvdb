@@ -79,34 +79,27 @@ export default function RolesTable({
   const deleteRole = async (roleId: number) => {
     try {
       const roleToDelete = { RoleId: roleId };
-      // const response = await fetch("/api/roles/delete", {
-      //   method: "DELETE",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(roleToDelete),
-      // });
       const response = await deleteRoleCommand(roleToDelete);
 
       if (!response) {
-        throw new Error("Échec de la suppression du rôle");
+        throw new Error(`${t.roles.notifications.deleteFailure}`);
       }
       toast({
-        title: `Rôle supprimé avec succès`,
+        title: `${t.roles.notifications.deleteSuccess}`,
         description: `${t.roles.title} : ${response.Name}`,
       });
       router.refresh();
     } catch (error) {
       toast({
         variant: "destructive",
-        title: `Une erreur s'est produite pendant la suppression du rôle`,
+        title: `${t.roles.notifications.deleteError}`,
         description: `${error}`,
       });
     }
   };
 
   return (
-    <main className="">
+    <div className="">
       <Table
         columns={columns}
         data={rolesData}
@@ -115,6 +108,6 @@ export default function RolesTable({
           router.push(`/settings/roles/${row.RoleId}?action="view"`)
         }
       />
-    </main>
+    </div>
   );
 }

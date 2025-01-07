@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import createRoleCommand from "@/repositories/roles/commands/createRoleCommand";
 import updateRoleCommand from "@/repositories/roles/commands/updateRoleCommand";
+import { useForm } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RoleViewModel } from "@/repositories/roles/rolesViewModel";
@@ -30,54 +31,27 @@ export default function RoleForm({
   const router = useRouter();
 
   const [isPending, setIsPending] = useState(false);
-  const [formData, setFormData] = useState<RoleFormData>({
-    RoleId: 0,
-    Name: "",
+
+  const form = useForm<RoleFormData>({
+    defaultValues: {
+      RoleId: action !== "create" ? (roleData ? roleData.RoleId : 0) : 0,
+      Name: action !== "create" ? (roleData ? roleData.Name : "") : "",
+    },
+    onSubmit: async ({ value }) => {
+      action === "create" && createRole(value);
+      action === "edit" && updateRole(value);
+    },
   });
 
-  useEffect(() => {
-    roleData &&
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        RoleId: roleData.RoleId,
-        Name: roleData.Name,
-      }));
-  }, []);
-
-  const createRole = async () => {
+  const createRole = async (formData: RoleFormData) => {
     try {
       const response = await createRoleCommand(formData);
 
       if (!response) {
-        throw new Error("Échec de la création du rôle");
+        throw new Error(`${t.roles.notifications.createFailure}`);
       }
       toast({
-        title: `Rôle créé avec succès`,
-        description: `${t.roles.title} : ${response.Name}`,
-      });
-
-      router.refresh();
-      router.push("/settings/roles", { scroll: false });
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: `Une erreur s'est produite pendant la création du rôle`,
-        description: `${error}`,
-      });
-    } finally {
-      setIsPending(false);
-    }
-  };
-
-  const updateRole = async () => {
-    try {
-      const response = await updateRoleCommand(formData);
-
-      if (!response) {
-        throw new Error("Échec de la modification du rôle");
-      }
-      toast({
-        title: `Rôle modifié avec succès`,
+        title: `${t.roles.notifications.createSuccess}`,
         description: `${t.roles.title} : ${response.Name}`,
       });
 
@@ -85,7 +59,7 @@ export default function RoleForm({
     } catch (error) {
       toast({
         variant: "destructive",
-        title: `Une erreur s'est produite pendant la modification du rôle`,
+        title: `${t.roles.notifications.createError}`,
         description: `${error}`,
       });
     } finally {
@@ -93,33 +67,57 @@ export default function RoleForm({
     }
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
+  const updateRole = async (formData: RoleFormData) => {
+    try {
+      const response = await updateRoleCommand(formData);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsPending(true);
-    action === "create" && createRole();
-    action === "edit" && updateRole();
+      if (!response) {
+        throw new Error(`${t.roles.notifications.updateFailure}`);
+      }
+      toast({
+        title: `${t.roles.notifications.updateSuccess}`,
+        description: `${t.roles.title} : ${response.Name}`,
+      });
+
+      router.push("/settings/roles");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: `${t.roles.notifications.updateError}`,
+        description: `${error}`,
+      });
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        form.handleSubmit();
+      }}
+      className="flex flex-col space-y-5"
+    >
       <div className="space-y-1">
-        <span>{t.roles.form.name}</span>
-        <Input
-          id="Name"
+        <form.Field
           name="Name"
-          placeholder={`${t.roles.form.name}`}
-          className="w-full"
-          onChange={handleChange}
-          value={formData.Name}
-          required
+          children={(field) => (
+            <>
+              <span>{t.roles.form.name}</span>
+              <Input
+                id="Name"
+                name="Name"
+                placeholder={`${t.roles.form.name}`}
+                className="w-full"
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+                disabled={action === "view"}
+                required
+              />
+            </>
+          )}
         />
       </div>
       {action !== "view" ? (
@@ -127,7 +125,7 @@ export default function RoleForm({
           <Button
             type="button"
             variant={"secondary"}
-            className="w-[40%]"
+            className="w-[30%]"
             onClick={() => router.back()}
           >
             {t.shared.cancel}
@@ -135,7 +133,7 @@ export default function RoleForm({
           <Button
             type="submit"
             variant={"default"}
-            className="w-[40%]"
+            className="w-[30%]"
             disabled={isPending}
           >
             {t.shared.save}
@@ -145,7 +143,7 @@ export default function RoleForm({
         <div className="flex justify-center space-x-3">
           <Button
             variant={"secondary"}
-            className="w-[40%]"
+            className="w-[30%]"
             onClick={() => router.back()}
           >
             {t.shared.cancel}

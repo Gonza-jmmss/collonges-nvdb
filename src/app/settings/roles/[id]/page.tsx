@@ -24,8 +24,8 @@ export default async function RolePage({
     ${action != "create" ? `: ${role ? role.Name : ""}` : ""}`}`;
 
   return (
-    <main className="mt-5 flex justify-center">
-      <div className="mt-3 w-[50vw]">
+    <div className="mt-5 flex justify-center">
+      <div className="mt-3 w-[50vw] rounded-md border bg-muted/60 p-5 shadow-md">
         <div className="flex items-center justify-between text-lg font-medium">
           {pagetitle}
         </div>
@@ -34,6 +34,6 @@ export default async function RolePage({
         </div>
         {/* <pre>{JSON.stringify(role, null, 2)}</pre> */}
       </div>
-    </main>
+    </div>
   );
 }
