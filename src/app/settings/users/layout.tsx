@@ -1,15 +1,15 @@
 export default function UsersLayout({
   children,
-  sidePanel,
+  // sidePanel,
 }: {
   children: React.ReactNode;
   sidePanel: React.ReactNode;
 }) {
   return (
-    <main className="flex h-full w-full justify-center">
+    <main className="flex w-full justify-center">
       <div>
         {children}
-        {sidePanel}
+        {/* {sidePanel} */}
       </div>
     </main>
   );
