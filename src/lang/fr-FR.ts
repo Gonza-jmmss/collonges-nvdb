@@ -56,6 +56,24 @@ export default {
       repeatePassword: "Répéter le mot de passe",
       role: "Rôle",
     },
+    notifications: {
+      createSuccess: "Utilisateur créé avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création du utilisateur",
+      createFailure: "Échec de la création du utilisateur",
+      updateSuccess: "Utilisateur modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification du utilisateur",
+      updateFailure: "Échec de la modification du utilisateur",
+      deleteSuccess: "Utilisateur supprimé avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression du utilisateur",
+      deleteFailure: "Échec de la suppression du utilisateur",
+      updatePasswordSuccess: "Mots de passe modifié avec succès",
+      updatePasswordError:
+        "Une erreur s'est produite pendant la modification du mots de passe",
+      updatePasswordFailure: "Échec de la modification du mots de passe",
+    },
   },
   roles: {
     title: "Rôles",
@@ -70,12 +88,15 @@ export default {
       name: "Nom du rôle",
     },
     notifications: {
-      createSuccess: "",
-      createError: "",
-      updateSuccess: "",
-      updateError: "",
-      deleteSuccess: "",
-      deleteError: "",
+      createSuccess: "Rôle créé avec succès",
+      createError: "Une erreur s'est produite pendant la création du rôle",
+      createFailure: "Échec de la création du rôle",
+      updateSuccess: "Rôle modifié avec succès",
+      updateError: "Une erreur s'est produite pendant la modification du rôle",
+      updateFailure: "Échec de la modification du rôle",
+      deleteSuccess: "Rôle supprimé avec succès",
+      deleteError: "Une erreur s'est produite pendant la suppression du rôle",
+      deleteFailure: "Échec de la suppression du rôle",
     },
   },
   student: {

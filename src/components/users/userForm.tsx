@@ -1,26 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import createUserCommand from "@/repositories/users/commands/createUserCommand";
+import updateUserCommand from "@/repositories/users/commands/updateUserCommand";
+import updateUserPasswordCommand from "@/repositories/users/commands/updateUserPasswordCommand";
+import { useForm } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
 import { UserViewModel } from "@/repositories/users/usersViewModel";
 import { RoleViewModel } from "@/repositories/roles/rolesViewModel";
+import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import frFR from "@/lang/fr-FR";
 
-const UserSchema = z
-  .object({
-    UserName: z.string(),
-    Password: z.string().min(8),
-    RepeatPassword: z.string().min(8),
-    RoleId: z.number().nullable(),
-  })
-  .refine((data) => data.Password === data.RepeatPassword, {
-    message: `Les mots de passe ne correspondent pas`,
-    path: ["RepeatPassword"],
-  });
+const UserSchema = z.object({
+  UserId: z.number(),
+  UserName: z.string(),
+  Password: z.string(),
+  RepeatPassword: z.string(),
+  RoleId: z.number(),
+});
 
 type UserFormData = z.infer<typeof UserSchema>;
 
@@ -34,87 +35,150 @@ export default function UserForm({
   roles: RoleViewModel[];
 }) {
   const t = frFR;
+  const { toast } = useToast();
   const router = useRouter();
-
-  const [errorLogInMessage, setErrorLogInMessage] = useState<
-    string | undefined
-  >(undefined);
   const [isPending, setIsPending] = useState(false);
-  const [formData, setFormData] = useState<UserFormData>({
-    UserName: "",
-    Password: "",
-    RepeatPassword: "",
-    RoleId: null,
+
+  const form = useForm<UserFormData>({
+    defaultValues: {
+      UserId: action !== "create" ? (userData ? userData.UserId : 0) : 0,
+      UserName: action !== "create" ? (userData ? userData.UserName : "") : "",
+      Password: "",
+      RepeatPassword: "",
+      RoleId: action !== "create" ? (userData ? userData.RoleId : 0) : 0,
+    },
+    onSubmit: async ({ value }) => {
+      action === "create" && createUser(value);
+      action === "edit" && updateUser(value);
+      action === "password" && updateUserPassword(value);
+    },
   });
 
-  useEffect(() => {
-    userData &&
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        UserId: userData.UserId,
-        UserName: userData.UserName,
-      }));
-  }, []);
+  const createUser = async (formData: UserFormData) => {
+    try {
+      const response = await createUserCommand(formData);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    errorLogInMessage && setErrorLogInMessage(undefined);
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+      if (!response) {
+        throw new Error(`${t.users.notifications.createFailure}`);
+      }
+      toast({
+        title: `${t.users.notifications.createSuccess}`,
+        description: `${t.users.title} : ${response.UserName}`,
+      });
+
+      router.refresh();
+      router.push("/settings/users");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: `${t.users.notifications.createError}`,
+        description: `${error}`,
+      });
+    } finally {
+      setIsPending(false);
+    }
   };
 
-  // Handle all the NONE raw <input> fields
-  const handleExternal = (values: { name: string; value: number }) => {
-    console.log("handleExternal", values);
-    const { name, value } = values;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const updateUser = async (formData: UserFormData) => {
+    try {
+      const response = await updateUserCommand(formData);
+
+      if (!response) {
+        throw new Error(`${t.users.notifications.updateFailure}`);
+      }
+      toast({
+        title: `${t.users.notifications.updateSuccess}`,
+        description: `${t.users.title} : ${response.UserName}`,
+      });
+      router.push("/settings/users");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: `${t.users.notifications.updateError}`,
+        description: `${error}`,
+      });
+    } finally {
+      setIsPending(false);
+    }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsPending(true);
-    setErrorLogInMessage(undefined);
-  };
+  const updateUserPassword = async (formData: UserFormData) => {
+    try {
+      const response = await updateUserPasswordCommand(formData);
 
-  useEffect(() => {
-    console.log("formData", formData);
-  }, [formData]);
+      if (!response) {
+        throw new Error(`${t.users.notifications.updatePasswordFailure}`);
+      }
+      toast({
+        title: `${t.users.notifications.updatePasswordSuccess}`,
+        description: `${t.users.title} : ${response.UserName}`,
+      });
+
+      router.push("/settings/users");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: `${t.users.notifications.updatePasswordError}`,
+        description: `${error}`,
+      });
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        form.handleSubmit();
+      }}
+      className="flex flex-col space-y-5"
+    >
       {action !== "password" && (
         <>
           <div className="space-y-1">
-            <span>{t.users.form.userName}</span>
-            <Input
-              id="UserName"
+            <form.Field
               name="UserName"
-              placeholder={`${t.users.form.userName}`}
-              className="w-full"
-              onChange={handleChange}
-              value={formData.UserName}
+              children={(field) => (
+                <>
+                  <span>{t.users.form.userName}</span>
+                  <Input
+                    id="UserName"
+                    name="UserName"
+                    placeholder={`${t.users.form.userName}`}
+                    className="w-full"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    disabled={action === "view"}
+                    required
+                  />
+                </>
+              )}
             />
           </div>
           <div className="space-y-1">
-            <span>{t.users.form.role}</span>
-            <Combobox
-              options={roles}
-              textAttribute="Name"
-              valueAttribute="RoleId"
-              placeholder={t.users.form.role}
-              itemSelected={roles.find((x) => x.RoleId === formData.RoleId)}
-              setItemSelected={(x: { RoleId: number; Name: string }) => {
-                handleExternal({
-                  name: "RoleId",
-                  value: x && x.RoleId,
-                });
-              }}
-              showSearch
+            <form.Field
+              name="RoleId"
+              children={(field) => (
+                <>
+                  <span>{t.users.form.role}</span>
+                  <Combobox
+                    options={roles}
+                    textAttribute="Name"
+                    valueAttribute="RoleId"
+                    placeholder={t.users.form.role}
+                    itemSelected={roles.find(
+                      (x) => x.RoleId === field.state.value,
+                    )}
+                    setItemSelected={(x: { RoleId: number; Name: string }) => {
+                      field.handleChange(x && x.RoleId);
+                    }}
+                    disabled={action === "view"}
+                    showSearch
+                  />
+                </>
+              )}
             />
           </div>
         </>
@@ -122,27 +186,63 @@ export default function UserForm({
       {(action === "password" || action === "create") && (
         <>
           <div className="space-y-1">
-            <span>{t.users.form.password}</span>
-            <Input
-              id="Password"
+            <form.Field
               name="Password"
-              placeholder={`${t.users.form.password}`}
-              type="password"
-              className="w-full"
-              onChange={handleChange}
-              value={formData.Password}
+              validators={{
+                onChange: z
+                  .string()
+                  .min(8, "Le mot de passe doit contenir au moins 8 lettres"),
+              }}
+              children={(field) => (
+                <>
+                  <span>{t.users.form.password}</span>
+                  <Input
+                    id="Password"
+                    name="Password"
+                    placeholder={`${t.users.form.password}`}
+                    type="password"
+                    className="w-full"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    required={action === "create"}
+                  />
+                  <div className="text-xs text-red-500">
+                    {field.state.meta.errors}
+                  </div>
+                </>
+              )}
             />
           </div>
           <div className="space-y-1">
-            <span>{t.users.form.repeatePassword}</span>
-            <Input
-              id="RepeatPassword"
+            <form.Field
               name="RepeatPassword"
-              placeholder={`${t.users.form.repeatePassword}`}
-              type="password"
-              className="w-full"
-              onChange={handleChange}
-              value={formData.RepeatPassword}
+              validators={{
+                onChangeListenTo: ["Password"],
+                onChange: ({ value, fieldApi }) => {
+                  if (value !== fieldApi.form.getFieldValue("Password")) {
+                    return "Les mots de passe ne correspondent pas";
+                  }
+                  return undefined;
+                },
+              }}
+              children={(field) => (
+                <>
+                  <span>{t.users.form.repeatePassword}</span>
+                  <Input
+                    id="RepeatPassword"
+                    name="RepeatPassword"
+                    placeholder={`${t.users.form.repeatePassword}`}
+                    type="password"
+                    className="w-full"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    required={action === "create"}
+                  />
+                  <div className="text-xs text-red-500">
+                    {field.state.meta.errors}
+                  </div>
+                </>
+              )}
             />
           </div>
         </>

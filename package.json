@@ -23,7 +23,9 @@
     "@radix-ui/react-tabs": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.4",
     "@tanstack/match-sorter-utils": "^8.15.1",
+    "@tanstack/react-form": "^0.41.0",
     "@tanstack/react-table": "^8.17.3",
+    "@tanstack/zod-form-adapter": "^0.41.0",
     "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/mssql": "^9.1.5",
@@ -49,7 +51,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tedious": "^18.6.1",
     "uri-js": "^4.4.1",
-    "zod": "^3.23.8"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/bun": "latest",

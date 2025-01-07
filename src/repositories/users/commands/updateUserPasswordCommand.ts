@@ -5,22 +5,24 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-type createUserParamsType = {
-  UserName: string;
+type updateUserPasswordParamsType = {
+  UserId: number;
   Password: string;
-  RoleId: number;
 };
 
-const createUserCommand = async (params: createUserParamsType) => {
+const updateUserPasswordCommand = async (
+  params: updateUserPasswordParamsType,
+) => {
   const hashedPassword = (await bcrypt.hash(params.Password, 10)).toString();
 
-  return await prisma.users.create({
+  return await prisma.users.update({
+    where: {
+      UserId: params.UserId,
+    },
     data: {
-      UserName: params.UserName,
       Password: hashedPassword,
-      RoleId: params.RoleId,
     },
   });
 };
 
-export default createUserCommand;
+export default updateUserPasswordCommand;

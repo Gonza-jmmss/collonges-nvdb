@@ -26,15 +26,15 @@ export default async function UserPage({
     ${action != "create" ? `: ${user ? user.UserName : ""}` : ""}`}`;
 
   return (
-    <main className="mt-5 flex justify-center">
-      <div className="mt-3 w-[50vw]">
-        <div className="flex items-center justify-between text-lg font-medium">
+    <div className="mt-5 flex justify-center">
+      <div className="mt-3 w-[50vw] rounded-md border bg-muted/60 p-5 shadow-md">
+        <div className="flex items-center justify-between text-xl font-semibold">
           {pagetitle}
         </div>
         <div className="mt-5">
           <UserForm userData={user} action={action} roles={roles} />
         </div>
       </div>
-    </main>
+    </div>
   );
 }

@@ -27,6 +27,7 @@ export default function Combobox({
   itemSelected,
   setItemSelected,
   showSearch,
+  disabled,
 }: {
   options: {
     [key: string]: any;
@@ -37,6 +38,7 @@ export default function Combobox({
   itemSelected?: any;
   setItemSelected: any;
   showSearch?: boolean;
+  disabled?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -44,10 +46,11 @@ export default function Combobox({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant="combobox"
           role="combobox"
           aria-expanded={open}
           className="w-full justify-between"
+          disabled={disabled}
         >
           {itemSelected
             ? itemSelected[textAttribute]
