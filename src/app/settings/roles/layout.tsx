@@ -1,14 +1,14 @@
 export default function RolesLayout({
   children,
-  modal,
+  // modal,
 }: {
   children: React.ReactNode;
   modal: React.ReactNode;
 }) {
   return (
-    <main className="flex h-full w-full justify-center">
+    <main className="flex w-full justify-center">
       {children}
-      {modal}
+      {/* {modal} */}
     </main>
   );
 }
