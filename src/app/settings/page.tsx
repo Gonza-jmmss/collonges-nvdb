@@ -64,6 +64,24 @@ export default function Settings() {
               <span className="text-lg">{t.roles.title}</span>
             </Link>
           </Button>
+          <Button asChild className={`h-[10rem] w-[10rem]`} variant="outline">
+            <Link
+              href={`/settings/modules`}
+              className="flex flex-col space-y-2"
+            >
+              <Icon
+                name={
+                  isValidIconName("MdViewModule")
+                    ? "MdViewModule"
+                    : "MdOutlineNotInterested"
+                }
+                className="text-3xl"
+              />
+              <span className="text-wrap text-center text-lg">
+                {t.modules.title}
+              </span>
+            </Link>
+          </Button>
         </div>
       </div>
     </main>
