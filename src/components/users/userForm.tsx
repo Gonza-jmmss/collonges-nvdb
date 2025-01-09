@@ -66,8 +66,8 @@ export default function UserForm({
         description: `${t.users.title} : ${response.UserName}`,
       });
 
-      router.refresh();
       router.push("/settings/users");
+      router.refresh();
     } catch (error) {
       toast({
         variant: "destructive",
@@ -90,7 +90,9 @@ export default function UserForm({
         title: `${t.users.notifications.updateSuccess}`,
         description: `${t.users.title} : ${response.UserName}`,
       });
+
       router.push("/settings/users");
+      router.refresh();
     } catch (error) {
       toast({
         variant: "destructive",
@@ -115,6 +117,7 @@ export default function UserForm({
       });
 
       router.push("/settings/users");
+      router.refresh();
     } catch (error) {
       toast({
         variant: "destructive",

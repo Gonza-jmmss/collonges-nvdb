@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import deleteUserCommand from "@/repositories/users/commands/deleteUserCommand";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
@@ -9,6 +9,7 @@ import Link from "next/link";
 import { getAllUsersQueryViewModel } from "@/repositories/users/usersViewModel";
 import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
+import DeleteModal from "@/components/common/deleteModal";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import frFR from "@/lang/fr-FR";
@@ -21,6 +22,14 @@ export default function UsersTable({
   const t = frFR;
   const router = useRouter();
   const { toast } = useToast();
+
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedUSerToDelete, setSelectedUSerToDelete] = useState(0);
+
+  const closeModal = () => {
+    setOpenModal(false);
+    setSelectedUSerToDelete(0);
+  };
 
   const columns = useMemo<ColumnDef<getAllUsersQueryViewModel, any>[]>(
     () => [
@@ -48,7 +57,7 @@ export default function UsersTable({
       {
         accessorKey: "actions",
         id: "actions",
-        header: () => <Header text={t.student.columns.actions} />,
+        header: () => <Header text={t.shared.actions} />,
         size: 50,
         cell: (row) => (
           <div
@@ -81,7 +90,12 @@ export default function UsersTable({
                 className="cursor-pointer text-xl"
               />
             </Link>
-            <div onClick={() => deleteUser(row.row.original.UserId)}>
+            <div
+              onClick={() => {
+                setOpenModal(true);
+                setSelectedUSerToDelete(row.row.original.UserId);
+              }}
+            >
               <Icon
                 name={
                   isValidIconName("MdDelete")
@@ -129,6 +143,13 @@ export default function UsersTable({
         onRowClick={(row) =>
           router.push(`/settings/users/${row.UserId}?action="view"`)
         }
+      />
+      <DeleteModal
+        openModal={openModal}
+        closeModal={closeModal}
+        titleText={t.users.deleteModal.title}
+        descriptionText={t.users.deleteModal.description}
+        deletefunction={() => deleteUser(selectedUSerToDelete)}
       />
     </div>
   );

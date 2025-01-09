@@ -1,9 +1,10 @@
+import { cache } from "react";
 import { PrismaClient } from "@prisma/client";
 import { UsersViewModel } from "../usersViewModel";
 
 const prisma = new PrismaClient();
 
-const getAllUsersQuery = async () => {
+const getAllUsersQuery = cache(async () => {
   const query = await prisma.users.findMany({
     include: {
       Roles: true,
@@ -18,6 +19,6 @@ const getAllUsersQuery = async () => {
   }));
 
   return res;
-};
+});
 
 export default getAllUsersQuery;
