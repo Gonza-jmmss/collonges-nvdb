@@ -1,17 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import { useForm } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
 import { authenticate } from "@/lib/actions";
+import { z } from "zod";
 import frFR from "@/lang/fr-FR";
 
-type LoginFormData = {
-  userName: string;
-  password: string;
-};
+const LoginSchema = z.object({
+  UserName: z.string(),
+  Password: z.string(),
+});
+
+type LoginFormData = z.infer<typeof LoginSchema>;
 
 export default function LoginForm() {
   const t = frFR;
@@ -19,79 +23,94 @@ export default function LoginForm() {
     string | undefined
   >(undefined);
   const [isPending, setIsPending] = useState(false);
-  const [formData, setFormData] = useState<LoginFormData>({
-    userName: "",
-    password: "",
+
+  const form = useForm<LoginFormData>({
+    defaultValues: {
+      UserName: "",
+      Password: "",
+    },
+    onSubmit: async ({ value }) => {
+      setIsPending(true);
+      setErrorLogInMessage(undefined);
+
+      const formDataToSubmit = new FormData();
+      formDataToSubmit.append("username", value.UserName);
+      formDataToSubmit.append("password", value.Password);
+
+      try {
+        const result = await authenticate(undefined, formDataToSubmit);
+        if (result) {
+          setErrorLogInMessage(result);
+        }
+      } catch (error) {
+        setErrorLogInMessage("An unexpected error occurred");
+      } finally {
+        setIsPending(false);
+      }
+    },
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    errorLogInMessage && setErrorLogInMessage(undefined);
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsPending(true);
-    setErrorLogInMessage(undefined);
-
-    const formDataToSubmit = new FormData();
-    formDataToSubmit.append("username", formData.userName);
-    formDataToSubmit.append("password", formData.password);
-
-    try {
-      const result = await authenticate(undefined, formDataToSubmit);
-      if (result) {
-        setErrorLogInMessage(result);
-      }
-    } catch (error) {
-      setErrorLogInMessage("An unexpected error occurred");
-    } finally {
-      setIsPending(false);
-    }
-  };
-
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        form.handleSubmit();
+      }}
+      className="flex flex-col space-y-5"
+    >
       <div className="flex items-center">
-        <Icon
-          name={
-            isValidIconName("MdPerson") ? "MdPerson" : "MdOutlineNotInterested"
-          }
-          className="text-xl"
-        />
-        <Input
-          id="userName"
-          name="userName"
-          placeholder={`${t.login.user}`}
-          variant="lined"
-          className="w-full"
-          onChange={handleChange}
-          value={formData.userName}
+        <form.Field
+          name="UserName"
+          children={(field) => (
+            <>
+              <Icon
+                name={
+                  isValidIconName("MdPerson")
+                    ? "MdPerson"
+                    : "MdOutlineNotInterested"
+                }
+                className="text-xl"
+              />
+              <Input
+                id="UserName"
+                name="UserName"
+                placeholder={`${t.login.user}`}
+                variant="lined"
+                className="w-full"
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            </>
+          )}
         />
       </div>
       <div className="space-y-1">
         <div className="flex items-center">
-          <Icon
-            name={
-              isValidIconName("MdPassword")
-                ? "MdPassword"
-                : "MdOutlineNotInterested"
-            }
-            className="text-xl"
-          />
-          <Input
-            id="password"
-            name="password"
-            placeholder={`${t.login.password}`}
-            type="password"
-            variant="lined"
-            className="w-full"
-            onChange={handleChange}
-            value={formData.password}
+          <form.Field
+            name="UserName"
+            children={(field) => (
+              <>
+                <Icon
+                  name={
+                    isValidIconName("MdPassword")
+                      ? "MdPassword"
+                      : "MdOutlineNotInterested"
+                  }
+                  className="text-xl"
+                />
+                <Input
+                  id="password"
+                  name="password"
+                  placeholder={`${t.login.password}`}
+                  type="password"
+                  variant="lined"
+                  className="w-full"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+              </>
+            )}
           />
         </div>
         <div
