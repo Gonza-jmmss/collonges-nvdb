@@ -7,7 +7,7 @@ export default {
     studentsSegment: "students",
     reports: "Rapports",
     reportsSegment: "reports",
-    settings: "paramètres",
+    settings: "Paramètres",
   },
   breadcrumbs: {
     home: "Accueil",
@@ -17,6 +17,7 @@ export default {
     settings: "Paramètres",
     users: "Utilisateurs",
     roles: "Rôles",
+    modules: "Modules",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -35,6 +36,7 @@ export default {
     edit: "Modifier",
     delete: "Supprimer",
     view: "Visualiser",
+    actions: "Actions",
   },
   login: {
     user: "Utilisateur",
@@ -74,6 +76,10 @@ export default {
         "Une erreur s'est produite pendant la modification du mots de passe",
       updatePasswordFailure: "Échec de la modification du mots de passe",
     },
+    deleteModal: {
+      title: "Êtes-vous sûr de supprimer l'utilisateur ?",
+      description: "Supprimer l'utilisateur le supprimerait définitivement",
+    },
   },
   roles: {
     title: "Rôles",
@@ -98,6 +104,51 @@ export default {
       deleteError: "Une erreur s'est produite pendant la suppression du rôle",
       deleteFailure: "Échec de la suppression du rôle",
     },
+    deleteModal: {
+      title: "Êtes-vous sûr de supprimer le rôle ?",
+      description: "Supprimer le rôle le supprimerait définitivement",
+    },
+  },
+  modules: {
+    title: "Modules",
+    module: "Module",
+    create: "Créer un module",
+    columns: {
+      moduleId: "ID",
+      name: "Module",
+      path: "Chemin web",
+      icon: "Icône",
+      location: "Emplacement",
+    },
+    form: {
+      roleId: "ID",
+      name: "Nom du module",
+      path: "Chemin web",
+      icon: "Icône",
+      location: "Emplacement",
+    },
+    notifications: {
+      createSuccess: "Module créé avec succès",
+      createError: "Une erreur s'est produite pendant la création du module",
+      createFailure: "Échec de la création du module",
+      updateSuccess: "Module modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification du module",
+      updateFailure: "Échec de la modification du module",
+      deleteSuccess: "Module supprimé avec succès",
+      deleteError: "Une erreur s'est produite pendant la suppression du module",
+      deleteFailure: "Échec de la suppression du module",
+    },
+    validations: {
+      iconValidation: "Le Icône n'existe pas",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de supprimer le module ?",
+      description: "Supprimer le module le supprimerait définitivement",
+    },
+  },
+  sidebarElements: {
+    title: "Éléments de la barre latérale",
   },
   student: {
     pageTitle: "Page des étudiants",
