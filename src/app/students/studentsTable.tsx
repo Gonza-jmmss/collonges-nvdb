@@ -54,7 +54,7 @@ export default function StudentsTable({
       {
         accessorKey: "actions",
         id: "actions",
-        header: () => <Header text={t.student.columns.actions} />,
+        header: () => <Header text={t.shared.actions} />,
         cell: () => <div>Notes</div>,
       },
     ],

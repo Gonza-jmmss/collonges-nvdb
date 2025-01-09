@@ -6,7 +6,6 @@ export default async function StudentsPage() {
   const t = frFR;
 
   const students = await getAllStudentsQuery();
-  // const students = await studentsQuery.execute();
 
   return (
     <main className="">
