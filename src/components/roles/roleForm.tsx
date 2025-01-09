@@ -56,6 +56,7 @@ export default function RoleForm({
       });
 
       router.push("/settings/roles");
+      router.refresh();
     } catch (error) {
       toast({
         variant: "destructive",
@@ -80,6 +81,7 @@ export default function RoleForm({
       });
 
       router.push("/settings/roles");
+      router.refresh();
     } catch (error) {
       toast({
         variant: "destructive",

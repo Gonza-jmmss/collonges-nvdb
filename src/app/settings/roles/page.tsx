@@ -8,7 +8,6 @@ export default async function RolesPage() {
   const t = frFR;
 
   const roles = await getAllRolesQuery();
-  // const roles = await rolesQuery.execute();
 
   return (
     <main className="mt-3 w-[80vw]">

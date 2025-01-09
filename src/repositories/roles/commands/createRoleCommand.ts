@@ -9,13 +9,12 @@ type CreateRoleParams = {
 };
 
 const createRoleCommand = async (params: CreateRoleParams) => {
-  console.log("createRoleCommand");
   const command = await prisma.roles.create({
     data: {
       Name: params.Name,
     },
   });
-  console.log("command", command);
+
   return command;
 };
 

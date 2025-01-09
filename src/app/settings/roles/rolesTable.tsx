@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import deleteRoleCommand from "@/repositories/roles/commands/deleteRoleCommand";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
@@ -9,6 +9,7 @@ import Link from "next/link";
 import { RolesViewModel } from "@/repositories/roles/rolesViewModel";
 import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
+import DeleteModal from "@/components/common/deleteModal";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import frFR from "@/lang/fr-FR";
@@ -21,6 +22,14 @@ export default function RolesTable({
   const t = frFR;
   const router = useRouter();
   const { toast } = useToast();
+
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedRoleToDelete, setSelectedRoleToDelete] = useState(0);
+
+  const closeModal = () => {
+    setOpenModal(false);
+    setSelectedRoleToDelete(0);
+  };
 
   const columns = useMemo<ColumnDef<RolesViewModel, any>[]>(
     () => [
@@ -39,7 +48,7 @@ export default function RolesTable({
       {
         accessorKey: "actions",
         id: "actions",
-        header: () => <Header text={t.student.columns.actions} />,
+        header: () => <Header text={t.shared.actions} />,
         size: 50,
         cell: (row) => (
           <div
@@ -59,7 +68,12 @@ export default function RolesTable({
                 className="cursor-pointer text-xl"
               />
             </Link>
-            <div onClick={() => deleteRole(row.row.original.RoleId)}>
+            <div
+              onClick={() => {
+                setOpenModal(true);
+                setSelectedRoleToDelete(row.row.original.RoleId);
+              }}
+            >
               <Icon
                 name={
                   isValidIconName("MdDelete")
@@ -107,6 +121,13 @@ export default function RolesTable({
         onRowClick={(row) =>
           router.push(`/settings/roles/${row.RoleId}?action="view"`)
         }
+      />
+      <DeleteModal
+        openModal={openModal}
+        closeModal={closeModal}
+        titleText={t.roles.deleteModal.title}
+        descriptionText={t.roles.deleteModal.description}
+        deletefunction={() => deleteRole(selectedRoleToDelete)}
       />
     </div>
   );
