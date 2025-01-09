@@ -1,3 +1,4 @@
+import getAllModulesQuery from "@/repositories/modules/queries/getAllModulesQuery";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
@@ -7,15 +8,7 @@ import frFR from "@/lang/fr-FR";
 export default async function Home() {
   const t = frFR;
 
-  const sidebarElements = [
-    { name: t.SidebarElements.students, path: "/students", icon: "MdSchool" },
-    { name: t.SidebarElements.reports, path: "/reports", icon: "MdDvr" },
-    {
-      name: t.SidebarElements.settings,
-      path: "/settings",
-      icon: "MdSettings",
-    },
-  ];
+  const modules = await getAllModulesQuery();
 
   return (
     <main className="mt-6 flex w-full justify-center">
@@ -24,7 +17,7 @@ export default async function Home() {
           <span className="text-4xl font-bold">{t.shared.welcome}</span>
         </div>
         <div className={`mt-10 flex justify-center space-x-8`}>
-          {sidebarElements.map((element, index) => (
+          {modules.slice(1).map((element, index) => (
             <Button
               key={index}
               asChild
@@ -32,18 +25,18 @@ export default async function Home() {
               variant="outline"
             >
               <Link
-                href={`${element.path}`}
+                href={`${element.Path}`}
                 className="flex flex-col space-y-2"
               >
                 <Icon
                   name={
-                    isValidIconName(element.icon)
-                      ? element.icon
+                    isValidIconName(element.Icon)
+                      ? element.Icon
                       : "MdOutlineNotInterested"
                   }
                   className="text-3xl"
                 />
-                <span className="text-lg">{element.name}</span>
+                <span className="text-lg">{element.Name}</span>
               </Link>
             </Button>
           ))}
