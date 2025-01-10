@@ -34,9 +34,11 @@ export default async function Home() {
                       ? element.Icon
                       : "MdOutlineNotInterested"
                   }
-                  className="text-3xl"
+                  className="flex h-[50%] items-end text-3xl"
                 />
-                <span className="text-lg">{element.Name}</span>
+                <span className="h-[50%] text-wrap text-center text-lg">
+                  {element.Name}
+                </span>
               </Link>
             </Button>
           ))}
