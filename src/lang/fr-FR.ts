@@ -59,7 +59,7 @@ export default {
       role: "Rôle",
     },
     notifications: {
-      createSuccess: "Utilisateur créé avec succès",
+      createSuccess: "Utilisateur crée avec succès",
       createError:
         "Une erreur s'est produite pendant la création du utilisateur",
       createFailure: "Échec de la création du utilisateur",
@@ -78,7 +78,7 @@ export default {
     },
     deleteModal: {
       title: "Êtes-vous sûr de supprimer l'utilisateur ?",
-      description: "Supprimer l'utilisateur le supprimerait définitivement",
+      description: "L'utilisateur sera définitivement supprimé",
     },
   },
   roles: {
@@ -94,7 +94,7 @@ export default {
       name: "Nom du rôle",
     },
     notifications: {
-      createSuccess: "Rôle créé avec succès",
+      createSuccess: "Rôle crée avec succès",
       createError: "Une erreur s'est produite pendant la création du rôle",
       createFailure: "Échec de la création du rôle",
       updateSuccess: "Rôle modifié avec succès",
@@ -106,7 +106,7 @@ export default {
     },
     deleteModal: {
       title: "Êtes-vous sûr de supprimer le rôle ?",
-      description: "Supprimer le rôle le supprimerait définitivement",
+      description: "Le rôle sera définitivement supprimé",
     },
   },
   modules: {
@@ -128,7 +128,7 @@ export default {
       location: "Emplacement",
     },
     notifications: {
-      createSuccess: "Module créé avec succès",
+      createSuccess: "Module crée avec succès",
       createError: "Une erreur s'est produite pendant la création du module",
       createFailure: "Échec de la création du module",
       updateSuccess: "Module modifié avec succès",
@@ -144,11 +144,51 @@ export default {
     },
     deleteModal: {
       title: "Êtes-vous sûr de supprimer le module ?",
-      description: "Supprimer le module le supprimerait définitivement",
+      description: "Le module sera définitivement supprimé",
     },
   },
   sidebarElements: {
     title: "Éléments de la barre latérale",
+    sidebarElement: "Élément de la barre latérale",
+    surnom: "Éléments de la barre",
+    create: "Créer un élément",
+    columns: {
+      sidebarElementId: "ID",
+      name: "Éléments de la barre",
+      path: "Chemin web",
+      icon: "Icône",
+      moduleName: "Module",
+      location: "Emplacement",
+    },
+    form: {
+      sidebarElementId: "ID",
+      name: "Éléments de la barre",
+      path: "Chemin web",
+      icon: "Icône",
+      description: "Description",
+      location: "Emplacement",
+      moduleId: "Module",
+    },
+    notifications: {
+      createSuccess: "Élément crée avec succès",
+      createError: "Une erreur s'est produite pendant la création de l'élément",
+      createFailure: "Échec de la création de l'élément",
+      updateSuccess: "Élément modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification de l'élément",
+      updateFailure: "Échec de la modification du élément",
+      deleteSuccess: "Élément supprimé avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression de l'élément",
+      deleteFailure: "Échec de la suppression de l'élément",
+    },
+    validations: {
+      iconValidation: "Le Icône n'existe pas",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de supprimer l'élément ?",
+      description: "L'élément sera définitivement supprimé",
+    },
   },
   student: {
     pageTitle: "Page des étudiants",

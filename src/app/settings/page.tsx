@@ -1,11 +1,14 @@
+import getAllSidebarElementsQuery from "@/repositories/sidebarElements/queries/getAllSidebarElementsQuery";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
 import frFR from "@/lang/fr-FR";
 
-export default function Settings() {
+export default async function Settings() {
   const t = frFR;
+
+  const sidebarElements = await getAllSidebarElementsQuery();
   return (
     <main className="mt-6 flex w-full justify-center">
       <div className="mt-3 w-[80vw]">
@@ -15,7 +18,7 @@ export default function Settings() {
           </span>
         </div>
         <div className={`mt-10 flex justify-center space-x-8`}>
-          {/* {sidebarElements.map((element, index) => (
+          {sidebarElements.map((element, index) => (
             <Button
               key={index}
               asChild
@@ -23,22 +26,24 @@ export default function Settings() {
               variant="outline"
             >
               <Link
-                href={`${element.path}`}
+                href={`${element.Path}`}
                 className="flex flex-col space-y-2"
               >
                 <Icon
                   name={
-                    isValidIconName(element.icon)
-                      ? element.icon
+                    isValidIconName(element.Icon)
+                      ? element.Icon
                       : "MdOutlineNotInterested"
                   }
-                  className="text-3xl"
+                  className="flex h-[50%] items-end text-3xl"
                 />
-                <span className="text-lg">{element.name}</span>
+                <span className="h-[50%] text-wrap text-center text-lg">
+                  {element.Name}
+                </span>
               </Link>
             </Button>
-          ))} */}
-          <Button asChild className={`h-[10rem] w-[10rem]`} variant="outline">
+          ))}
+          {/* <Button asChild className={`h-[10rem] w-[10rem]`} variant="outline">
             <Link href={`/settings/users`} className="flex flex-col space-y-2">
               <Icon
                 name={
@@ -46,9 +51,11 @@ export default function Settings() {
                     ? "MdPerson"
                     : "MdOutlineNotInterested"
                 }
-                className="text-3xl"
+                className="flex h-[50%] items-end text-3xl"
               />
-              <span className="text-lg">{t.users.title}</span>
+              <span className="h-[50%] text-wrap text-center text-lg">
+                {t.users.title}
+              </span>
             </Link>
           </Button>
           <Button asChild className={`h-[10rem] w-[10rem]`} variant="outline">
@@ -59,9 +66,11 @@ export default function Settings() {
                     ? "MdGppGood"
                     : "MdOutlineNotInterested"
                 }
-                className="text-3xl"
+                className="flex h-[50%] items-end text-3xl"
               />
-              <span className="text-lg">{t.roles.title}</span>
+              <span className="h-[50%] text-wrap text-center text-lg">
+                {t.roles.title}
+              </span>
             </Link>
           </Button>
           <Button asChild className={`h-[10rem] w-[10rem]`} variant="outline">
@@ -75,13 +84,31 @@ export default function Settings() {
                     ? "MdViewModule"
                     : "MdOutlineNotInterested"
                 }
-                className="text-3xl"
+                className="flex h-[50%] items-end text-3xl"
               />
-              <span className="text-wrap text-center text-lg">
+              <span className="h-[50%] text-wrap text-center text-lg">
                 {t.modules.title}
               </span>
             </Link>
           </Button>
+          <Button asChild className={`h-[10rem] w-[10rem]`} variant="outline">
+            <Link
+              href={`/settings/sidebarElements`}
+              className="flex flex-col space-y-2"
+            >
+              <Icon
+                name={
+                  isValidIconName("MdStop")
+                    ? "MdStop"
+                    : "MdOutlineNotInterested"
+                }
+                className="flex h-[50%] items-end text-3xl"
+              />
+              <span className="h-[50%] text-wrap text-center text-lg">
+                {t.sidebarElements.surnom}
+              </span>
+            </Link>
+          </Button> */}
         </div>
       </div>
     </main>
