@@ -190,6 +190,45 @@ export default {
       description: "L'élément sera définitivement supprimé",
     },
   },
+  roleSidebarElements: {
+    title: "Éléments du module de rôle",
+    roleSidebarElement: "Élément du module de rôle",
+    create: "Créer un élément de rôle",
+    columns: {
+      roleSidebarElementId: "ID",
+      sidebarElementName: "Élément du module",
+      moduleName: "Module",
+      path: "Chemin web",
+      roleName: "Rôle",
+    },
+    form: {
+      sidebarElementId: "Éléments du module",
+      moduleId: "Modules",
+      roleId: "Rôle",
+      chooseElementType: "Choisir type de element",
+    },
+    notifications: {
+      createSuccess: "Élément de rôle crée avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création de l'élément de rôle",
+      createFailure: "Échec de la création de l'élément de rôle",
+      updateSuccess: "Élément de rôle modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification de l'élément de rôle",
+      updateFailure: "Échec de la modification du élément de rôle",
+      deleteSuccess: "Élément de rôle supprimé avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression de l'élément de rôle",
+      deleteFailure: "Échec de la suppression de l'élément de rôle",
+    },
+    validations: {
+      iconValidation: "Le Icône n'existe pas",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de supprimer l'élément de rôle ?",
+      description: "L'élément de rôle sera définitivement supprimé",
+    },
+  },
   student: {
     pageTitle: "Page des étudiants",
     student: "Étudiant",

@@ -3,7 +3,7 @@ import getAllModulesQuery from "@/repositories/modules/queries/getAllModulesQuer
 import SidebarElementForm from "@/components/sidebarElement/sidebarElementForm";
 import frFR from "@/lang/fr-FR";
 
-export default async function Page({
+export default async function SidebarElementPage({
   params,
   searchParams,
 }: {

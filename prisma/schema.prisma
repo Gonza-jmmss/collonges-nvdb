@@ -279,14 +279,15 @@ model StudentTypes {
 }
 
 model Modules {
-  ModuleId        Int               @id(map: "PK__Modules__2B7477A715535232") @default(autoincrement())
-  Name            String            @db.NVarChar(50)
-  Path            String            @db.NVarChar(50)
-  Icon            String            @db.NVarChar(50)
-  Location        Int?
-  UpdatedAt       DateTime?
-  CreatedAt       DateTime          @default(now())
-  SidebarElements SidebarElements[]
+  ModuleId            Int                   @id(map: "PK__Modules__2B7477A715535232") @default(autoincrement())
+  Name                String                @db.NVarChar(50)
+  Path                String                @db.NVarChar(50)
+  Icon                String                @db.NVarChar(50)
+  Location            Int?
+  UpdatedAt           DateTime?
+  CreatedAt           DateTime              @default(now())
+  RoleSidebarElements RoleSidebarElements[]
+  SidebarElements     SidebarElements[]
 
   @@schema("Users")
 }
@@ -303,13 +304,15 @@ model Roles {
 }
 
 model RoleSidebarElements {
-  RoleSidebarElementId Int             @id(map: "PK__RoleSide__53AF951C8D685ACB") @default(autoincrement())
-  SidebarElementId     Int
+  RoleSidebarElementId Int              @id(map: "PK__RoleSide__53AF951C8D685ACB") @default(autoincrement())
+  SidebarElementId     Int?
   RoleId               Int
   UpdatedAt            DateTime?
-  CreatedAt            DateTime        @default(now())
-  Roles                Roles           @relation(fields: [RoleId], references: [RoleId], onUpdate: NoAction, map: "FK_RoleSidebarElements_Roles")
-  SidebarElements      SidebarElements @relation(fields: [SidebarElementId], references: [SidebarElementId], onUpdate: NoAction, map: "FK_RoleSidebarElements_SidebarElements")
+  CreatedAt            DateTime         @default(now())
+  ModuleId             Int?
+  Modules              Modules?         @relation(fields: [ModuleId], references: [ModuleId], onDelete: NoAction, onUpdate: NoAction, map: "FK_RoleSidebarElements_Modules")
+  Roles                Roles            @relation(fields: [RoleId], references: [RoleId], onUpdate: NoAction, map: "FK_RoleSidebarElements_Roles")
+  SidebarElements      SidebarElements? @relation(fields: [SidebarElementId], references: [SidebarElementId], onDelete: NoAction, onUpdate: NoAction, map: "FK_RoleSidebarElements_SidebarElements")
 
   @@schema("Users")
 }
