@@ -88,7 +88,7 @@ export default function LoginForm() {
       <div className="space-y-1">
         <div className="flex items-center">
           <form.Field
-            name="UserName"
+            name="Password"
             children={(field) => (
               <>
                 <Icon
