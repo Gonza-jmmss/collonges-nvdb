@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/repositories/roleModuleElements", "src/app/settings/roleModuleElements"  ],
   "exclude": [
     "node_modules"
   ]

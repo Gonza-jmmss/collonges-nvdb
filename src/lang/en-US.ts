@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  SidebarElements: {
+  ModuleElements: {
     home: "Home",
     homeSegment: "home",
     students: "Students",

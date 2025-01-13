@@ -1,14 +1,5 @@
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  SidebarElements: {
-    home: "Accueil",
-    homeSegment: "home",
-    students: "Etudiants",
-    studentsSegment: "students",
-    reports: "Rapports",
-    reportsSegment: "reports",
-    settings: "Paramètres",
-  },
   breadcrumbs: {
     home: "Accueil",
     students: "Etudiants",
@@ -18,6 +9,8 @@ export default {
     users: "Utilisateurs",
     roles: "Rôles",
     modules: "Modules",
+    moduleElements: "Éléments du module",
+    roleModuleElements: "Éléments du module de rôle",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -147,22 +140,22 @@ export default {
       description: "Le module sera définitivement supprimé",
     },
   },
-  sidebarElements: {
-    title: "Éléments de la barre latérale",
-    sidebarElement: "Élément de la barre latérale",
-    surnom: "Éléments de la barre",
+  moduleElements: {
+    title: "Éléments du module",
+    moduleElement: "Élément du module",
+    surnom: "Éléments du module",
     create: "Créer un élément",
     columns: {
-      sidebarElementId: "ID",
-      name: "Éléments de la barre",
+      moduleElementId: "ID",
+      name: "Éléments du module",
       path: "Chemin web",
       icon: "Icône",
       moduleName: "Module",
       location: "Emplacement",
     },
     form: {
-      sidebarElementId: "ID",
-      name: "Éléments de la barre",
+      moduleElementId: "ID",
+      name: "Éléments du module",
       path: "Chemin web",
       icon: "Icône",
       description: "Description",
@@ -190,19 +183,19 @@ export default {
       description: "L'élément sera définitivement supprimé",
     },
   },
-  roleSidebarElements: {
+  roleModuleElements: {
     title: "Éléments du module de rôle",
-    roleSidebarElement: "Élément du module de rôle",
+    roleModuleElement: "Élément du module de rôle",
     create: "Créer un élément de rôle",
     columns: {
-      roleSidebarElementId: "ID",
-      sidebarElementName: "Élément du module",
+      roleModuleElementId: "ID",
+      moduleElementName: "Élément du module",
       moduleName: "Module",
       path: "Chemin web",
       roleName: "Rôle",
     },
     form: {
-      sidebarElementId: "Éléments du module",
+      moduleElementId: "Éléments du module",
       moduleId: "Modules",
       roleId: "Rôle",
       chooseElementType: "Choisir type de element",
