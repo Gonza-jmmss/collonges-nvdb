@@ -1,9 +1,28 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 import getUserByUserNameQuery from "@/repositories/users/queries/getUserByUserNameQuery";
+import getAllRoleModuleElementsByRoleIdQuery from "@/repositories/roleModuleElements/queries/getAllRoleModuleElementsByRoleIdQuery";
+import { CustomUser } from "@/types/auth";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+
+// Extend the User type in next-auth
+declare module "next-auth" {
+  interface User extends CustomUser {}
+
+  interface Session {
+    user: CustomUser;
+  }
+}
+
+// Extend the JWT type in next-auth/jwt
+declare module "next-auth/jwt" {
+  interface JWT {
+    user: CustomUser;
+  }
+}
 
 // Define a Zod schema for credentials validation
 const credentialsSchema = z.object({
@@ -50,11 +69,18 @@ export const authConfig = {
             );
 
             if (passwordsMatch) {
+              const roleModules = await getAllRoleModuleElementsByRoleIdQuery(
+                user.RoleId,
+              );
+
               // Return user object with required fields
               return {
                 id: user.UserId.toString(),
                 name: user.UserName,
-                // email: user.Email || null, // Add email if available
+                email: null, // Add required AdapterUser fields
+                emailVerified: null,
+                userData: user, // Full user data
+                roleModules: roleModules, // Role modules data
               };
             } else {
               console.error("Password does not match");
@@ -87,24 +113,68 @@ export const authConfig = {
         return Response.redirect(new URL("/", nextUrl.origin));
       }
 
+      if (isLoggedIn && auth.user) {
+        try {
+          const userRole = auth.user;
+          const path = nextUrl.pathname;
+
+          // get path without last "/create" or "/(any number)"
+          const extractBasePath = (path: string) => {
+            const match = path.match(/^(.*?)(\/(?:create|\d+))$/);
+            return match ? match[1] : path;
+          };
+
+          const hasPermission = userRole.roleModules.some(
+            (element) =>
+              element.RoleId === userRole.userData.RoleId &&
+              element.Path === extractBasePath(path),
+          );
+
+          if (!hasPermission) {
+            console.log("Access denied for path:", path);
+            return Response.redirect(new URL("/", nextUrl.origin));
+          }
+
+          console.log("Access granted for path:", path);
+          return true;
+        } catch (error) {
+          console.error("Error checking permissions:", error);
+          // On error, redirect to error page or home
+          return Response.redirect(new URL("/error", nextUrl.origin));
+        }
+      }
+
       return true;
     },
 
     // JWT callback to add custom fields to token
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.name = user.name;
+        // Include all user data in the token
+        token.user = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          emailVerified: user.emailVerified,
+          userData: user.userData,
+          roleModules: user.roleModules,
+        };
       }
+
       return token;
     },
 
-    // Session callback to add custom fields to session
     async session({ session, token }) {
-      if (session.user && token) {
-        session.user.id = token.id as string;
-        session.user.name = token.name as string;
+      if (token.user) {
+        session.user = {
+          ...token.user,
+          id: token.user.id || "",
+          name: token.user.name || null,
+          email: token.user.email || "",
+          emailVerified: token.user.emailVerified || null,
+        };
       }
+
       return session;
     },
   },
@@ -112,11 +182,11 @@ export const authConfig = {
   // Session and security configuration
   jwt: {
     // Explicitly set maxAge for JWT
-    maxAge: Number(process.env.SESSION_MAX_AGE), // 1 day
+    maxAge: Number(process.env.SESSION_MAX_AGE),
   },
   session: {
     strategy: "jwt",
-    maxAge: Number(process.env.SESSION_MAX_AGE), // 1 day
+    maxAge: Number(process.env.SESSION_MAX_AGE),
   },
 
   // Use environment secret for added security

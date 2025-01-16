@@ -1,13 +1,13 @@
 "use server";
 
-import { cache } from "react";
 import { PrismaClient } from "@prisma/client";
 import { RoleModuleElementsMapViewModel } from "../roleModuleElementsViewModel";
 
 const prisma = new PrismaClient();
 
-const getAllRoleModuleElementsQuery = cache(async () => {
+const getAllRoleModuleElementsByRoleIdQuery = async (RoleId: number) => {
   const query = await prisma.roleModuleElements.findMany({
+    where: { RoleId: RoleId },
     include: {
       ModuleElements: true,
       Modules: true,
@@ -32,35 +32,6 @@ const getAllRoleModuleElementsQuery = cache(async () => {
   );
 
   return res;
-});
+};
 
-export default getAllRoleModuleElementsQuery;
-
-// "use server";
-
-// import { unstable_cache } from 'next/cache';
-// import { PrismaClient } from '@prisma/client';
-
-// const prisma = new PrismaClient();
-
-// const getAllRoleModuleElementsQuery = async () => {
-//   // Using unstable_cache with a specific key and tags
-//   return unstable_cache(
-//     async () => {
-//       const query = await prisma.roleModuleElements.findMany({
-//         include: {
-//           ModuleElements: true,
-//           Roles: true,
-//         },
-//       });
-//       return query;
-//     },
-//     ['role-module-elements'], // Cache key
-//     {
-//       tags: ['role-module-elements'], // Cache tag for revalidation
-//       revalidate: 3600, // Cache for 1 hour (optional)
-//     }
-//   )();
-// };
-
-// export default getAllRoleModuleElementsQuery;
+export default getAllRoleModuleElementsByRoleIdQuery;
