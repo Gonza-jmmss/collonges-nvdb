@@ -10,6 +10,11 @@ const getAllModuleElementsByRoleIdQuery = async (
   moduleId: number,
 ) => {
   const query = await prisma.roleModuleElements.findMany({
+    orderBy: {
+      ModuleElements: {
+        Location: "asc",
+      },
+    },
     where: {
       RoleId: { equals: RoleId },
       ModuleElements: { ModuleId: moduleId },

@@ -6,7 +6,7 @@ export type RoleModuleElementsViewModel = {
   ModuleId: number | undefined;
   Path: string;
   RoleName: string;
-  RoleId: string;
+  RoleId: number;
 };
 
 export type RoleModuleElementViewModel = {

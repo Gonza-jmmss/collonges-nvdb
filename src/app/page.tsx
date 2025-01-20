@@ -24,7 +24,7 @@ export default async function Home() {
         </div>
         {/* <pre>{JSON.stringify(modules, null, 2)}</pre> */}
         <div className={`mt-10 flex justify-center space-x-8`}>
-          {modules.map((element, index) => (
+          {modules.slice(1).map((element, index) => (
             <Button
               key={index}
               asChild
