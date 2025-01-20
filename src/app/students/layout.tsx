@@ -5,10 +5,7 @@ export default function StudentsLayout({
 }) {
   return (
     <main className="flex h-full w-full justify-center">
-      <div>
-        {/* <span>Users</span> */}
-        {children}
-      </div>
+      <div>{children}</div>
     </main>
   );
 }
