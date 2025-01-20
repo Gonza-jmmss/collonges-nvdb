@@ -97,6 +97,19 @@ export const authConfig = {
       },
     }),
   ],
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        domain:
+          process.env.NODE_ENV === "production" ? ".localhost" : undefined,
+      },
+    },
+  },
   callbacks: {
     // Authorization check for route protection
     authorized({ auth, request: { nextUrl } }) {
@@ -115,7 +128,13 @@ export const authConfig = {
 
       if (isLoggedIn && auth.user) {
         try {
-          const userRole = auth.user;
+          // Ensure userData exists before accessing it
+          if (!auth.user.userData || !auth.user.roleModules) {
+            console.error("Missing user data or role modules");
+            return Response.redirect(new URL("/login", nextUrl.origin));
+          }
+
+          // const userRole = auth.user;
           const path = nextUrl.pathname;
 
           // get path without last "/create" or "/(any number)"
@@ -124,9 +143,9 @@ export const authConfig = {
             return match ? match[1] : path;
           };
 
-          const hasPermission = userRole.roleModules.some(
+          const hasPermission = auth.user.roleModules.some(
             (element) =>
-              element.RoleId === userRole.userData.RoleId &&
+              element.RoleId === auth.user.userData.RoleId &&
               element.Path === extractBasePath(path),
           );
 
@@ -147,46 +166,48 @@ export const authConfig = {
       return true;
     },
 
-    // JWT callback to add custom fields to token
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
-        // Include all user data in the token
         token.user = {
-          id: user.id,
-          name: user.name,
-          email: user.email,
+          id: user.id || "",
+          name: user.name || null,
+          email: user.email || "",
           emailVerified: user.emailVerified,
           userData: user.userData,
           roleModules: user.roleModules,
         };
       }
 
+      // Handle session updates
+      if (trigger === "update" && session) {
+        token.user = { ...token.user, ...session.user };
+      }
+
       return token;
     },
 
     async session({ session, token }) {
-      if (token.user) {
+      if (token && token.user) {
         session.user = {
           ...token.user,
           id: token.user.id || "",
           name: token.user.name || null,
           email: token.user.email || "",
           emailVerified: token.user.emailVerified || null,
+          userData: token.user.userData,
+          roleModules: token.user.roleModules,
         };
       }
-
       return session;
     },
   },
+  trustHost: true,
 
   // Session and security configuration
-  jwt: {
-    // Explicitly set maxAge for JWT
-    maxAge: Number(process.env.SESSION_MAX_AGE),
-  },
   session: {
     strategy: "jwt",
-    maxAge: Number(process.env.SESSION_MAX_AGE),
+    maxAge: Number(process.env.SESSION_MAX_AGE) || 36000,
+    updateAge: 300, // Force session update every 5 minutes
   },
 
   // Use environment secret for added security
@@ -194,4 +215,7 @@ export const authConfig = {
 } satisfies NextAuthConfig;
 
 // Export NextAuth with the combined configuration
-export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
+  trustHost: true,
+});
