@@ -9,9 +9,12 @@ type deleteUserParamsType = {
 };
 
 const deleteUserCommand = async (params: deleteUserParamsType) => {
-  return await prisma.users.delete({
+  return await prisma.users.update({
     where: {
       UserId: params.UserId,
+    },
+    data: {
+      IsEnabled: false,
     },
   });
 };

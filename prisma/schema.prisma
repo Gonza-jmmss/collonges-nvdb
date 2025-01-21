@@ -297,6 +297,7 @@ model Roles {
   Name               String               @db.NVarChar(50)
   UpdatedAt          DateTime?
   CreatedAt          DateTime             @default(now())
+  IsEnabled          Boolean
   RoleModuleElements RoleModuleElements[]
   Users              Users[]
 
@@ -310,6 +311,7 @@ model Users {
   UpdatedAt DateTime?
   CreatedAt DateTime  @default(now())
   RoleId    Int
+  IsEnabled Boolean
   Roles     Roles     @relation(fields: [RoleId], references: [RoleId], onUpdate: NoAction, map: "FK_Users_Roles")
 
   @@schema("Users")

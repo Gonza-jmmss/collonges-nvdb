@@ -6,6 +6,7 @@ import updateRoleCommand from "@/repositories/roles/commands/updateRoleCommand";
 import { useForm } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import ToggleButton from "@/components/common/toggleButton";
 import { RoleViewModel } from "@/repositories/roles/rolesViewModel";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,7 @@ import frFR from "@/lang/fr-FR";
 const RoleSchema = z.object({
   RoleId: z.number(),
   Name: z.string(),
+  IsEnabled: z.boolean(),
 });
 
 type RoleFormData = z.infer<typeof RoleSchema>;
@@ -36,6 +38,8 @@ export default function RoleForm({
     defaultValues: {
       RoleId: action !== "create" ? (roleData ? roleData.RoleId : 0) : 0,
       Name: action !== "create" ? (roleData ? roleData.Name : "") : "",
+      IsEnabled:
+        action !== "create" ? (roleData ? roleData.IsEnabled : true) : true,
     },
     onSubmit: async ({ value }) => {
       action === "create" && createRole(value);
@@ -117,6 +121,26 @@ export default function RoleForm({
                 onChange={(e) => field.handleChange(e.target.value)}
                 disabled={action === "view"}
                 required
+              />
+            </>
+          )}
+        />
+      </div>
+      <div className="space-y-1">
+        <form.Field
+          name="IsEnabled"
+          children={(field) => (
+            <>
+              <span>{t.roles.form.isEnabled}</span>
+              <ToggleButton
+                options={[
+                  { key: false, value: t.shared.no },
+                  { key: true, value: t.shared.yes },
+                ]}
+                setItemSelected={(x: { key: boolean; value: string }) => {
+                  field.handleChange(x && x.key);
+                }}
+                itemSelected={field.state.value}
               />
             </>
           )}

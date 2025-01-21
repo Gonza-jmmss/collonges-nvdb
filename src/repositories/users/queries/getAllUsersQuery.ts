@@ -1,4 +1,4 @@
-import { cache } from "react";
+import { cache, use } from "react";
 import { PrismaClient } from "@prisma/client";
 import { UsersViewModel } from "../usersViewModel";
 
@@ -16,6 +16,7 @@ const getAllUsersQuery = cache(async () => {
     UserName: users.UserName,
     RoleId: users.Roles.RoleId,
     RoleName: users.Roles.Name,
+    IsEnabled: users.IsEnabled,
   }));
 
   return res;

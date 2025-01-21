@@ -55,6 +55,14 @@ export default function UsersTable({
         filterFn: "equalsString",
       },
       {
+        accessorKey: "IsEnabled",
+        id: "IsEnabled",
+        header: () => <Header text={t.users.columns.isEnabled} />,
+        cell: (row) =>
+          row.row.original.IsEnabled ? t.shared.yes : t.shared.no,
+        filterFn: "equalsString",
+      },
+      {
         accessorKey: "actions",
         id: "actions",
         header: () => <Header text={t.shared.actions} />,
@@ -125,6 +133,7 @@ export default function UsersTable({
         description: `${t.users.title} : ${response.UserName}`,
       });
       router.refresh();
+      closeModal();
     } catch (error) {
       toast({
         variant: "destructive",
@@ -150,6 +159,7 @@ export default function UsersTable({
         titleText={t.users.deleteModal.title}
         descriptionText={t.users.deleteModal.description}
         deletefunction={() => deleteUser(selectedUSerToDelete)}
+        desable
       />
     </div>
   );

@@ -46,6 +46,14 @@ export default function RolesTable({
         filterFn: "equalsString",
       },
       {
+        accessorKey: "IsEnabled",
+        id: "IsEnabled",
+        header: () => <Header text={t.roles.columns.isEnabled} />,
+        cell: (row) =>
+          row.row.original.IsEnabled ? t.shared.yes : t.shared.no,
+        filterFn: "equalsString",
+      },
+      {
         accessorKey: "actions",
         id: "actions",
         header: () => <Header text={t.shared.actions} />,
@@ -102,6 +110,7 @@ export default function RolesTable({
         title: `${t.roles.notifications.deleteSuccess}`,
         description: `${t.roles.title} : ${response.Name}`,
       });
+      closeModal();
       router.refresh();
     } catch (error) {
       toast({
@@ -128,6 +137,7 @@ export default function RolesTable({
         titleText={t.roles.deleteModal.title}
         descriptionText={t.roles.deleteModal.description}
         deletefunction={() => deleteRole(selectedRoleToDelete)}
+        desable
       />
     </div>
   );

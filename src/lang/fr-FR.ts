@@ -28,6 +28,7 @@ export default {
     create: "Créer",
     edit: "Modifier",
     delete: "Supprimer",
+    desable: "Désactiver",
     view: "Visualiser",
     actions: "Actions",
     page: "Page",
@@ -45,12 +46,14 @@ export default {
       userId: "ID",
       userName: "Utilisateur",
       roleName: "Rôle",
+      isEnabled: "Actif",
     },
     form: {
       userName: "Nom d'utilisateur",
       password: "Mot de passe",
       repeatePassword: "Répéter le mot de passe",
       role: "Rôle",
+      isEnabled: "Utilisateur actif",
     },
     notifications: {
       createSuccess: "Utilisateur créé avec succès",
@@ -61,10 +64,10 @@ export default {
       updateError:
         "Une erreur s'est produite pendant la modification de l'utilisateur",
       updateFailure: "Échec de la modification de l'utilisateur",
-      deleteSuccess: "Utilisateur supprimé avec succès",
+      deleteSuccess: "Utilisateur désactivé  avec succès",
       deleteError:
-        "Une erreur s'est produite pendant la suppression de l'utilisateur",
-      deleteFailure: "Échec de la suppression de l'utilisateur",
+        "Une erreur s'est produite pendant la désactivation de l'utilisateur",
+      deleteFailure: "Échec de la désactivation de l'utilisateur",
       updatePasswordSuccess: "Mot de passe modifié avec succès",
       updatePasswordError:
         "Une erreur s'est produite pendant la modification du mot de passe",
@@ -83,9 +86,11 @@ export default {
     columns: {
       roleId: "ID",
       name: "Nom du rôle",
+      isEnabled: "Actif",
     },
     form: {
       name: "Nom du rôle",
+      isEnabled: "Rôle actif",
     },
     notifications: {
       createSuccess: "Rôle créé avec succès",
@@ -94,9 +99,9 @@ export default {
       updateSuccess: "Rôle modifié avec succès",
       updateError: "Une erreur s'est produite pendant la modification du rôle",
       updateFailure: "Échec de la modification du rôle",
-      deleteSuccess: "Rôle supprimé avec succès",
-      deleteError: "Une erreur s'est produite pendant la suppression du rôle",
-      deleteFailure: "Échec de la suppression du rôle",
+      deleteSuccess: "Rôle désactivé avec succès",
+      deleteError: "Une erreur s'est produite pendant la désactivation du rôle",
+      deleteFailure: "Échec de la désactivation du rôle",
     },
     deleteModal: {
       title: "Êtes-vous sûr de supprimer le rôle ?",

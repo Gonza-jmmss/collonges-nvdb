@@ -8,6 +8,7 @@ type updateUserParamsType = {
   UserId: number;
   UserName: string;
   RoleId: number;
+  IsEnabled: boolean;
 };
 
 const updateUserCommand = async (params: updateUserParamsType) => {
@@ -18,6 +19,7 @@ const updateUserCommand = async (params: updateUserParamsType) => {
     data: {
       UserName: params.UserName,
       RoleId: params.RoleId,
+      IsEnabled: params.IsEnabled,
     },
   });
 };

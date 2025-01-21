@@ -9,6 +9,7 @@ const getAllRolesQuery = async () => {
   const res = query.map((roles: RolesViewModel) => ({
     RoleId: roles.RoleId,
     Name: roles.Name,
+    IsEnabled: roles.IsEnabled,
   }));
 
   return res;

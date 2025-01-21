@@ -15,6 +15,7 @@ const getUserByUserIdQuery = async (userId: number) => {
     UserName: query.UserName,
     RoleId: query.Roles.RoleId,
     RoleName: query.Roles.Name,
+    IsEnabled: query.IsEnabled,
   };
 
   console.log("getUserByUserIdQuery", res);

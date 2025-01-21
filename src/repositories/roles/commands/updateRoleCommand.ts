@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 type UpdateRoleParams = {
   RoleId: number;
   Name: string;
+  IsEnabled: boolean;
 };
 
 const updateRoleCommand = async (params: UpdateRoleParams) => {
@@ -16,6 +17,7 @@ const updateRoleCommand = async (params: UpdateRoleParams) => {
     },
     data: {
       Name: params.Name,
+      IsEnabled: params.IsEnabled,
     },
   });
 };

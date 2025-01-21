@@ -8,6 +8,7 @@ import { useForm } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
+import ToggleButton from "@/components/common/toggleButton";
 import { UserViewModel } from "@/repositories/users/usersViewModel";
 import { RoleViewModel } from "@/repositories/roles/rolesViewModel";
 import { useToast } from "@/hooks/use-toast";
@@ -21,6 +22,7 @@ const UserSchema = z.object({
   Password: z.string(),
   RepeatPassword: z.string(),
   RoleId: z.number(),
+  IsEnabled: z.boolean(),
 });
 
 type UserFormData = z.infer<typeof UserSchema>;
@@ -46,6 +48,8 @@ export default function UserForm({
       Password: "",
       RepeatPassword: "",
       RoleId: action !== "create" ? (userData ? userData.RoleId : 0) : 0,
+      IsEnabled:
+        action !== "create" ? (userData ? userData.IsEnabled : true) : true,
     },
     onSubmit: async ({ value }) => {
       action === "create" && createUser(value);
@@ -155,6 +159,26 @@ export default function UserForm({
                     onChange={(e) => field.handleChange(e.target.value)}
                     disabled={action === "view"}
                     required
+                  />
+                </>
+              )}
+            />
+          </div>
+          <div className="space-y-1">
+            <form.Field
+              name="IsEnabled"
+              children={(field) => (
+                <>
+                  <span>{t.users.form.isEnabled}</span>
+                  <ToggleButton
+                    options={[
+                      { key: false, value: t.shared.no },
+                      { key: true, value: t.shared.yes },
+                    ]}
+                    setItemSelected={(x: { key: boolean; value: string }) => {
+                      field.handleChange(x && x.key);
+                    }}
+                    itemSelected={field.state.value}
                   />
                 </>
               )}

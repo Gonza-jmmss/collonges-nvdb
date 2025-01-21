@@ -3,11 +3,13 @@ export type getAllUsersQueryViewModel = {
   UserName: string;
   RoleId: number;
   RoleName: string;
+  IsEnabled: boolean;
 };
 
 export type UsersViewModel = {
   UserId: number;
   UserName: string;
+  IsEnabled: boolean;
   Roles: {
     RoleId: number;
     Name: string;
@@ -21,4 +23,5 @@ export type UserViewModel = {
   UserName: string;
   RoleId: number;
   RoleName: string;
+  IsEnabled: boolean;
 } | null;
