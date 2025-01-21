@@ -29,7 +29,15 @@ export default function Breadcrumbs() {
               <BreadcrumbItem>
                 {index === breadcrumbElements.length - 1 ? (
                   <BreadcrumbPage className={`cursor-default text-primary`}>
-                    {`${isNaN(Number(segment)) ? t.breadcrumbs[segment as keyof typeof t.breadcrumbs] : segment}`}
+                    {`${
+                      isNaN(Number(segment))
+                        ? t.breadcrumbs[
+                            segment as keyof typeof t.breadcrumbs
+                          ] !== undefined
+                          ? t.breadcrumbs[segment as keyof typeof t.breadcrumbs]
+                          : t.shared.page
+                        : segment
+                    }`}
                   </BreadcrumbPage>
                 ) : (
                   <>

@@ -30,6 +30,7 @@ export default {
     delete: "Supprimer",
     view: "Visualiser",
     actions: "Actions",
+    page: "Page",
   },
   login: {
     user: "Utilisateur",
