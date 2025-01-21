@@ -46,7 +46,7 @@ export default function Sidebar({
                       : segments[0].toLowerCase()) ? (
                       <Button
                         key={index}
-                        className="w-[85%] cursor-default duration-300 hover:bg-transparent"
+                        className="w-[85%] cursor-default hover:bg-transparent"
                         variant="ghost"
                       >
                         {isMouseOver ? (
