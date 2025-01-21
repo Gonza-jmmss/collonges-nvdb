@@ -2,7 +2,7 @@
 export default {
   breadcrumbs: {
     home: "Accueil",
-    students: "Etudiants",
+    students: "Étudiants",
     reports: "Rapports",
     ifleStudentsNotes: "Notes des étudiants IFLE",
     settings: "Paramètres",
@@ -21,7 +21,7 @@ export default {
     yes: "Oui",
     no: "Non",
     exportPDF: "Exporter en PDF",
-    welcome: "Bienvenu !",
+    welcome: "Bienvenue !",
     shortcut: "Raccourcis",
     logout: "Déconnexion",
     login: "Se connecter",
@@ -53,22 +53,22 @@ export default {
       role: "Rôle",
     },
     notifications: {
-      createSuccess: "Utilisateur crée avec succès",
+      createSuccess: "Utilisateur créé avec succès",
       createError:
-        "Une erreur s'est produite pendant la création du utilisateur",
-      createFailure: "Échec de la création du utilisateur",
+        "Une erreur s'est produite pendant la création de l'utilisateur",
+      createFailure: "Échec de la création de l'utilisateur",
       updateSuccess: "Utilisateur modifié avec succès",
       updateError:
-        "Une erreur s'est produite pendant la modification du utilisateur",
-      updateFailure: "Échec de la modification du utilisateur",
+        "Une erreur s'est produite pendant la modification de l'utilisateur",
+      updateFailure: "Échec de la modification de l'utilisateur",
       deleteSuccess: "Utilisateur supprimé avec succès",
       deleteError:
-        "Une erreur s'est produite pendant la suppression du utilisateur",
-      deleteFailure: "Échec de la suppression du utilisateur",
-      updatePasswordSuccess: "Mots de passe modifié avec succès",
+        "Une erreur s'est produite pendant la suppression de l'utilisateur",
+      deleteFailure: "Échec de la suppression de l'utilisateur",
+      updatePasswordSuccess: "Mot de passe modifié avec succès",
       updatePasswordError:
-        "Une erreur s'est produite pendant la modification du mots de passe",
-      updatePasswordFailure: "Échec de la modification du mots de passe",
+        "Une erreur s'est produite pendant la modification du mot de passe",
+      updatePasswordFailure: "Échec de la modification du mot de passe",
     },
     deleteModal: {
       title: "Êtes-vous sûr de supprimer l'utilisateur ?",
@@ -88,7 +88,7 @@ export default {
       name: "Nom du rôle",
     },
     notifications: {
-      createSuccess: "Rôle crée avec succès",
+      createSuccess: "Rôle créé avec succès",
       createError: "Une erreur s'est produite pendant la création du rôle",
       createFailure: "Échec de la création du rôle",
       updateSuccess: "Rôle modifié avec succès",
@@ -122,7 +122,7 @@ export default {
       location: "Emplacement",
     },
     notifications: {
-      createSuccess: "Module crée avec succès",
+      createSuccess: "Module créé avec succès",
       createError: "Une erreur s'est produite pendant la création du module",
       createFailure: "Échec de la création du module",
       updateSuccess: "Module modifié avec succès",
@@ -134,7 +134,7 @@ export default {
       deleteFailure: "Échec de la suppression du module",
     },
     validations: {
-      iconValidation: "Le Icône n'existe pas",
+      iconValidation: "L'icône n'existe pas",
     },
     deleteModal: {
       title: "Êtes-vous sûr de supprimer le module ?",
@@ -164,20 +164,20 @@ export default {
       moduleId: "Module",
     },
     notifications: {
-      createSuccess: "Élément crée avec succès",
+      createSuccess: "Élément créé avec succès",
       createError: "Une erreur s'est produite pendant la création de l'élément",
       createFailure: "Échec de la création de l'élément",
       updateSuccess: "Élément modifié avec succès",
       updateError:
         "Une erreur s'est produite pendant la modification de l'élément",
-      updateFailure: "Échec de la modification du élément",
+      updateFailure: "Échec de la modification de l'élément",
       deleteSuccess: "Élément supprimé avec succès",
       deleteError:
         "Une erreur s'est produite pendant la suppression de l'élément",
       deleteFailure: "Échec de la suppression de l'élément",
     },
     validations: {
-      iconValidation: "Le Icône n'existe pas",
+      iconValidation: "L'icône n'existe pas",
     },
     deleteModal: {
       title: "Êtes-vous sûr de supprimer l'élément ?",
@@ -199,24 +199,24 @@ export default {
       moduleElementId: "Éléments du module",
       moduleId: "Modules",
       roleId: "Rôle",
-      chooseElementType: "Choisir type de element",
+      chooseElementType: "Choisir type d'élément",
     },
     notifications: {
-      createSuccess: "Élément de rôle crée avec succès",
+      createSuccess: "Élément de rôle créé avec succès",
       createError:
         "Une erreur s'est produite pendant la création de l'élément de rôle",
       createFailure: "Échec de la création de l'élément de rôle",
       updateSuccess: "Élément de rôle modifié avec succès",
       updateError:
         "Une erreur s'est produite pendant la modification de l'élément de rôle",
-      updateFailure: "Échec de la modification du élément de rôle",
+      updateFailure: "Échec de la modification de l'élément de rôle",
       deleteSuccess: "Élément de rôle supprimé avec succès",
       deleteError:
         "Une erreur s'est produite pendant la suppression de l'élément de rôle",
       deleteFailure: "Échec de la suppression de l'élément de rôle",
     },
     validations: {
-      iconValidation: "Le Icône n'existe pas",
+      iconValidation: "L'icône n'existe pas",
     },
     deleteModal: {
       title: "Êtes-vous sûr de supprimer l'élément de rôle ?",
@@ -270,7 +270,7 @@ export default {
         secretariat: "Le secrétariat :",
         date: "Date :",
         data: {
-          studentName: "Nom de l'etudiant(e) :",
+          studentName: "Nom de l'étudiant(e) :",
           dbaseId: "N° ID :",
           birthdate: "Né(e) le :",
           issueDate: "Date d'émission du relevé :",
