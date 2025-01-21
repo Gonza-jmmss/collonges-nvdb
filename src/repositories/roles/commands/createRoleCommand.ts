@@ -6,12 +6,14 @@ const prisma = new PrismaClient();
 
 type CreateRoleParams = {
   Name: string;
+  IsEnabled: boolean;
 };
 
 const createRoleCommand = async (params: CreateRoleParams) => {
   const command = await prisma.roles.create({
     data: {
       Name: params.Name,
+      IsEnabled: params.IsEnabled,
     },
   });
 

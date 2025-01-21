@@ -9,6 +9,7 @@ type createUserParamsType = {
   UserName: string;
   Password: string;
   RoleId: number;
+  IsEnabled: boolean;
 };
 
 const createUserCommand = async (params: createUserParamsType) => {
@@ -19,6 +20,7 @@ const createUserCommand = async (params: createUserParamsType) => {
       UserName: params.UserName,
       Password: hashedPassword,
       RoleId: params.RoleId,
+      IsEnabled: params.IsEnabled,
     },
   });
 };
