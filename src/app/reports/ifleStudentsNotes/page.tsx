@@ -1,12 +1,12 @@
 import IFLEStudentsTable from "./ifleStudentsTable";
-import { getAllStudentsQuery } from "@/repositories/students/queries/getAllStudentsQuery";
+import getAllStudentsQuery from "@/repositories/students/queries/getAllStudentsQuery";
 import frFR from "@/lang/fr-FR";
 
 export default async function ifleStudentsNotesPage() {
   const t = frFR;
 
-  const studentsQuery = new getAllStudentsQuery();
-  const students = await studentsQuery.execute();
+  const students = await getAllStudentsQuery();
+  // const students = await studentsQuery.execute();
 
   return (
     <main className="mt-5 flex justify-center">

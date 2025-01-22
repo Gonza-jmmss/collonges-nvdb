@@ -44,5 +44,5 @@ export type StudentCourseMapViewModel = {
   };
   StudentId: number;
   UpdatedAt: Date | null;
-  Note: string;
+  Note: string | null;
 };

@@ -1,79 +1,78 @@
 import { PrismaClient } from "@prisma/client";
-import { Query } from "@/interfaces/query";
-import {
-  QuarterNotesResultViewModel,
-  StudentCourseMapViewModel,
-} from "@/repositories/reports/viewModels/StudentNotesViewModel";
+import { StudentCourseMapViewModel } from "@/repositories/reports/viewModels/StudentNotesViewModel";
 import translateGrade from "@/functions/translateGrade";
 
 const prisma = new PrismaClient();
 
-export class getQuarterNotesByStudentId
-  implements Query<QuarterNotesResultViewModel, number>
-{
-  async execute(studentId: number): Promise<QuarterNotesResultViewModel> {
-    const result = await prisma.students.findUnique({
-      where: {
-        StudentId: studentId,
-        IsEnabled: true,
-      },
-      include: {
-        Persons: {
-          include: {
-            Countries: true,
-          },
+const getQuarterNotesByStudentId = async (studentId: number) => {
+  const query = await prisma.students.findUnique({
+    where: {
+      StudentId: studentId,
+      IsEnabled: true,
+    },
+    include: {
+      Persons: {
+        include: {
+          Countries: true,
         },
-        Colleges: true,
-        StudentCourses: {
-          where: {
-            Note: { not: null },
-          },
-          include: {
-            Courses: {
-              select: {
-                CourseCode: true,
-                CreditAmount: true,
-                Name: true,
-                EnglishName: true,
-                PeriodNumber: true,
-              },
+      },
+      Colleges: true,
+      StudentCourses: {
+        where: {
+          Note: { not: null },
+        },
+        include: {
+          Courses: {
+            select: {
+              CourseCode: true,
+              CreditAmount: true,
+              Name: true,
+              EnglishName: true,
+              PeriodNumber: true,
             },
-            ScholarYears: {
-              select: {
-                Name: true,
-              },
+          },
+          ScholarYears: {
+            select: {
+              Name: true,
             },
           },
         },
       },
-    });
+    },
+  });
 
-    if (!result) {
-      throw new Error(`Student with ID ${studentId} not found`);
-    }
-
-    return {
-      StudentName: result?.Persons.AlternativeName,
-      StudentFirstName: result?.Persons.FirstName,
-      StudentLastName: result?.Persons.LastName,
-      DBaseCode: result?.Persons.DBaseCode,
-      Birthdate: result?.Persons.BirthDate,
-      BirthCountryFr: result?.Persons.Countries?.Name,
-      BirthCountryEn: result?.Persons.Countries?.NameEnglish,
-      BirthCity: result?.Persons.BirthCity,
-      CollegeAbbreviation: result?.Colleges?.Abbreviation,
-      CourseNotes: result?.StudentCourses.map(
-        (studentCourse: StudentCourseMapViewModel) => ({
-          CourseCode: studentCourse.Courses.CourseCode,
-          Quarter: studentCourse.Courses.PeriodNumber,
-          CourseName: studentCourse.Courses.Name,
-          CoursEnglishName: studentCourse.Courses.EnglishName,
-          ScholarYear: studentCourse.ScholarYears.Name,
-          CreditAmount: studentCourse.Courses.CreditAmount,
-          Note: studentCourse.Note,
-          AmericanNote: translateGrade(studentCourse.Note),
-        }),
-      ),
-    };
+  if (!query) {
+    throw new Error(`Student with ID ${studentId} not found`);
   }
-}
+
+  const res = {
+    StudentName: query?.Persons.AlternativeName,
+    StudentFirstName: query?.Persons.FirstName,
+    StudentLastName: query?.Persons.LastName,
+    DBaseCode: query?.Persons.DBaseCode,
+    Birthdate: query?.Persons.BirthDate,
+    BirthCountryFr: query?.Persons.Countries?.Name,
+    BirthCountryEn: query?.Persons.Countries?.NameEnglish,
+    BirthCity: query?.Persons.BirthCity,
+    CollegeAbbreviation: query?.Colleges?.Abbreviation,
+    CourseNotes: query?.StudentCourses.map(
+      (studentCourse: StudentCourseMapViewModel) => ({
+        CourseCode: studentCourse.Courses.CourseCode,
+        Quarter: studentCourse.Courses.PeriodNumber,
+        CourseName: studentCourse.Courses.Name,
+        CoursEnglishName: studentCourse.Courses.EnglishName,
+        ScholarYear: studentCourse.ScholarYears.Name,
+        CreditAmount: studentCourse.Courses.CreditAmount,
+        Note: studentCourse.Note,
+        AmericanNote:
+          studentCourse.Note != null
+            ? translateGrade(studentCourse.Note)
+            : null,
+      }),
+    ),
+  };
+
+  return res;
+};
+
+export default getQuarterNotesByStudentId;

@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider = "sqlserver"
   url      = env("DATABASE_URL")
-  schemas  = ["Core", "Courses", "Persons", "Students"]
+  schemas  = ["Core", "Courses", "Persons", "Students", "Users"]
 }
 
 model Accommodations {
@@ -276,4 +276,73 @@ model StudentTypes {
   Students      Students[]
 
   @@schema("Students")
+}
+
+model Modules {
+  ModuleId           Int                  @id(map: "PK__Modules__2B7477A715535232") @default(autoincrement())
+  Name               String               @db.NVarChar(50)
+  Path               String               @db.NVarChar(50)
+  Icon               String               @db.NVarChar(50)
+  Location           Int?
+  UpdatedAt          DateTime?
+  CreatedAt          DateTime             @default(now())
+  ModuleElements     ModuleElements[]
+  RoleModuleElements RoleModuleElements[]
+
+  @@schema("Users")
+}
+
+model Roles {
+  RoleId             Int                  @id(map: "PK__Roles__8AFACE1ADB80B0B2") @default(autoincrement())
+  Name               String               @db.NVarChar(50)
+  UpdatedAt          DateTime?
+  CreatedAt          DateTime             @default(now())
+  IsEnabled          Boolean
+  RoleModuleElements RoleModuleElements[]
+  Users              Users[]
+
+  @@schema("Users")
+}
+
+model Users {
+  UserId    Int       @id(map: "PK__Users__1788CC4C872C57F4") @default(autoincrement())
+  UserName  String    @db.NVarChar(50)
+  Password  String    @db.NVarChar(100)
+  UpdatedAt DateTime?
+  CreatedAt DateTime  @default(now())
+  RoleId    Int
+  IsEnabled Boolean
+  Roles     Roles     @relation(fields: [RoleId], references: [RoleId], onUpdate: NoAction, map: "FK_Users_Roles")
+
+  @@schema("Users")
+}
+
+model ModuleElements {
+  ModuleElementId    Int                  @id(map: "PK__SidebarE__0C9AC0DB84FFA65A") @default(autoincrement())
+  Name               String               @db.NVarChar(50)
+  Path               String               @db.NVarChar(50)
+  Icon               String               @db.NVarChar(50)
+  Description        String               @db.NVarChar(Max)
+  ModuleId           Int?
+  Location           Int?
+  UpdatedAt          DateTime?
+  CreatedAt          DateTime             @default(now())
+  Modules            Modules?             @relation(fields: [ModuleId], references: [ModuleId], onDelete: NoAction, onUpdate: NoAction, map: "FK_ModuleElements_Modules")
+  RoleModuleElements RoleModuleElements[]
+
+  @@schema("Users")
+}
+
+model RoleModuleElements {
+  RoleModuleElementId Int             @id(map: "PK__RoleSide__53AF951C8D685ACB") @default(autoincrement())
+  ModuleElementId     Int?
+  RoleId              Int
+  UpdatedAt           DateTime?
+  CreatedAt           DateTime        @default(now())
+  ModuleId            Int?
+  ModuleElements      ModuleElements? @relation(fields: [ModuleElementId], references: [ModuleElementId], onDelete: NoAction, onUpdate: NoAction, map: "FK_RoleModuleElements_ModuleElements")
+  Modules             Modules?        @relation(fields: [ModuleId], references: [ModuleId], onDelete: NoAction, onUpdate: NoAction, map: "FK_RoleModuleElements_Modules")
+  Roles               Roles           @relation(fields: [RoleId], references: [RoleId], onUpdate: NoAction, map: "FK_RoleModuleElements_Roles")
+
+  @@schema("Users")
 }

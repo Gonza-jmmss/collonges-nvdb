@@ -95,23 +95,24 @@ export default function ifleStudentNotesPDF({
       doc.text(nomCampusText, nomCampusX, currentY);
       currentY += 5;
 
-      //bp74
-      const bp74Text = t.reports.ifleStudentsNotes.dpfFrench.bp74.toUpperCase();
-      const bp74Width =
-        (doc.getStringUnitWidth(bp74Text) * doc.getFontSize()) /
+      //address1
+      const address1Text =
+        t.reports.ifleStudentsNotes.dpfFrench.address1.toUpperCase();
+      const address1Width =
+        (doc.getStringUnitWidth(address1Text) * doc.getFontSize()) /
         doc.internal.scaleFactor;
-      const bp74X = (pageWidth - bp74Width) / 2;
-      doc.text(bp74Text, bp74X, currentY);
+      const address1X = (pageWidth - address1Width) / 2;
+      doc.text(address1Text, address1X, currentY);
       currentY += 5;
 
-      //address
-      const addressText =
-        t.reports.ifleStudentsNotes.dpfFrench.address.toUpperCase();
-      const addressWidth =
-        (doc.getStringUnitWidth(addressText) * doc.getFontSize()) /
+      //address2
+      const address2Text =
+        t.reports.ifleStudentsNotes.dpfFrench.address2.toUpperCase();
+      const address2Width =
+        (doc.getStringUnitWidth(address2Text) * doc.getFontSize()) /
         doc.internal.scaleFactor;
-      const addressX = (pageWidth - addressWidth) / 2;
-      doc.text(addressText, addressX, currentY);
+      const address2X = (pageWidth - address2Width) / 2;
+      doc.text(address2Text, address2X, currentY);
       currentY += 9;
 
       //titleReport
@@ -139,7 +140,7 @@ export default function ifleStudentNotesPDF({
         leftmargin +
         2;
       const studentName =
-        `${studentNotesData.StudentLastName?.toUpperCase()}, ${studentNotesData.StudentLastName?.toUpperCase()}` ||
+        `${studentNotesData.StudentLastName?.toUpperCase()}, ${studentNotesData.StudentFirstName?.toUpperCase()}` ||
         ""; // Apellidos, Nombres
       doc.setFont("helvetica", "normal");
       doc.text(studentName, studentNameTextWithMargin, currentY);
@@ -363,7 +364,8 @@ export default function ifleStudentNotesPDF({
       //img logoIFLE
       doc.addImage(logoIFLE, "PNG", rightmargin - 30, 10, 30, 30);
       //img tamponeIFLE
-      doc.addImage(tamponIFLE, "PNG", 80, 275, 50, 10);
+      // doc.addImage(tamponIFLE, "PNG", 80, 275, 50, 10);
+      doc.addImage(tamponIFLE, "PNG", 60, currentY + 15, 50, 10);
 
       // // guideLine for the logos /////////////////////////
       // doc.line(leftmargin, 30, leftmargin + 5, 30);
@@ -377,7 +379,8 @@ export default function ifleStudentNotesPDF({
       // doc.line(rightmargin - 5, 10, rightmargin - 5, 43);
       // // guideLine for the logos /////////////////////////
 
-      const fileName = `Transcript francais ${studentName} ${studentNotesData.CourseNotes[0].ScholarYear} ${studentNotesData.CourseNotes[0].Quarter}`;
+      // const fileName = `Transcript francais ${studentName} ${studentNotesData.CourseNotes[0].ScholarYear} ${studentNotesData.CourseNotes[0].Quarter}`;
+      const fileName = `Transcript T${studentNotesData.CourseNotes[0].Quarter} ${studentNotesData.CourseNotes[0].ScholarYear}  ${studentName}`;
       doc.output("dataurlnewwindow");
       doc.save(fileName);
     } catch (error) {

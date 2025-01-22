@@ -123,7 +123,11 @@ export default function TableComponent<T>({
 
   const [isColumnSearch, setIsColumnSearch] = React.useState(false);
 
-  const [rowsNumber, setRowsNumber] = React.useState(10);
+  const [rowsNumber, setRowsNumber] = React.useState({ key: "10", value: 10 });
+
+  React.useEffect(() => {
+    table.setPageSize(rowsNumber.value);
+  }, [rowsNumber]);
 
   const table = useReactTable({
     data,
@@ -169,7 +173,12 @@ export default function TableComponent<T>({
                       //         header.getContext(),
                       //       )}
                       // </TableHead>
-                      <TableHead key={header.id}>
+                      <TableHead
+                        key={header.id}
+                        style={{
+                          width: header.column.columnDef.size || "auto",
+                        }}
+                      >
                         <div
                           {...{
                             className: header.column.getCanSort()
@@ -220,7 +229,13 @@ export default function TableComponent<T>({
                     className={`${onRowClick != null && "cursor-pointer"}`}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell
+                        key={cell.id}
+                        style={{
+                          width: cell.column.columnDef.size || "auto",
+                        }}
+                        onClick={(event) => event.stopPropagation()}
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext(),
@@ -305,7 +320,12 @@ export default function TableComponent<T>({
                         //         header.getContext(),
                         //       )}
                         // </TableHead>
-                        <TableHead key={header.id}>
+                        <TableHead
+                          key={header.id}
+                          style={{
+                            width: header.column.columnDef.size || "auto",
+                          }}
+                        >
                           <div
                             {...{
                               className: header.column.getCanSort()
@@ -356,7 +376,12 @@ export default function TableComponent<T>({
                       className={`${onRowClick != null && "cursor-pointer"}`}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
+                        <TableCell
+                          key={cell.id}
+                          style={{
+                            width: cell.column.columnDef.size || "auto",
+                          }}
+                        >
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext(),
@@ -456,14 +481,16 @@ export default function TableComponent<T>({
                 className="w-10 justify-center p-1"
               />
             </span>
-            <Combobox
-              options={paginationValues}
-              textAttribute="key"
-              valueAttribute="value"
-              placeholder="rows"
-              itemSelected={rowsNumber}
-              setItemSelected={setRowsNumber}
-            />
+            <div className="w-min">
+              <Combobox
+                options={paginationValues}
+                textAttribute="key"
+                valueAttribute="value"
+                placeholder="rows"
+                itemSelected={rowsNumber}
+                setItemSelected={setRowsNumber}
+              />
+            </div>
           </div>
         </>
       )}

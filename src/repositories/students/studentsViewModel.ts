@@ -34,19 +34,3 @@ export type StudentsMapViewModel = {
     Name: string | null;
   } | null;
 };
-
-// export type StudentCourseViewModel = {
-//   Courses: {
-//     Name: string;
-//     EnglishName: string;
-//     CourseCode: string | null;
-//     CreditAmount: number;
-//     PeriodNumber: number | null;
-//   };
-//   ScholarYears: {
-//     Name: string;
-//   };
-//   StudentId: number;
-//   UpdatedAt: Date | null;
-//   Note: string;
-// };
