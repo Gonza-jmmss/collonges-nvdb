@@ -97,6 +97,22 @@ export const authConfig = {
       },
     }),
   ],
+  // cookies: {
+  //   sessionToken: {
+  //     name: "next-auth.session-token",
+  //     options: {
+  //       httpOnly: true,
+  //       sameSite: "lax",
+  //       path: "/",
+  //       secure: process.env.NODE_ENV === "production",
+  //       domain: process.env.COOKIE_DOMAIN || undefined,
+  //       // domain:
+  //       //   process.env.NODE_ENV === "production"
+  //       //     ? process.env.COOKIE_DOMAIN
+  //       //     : undefined,
+  //     },
+  //   },
+  // },
   cookies: {
     sessionToken: {
       name: "next-auth.session-token",
@@ -104,9 +120,8 @@ export const authConfig = {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: process.env.NODE_ENV === "production",
-        domain:
-          process.env.NODE_ENV === "production" ? ".localhost" : undefined,
+        secure: false,
+        domain: process.env.COOKIE_DOMAIN || undefined,
       },
     },
   },
