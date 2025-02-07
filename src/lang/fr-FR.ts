@@ -64,6 +64,10 @@ export default {
       role: "Rôle",
       isEnabled: "Utilisateur actif",
     },
+    validations: {
+      passwordValidation: "Le mot de passe doit contenir au moins 8 lettres",
+      repeatPasswordValidation: "Les mots de passe ne correspondent pas",
+    },
     notifications: {
       createSuccess: "Utilisateur créé avec succès",
       createError:
