@@ -32,7 +32,7 @@ export default function Combobox({
   options: {
     [key: string]: any;
   }[];
-  textAttribute: string;
+  textAttribute: string | string[];
   valueAttribute: string;
   placeholder: string;
   itemSelected?: any;
@@ -41,6 +41,13 @@ export default function Combobox({
   disabled?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const textAttributeToWork = Array.isArray(textAttribute)
+    ? textAttribute[0]
+    : textAttribute;
+
+  const textAttributeToShow = Array.isArray(textAttribute)
+    ? (option: any) => textAttribute.map((attr) => option[attr]).join(", ")
+    : textAttribute;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -53,10 +60,8 @@ export default function Combobox({
           disabled={disabled}
         >
           {itemSelected
-            ? itemSelected[textAttribute]
-            : placeholder
-              ? placeholder
-              : "Select..."}
+            ? itemSelected[textAttributeToWork]
+            : placeholder || "Select..."}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -64,7 +69,7 @@ export default function Combobox({
         <Command>
           {showSearch && (
             <CommandInput
-              placeholder={`${placeholder ? `${placeholder}...` : "Select..."}`}
+              placeholder={`${placeholder || "Select"}...`}
               className="h-9"
             />
           )}
@@ -76,22 +81,29 @@ export default function Combobox({
                 <CommandItem
                   key={option[valueAttribute]}
                   value={option[valueAttribute]}
-                  onSelect={(currentValue) => {
+                  onSelect={() => {
                     setItemSelected(
-                      currentValue === itemSelected ? "" : option,
+                      itemSelected &&
+                        itemSelected[valueAttribute] === option[valueAttribute]
+                        ? null
+                        : option,
                     );
                     setOpen(false);
                   }}
                   className="cursor-pointer"
                 >
                   <div className="flex w-full items-center justify-between">
-                    <div className="pr-2">{option[textAttribute]}</div>
+                    <div className="pr-2">
+                      {typeof textAttributeToShow === "function"
+                        ? textAttributeToShow(option)
+                        : option[textAttributeToShow]}
+                    </div>
                     <CheckIcon
                       className={cn(
                         "ml-auto h-4 w-4",
                         itemSelected &&
-                          itemSelected.toString() ===
-                            option[textAttribute].toString()
+                          itemSelected[valueAttribute] ===
+                            option[valueAttribute]
                           ? "opacity-100"
                           : "opacity-0",
                       )}
