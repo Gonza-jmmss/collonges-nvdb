@@ -3,7 +3,11 @@ import { StudentsMapViewModel } from "../studentsViewModel";
 
 const prisma = new PrismaClient();
 
-const getAllStudentsQuery = async () => {
+type getAllStudentsQueryParamsType = {
+  IsEnabled: boolean;
+};
+
+const getAllStudentsQuery = async (params: getAllStudentsQueryParamsType) => {
   const query = await prisma.students.findMany({
     orderBy: [
       {
@@ -15,6 +19,7 @@ const getAllStudentsQuery = async () => {
         },
       },
     ],
+    where: { IsEnabled: params.IsEnabled },
     include: {
       Persons: {
         select: {

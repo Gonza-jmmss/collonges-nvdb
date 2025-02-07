@@ -197,11 +197,12 @@ model Persons {
 }
 
 model Regimes {
-  RegimeId  Int        @id(map: "PK__Regimes__B8947F98B9F34A5C") @default(autoincrement())
-  Name      String?    @db.NVarChar(50)
-  UpdatedAt DateTime?
-  CreatedAt DateTime   @default(now())
-  Students  Students[]
+  RegimeId     Int        @id(map: "PK__Regimes__B8947F98B9F34A5C") @default(autoincrement())
+  Name         String?    @db.NVarChar(50)
+  UpdatedAt    DateTime?
+  CreatedAt    DateTime   @default(now())
+  Abbreviation String?    @db.NVarChar(10)
+  Students     Students[]
 
   @@schema("Core")
 }
