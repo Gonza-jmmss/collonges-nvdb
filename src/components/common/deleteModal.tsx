@@ -8,14 +8,14 @@ export default function DeleteModal({
   titleText,
   descriptionText,
   deletefunction,
-  desable,
+  disable,
 }: {
   openModal: boolean;
   closeModal: () => void;
   titleText: string;
   descriptionText: string;
   deletefunction: () => void;
-  desable?: boolean;
+  disable?: boolean;
 }) {
   const t = frFR;
 
@@ -41,7 +41,7 @@ export default function DeleteModal({
             className="w-[30%]"
             onClick={deletefunction}
           >
-            {desable ? t.shared.desable : t.shared.delete}
+            {disable ? t.shared.disable : t.shared.delete}
           </Button>
         </div>
       </div>
