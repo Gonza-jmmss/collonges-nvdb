@@ -159,7 +159,7 @@ export default function UsersTable({
         titleText={t.users.deleteModal.title}
         descriptionText={t.users.deleteModal.description}
         deletefunction={() => deleteUser(selectedUSerToDelete)}
-        desable
+        disable
       />
     </div>
   );
