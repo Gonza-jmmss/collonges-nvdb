@@ -67,7 +67,7 @@ export default function UserForm({
       }
       toast({
         title: `${t.users.notifications.createSuccess}`,
-        description: `${t.users.title} : ${response.UserName}`,
+        description: `${t.users.user} : ${response.UserName}`,
       });
 
       router.push("/settings/users");
@@ -92,7 +92,7 @@ export default function UserForm({
       }
       toast({
         title: `${t.users.notifications.updateSuccess}`,
-        description: `${t.users.title} : ${response.UserName}`,
+        description: `${t.users.user} : ${response.UserName}`,
       });
 
       router.push("/settings/users");
@@ -117,7 +117,7 @@ export default function UserForm({
       }
       toast({
         title: `${t.users.notifications.updatePasswordSuccess}`,
-        description: `${t.users.title} : ${response.UserName}`,
+        description: `${t.users.user} : ${response.UserName}`,
       });
 
       router.push("/settings/users");
@@ -179,6 +179,7 @@ export default function UserForm({
                       field.handleChange(x && x.key);
                     }}
                     itemSelected={field.state.value}
+                    disabled={action === "view"}
                   />
                 </>
               )}
