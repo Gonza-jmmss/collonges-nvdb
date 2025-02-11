@@ -88,20 +88,28 @@ EXPOSE 3000
 # Set production environment variables
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
-ENV NODE_ENV production
 
 # PROD
-ENV NEXTAUTH_URL "http://srvifle:3128"
-ENV NEXT_PUBLIC_NEXTAUTH_URL "http://srvifle:3128"
+# ENV NODE_ENV production
+# ENV NEXTAUTH_URL "http://srvifle:3128"
+# ENV NEXT_PUBLIC_NEXTAUTH_URL "http://srvifle:3128"
+# ENV NEXTAUTH_URL_INTERNAL "http://localhost:3000"
+# ENV COOKIE_DOMAIN "srvifle"
+# ENV NEXT_PUBLIC_URL: "http://srvifle:3128"
+# SERVER TEST
+ENV NODE_ENV test
+ENV NEXTAUTH_URL "http://srvifle:3129"
+ENV NEXT_PUBLIC_NEXTAUTH_URL "http://srvifle:3129"
 ENV NEXTAUTH_URL_INTERNAL "http://localhost:3000"
 ENV COOKIE_DOMAIN "srvifle"
-ENV NEXT_PUBLIC_URL: "http://srvifle:3128"
+ENV NEXT_PUBLIC_URL: "http://srvifle:3129"
+
 # DEV
 # ENV NEXTAUTH_URL "http://localhost:3128"
 # ENV NEXT_PUBLIC_NEXTAUTH_URL "http://localhost:3128"
 # ENV NEXTAUTH_URL_INTERNAL "http://localhost:3000"
 # ENV COOKIE_DOMAIN "localhost"
-ENV NEXT_PUBLIC_URL: "http://localhost:3128"
+# ENV NEXT_PUBLIC_URL: "http://localhost:3128"
 
 # Start the application
 CMD ["node", "server.js"]
