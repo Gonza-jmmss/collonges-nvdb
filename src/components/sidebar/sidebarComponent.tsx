@@ -2,12 +2,12 @@
 
 import { useState, Fragment } from "react";
 import { ModulesViewModel } from "@/repositories/modules/modulesViewModel";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { logout } from "@/lib/actions";
+import { useRouter } from "next/navigation";
 import frFR from "@/lang/fr-FR";
 import { Session } from "next-auth";
 
@@ -21,6 +21,7 @@ export default function Sidebar({
   session: Session | null;
 }) {
   const t = frFR;
+  const router = useRouter();
   const segments = useSelectedLayoutSegments();
 
   const [isMouseOver, setIsMouseOver] = useState(false);
@@ -46,11 +47,11 @@ export default function Sidebar({
                       : segments[0].toLowerCase()) ? (
                       <Button
                         key={index}
-                        className="w-[85%] cursor-default hover:bg-transparent"
+                        className="flex w-[85%] cursor-default justify-start hover:bg-transparent"
                         variant="ghost"
                       >
                         {isMouseOver ? (
-                          <div className="flex justify-center space-x-3 text-primary">
+                          <div className="flex space-x-3 text-primary">
                             <Icon
                               name={
                                 isValidIconName(element.Icon)
@@ -76,13 +77,13 @@ export default function Sidebar({
                       <Button
                         key={index}
                         asChild
-                        className={`w-[85%]`}
+                        className={`flex w-[85%] justify-start space-x-3`}
                         variant="ghost"
                       >
                         {isMouseOver ? (
-                          <Link
-                            href={`${element.Path}`}
-                            className="flex justify-center space-x-3"
+                          <div
+                            className="cursor-pointer"
+                            onClick={() => router.push(`${element.Path}`)}
                           >
                             <Icon
                               name={
@@ -93,20 +94,21 @@ export default function Sidebar({
                               className="text-xl"
                             />{" "}
                             <span>{element.Name}</span>
-                          </Link>
+                          </div>
                         ) : (
-                          <Link href={`${element.Path}`}>
-                            {
-                              <Icon
-                                name={
-                                  isValidIconName(element.Icon)
-                                    ? element.Icon
-                                    : "MdOutlineNotInterested"
-                                }
-                                className="text-xl"
-                              />
-                            }
-                          </Link>
+                          <div
+                            className="cursor-pointer"
+                            onClick={() => router.push(`${element.Path}`)}
+                          >
+                            <Icon
+                              name={
+                                isValidIconName(element.Icon)
+                                  ? element.Icon
+                                  : "MdOutlineNotInterested"
+                              }
+                              className="text-xl"
+                            />
+                          </div>
                         )}
                       </Button>
                     )}
@@ -115,10 +117,18 @@ export default function Sidebar({
               </Fragment>
             ))}
           </div>
-          <div className="flex w-full flex-col items-center justify-center space-y-2 pb-5">
+          <div className="flex flex-col items-center space-y-3 py-3">
             {isMouseOver ? (
               <>
-                <div className="flex w-[85%] justify-center space-x-3">
+                {process.env.NEXT_PUBLIC_ENV === "test" && (
+                  <div className="flex w-[85%] justify-start space-x-3 px-4">
+                    {String(process.env.NEXT_PUBLIC_ENV)
+                      .charAt(0)
+                      .toUpperCase() +
+                      String(process.env.NEXT_PUBLIC_ENV).slice(1)}
+                  </div>
+                )}
+                <div className="flex w-[85%] justify-start space-x-3 px-4">
                   <Icon
                     name={
                       isValidIconName("MdPersonOutline")
@@ -131,7 +141,7 @@ export default function Sidebar({
                 </div>
                 <Button
                   variant={"ghost"}
-                  className="flex w-[85%] justify-center space-x-3"
+                  className="flex w-[85%] justify-start space-x-3"
                   onClick={() => logout()}
                 >
                   <Icon
@@ -147,6 +157,14 @@ export default function Sidebar({
               </>
             ) : (
               <>
+                {process.env.NEXT_PUBLIC_ENV === "test" && (
+                  <div>
+                    {String(process.env.NEXT_PUBLIC_ENV)
+                      .charAt(0)
+                      .toUpperCase() +
+                      String(process.env.NEXT_PUBLIC_ENV).slice(1)}
+                  </div>
+                )}
                 <Icon
                   name={
                     isValidIconName("MdPersonOutline")
