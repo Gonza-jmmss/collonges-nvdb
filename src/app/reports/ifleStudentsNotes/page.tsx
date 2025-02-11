@@ -5,7 +5,7 @@ import frFR from "@/lang/fr-FR";
 export default async function ifleStudentsNotesPage() {
   const t = frFR;
 
-  const students = await getAllStudentsQuery();
+  const students = await getAllStudentsQuery({ IsEnabled: true });
   // const students = await studentsQuery.execute();
 
   return (
