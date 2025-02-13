@@ -342,9 +342,9 @@ export default function ifleStudentNotesPDF({
       currentY += 10;
 
       //date
-      const dateText = t.reports.ifleStudentsNotes.dpfEnglish.date;
+      const dateText = t.reports.ifleStudentsNotes.dpfFrench.date;
       doc.text(
-        t.reports.ifleStudentsNotes.dpfEnglish.date,
+        t.reports.ifleStudentsNotes.dpfFrench.date,
         leftmargin,
         currentY,
       );
@@ -380,7 +380,7 @@ export default function ifleStudentNotesPDF({
       // // guideLine for the logos /////////////////////////
 
       // const fileName = `Transcript francais ${studentName} ${studentNotesData.CourseNotes[0].ScholarYear} ${studentNotesData.CourseNotes[0].Quarter}`;
-      const fileName = `Relevé Officiel des Notes T${studentNotesData.CourseNotes[0].Quarter} ${studentNotesData.CourseNotes[0].ScholarYear}  ${studentName}`;
+      const fileName = `Relevé Officiel des Cours et des Notes T${studentNotesData.CourseNotes[0].Quarter} ${studentNotesData.CourseNotes[0].ScholarYear}  ${studentName}`;
       doc.output("dataurlnewwindow");
       doc.save(fileName);
     } catch (error) {
