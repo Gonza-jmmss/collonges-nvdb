@@ -23,7 +23,13 @@ const updatePersonCommand = async (params: PersonParams) => {
         BirthCity: params.BirthCity,
         Address1: params.Address1,
         BirthCountryId: params.BirthCountryId,
+        CountryId: params.CountryId,
         Email: params.Email,
+        DBaseCode: params.DBaseCode,
+        ImageName:
+          params.ImageNameTemp !== null
+            ? params.ImageNameTemp
+            : params.ImageName,
       },
     });
 

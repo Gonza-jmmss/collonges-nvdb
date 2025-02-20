@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import createStudentCommand from "@/repositories/students/commands/createStudentPersonCommand";
 import updateStudentPersonCommand from "@/repositories/students/commands/updateStudentPersonCommand";
 import { SexEnum } from "@/enum/sexEnum";
@@ -21,6 +21,7 @@ import { StudentPersonSchema } from "@/zodSchemas/studentsSchema";
 import enumToArray from "@/functions/enumToArray";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { z } from "zod";
 import frFR from "@/lang/fr-FR";
 
@@ -48,141 +49,109 @@ export default function StudentForm({
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
 
+  const [preview, setPreview] = useState<string | null>(null);
+
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
+
   const studentType = [{ StudentTypeId: 1, Name: "IFLE" }];
 
   const form = useForm<StudentFormData>({
     defaultValues: {
       Person: {
         PersonId:
-          action !== "create"
-            ? studentData
-              ? studentData.Person.PersonId
-              : null
-            : null,
+          action !== "create" ? (studentData?.Person.PersonId ?? null) : null,
         FirstName:
-          action !== "create"
-            ? studentData
-              ? studentData.Person.FirstName
-              : null
-            : null,
+          action !== "create" ? (studentData?.Person.FirstName ?? null) : null,
         LastName:
-          action !== "create"
-            ? studentData
-              ? studentData.Person.LastName
-              : null
-            : null,
+          action !== "create" ? (studentData?.Person.LastName ?? null) : null,
         BirthDate:
-          action !== "create"
-            ? studentData
-              ? studentData.Person.BirthDate
-              : null
-            : null,
-        Sex:
-          action !== "create"
-            ? studentData
-              ? studentData.Person.Sex
-              : null
-            : null,
+          action !== "create" ? (studentData?.Person.BirthDate ?? null) : null,
+        Sex: action !== "create" ? (studentData?.Person.Sex ?? null) : null,
         Telephone:
-          action !== "create"
-            ? studentData
-              ? studentData.Person.Telephone
-              : null
-            : null,
+          action !== "create" ? (studentData?.Person.Telephone ?? null) : null,
         WorkTelephone:
           action !== "create"
-            ? studentData
-              ? studentData.Person.WorkTelephone
-              : null
+            ? (studentData?.Person.WorkTelephone ?? null)
             : null,
         BirthCity:
-          action !== "create"
-            ? studentData
-              ? studentData.Person.BirthCity
-              : null
-            : null,
+          action !== "create" ? (studentData?.Person.BirthCity ?? null) : null,
         Address1:
-          action !== "create"
-            ? studentData
-              ? studentData.Person.Address1
-              : null
-            : null,
+          action !== "create" ? (studentData?.Person.Address1 ?? null) : null,
         BirthCountryId:
           action !== "create"
-            ? studentData
-              ? studentData.Person.BirthCountryId
-              : null
+            ? (studentData?.Person.BirthCountryId ?? null)
             : null,
-        Email:
-          action !== "create"
-            ? studentData
-              ? studentData.Person.Email
-              : null
-            : null,
+        CountryId: null,
+        Email: action !== "create" ? (studentData?.Person.Email ?? null) : null,
+        DBaseCode:
+          action !== "create" ? (studentData?.Person.DBaseCode ?? null) : null,
+        ImageName:
+          action !== "create" ? (studentData?.Person.ImageName ?? null) : null,
+        ImageNameTemp: null,
       },
       Student: {
         StudentId:
-          action !== "create"
-            ? studentData
-              ? studentData.Student.StudentId
-              : 1
-            : 1,
+          action !== "create" ? (studentData?.Student.StudentId ?? null) : null,
         StudentTypeId:
-          action !== "create"
-            ? studentData
-              ? studentData.Student.StudentTypeId
-              : 1
-            : 1,
+          action !== "create" ? (studentData?.Student.StudentTypeId ?? 1) : 1,
         IsACA:
-          action !== "create"
-            ? studentData
-              ? studentData.Student.IsACA
-              : true
-            : true,
+          action !== "create" ? (studentData?.Student.IsACA ?? true) : true,
         CollegeId:
-          action !== "create"
-            ? studentData
-              ? studentData.Student.CollegeId
-              : null
-            : null,
+          action !== "create" ? (studentData?.Student.CollegeId ?? null) : null,
         RegimeId:
-          action !== "create"
-            ? studentData
-              ? studentData.Student.RegimeId
-              : null
-            : null,
+          action !== "create" ? (studentData?.Student.RegimeId ?? null) : null,
         IsEnabled:
-          action !== "create"
-            ? studentData
-              ? studentData.Student.IsEnabled
-              : true
-            : true,
+          action !== "create" ? (studentData?.Student.IsEnabled ?? true) : true,
       },
       ContactPerson:
         action !== "create"
-          ? studentData?.ContactPerson
-            ? studentData?.ContactPerson.map((contact) => ({
-                PersonId: contact.PersonId,
-                ContactTypeId: contact.ContactTypeId,
-                FirstName: contact.FirstName,
-                LastName: contact.LastName,
-                BirthDate: contact.BirthDate,
-                Sex: contact.Sex,
-                Telephone: contact.Telephone,
-                WorkTelephone: contact.WorkTelephone,
-                BirthCity: contact.BirthCity,
-                Address1: contact.Address1,
-                BirthCountryId: contact.BirthCountryId,
-                Email: contact.Email,
-                LoadType: null,
-              }))
-            : null
+          ? (studentData?.ContactPerson?.map((contact) => ({
+              PersonId: contact.PersonId,
+              ContactTypeId: contact.ContactTypeId,
+              FirstName: contact.FirstName,
+              LastName: contact.LastName,
+              Telephone: contact.Telephone,
+              WorkTelephone: contact.WorkTelephone,
+              BirthCity: contact.BirthCity,
+              Address1: contact.Address1,
+              CountryId: contact.CountryId,
+              Email: contact.Email,
+              LoadType: null,
+              BirthDate: null,
+              Sex: null,
+              BirthCountryId: null,
+              DBaseCode: null,
+              ImageName: null,
+              ImageNameTemp: null,
+            })) ?? null)
           : null,
     },
     onSubmit: async ({ value }) => {
+      const fileInput = document.querySelector(
+        'input[type="file"]',
+      ) as HTMLInputElement;
+      const file = fileInput?.files?.[0];
+
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const uploadResponse = await fetch("/api/images/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error("Image upload failed");
+        }
+
+        const { fileName } = await uploadResponse.json();
+        value.Person.ImageNameTemp = fileName;
+      }
+
+      setIsPending(true);
       action === "create" && createStudent(value);
       action === "edit" && updateStudent(value);
-      // console.log("studentForm", value);
     },
   });
 
@@ -193,9 +162,11 @@ export default function StudentForm({
       if (!response) {
         throw new Error(`${t.students.notifications.createFailure}`);
       }
+
       toast({
         title: `${t.students.notifications.createSuccess}`,
         description: `${t.students.student} : ${response.person.AlternativeName}`,
+        // description: `${t.students.student} : ${response}`,
       });
 
       router.push("/students");
@@ -218,11 +189,27 @@ export default function StudentForm({
       if (!response) {
         throw new Error(`${t.students.notifications.updateFailure}`);
       }
+
       toast({
         title: `${t.students.notifications.updateSuccess}`,
         description: `${t.students.student} : ${response.person?.AlternativeName}`,
         // description: `${t.students.student} : student`,
       });
+
+      // Delete old photo
+      if (studentData?.Person.ImageName !== null) {
+        const imageData = new FormData();
+        imageData.append("image", studentData?.Person.ImageName || "");
+
+        const deleteResponse = await fetch("/api/images/delete", {
+          method: "POST",
+          body: imageData,
+        });
+
+        if (!deleteResponse.ok) {
+          throw new Error("Image elimination failed");
+        }
+      }
 
       router.push("/students");
       router.refresh();
@@ -237,6 +224,27 @@ export default function StudentForm({
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      setPreview(URL.createObjectURL(file)); // Generate preview URL
+    }
+  };
+
+  // const updateImage = async (image: string) => {
+  //   console.log("image", image);
+  //   const formData = new FormData();
+  //   formData.append("image", image);
+
+  //   const uploadResponse = await fetch("/api/images/delete", {
+  //     method: "POST",
+  //     body: formData,
+  //   });
+
+  //   console.log("uploadResponse", uploadResponse);
+  // };
+
   return (
     <form
       onSubmit={(e) => {
@@ -246,7 +254,81 @@ export default function StudentForm({
       }}
       className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2"
     >
-      <div className="space-y-1">
+      <div className="absolute right-5 top-5 col-span-1 space-y-1 md:col-span-2">
+        <form.Field
+          name="Person.ImageName"
+          children={(field) => (
+            <>
+              <div className="flex items-center justify-end space-x-3">
+                {action !== "view" && (
+                  <div className="space-y-1">
+                    <Input
+                      ref={imageInputRef}
+                      id="ImageName"
+                      name="ImageName"
+                      type={"file"}
+                      accept="image/jpg, image/jpeg, image/png"
+                      className="hidden"
+                      // value={field.state.value || ""}
+                      onChange={(e) => {
+                        field.handleChange(e.target.value);
+                        handleFileChange(e);
+                      }}
+                      disabled={action === "view"}
+                    />
+                    <Button
+                      type="button"
+                      variant={"ghost"}
+                      className="flex space-x-2"
+                      onClick={() => imageInputRef.current?.click()}
+                    >
+                      <Icon
+                        name={
+                          isValidIconName("MdCloudUpload")
+                            ? "MdCloudUpload"
+                            : "MdOutlineNotInterested"
+                        }
+                        className="text-3xl"
+                      />
+                      <span>{t.students.form.personImage}</span>
+                    </Button>
+                  </div>
+                )}
+                <Image
+                  src={`${
+                    field.state.value
+                      ? field.state.value?.includes("fakepath")
+                        ? preview
+                        : `/api/images/${field.state.value}`
+                      : "/404image.png"
+                  }`}
+                  alt={"ImageName"}
+                  width={800}
+                  height={800}
+                  style={{
+                    objectFit: "cover",
+                    width: "4rem",
+                    height: "4rem",
+                    padding: "1px",
+                    borderWidth: "2px",
+                    borderRadius: "0.375rem",
+                    borderColor: "rgb(212 212 212)",
+                  }}
+                />
+                {/* <Button
+                  type="button"
+                  variant={"ghost"}
+                  className="flex space-x-2"
+                  onClick={() => updateImage(field.state.value || "")}
+                >
+                  Update
+                </Button> */}
+              </div>
+            </>
+          )}
+        />
+      </div>
+      <div className="mt-7 space-y-1">
         <form.Field
           name="Person.FirstName"
           children={(field) => (
@@ -266,7 +348,7 @@ export default function StudentForm({
           )}
         />
       </div>
-      <div className="space-y-1">
+      <div className="space-y-1 md:mt-7">
         <form.Field
           name="Person.LastName"
           children={(field) => (
@@ -357,7 +439,8 @@ export default function StudentForm({
           )}
         />
       </div>
-      <div className="col-span-1 space-y-1 md:col-span-2">
+      <div className="space-y-1">
+        {/* <div className="col-span-1 space-y-1 md:col-span-2"> */}
         <form.Field
           name="Person.Email"
           children={(field) => (
@@ -367,6 +450,26 @@ export default function StudentForm({
                 id="Email"
                 name="Email"
                 placeholder={`${t.students.form.email}`}
+                className="w-full"
+                value={field.state.value || ""}
+                onChange={(e) => field.handleChange(e.target.value)}
+                disabled={action === "view"}
+                required
+              />
+            </>
+          )}
+        />
+      </div>
+      <div className="space-y-1">
+        <form.Field
+          name="Person.DBaseCode"
+          children={(field) => (
+            <>
+              <span>{t.students.form.dBaseCode}</span>
+              <Input
+                id="DBaseCode"
+                name="DBaseCode"
+                placeholder={`${t.students.form.dBaseCode}`}
                 className="w-full"
                 value={field.state.value || ""}
                 onChange={(e) => field.handleChange(e.target.value)}
@@ -447,6 +550,11 @@ export default function StudentForm({
                   disabled={action === "view"}
                   showSearch
                 />
+                <div className="text-xs text-red-500">
+                  {field.state.meta.errors
+                    ? field.state.meta.errors.join(", ")
+                    : null}
+                </div>
               </>
             )}
           />
@@ -574,6 +682,11 @@ export default function StudentForm({
                   disabled={action === "view"}
                   showSearch
                 />
+                <div className="text-xs text-red-500">
+                  {field.state.meta.errors
+                    ? field.state.meta.errors.join(", ")
+                    : null}
+                </div>
               </>
             )}
           />
@@ -588,6 +701,7 @@ export default function StudentForm({
               <ToggleButton
                 options={[
                   { key: true, value: t.shared.no },
+
                   { key: false, value: t.shared.yes },
                 ]}
                 setItemSelected={(x: { key: boolean; value: string }) => {
@@ -609,6 +723,7 @@ export default function StudentForm({
               <ToggleButton
                 options={[
                   { key: false, value: t.shared.no },
+
                   { key: true, value: t.shared.yes },
                 ]}
                 setItemSelected={(x: { key: boolean; value: string }) => {
@@ -640,15 +755,19 @@ export default function StudentForm({
                       ContactTypeId: 0,
                       FirstName: null,
                       LastName: null,
-                      BirthDate: null,
-                      Sex: null,
                       Telephone: null,
                       WorkTelephone: null,
                       BirthCity: null,
                       Address1: null,
-                      BirthCountryId: null,
+                      CountryId: null,
                       Email: null,
                       LoadType: null,
+                      BirthDate: null,
+                      Sex: null,
+                      BirthCountryId: null,
+                      DBaseCode: null,
+                      ImageName: null,
+                      ImageNameTemp: null,
                     })
                   }
                 >
@@ -801,75 +920,6 @@ export default function StudentForm({
                           )}
                         />
                       </div>
-                      <div className="space-y-1">
-                        <form.Field
-                          name={`ContactPerson[${index}].BirthDate`}
-                          validators={{
-                            onSubmitAsync: (value) => {
-                              if (value === null || value === undefined) {
-                                return t.students.validations
-                                  .bithDateValidation;
-                              }
-                              return z.date().safeParse(value.value).success
-                                ? undefined
-                                : t.students.validations.bithDateValidation;
-                            },
-                          }}
-                          children={(field) => (
-                            <>
-                              <span>{t.students.form.birthDate}</span>
-                              <DateInput
-                                dateForm={field.state.value}
-                                setItemSelected={(x: Date) => {
-                                  field.handleChange(x);
-                                }}
-                                disabled={action === "view"}
-                              />
-                              <div className="text-xs text-red-500">
-                                {field.state.meta.errors}
-                              </div>
-                            </>
-                          )}
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <form.Field
-                          name={`ContactPerson[${index}].Sex`}
-                          validators={{
-                            onSubmitAsync: (value) => {
-                              if (value === null || value === undefined) {
-                                return t.students.validations.sexValidation;
-                              }
-                              return z.number().min(0).safeParse(value.value)
-                                .success
-                                ? undefined
-                                : t.students.validations.sexValidation;
-                            },
-                          }}
-                          children={(field) => (
-                            <>
-                              <span>{t.students.form.sex}</span>
-                              <Combobox
-                                options={enumToArray(SexEnum)}
-                                textAttribute="value"
-                                valueAttribute="key"
-                                placeholder={t.students.form.sex}
-                                itemSelected={enumToArray(SexEnum).find(
-                                  (x) => x.key === field.state.value,
-                                )}
-                                setItemSelected={(x: { key: number }) => {
-                                  field.handleChange(x && x.key);
-                                }}
-                                disabled={action === "view"}
-                                showSearch
-                              />
-                              <div className="text-xs text-red-500">
-                                {field.state.meta.errors}
-                              </div>
-                            </>
-                          )}
-                        />
-                      </div>
                       <div className="col-span-1 space-y-1 md:col-span-2">
                         <form.Field
                           name={`ContactPerson[${index}].Email`}
@@ -938,7 +988,7 @@ export default function StudentForm({
                       <div className="col-span-1 grid grid-cols-1 gap-5 md:col-span-2 md:grid-cols-2 lg:grid-cols-3">
                         <div className="space-y-1">
                           <form.Field
-                            name={`ContactPerson[${index}].BirthCountryId`}
+                            name={`ContactPerson[${index}].CountryId`}
                             validators={{
                               onSubmitAsync: (value) => {
                                 if (value === null || value === undefined) {
@@ -953,12 +1003,12 @@ export default function StudentForm({
                             }}
                             children={(field) => (
                               <>
-                                <span>{t.students.form.birthCountryId}</span>
+                                <span>{t.students.form.countryId}</span>
                                 <Combobox
                                   options={countries}
                                   textAttribute="Name"
                                   valueAttribute="CountryId"
-                                  placeholder={t.students.form.birthCountryId}
+                                  placeholder={t.students.form.countryId}
                                   itemSelected={countries.find(
                                     (x) => x.CountryId === field.state.value,
                                   )}
@@ -970,6 +1020,11 @@ export default function StudentForm({
                                   disabled={action === "view"}
                                   showSearch
                                 />
+                                <div className="text-xs text-red-500">
+                                  {field.state.meta.errors
+                                    ? field.state.meta.errors.join(", ")
+                                    : null}
+                                </div>
                               </>
                             )}
                           />
@@ -979,11 +1034,11 @@ export default function StudentForm({
                             name={`ContactPerson[${index}].BirthCity`}
                             children={(field) => (
                               <>
-                                <span>{t.students.form.birthCity}</span>
+                                <span>{t.students.form.contactCity}</span>
                                 <Input
                                   id="BirthCity"
                                   name="BirthCity"
-                                  placeholder={`${t.students.form.birthCity}`}
+                                  placeholder={`${t.students.form.contactCity}`}
                                   className="w-full"
                                   value={field.state.value || ""}
                                   onChange={(e) =>
@@ -1096,6 +1151,11 @@ export default function StudentForm({
                                 disabled={action === "view"}
                                 showSearch
                               />
+                              <div className="text-xs text-red-500">
+                                {field.state.meta.errors
+                                  ? field.state.meta.errors.join(", ")
+                                  : null}
+                              </div>
                             </>
                           )}
                         />
@@ -1130,6 +1190,7 @@ export default function StudentForm({
       ) : (
         <div className="col-span-2 flex justify-center space-x-3">
           <Button
+            // type="button"
             variant={"secondary"}
             className="w-[40%]"
             onClick={() => router.back()}

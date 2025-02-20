@@ -45,6 +45,38 @@ export default function DateInput({
     }
   }, []);
 
+  const parseDateString = (value: string) => {
+    const dateRegex = /^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/;
+    const match = value.match(dateRegex);
+
+    if (match) {
+      const [_, day, month, year] = match;
+      return {
+        Day: parseInt(day),
+        Month: parseInt(month),
+        Year: parseInt(year),
+      };
+    }
+    return null;
+  };
+
+  const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const pastedText = event.clipboardData.getData("text");
+    const parsedDate = parseDateString(pastedText);
+
+    if (parsedDate) {
+      setDateValues(parsedDate);
+    } else {
+      // If not a full date, paste only in the current field
+      const { name } = event.currentTarget;
+      setDateValues((prev) => ({
+        ...prev,
+        [name]: pastedText === "" ? null : Number(pastedText),
+      }));
+    }
+  };
+
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = event.target;
@@ -174,6 +206,7 @@ export default function DateInput({
           className="w-full"
           value={dateValues.Day ?? ""}
           onChange={handleChange}
+          onPaste={handlePaste}
           disabled={disabled}
         />
         <Input

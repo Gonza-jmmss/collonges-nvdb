@@ -11,5 +11,9 @@ export const PersonSchema = z.object({
   BirthCity: z.string().nullable(),
   Address1: z.string().nullable(),
   BirthCountryId: z.number().nullable(),
+  CountryId: z.number().nullable(),
   Email: z.string().nullable(),
+  DBaseCode: z.string().nullable(),
+  ImageName: z.string().nullable(),
+  ImageNameTemp: z.string().nullable(),
 });

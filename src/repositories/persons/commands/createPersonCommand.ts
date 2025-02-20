@@ -22,6 +22,8 @@ const createPersonCommand = async (params: PersonParams) => {
       Address1: params.Address1,
       BirthCountryId: params.BirthCountryId,
       Email: params.Email,
+      DBaseCode: params.DBaseCode,
+      ImageName: params.ImageNameTemp,
     },
   });
 

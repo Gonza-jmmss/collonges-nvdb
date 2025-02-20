@@ -5,8 +5,18 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
+  // images: {
+  //   domains: ["localhost"],
+  // },
   images: {
-    domains: ["localhost"],
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3000",
+        pathname: "/api/images/**",
+      },
+    ],
   },
   headers: async () => {
     return [

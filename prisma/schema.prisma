@@ -69,16 +69,17 @@ model ContactTypes {
 }
 
 model Countries {
-  CountryId       Int               @id(map: "PK__Countrie__10D1609FF8C41E7A") @default(autoincrement())
-  Name            String            @db.NVarChar(50)
-  ISO2            String?           @db.NVarChar(5)
-  ISO3            String?           @db.NVarChar(5)
-  PhoneCode       String?           @db.NVarChar(50)
-  NameEnglish     String?           @db.NVarChar(50)
-  UpdatedAt       DateTime?
-  CreatedAt       DateTime          @default(now())
-  PersonCountries PersonCountries[]
-  Persons         Persons[]
+  CountryId                            Int               @id(map: "PK__Countrie__10D1609FF8C41E7A") @default(autoincrement())
+  Name                                 String            @db.NVarChar(50)
+  ISO2                                 String?           @db.NVarChar(5)
+  ISO3                                 String?           @db.NVarChar(5)
+  PhoneCode                            String?           @db.NVarChar(50)
+  NameEnglish                          String?           @db.NVarChar(50)
+  UpdatedAt                            DateTime?
+  CreatedAt                            DateTime          @default(now())
+  PersonCountries                      PersonCountries[]
+  Persons_Persons_CountryIdToCountries Persons[]         @relation("Persons_CountryIdToCountries")
+  Persons                              Persons[]
 
   @@schema("Core")
 }
@@ -165,33 +166,35 @@ model PersonCountries {
 }
 
 model Persons {
-  PersonId                             Int               @id(map: "PK__Persons__AA2FFBE545B07A2A") @default(autoincrement())
-  FirstName                            String?           @db.NVarChar(50)
-  LastName                             String?           @db.NVarChar(50)
-  AlternativeName                      String?           @db.NVarChar(100)
-  BirthDate                            DateTime?         @db.Date
-  Sex                                  Int?
-  Telephone                            String?           @db.NVarChar(20)
-  WorkTelephone                        String?           @db.NVarChar(20)
-  CivilStatus                          Int?
-  ReligionId                           Int?
-  Profession                           String?           @db.NVarChar(50)
-  BirthCity                            String?           @db.NVarChar(50)
-  Address1                             String?           @db.NVarChar(100)
-  Address2                             String?           @db.NVarChar(100)
-  Address3                             String?           @db.NVarChar(100)
-  CountryId                            Int?
-  BirthCountryId                       Int?
-  Email                                String?           @db.NVarChar(50)
-  DBaseCode                            String?           @db.NVarChar(10)
-  UpdatedAt                            DateTime?
-  CreatedAt                            DateTime          @default(now())
-  Contacts_Contacts_ContactIdToPersons Contacts[]        @relation("Contacts_ContactIdToPersons")
-  Contacts_Contacts_PersonIdToPersons  Contacts[]        @relation("Contacts_PersonIdToPersons")
-  PersonCountries                      PersonCountries[]
-  Religions                            Religions?        @relation(fields: [ReligionId], references: [ReligionId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Persons_Religions")
-  Countries                            Countries?        @relation(fields: [BirthCountryId], references: [CountryId], onDelete: NoAction, onUpdate: NoAction, map: "FK_PersonsBirth_Countries")
-  Students                             Students[]
+  PersonId                               Int               @id(map: "PK__Persons__AA2FFBE545B07A2A") @default(autoincrement())
+  FirstName                              String?           @db.NVarChar(50)
+  LastName                               String?           @db.NVarChar(50)
+  AlternativeName                        String?           @db.NVarChar(100)
+  BirthDate                              DateTime?         @db.Date
+  Sex                                    Int?
+  Telephone                              String?           @db.NVarChar(20)
+  WorkTelephone                          String?           @db.NVarChar(20)
+  CivilStatus                            Int?
+  ReligionId                             Int?
+  Profession                             String?           @db.NVarChar(50)
+  BirthCity                              String?           @db.NVarChar(50)
+  Address1                               String?           @db.NVarChar(100)
+  Address2                               String?           @db.NVarChar(100)
+  Address3                               String?           @db.NVarChar(100)
+  CountryId                              Int?
+  BirthCountryId                         Int?
+  Email                                  String?           @db.NVarChar(50)
+  DBaseCode                              String?           @db.NVarChar(10)
+  UpdatedAt                              DateTime?
+  CreatedAt                              DateTime          @default(now())
+  ImageName                              String?           @db.NVarChar(Max)
+  Contacts_Contacts_ContactIdToPersons   Contacts[]        @relation("Contacts_ContactIdToPersons")
+  Contacts_Contacts_PersonIdToPersons    Contacts[]        @relation("Contacts_PersonIdToPersons")
+  PersonCountries                        PersonCountries[]
+  Countries_Persons_CountryIdToCountries Countries?        @relation("Persons_CountryIdToCountries", fields: [CountryId], references: [CountryId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Persons_Countries")
+  Religions                              Religions?        @relation(fields: [ReligionId], references: [ReligionId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Persons_Religions")
+  Countries                              Countries?        @relation(fields: [BirthCountryId], references: [CountryId], onDelete: NoAction, onUpdate: NoAction, map: "FK_PersonsBirth_Countries")
+  Students                               Students[]
 
   @@schema("Persons")
 }
@@ -225,6 +228,7 @@ model ScholarYears {
   ToDate         DateTime?        @db.Date
   UpdatedAt      DateTime?
   CreatedAt      DateTime         @default(now())
+  IsActive       Boolean
   StudentCourses StudentCourses[]
 
   @@schema("Courses")

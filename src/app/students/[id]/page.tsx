@@ -32,7 +32,7 @@ export default async function Student({
   const nonStudents = await getAllNonStudentsQuery();
 
   return (
-    <div className="mt-3 w-[70vw] rounded-md border bg-muted/60 p-5 shadow-md">
+    <div className="relative mt-3 w-[70vw] rounded-md border bg-muted/60 p-5 shadow-md">
       <div className="flex justify-between space-x-3">
         <span className="text-xl font-semibold">{t.students.student}</span>
       </div>

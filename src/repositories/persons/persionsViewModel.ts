@@ -17,6 +17,7 @@ export type PersonViewModel = {
   CountryId: number | null;
   BirthCountryId: number | null;
   Email: string | null;
+  Image: string | null;
   DBaseCode: string | null;
 };
 
@@ -39,6 +40,7 @@ export type PersonsViewModel = {
   CountryId: number | null;
   BirthCountryId: number | null;
   Email: string | null;
+  Image: string | null;
   DBaseCode: string | null;
   UpdatedAt: Date | null;
   CreatedAt: Date;
