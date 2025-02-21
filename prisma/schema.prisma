@@ -85,39 +85,20 @@ model Countries {
 }
 
 model Courses {
-  CoursId        Int              @id(map: "PK__Courses__DA537785C1FC6AFA") @default(autoincrement())
+  CourseId       Int              @id(map: "PK__Courses__DA537785C1FC6AFA") @default(autoincrement())
   Name           String           @db.NVarChar(50)
   EnglishName    String           @db.NVarChar(50)
   CourseCode     String?          @db.NVarChar(50)
   CreditAmount   Int
-  CoursPeriodId  Int
+  CoursePeriodId Int
   PeriodNumber   Int?
-  CoursesTypeId  Int
+  CourseTypeId   Int
   IsEnabled      Boolean?
   UpdatedAt      DateTime?
   CreatedAt      DateTime         @default(now())
-  CoursPeriods   CoursPeriods     @relation(fields: [CoursPeriodId], references: [CoursPeriodId], onUpdate: NoAction, map: "FK_Courses_CoursPeriods")
+  CoursePeriods  CoursePeriods    @relation(fields: [CoursePeriodId], references: [CoursePeriodId], onUpdate: NoAction, map: "FK_Courses_CoursePeriods")
+  CourseTypes    CourseTypes      @relation(fields: [CourseTypeId], references: [CourseTypeId], onUpdate: NoAction, map: "FK_Courses_CourseTypes")
   StudentCourses StudentCourses[]
-
-  @@schema("Courses")
-}
-
-model CoursesTypes {
-  CoursTypeId Int       @id(map: "PK__CoursesT__56A57B3E62FBA2B7") @default(autoincrement())
-  Name        String    @db.NVarChar(50)
-  UpdatedAt   DateTime?
-  CreatedAt   DateTime  @default(now())
-
-  @@schema("Courses")
-}
-
-model CoursPeriods {
-  CoursPeriodId Int       @id(map: "PK__CoursPer__EACACD3ABDE3E123") @default(autoincrement())
-  Name          String    @db.NVarChar(50)
-  MonthAmount   Int
-  UpdatedAt     DateTime?
-  CreatedAt     DateTime  @default(now())
-  Courses       Courses[]
 
   @@schema("Courses")
 }
@@ -235,16 +216,16 @@ model ScholarYears {
 }
 
 model StudentCourses {
-  StudentCoursId Int          @id(map: "PK__StudentC__79F228C2995AE57D") @default(autoincrement())
-  StudentId      Int
-  CoursId        Int
-  Note           String?      @db.NVarChar(5)
-  ScholarYearId  Int
-  UpdatedAt      DateTime?
-  CreatedAt      DateTime     @default(now())
-  Courses        Courses      @relation(fields: [CoursId], references: [CoursId], onUpdate: NoAction, map: "FK_StudentCourses_Courses")
-  ScholarYears   ScholarYears @relation(fields: [ScholarYearId], references: [ScholarYearId], onUpdate: NoAction, map: "FK_StudentCourses_ScholarYears")
-  Students       Students     @relation(fields: [StudentId], references: [StudentId], onUpdate: NoAction, map: "FK_StudentCourses_Students")
+  StudentCourseId Int          @id(map: "PK__StudentC__79F228C2995AE57D") @default(autoincrement())
+  StudentId       Int
+  CourseId        Int
+  Note            String?      @db.NVarChar(5)
+  ScholarYearId   Int
+  UpdatedAt       DateTime?
+  CreatedAt       DateTime     @default(now())
+  Courses         Courses      @relation(fields: [CourseId], references: [CourseId], onUpdate: NoAction, map: "FK_StudentCourses_Courses")
+  ScholarYears    ScholarYears @relation(fields: [ScholarYearId], references: [ScholarYearId], onUpdate: NoAction, map: "FK_StudentCourses_ScholarYears")
+  Students        Students     @relation(fields: [StudentId], references: [StudentId], onUpdate: NoAction, map: "FK_StudentCourses_Students")
 
   @@schema("Courses")
 }
@@ -350,4 +331,25 @@ model RoleModuleElements {
   Roles               Roles           @relation(fields: [RoleId], references: [RoleId], onUpdate: NoAction, map: "FK_RoleModuleElements_Roles")
 
   @@schema("Users")
+}
+
+model CoursePeriods {
+  CoursePeriodId Int       @id(map: "PK__CoursPer__EACACD3ABDE3E123") @default(autoincrement())
+  Name           String    @db.NVarChar(50)
+  MonthAmount    Int
+  UpdatedAt      DateTime?
+  CreatedAt      DateTime  @default(now())
+  Courses        Courses[]
+
+  @@schema("Courses")
+}
+
+model CourseTypes {
+  CourseTypeId Int       @id(map: "PK__CoursesT__56A57B3E62FBA2B7") @default(autoincrement())
+  Name         String    @db.NVarChar(50)
+  UpdatedAt    DateTime?
+  CreatedAt    DateTime  @default(now(), map: "CoursesTypes_CreatedAt_df")
+  Courses      Courses[]
+
+  @@schema("Courses")
 }

@@ -11,6 +11,7 @@ export default {
     modules: "Modules",
     moduleElements: "Éléments du module",
     roleModuleElements: "Éléments du module de rôle",
+    courses: "Cours",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -306,6 +307,45 @@ export default {
     deleteModal: {
       title: "Êtes-vous sûr de désactiver l'étudiant ?",
       description: "L'étudiant sera désactivé",
+    },
+  },
+  courses: {
+    title: "Page des cours",
+    course: "Cours",
+    create: "Créer un cours",
+    columns: {
+      courseId: "ID",
+      name: "Cours",
+      courseCode: "Code cours",
+      periodNumber: "Trimestre",
+      creditAmount: "Crédits",
+      isEnabled: "Est activé",
+    },
+    form: {
+      name: "Nom français",
+      englishName: "Nom anglais",
+      courseCode: "Code cours",
+      creditAmount: "Crédits",
+      coursePeriodId: "Type de période",
+      periodNumber: "N° Trimestre",
+      courseTypeId: "Type de cours",
+      isEnabled: "Est activé",
+    },
+    notifications: {
+      createSuccess: "Cours créé avec succès",
+      createError: "Une erreur s'est produite pendant la création du cours",
+      createFailure: "Échec de la création du cours",
+      updateSuccess: "Cours modifié avec succès",
+      updateError: "Une erreur s'est produite pendant la modification du cours",
+      updateFailure: "Échec de la modification du cours",
+      deleteSuccess: "Cours désactivé  avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la désactivation du cours",
+      deleteFailure: "Échec de la désactivation du cours",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de désactiver le cours ?",
+      description: "Le cours sera désactivé",
     },
   },
   reports: {
