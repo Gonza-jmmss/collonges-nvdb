@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import Icon from "@/components/common/icon";
@@ -22,32 +24,24 @@ import {
 } from "@/components/ui/table";
 
 // A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
-import {
-  RankingInfo,
-  rankItem,
-  compareItems,
-} from "@tanstack/match-sorter-utils";
+import { rankItem } from "@tanstack/match-sorter-utils";
 
 import {
   ColumnFiltersState,
   FilterFn,
-  ColumnDef,
-  SortingFn,
+  ExpandedState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  sortingFns,
+  getExpandedRowModel,
   useReactTable,
-  SortingState,
   VisibilityState,
 } from "@tanstack/react-table";
 
 import DebouncedInput from "@/components/common/debouncedInput";
 import Filter from "@/components/common/filter";
-import { Value } from "@radix-ui/react-select";
-import { set } from "zod";
 
 declare module "@tanstack/react-table" {
   //add fuzzy filter to the filterFns
@@ -103,6 +97,9 @@ interface TableProps<T> {
   onRowClick?: (row: any) => void;
   className?: string;
   minimalMode?: boolean;
+  noBorders?: boolean;
+  expandable?: boolean;
+  expandedContent?: React.ReactNode;
 }
 export default function TableComponent<T>({
   columns,
@@ -110,6 +107,9 @@ export default function TableComponent<T>({
   onRowClick,
   className,
   minimalMode,
+  noBorders,
+  expandable,
+  expandedContent,
 }: TableProps<T>) {
   // const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] =
@@ -125,6 +125,8 @@ export default function TableComponent<T>({
 
   const [rowsNumber, setRowsNumber] = React.useState({ key: "10", value: 10 });
 
+  const [expanded, setExpanded] = React.useState<ExpandedState>({});
+
   React.useEffect(() => {
     table.setPageSize(rowsNumber.value);
   }, [rowsNumber]);
@@ -139,14 +141,20 @@ export default function TableComponent<T>({
       columnFilters,
       globalFilter,
       columnVisibility,
+      expanded,
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
+    onExpandedChange: setExpanded,
+    // getSubRows: (row) => row.subRows,
+    // getSubRows: (row) => row.children,
     globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter (most common use case for fuzzy filter)
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(), //client side filtering
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getRowCanExpand: () => expandable || false,
+    getExpandedRowModel: getExpandedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     // onSortingChange: setSorting,
@@ -158,21 +166,13 @@ export default function TableComponent<T>({
   return (
     <div className="w-full">
       {minimalMode ? (
-        <div className="rounded-md border">
+        <div className={`${noBorders ? "" : "rounded-md border"}`}>
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
-                      // <TableHead key={header.id}>
-                      //   {header.isPlaceholder
-                      //     ? null
-                      //     : flexRender(
-                      //         header.column.columnDef.header,
-                      //         header.getContext(),
-                      //       )}
-                      // </TableHead>
                       <TableHead
                         key={header.id}
                         style={{
@@ -222,27 +222,35 @@ export default function TableComponent<T>({
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    onClick={() => onRowClick?.(row.original)}
-                    className={`${onRowClick != null && "cursor-pointer"}`}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        style={{
-                          width: cell.column.columnDef.size || "auto",
-                        }}
-                        onClick={(event) => event.stopPropagation()}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
+                  <React.Fragment key={row.id}>
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      onClick={() => onRowClick?.(row.original)}
+                      className={`${onRowClick != null && "cursor-pointer"}`}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                          style={{
+                            width: cell.column.columnDef.size || "auto",
+                          }}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                    {row.getIsExpanded() && (
+                      <TableRow>
+                        <TableCell colSpan={row.getAllCells().length}>
+                          <div>{expandedContent}</div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
                 ))
               ) : (
                 <TableRow>
@@ -312,14 +320,6 @@ export default function TableComponent<T>({
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
                       return (
-                        // <TableHead key={header.id}>
-                        //   {header.isPlaceholder
-                        //     ? null
-                        //     : flexRender(
-                        //         header.column.columnDef.header,
-                        //         header.getContext(),
-                        //       )}
-                        // </TableHead>
                         <TableHead
                           key={header.id}
                           style={{
@@ -347,11 +347,7 @@ export default function TableComponent<T>({
                                 />
                               ),
                               desc: (
-                                <Icon
-                                  name={"MdSouth"}
-                                  // size={13}
-                                  className="ml-0.5"
-                                />
+                                <Icon name={"MdSouth"} className="ml-0.5" />
                               ),
                             }[header.column.getIsSorted() as string] ?? null}
                           </div>
@@ -369,26 +365,35 @@ export default function TableComponent<T>({
               <TableBody>
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                      onClick={() => onRowClick?.(row.original)}
-                      className={`${onRowClick != null && "cursor-pointer"}`}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell
-                          key={cell.id}
-                          style={{
-                            width: cell.column.columnDef.size || "auto",
-                          }}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
+                    <React.Fragment key={row.id}>
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                        onClick={() => onRowClick?.(row.original)}
+                        className={`${onRowClick != null && "cursor-pointer"}`}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell
+                            key={cell.id}
+                            style={{
+                              width: cell.column.columnDef.size || "auto",
+                            }}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                      {row.getIsExpanded() && (
+                        <TableRow>
+                          <TableCell colSpan={row.getAllCells().length}>
+                            <div>{expandedContent}</div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
                   ))
                 ) : (
                   <TableRow>
