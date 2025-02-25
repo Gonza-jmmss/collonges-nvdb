@@ -1,0 +1,355 @@
+"use client";
+
+import { useState } from "react";
+import createStudentCourseCommand from "@/repositories/studentCourses/commands/createStudentCourseCommands";
+import updateStudentCourseCommand from "@/repositories/studentCourses/commands/updateStudentCoursesCommands";
+import {
+  StudentsWithNoCoursesViewModel,
+  StudentCoursesByStudentIdViewModel,
+} from "@/repositories/studentCourses/studentCoursesViewModel";
+import { CourseViewModel } from "@/repositories/courses/coursesViewModel";
+import { ScholarPeriodsViewModel } from "@/repositories/scholarPeriods/scholarPeriodsViewModel";
+import { StudentCourseSchema } from "@/zodSchemas/studentCourses";
+import { useForm } from "@tanstack/react-form";
+import { Button } from "@/components/ui/button";
+import Combobox from "@/components/common/combobox";
+import Icon from "@/components/common/icon";
+import isValidIconName from "@/functions/isValidIconName";
+import enumToArray from "@/functions/enumToArray";
+import { PeriodEnum } from "@/enum/periodEnum";
+import { useUpdateQuery } from "@/hooks/useUpdateQuery";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+import frFR from "@/lang/fr-FR";
+
+type StudentCourseFormData = z.infer<typeof StudentCourseSchema>;
+
+export default function StudentCourseForm({
+  studentCoursesData,
+  studentsWithNoCourses,
+  courses,
+  allCourses,
+  scholarPeriods,
+  action,
+  urlParams,
+}: {
+  studentCoursesData: StudentCoursesByStudentIdViewModel;
+  studentsWithNoCourses: StudentsWithNoCoursesViewModel[];
+  courses: CourseViewModel[];
+  allCourses: CourseViewModel[];
+  scholarPeriods: ScholarPeriodsViewModel[];
+  action: string | undefined;
+  urlParams?: { [key: string]: string | string[] | undefined };
+}) {
+  const t = frFR;
+  const { toast } = useToast();
+  const router = useRouter();
+  const updateQuery = useUpdateQuery();
+
+  const [isPending, setIsPending] = useState(false);
+
+  const [periodSelected, setPeriodSelected] = useState(
+    typeof urlParams?.period === "string" ? parseInt(urlParams?.period) : 4,
+  );
+
+  const form = useForm<StudentCourseFormData>({
+    defaultValues: {
+      StudentId: action !== "create" ? (studentCoursesData?.StudentId ?? 0) : 0,
+      ScholarPeriodId:
+        action !== "create"
+          ? (studentCoursesData?.StudentCourses[0].ScholarPeriodId ??
+            scholarPeriods[0].ScholarPeriodId)
+          : scholarPeriods[0].ScholarPeriodId,
+      StudentCourses:
+        action !== "create"
+          ? (studentCoursesData?.StudentCourses?.map((studentCourse) => ({
+              CourseId: studentCourse.CourseId,
+            })) ?? null)
+          : null,
+    },
+    onSubmit: async ({ value }) => {
+      // console.log("formData", value);
+      action === "create" && createStudentCourse(value);
+      action === "edit" && updateStudentCourse(value);
+    },
+  });
+
+  const createStudentCourse = async (formData: StudentCourseFormData) => {
+    try {
+      const response = await createStudentCourseCommand(formData);
+
+      if (!response) {
+        throw new Error(`${t.studentCourses.notifications.createFailure}`);
+      }
+      toast({
+        title: `${t.studentCourses.notifications.createSuccess}`,
+        description: `${t.studentCourses.title} : ${studentCoursesData?.AlternativeName}`,
+      });
+
+      router.push("/courses/studentCourses");
+      router.refresh();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: `${t.studentCourses.notifications.createError}`,
+        description: `${error}`,
+      });
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  const updateStudentCourse = async (formData: StudentCourseFormData) => {
+    try {
+      const response = await updateStudentCourseCommand(formData);
+
+      if (!response) {
+        throw new Error(`${t.studentCourses.notifications.updateFailure}`);
+      }
+      toast({
+        title: `${t.studentCourses.notifications.updateSuccess}`,
+        description: `${t.studentCourses.title} : ${studentCoursesData?.AlternativeName}`,
+      });
+
+      router.push("/courses/studentCourses");
+      router.refresh();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: `${t.studentCourses.notifications.updateError}`,
+        description: `${error}`,
+      });
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  const handleUrlParameterChange = (key: string, value: string) => {
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.set(key, value);
+
+    // Update URL without replacing current parameters
+    const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+
+    // Use router.push or history.pushState depending on your navigation setup
+    // router.push(newUrl);
+    // or
+    window.history.pushState({}, "", newUrl);
+
+    // If you need to update some state as well
+    updateQuery(Object.fromEntries(currentParams));
+  };
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        form.handleSubmit();
+      }}
+      className="mt-3 grid grid-cols-1 gap-5"
+    >
+      <div className="col-span-2 space-y-1">
+        <form.Field
+          name="StudentId"
+          children={(field) => (
+            <>
+              <span>{t.studentCourses.form.studentId}</span>
+              <Combobox
+                options={studentsWithNoCourses}
+                textAttribute="AlternativeName"
+                valueAttribute="StudentId"
+                placeholder={t.studentCourses.form.studentId}
+                itemSelected={studentsWithNoCourses.find(
+                  (x) => x.StudentId === field.state.value,
+                )}
+                setItemSelected={(x: { StudentId: number }) => {
+                  field.handleChange(x && x.StudentId);
+                }}
+                disabled={action === "view"}
+                showSearch
+              />
+            </>
+          )}
+        />
+      </div>
+      <div className="col-span-2 space-y-1">
+        <form.Field
+          name="ScholarPeriodId"
+          children={(field) => (
+            <>
+              <span>{t.studentCourses.form.scholarPeriodId}</span>
+              <Combobox
+                options={scholarPeriods}
+                textAttribute="Name"
+                valueAttribute="ScholarPeriodId"
+                placeholder={t.studentCourses.form.scholarPeriodId}
+                itemSelected={scholarPeriods.find(
+                  (x) => x.ScholarPeriodId === field.state.value,
+                )}
+                setItemSelected={(x: { ScholarPeriodId: number }) => {
+                  field.handleChange(x && x.ScholarPeriodId);
+                }}
+                disabled={action === "view"}
+                showSearch
+              />
+            </>
+          )}
+        />
+      </div>
+      <div className="col-span-2 space-y-1">
+        <form.Field
+          name="StudentCourses"
+          mode="array"
+          children={(field) => (
+            <div className="flex flex-col space-y-5">
+              <div className="grid grid-cols-6">
+                <span className="col-span-6">
+                  {t.studentCourses.form.addCourse}
+                </span>
+                <span className="col-span-2 mt-3 md:col-span-1">
+                  {t.studentCourses.form.coursePeriod}
+                </span>
+                <div className="col-span-4 mt-2 md:col-span-5">
+                  <Combobox
+                    options={enumToArray(PeriodEnum)}
+                    textAttribute="value"
+                    valueAttribute="key"
+                    placeholder={t.courses.form.periodNumber}
+                    itemSelected={enumToArray(PeriodEnum).find(
+                      (x) => x.key === periodSelected,
+                    )}
+                    setItemSelected={(x: { key: number }) => {
+                      setPeriodSelected(x && x.key);
+                      handleUrlParameterChange("period", `${x.key}`);
+                    }}
+                  />
+                </div>
+                <span className="col-span-2 mt-3 md:col-span-1">
+                  {t.studentCourses.form.studentCourses}
+                </span>
+                <div className="col-span-4 mt-2 md:col-span-5">
+                  <Combobox
+                    options={courses}
+                    textAttribute={["Name", "CourseCode"]}
+                    valueAttribute="CourseId"
+                    placeholder={t.studentCourses.form.studentCourses}
+                    setItemSelected={(x: { CourseId: number }) => {
+                      if (
+                        !field.state.value
+                          ?.map((v) => v.CourseId)
+                          .includes(x.CourseId)
+                      )
+                        field.pushValue({
+                          CourseId: x && x.CourseId,
+                        });
+                    }}
+                    disabled={action === "view"}
+                    showSearch
+                  />
+                </div>
+              </div>
+              <div className="space-y-3 rounded-md border bg-muted p-2">
+                <div className="grid grid-cols-12">
+                  <div className="col-span-7 text-sm font-semibold">
+                    {t.studentCourses.columns.name}
+                  </div>
+                  <div className="col-span-3 text-sm font-semibold">
+                    {t.studentCourses.columns.courseCode}
+                  </div>
+                  <div className="col-span-1 text-sm font-semibold">
+                    {t.studentCourses.columns.note}
+                  </div>
+                </div>
+                {field.state.value?.map((studentCourse, index) => (
+                  <div
+                    key={index}
+                    className="col-span-1 rounded-md border border-foreground/30 p-2 md:col-span-2"
+                  >
+                    <div className="grid grid-cols-12">
+                      <div className="col-span-7 text-sm">
+                        {
+                          allCourses.find(
+                            (x) => x.CourseId === studentCourse.CourseId,
+                          )?.Name
+                        }
+                      </div>
+                      <div className="col-span-3 text-sm">
+                        {` ${
+                          allCourses.find(
+                            (x) => x.CourseId === studentCourse.CourseId,
+                          )?.CourseCode
+                        } `}
+                      </div>
+                      <div className="col-span-1 text-sm">
+                        {studentCoursesData?.StudentCourses.find(
+                          (x) => x.CourseId === studentCourse.CourseId,
+                        )?.Note !== undefined &&
+                          studentCoursesData?.StudentCourses.find(
+                            (x) => x.CourseId === studentCourse.CourseId,
+                          )?.Note !== null &&
+                          studentCoursesData?.StudentCourses.find(
+                            (x) => x.CourseId === studentCourse.CourseId,
+                          )?.Note}
+                      </div>
+                      {(studentCoursesData?.StudentCourses.find(
+                        (x) => x.CourseId === studentCourse.CourseId,
+                      )?.Note !== undefined &&
+                        studentCoursesData?.StudentCourses.find(
+                          (x) => x.CourseId === studentCourse.CourseId,
+                        )?.Note !== null) || (
+                        <Icon
+                          name={
+                            isValidIconName("MdClose")
+                              ? "MdClose"
+                              : "MdOutlineNotInterested"
+                          }
+                          className="col-span-1 cursor-pointer place-self-end text-xl hover:text-primary"
+                          onClick={() => field.removeValue(index)}
+                        />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        />
+      </div>
+      <div className="col-span-1 md:col-span-2">
+        {action !== "view" ? (
+          <div className="flex justify-center space-x-3">
+            <Button
+              type="button"
+              variant={"secondary"}
+              className="w-[30%]"
+              onClick={() => router.push("/courses/studentCourses")}
+            >
+              {t.shared.cancel}
+            </Button>
+            <Button
+              type="submit"
+              variant={"default"}
+              className="w-[30%]"
+              disabled={isPending}
+            >
+              {t.shared.save}
+            </Button>
+          </div>
+        ) : (
+          <div className="flex justify-center space-x-3">
+            <Button
+              variant={"secondary"}
+              className="w-[30%]"
+              onClick={() => router.back()}
+            >
+              {t.shared.cancel}
+            </Button>
+          </div>
+        )}
+      </div>
+      {/* <pre>{JSON.stringify(studentCoursesData, null, 2)}</pre> */}
+    </form>
+  );
+}

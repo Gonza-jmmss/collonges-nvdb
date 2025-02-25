@@ -12,6 +12,7 @@ export default {
     moduleElements: "Éléments du module",
     roleModuleElements: "Éléments du module de rôle",
     courses: "Cours",
+    studentCourses: "Cours des étudiant",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -78,7 +79,7 @@ export default {
       updateError:
         "Une erreur s'est produite pendant la modification de l'utilisateur",
       updateFailure: "Échec de la modification de l'utilisateur",
-      deleteSuccess: "Utilisateur désactivé  avec succès",
+      deleteSuccess: "Utilisateur désactivé avec succès",
       deleteError:
         "Une erreur s'est produite pendant la désactivation de l'utilisateur",
       deleteFailure: "Échec de la désactivation de l'utilisateur",
@@ -299,7 +300,7 @@ export default {
       updateError:
         "Une erreur s'est produite pendant la modification de l'étudiant",
       updateFailure: "Échec de la modification de l'étudiant",
-      deleteSuccess: "Étudiant désactivé  avec succès",
+      deleteSuccess: "Étudiant désactivé avec succès",
       deleteError:
         "Une erreur s'est produite pendant la désactivation de l'étudiant",
       deleteFailure: "Échec de la désactivation de l'étudiant",
@@ -338,7 +339,7 @@ export default {
       updateSuccess: "Cours modifié avec succès",
       updateError: "Une erreur s'est produite pendant la modification du cours",
       updateFailure: "Échec de la modification du cours",
-      deleteSuccess: "Cours désactivé  avec succès",
+      deleteSuccess: "Cours désactivé avec succès",
       deleteError:
         "Une erreur s'est produite pendant la désactivation du cours",
       deleteFailure: "Échec de la désactivation du cours",
@@ -346,6 +347,42 @@ export default {
     deleteModal: {
       title: "Êtes-vous sûr de désactiver le cours ?",
       description: "Le cours sera désactivé",
+    },
+  },
+  studentCourses: {
+    title: "Page des cours des étudiants",
+    studentCourse: "Cours des étudiant",
+    create: "Créer un cours des étudiants",
+    columns: {
+      studentId: "ID",
+      alternativeName: "Étudiant",
+      note: "Note",
+      scholarPeriodId: "Période",
+      courseId: "Cours ID",
+      name: "Cours",
+      courseCode: "Code cours",
+    },
+    form: {
+      studentId: "Étudiant",
+      studentCourses: "Cours",
+      addCourse: "Ajouter cours",
+      coursePeriod: "Trimestre",
+      scholarPeriodId: "Période",
+    },
+    notifications: {
+      createSuccess: "Cours ajoutés de l'étudiant avec succès",
+      createError:
+        "Une erreur s'est produite pendant l'ajout du cours de l'étudiant",
+      createFailure: "Échec de l'ajout du cours de l'étudiant",
+      updateSuccess: "Cours modifiés de l'étudiant avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification du cours de l'étudiant",
+      updateFailure: "Échec de la modification du cours de l'étudiant",
+
+      // deleteSuccess: "Cours de l'étudiant désactivé avec succès",
+      // deleteError:
+      //   "Une erreur s'est produite pendant la désactivation du cours de l'étudiant",
+      // deleteFailure: "Échec de la désactivation du cours de l'étudiant",
     },
   },
   reports: {
