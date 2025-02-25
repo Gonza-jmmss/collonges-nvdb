@@ -39,8 +39,10 @@ export type StudentCourseMapViewModel = {
     CreditAmount: number;
     PeriodNumber: number | null;
   };
-  ScholarYears: {
-    Name: string;
+  ScholarPeriods: {
+    ScholarYears: {
+      Name: string;
+    };
   };
   StudentId: number;
   UpdatedAt: Date | null;

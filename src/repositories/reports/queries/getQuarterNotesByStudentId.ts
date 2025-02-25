@@ -31,9 +31,13 @@ const getQuarterNotesByStudentId = async (studentId: number) => {
               PeriodNumber: true,
             },
           },
-          ScholarYears: {
-            select: {
-              Name: true,
+          ScholarPeriods: {
+            include: {
+              ScholarYears: {
+                select: {
+                  Name: true,
+                },
+              },
             },
           },
         },
@@ -61,7 +65,7 @@ const getQuarterNotesByStudentId = async (studentId: number) => {
         Quarter: studentCourse.Courses.PeriodNumber,
         CourseName: studentCourse.Courses.Name,
         CoursEnglishName: studentCourse.Courses.EnglishName,
-        ScholarYear: studentCourse.ScholarYears.Name,
+        ScholarYear: studentCourse.ScholarPeriods.ScholarYears.Name,
         CreditAmount: studentCourse.Courses.CreditAmount,
         Note: studentCourse.Note,
         AmericanNote:

@@ -210,22 +210,22 @@ model ScholarYears {
   UpdatedAt      DateTime?
   CreatedAt      DateTime         @default(now())
   IsActive       Boolean
-  StudentCourses StudentCourses[]
+  ScholarPeriods ScholarPeriods[]
 
   @@schema("Courses")
 }
 
 model StudentCourses {
-  StudentCourseId Int          @id(map: "PK__StudentC__79F228C2995AE57D") @default(autoincrement())
+  StudentCourseId Int            @id(map: "PK__StudentC__79F228C2995AE57D") @default(autoincrement())
   StudentId       Int
   CourseId        Int
-  Note            String?      @db.NVarChar(5)
-  ScholarYearId   Int
+  Note            String?        @db.NVarChar(5)
+  ScholarPeriodId Int
   UpdatedAt       DateTime?
-  CreatedAt       DateTime     @default(now())
-  Courses         Courses      @relation(fields: [CourseId], references: [CourseId], onUpdate: NoAction, map: "FK_StudentCourses_Courses")
-  ScholarYears    ScholarYears @relation(fields: [ScholarYearId], references: [ScholarYearId], onUpdate: NoAction, map: "FK_StudentCourses_ScholarYears")
-  Students        Students     @relation(fields: [StudentId], references: [StudentId], onUpdate: NoAction, map: "FK_StudentCourses_Students")
+  CreatedAt       DateTime       @default(now())
+  Courses         Courses        @relation(fields: [CourseId], references: [CourseId], onUpdate: NoAction, map: "FK_StudentCourses_Courses")
+  ScholarPeriods  ScholarPeriods @relation(fields: [ScholarPeriodId], references: [ScholarPeriodId], onUpdate: NoAction, map: "FK_StudentCourses_ScholarPeriods")
+  Students        Students       @relation(fields: [StudentId], references: [StudentId], onUpdate: NoAction, map: "FK_StudentCourses_Students")
 
   @@schema("Courses")
 }
@@ -350,6 +350,22 @@ model CourseTypes {
   UpdatedAt    DateTime?
   CreatedAt    DateTime  @default(now(), map: "CoursesTypes_CreatedAt_df")
   Courses      Courses[]
+
+  @@schema("Courses")
+}
+
+model ScholarPeriods {
+  ScholarPeriodId Int              @id(map: "PK_ScholarPeriod") @default(autoincrement())
+  Name            String           @db.NVarChar(50)
+  Number          Int
+  FromDate        DateTime?        @db.Date
+  ToDate          DateTime?        @db.Date
+  IsActive        Boolean
+  ScholarYearId   Int
+  UpdatedAt       DateTime?
+  CreatedAt       DateTime
+  ScholarYears    ScholarYears     @relation(fields: [ScholarYearId], references: [ScholarYearId], onUpdate: NoAction, map: "FK_ScholarPeriods_ScholarYears")
+  StudentCourses  StudentCourses[]
 
   @@schema("Courses")
 }
