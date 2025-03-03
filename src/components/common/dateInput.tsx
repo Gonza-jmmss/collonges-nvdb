@@ -17,10 +17,12 @@ export default function DateInput({
   dateForm,
   setItemSelected,
   disabled,
+  noMaxYearValidation,
 }: {
   dateForm?: Date | null;
   setItemSelected: (date: Date) => void;
   disabled?: boolean;
+  noMaxYearValidation?: boolean;
 }) {
   const t = frFR;
 
@@ -179,7 +181,11 @@ export default function DateInput({
   }, [dateValues.Month]);
 
   useEffect(() => {
-    if (dateValues.Year !== null && dateValues.Year > new Date().getFullYear())
+    if (
+      dateValues.Year !== null &&
+      !noMaxYearValidation &&
+      dateValues.Year > new Date().getFullYear()
+    )
       setDateValues((prev) => ({
         ...prev,
         Year: new Date().getFullYear(),

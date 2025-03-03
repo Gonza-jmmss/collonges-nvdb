@@ -3,7 +3,7 @@ export type ScholarYearsViewModel = {
   Name: string;
   FromDate: Date | null;
   ToDate: Date | null;
-  IsActive: Boolean;
+  IsActive: boolean;
 };
 
 export type ScholarYearMap = {

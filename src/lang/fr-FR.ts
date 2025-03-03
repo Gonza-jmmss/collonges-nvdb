@@ -14,6 +14,7 @@ export default {
     courses: "Cours",
     studentCourses: "Cours des étudiant",
     scholarPeriods: "Périodes scolaires",
+    scholarYears: "Années scolaires",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -425,6 +426,38 @@ export default {
       deleteError:
         "Une erreur s'est produite pendant la suppression du période scolaire",
       deleteFailure: "Échec de la suppression du période scolaire",
+    },
+  },
+  scholarYears: {
+    title: "Page des années scolaires",
+    scholarYear: "Année scolaire",
+    create: "Créer une année scolaire",
+    columns: {
+      scholarYearId: "ID",
+      name: "Année scolaire",
+      fromDate: "À partir de",
+      toDate: "Jusqu'à",
+      isActive: "Est activé",
+    },
+    form: {
+      name: "Année scolaire",
+      fromDate: "À partir de",
+      toDate: "Jusqu'à",
+      isActive: "Est activé",
+    },
+    notifications: {
+      createSuccess: "Année scolaire créé avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création du année scolaire",
+      createFailure: "Échec de la création du année scolaire",
+      updateSuccess: "Année scolaire modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification du année scolaire",
+      updateFailure: "Échec de la modification du année scolaire",
+      deleteSuccess: "Année scolaire désactivé avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression du année scolaire",
+      deleteFailure: "Échec de la suppression du année scolaire",
     },
   },
   reports: {
