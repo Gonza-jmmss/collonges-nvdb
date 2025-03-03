@@ -130,24 +130,24 @@ export default function ScholarPeriodsTable({
     [],
   );
 
-  const deleteModule = async (ScholarPeriodId: number) => {
+  const deleteScholarPeriod = async (ScholarPeriodId: number) => {
     try {
-      const moduleToDelete = { ScholarPeriodId: ScholarPeriodId };
-      const response = await deleteScholarPeriodCommand(moduleToDelete);
+      const scholarPeriodToDelete = { ScholarPeriodId: ScholarPeriodId };
+      const response = await deleteScholarPeriodCommand(scholarPeriodToDelete);
 
       if (!response) {
-        throw new Error(`${t.modules.notifications.deleteFailure}`);
+        throw new Error(`${t.scholarPeriods.notifications.deleteFailure}`);
       }
       toast({
-        title: `${t.modules.notifications.deleteSuccess}`,
-        description: `${t.modules.title} : ${response.Name}`,
+        title: `${t.scholarPeriods.notifications.deleteSuccess}`,
+        description: `${t.scholarPeriods.title} : ${response.Name}`,
       });
       router.refresh();
       closeModal();
     } catch (error) {
       toast({
         variant: "destructive",
-        title: `${t.modules.notifications.deleteError}`,
+        title: `${t.scholarPeriods.notifications.deleteError}`,
         description: `${error}`,
       });
     }
@@ -178,7 +178,9 @@ export default function ScholarPeriodsTable({
         closeModal={closeModal}
         titleText={t.modules.deleteModal.title}
         descriptionText={t.modules.deleteModal.description}
-        deletefunction={() => deleteModule(selectedScholarPeriodToDelete)}
+        deletefunction={() =>
+          deleteScholarPeriod(selectedScholarPeriodToDelete)
+        }
       />
     </div>
   );
