@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import Combobox from "@/components/common/combobox";
 import DateInput from "@/components/common/dateInput";
 import ToggleButton from "@/components/common/toggleButton";
-import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
@@ -32,7 +31,6 @@ export default function ScholarPeriodForm({
   const t = frFR;
   const { toast } = useToast();
   const router = useRouter();
-  const updateQuery = useUpdateQuery();
 
   const [isPending, setIsPending] = useState(false);
 
@@ -95,7 +93,7 @@ export default function ScholarPeriodForm({
       }
       toast({
         title: `${t.scholarPeriods.notifications.updateSuccess}`,
-        description: `${t.scholarPeriods.title} : ${scholarPeriodData?.Name}`,
+        description: `${t.scholarPeriods.title} : ${response?.Name}`,
       });
 
       router.push("/courses/scholarPeriods");
@@ -183,6 +181,7 @@ export default function ScholarPeriodForm({
                   field.handleChange(x);
                 }}
                 disabled={action === "view"}
+                noMaxYearValidation
               />
               {/* <div className="text-xs text-red-500">
                 {field.state.meta.errors
@@ -215,6 +214,7 @@ export default function ScholarPeriodForm({
                   field.handleChange(x);
                 }}
                 disabled={action === "view"}
+                noMaxYearValidation
               />
               {/* <div className="text-xs text-red-500">
                 {field.state.meta.errors
