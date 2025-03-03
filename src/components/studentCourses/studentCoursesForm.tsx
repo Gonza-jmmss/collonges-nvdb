@@ -153,6 +153,16 @@ export default function StudentCourseForm({
       <div className="col-span-2 space-y-1">
         <form.Field
           name="StudentId"
+          validators={{
+            onSubmitAsync: (value) => {
+              if (value === null || value === undefined) {
+                return t.studentCourses.validations.studentValidation;
+              }
+              return z.number().min(1).safeParse(value.value).success
+                ? undefined
+                : t.studentCourses.validations.studentValidation;
+            },
+          }}
           children={(field) => (
             <>
               <span>{t.studentCourses.form.studentId}</span>
@@ -170,6 +180,11 @@ export default function StudentCourseForm({
                 disabled={action === "view"}
                 showSearch
               />
+              <div className="text-xs text-red-500">
+                {field.state.meta.errors
+                  ? field.state.meta.errors.join(", ")
+                  : null}
+              </div>
             </>
           )}
         />
@@ -177,6 +192,16 @@ export default function StudentCourseForm({
       <div className="col-span-2 space-y-1">
         <form.Field
           name="ScholarPeriodId"
+          validators={{
+            onSubmitAsync: (value) => {
+              if (value === null || value === undefined) {
+                return t.studentCourses.validations.scholarPeriodValidation;
+              }
+              return z.number().min(0).safeParse(value.value).success
+                ? undefined
+                : t.studentCourses.validations.scholarPeriodValidation;
+            },
+          }}
           children={(field) => (
             <>
               <span>{t.studentCourses.form.scholarPeriodId}</span>
@@ -194,6 +219,11 @@ export default function StudentCourseForm({
                 disabled={action === "view"}
                 showSearch
               />
+              <div className="text-xs text-red-500">
+                {field.state.meta.errors
+                  ? field.state.meta.errors.join(", ")
+                  : null}
+              </div>
             </>
           )}
         />
@@ -202,6 +232,16 @@ export default function StudentCourseForm({
         <form.Field
           name="StudentCourses"
           mode="array"
+          validators={{
+            onSubmitAsync: (value) => {
+              if (value === null || value === undefined) {
+                return t.studentCourses.validations.coursesValidation;
+              }
+              return z.array(z.any()).min(1).safeParse(value.value).success
+                ? undefined
+                : t.studentCourses.validations.coursesValidation;
+            },
+          }}
           children={(field) => (
             <div className="flex flex-col space-y-5">
               <div className="grid grid-cols-6">
@@ -248,6 +288,11 @@ export default function StudentCourseForm({
                     disabled={action === "view"}
                     showSearch
                   />
+                  <div className="text-xs text-red-500">
+                    {field.state.meta.errors
+                      ? field.state.meta.errors.join(", ")
+                      : null}
+                  </div>
                 </div>
               </div>
               <div className="space-y-3 rounded-md border bg-muted p-2">

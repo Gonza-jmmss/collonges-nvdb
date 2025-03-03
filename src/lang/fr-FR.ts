@@ -369,6 +369,11 @@ export default {
       coursePeriod: "Trimestre",
       scholarPeriodId: "Période",
     },
+    validations: {
+      studentValidation: "Le étudiant est obligatoire",
+      scholarPeriodValidation: "La période scolaire est obligatoire",
+      coursesValidation: "Les courses sont obligatoires",
+    },
     notifications: {
       createSuccess: "Cours ajoutés de l'étudiant avec succès",
       createError:
@@ -383,6 +388,28 @@ export default {
       // deleteError:
       //   "Une erreur s'est produite pendant la désactivation du cours de l'étudiant",
       // deleteFailure: "Échec de la désactivation du cours de l'étudiant",
+    },
+  },
+  scholarPeriods: {
+    title: "Page des périodes scolaires",
+    scholarPeriod: "Période scolaire",
+    create: "Créer une période scolaire",
+    columns: {
+      scholarPeriodId: "ID",
+      name: "Période scolaire",
+      number: "Nombre",
+      fromDate: "À partir de",
+      toDate: "Jusqu'à",
+      isActive: "Est activé",
+      scholarYearName: "Année",
+    },
+    form: {
+      name: "Période scolaire",
+      number: "Nombre",
+      fromDate: "À partir de",
+      toDate: "Jusqu'à",
+      isActive: "Est activé",
+      scholarYearId: "Année",
     },
   },
   reports: {
