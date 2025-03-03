@@ -363,7 +363,7 @@ model ScholarPeriods {
   IsActive        Boolean
   ScholarYearId   Int
   UpdatedAt       DateTime?
-  CreatedAt       DateTime
+  CreatedAt       DateTime         @default(now())
   ScholarYears    ScholarYears     @relation(fields: [ScholarYearId], references: [ScholarYearId], onUpdate: NoAction, map: "FK_ScholarPeriods_ScholarYears")
   StudentCourses  StudentCourses[]
 

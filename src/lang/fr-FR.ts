@@ -13,6 +13,7 @@ export default {
     roleModuleElements: "Éléments du module de rôle",
     courses: "Cours",
     studentCourses: "Cours des étudiant",
+    scholarPeriods: "Périodes scolaires",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -410,6 +411,20 @@ export default {
       toDate: "Jusqu'à",
       isActive: "Est activé",
       scholarYearId: "Année",
+    },
+    notifications: {
+      createSuccess: "Période scolaire créé avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création du période scolaire",
+      createFailure: "Échec de la création du période scolaire",
+      updateSuccess: "Période scolaire modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification du période scolaire",
+      updateFailure: "Échec de la modification du période scolaire",
+      deleteSuccess: "Période scolaire désactivé avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression du période scolaire",
+      deleteFailure: "Échec de la suppression du période scolaire",
     },
   },
   reports: {

@@ -93,3 +93,13 @@ export type StudentCoursesByStudentIdViewModel = {
     CourseCode: string | null;
   }[];
 } | null;
+
+export type StudentCoursesByScholarPeriodIdMap = {
+  StudentId: number;
+  ScholarPeriodId: number;
+  CourseId: number;
+  Note: string | null;
+  UpdatedAt: Date | null;
+  CreatedAt: Date;
+  StudentCourseId: number;
+};
