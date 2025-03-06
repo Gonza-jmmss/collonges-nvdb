@@ -6,8 +6,25 @@ import {
 
 const prisma = new PrismaClient();
 
-const getAllStudentCoursesQuery = async () => {
+type getAllStudentCoursesQueryParamsType = {
+  ScholarYearId: number;
+  ScholarPeriodId: number;
+};
+
+const getAllStudentCoursesQuery = async (
+  params: getAllStudentCoursesQueryParamsType,
+) => {
   const query = await prisma.students.findMany({
+    orderBy: [{ IsEnabled: "desc" }, { Persons: { AlternativeName: "asc" } }],
+    where: {
+      StudentCourses: {
+        some: {
+          ScholarPeriods: {
+            ScholarYearId: params.ScholarYearId,
+          },
+        },
+      },
+    },
     include: {
       Persons: {
         select: {
@@ -15,6 +32,14 @@ const getAllStudentCoursesQuery = async () => {
         },
       },
       StudentCourses: {
+        where: {
+          ScholarPeriods: {
+            ScholarYearId: params.ScholarYearId,
+            ...(params.ScholarPeriodId !== 0 && {
+              ScholarPeriodId: params.ScholarPeriodId,
+            }),
+          },
+        },
         include: {
           Courses: {
             select: {
@@ -39,6 +64,7 @@ const getAllStudentCoursesQuery = async () => {
   const res = query.map((student: StudentCoursesGroupedByStudentMap) => ({
     StudentId: student.StudentId,
     AlternativeName: student.Persons.AlternativeName,
+    IsEnabled: student.IsEnabled,
     StudentCourses: student.StudentCourses.map(
       (studentCourse: StudentCourseGroupedByStudentMap) => ({
         StudentCourseId: studentCourse.StudentCourseId,

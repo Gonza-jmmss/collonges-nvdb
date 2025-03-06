@@ -17,15 +17,6 @@ export default async function StudentCoursesPage({
   const action =
     searchParams?.action && (searchParams.action as string).replace(/"/g, "");
 
-  if (params.id != "create") {
-    studentCourses = await getStudentCoursesByStudentIdQuery(Number(params.id));
-  } else {
-    studentCourses = null;
-  }
-
-  const pagetitle = `${`${t.shared[action as keyof typeof t.shared]} ${t.studentCourses.studentCourse}
-      ${action != "create" ? `: ${studentCourses ? studentCourses.AlternativeName : ""}` : ""}`}`;
-
   const studentsWithNoCourses = await getStudentsWithNoCoursesQuery();
 
   const period = searchParams?.period
@@ -42,6 +33,20 @@ export default async function StudentCoursesPage({
   });
 
   const scholarPeriods = await getLastsScholarPeriodsQuery();
+
+  if (params.id != "create") {
+    studentCourses = await getStudentCoursesByStudentIdQuery({
+      StudentId: Number(params.id),
+      ScholarPeriodId: searchParams.scholarPeriod
+        ? parseInt(searchParams.scholarPeriod as string)
+        : scholarPeriods[0].ScholarPeriodId,
+    });
+  } else {
+    studentCourses = null;
+  }
+
+  const pagetitle = `${`${t.shared[action as keyof typeof t.shared]} ${t.studentCourses.studentCourse}
+      ${action != "create" ? `: ${studentCourses ? studentCourses.AlternativeName : ""}` : ""}`}`;
 
   return (
     <div className="mt-5 flex justify-center">

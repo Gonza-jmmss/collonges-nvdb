@@ -1,6 +1,7 @@
 export type StudentCoursesViewModel = {
   StudentId: number;
   AlternativeName: string | null;
+  IsEnabled: boolean;
   StudentCourses: {
     StudentCourseId: number;
     Note: string | null;

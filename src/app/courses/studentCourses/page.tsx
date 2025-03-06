@@ -1,5 +1,7 @@
 import StudentCoursesTable from "./studentCoursesTable";
 import getAllStudentCoursesQuery from "@/repositories/studentCourses/queries/getAllStudentCoursesQuery";
+import getLastsScholarYearsWithPeriodsQuery from "@/repositories/scholarYears/queries/getLastsScholarYearsWithPeriodsQuery";
+import getAllScholarPeriodsByScholarYearIdQuery from "@/repositories/scholarPeriods/queries/getAllScholetPeroidsByScholarYearIdQuery";
 import frFR from "@/lang/fr-FR";
 
 export default async function StudentsCoursesPage({
@@ -9,7 +11,38 @@ export default async function StudentsCoursesPage({
 }) {
   const t = frFR;
 
-  const studentCourses = await getAllStudentCoursesQuery();
+  const scholarYears = await getLastsScholarYearsWithPeriodsQuery();
+  const scholarPeriods = await getAllScholarPeriodsByScholarYearIdQuery(
+    searchParams.scholarYear
+      ? parseInt(searchParams.scholarYear as string)
+      : scholarYears[0].ScholarYearId,
+  );
+
+  // getAllStudentCoursesQuery Params
+  const scholarYear = searchParams.scholarYear
+    ? parseInt(searchParams.scholarYear as string)
+    : scholarYears[0].ScholarYearId;
+  const scholarPeriod = searchParams.scholarPeriod
+    ? parseInt(searchParams.scholarPeriod as string)
+    : scholarPeriods[0].ScholarPeriodId;
+
+  const studentCourses = await getAllStudentCoursesQuery({
+    ScholarYearId: scholarYear,
+    ScholarPeriodId: scholarPeriod,
+  });
+
+  const scholarPeriodsTous = [
+    ...scholarPeriods,
+    {
+      ScholarPeriodId: 0,
+      Name: "Tous",
+      Number: 0,
+      FromDate: null,
+      ToDate: null,
+      IsActive: false,
+      ScholarYearId: 0,
+    },
+  ];
 
   return (
     <main>
@@ -21,6 +54,8 @@ export default async function StudentsCoursesPage({
         </div>
         <StudentCoursesTable
           studentCoursesData={studentCourses}
+          scholarYears={scholarYears}
+          scholarPeriods={scholarPeriodsTous}
           urlParams={searchParams}
         />
         {/* <pre>{JSON.stringify(studentCourses, null, 2)}</pre> */}

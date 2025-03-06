@@ -10,10 +10,12 @@ const prisma = new PrismaClient();
 type StudentCorseParams = z.infer<typeof StudentCourseSchema>;
 
 const updateStudentCourseCommand = async (params: StudentCorseParams) => {
+  console.log("updateStudentCourseCommand params", params);
   // get studentCourses data of the student
-  const studentCourse = await getStudentCoursesByStudentIdQuery(
-    params.StudentId,
-  );
+  const studentCourse = await getStudentCoursesByStudentIdQuery({
+    StudentId: params.StudentId,
+    ScholarPeriodId: params.ScholarPeriodId,
+  });
 
   // creating CourseIDs arrays
   const paramsCoursesIds = params.StudentCourses?.map((x) => x.CourseId);

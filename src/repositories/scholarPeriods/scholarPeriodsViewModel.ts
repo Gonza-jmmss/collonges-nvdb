@@ -28,3 +28,15 @@ export type ScholarPeriodMap = {
     IsActive: Boolean;
   };
 };
+
+export type ScholarPeriodsByScholarYearIdMap = {
+  ScholarPeriodId: number;
+  Name: string;
+  Number: number | null;
+  FromDate: Date | null;
+  ToDate: Date | null;
+  IsActive: boolean;
+  ScholarYearId: number;
+  UpdatedAt: Date | null;
+  CreatedAt: Date;
+};

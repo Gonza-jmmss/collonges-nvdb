@@ -3,9 +3,25 @@ import { StudentCourseGroupedByStudentMap } from "../studentCoursesViewModel";
 
 const prisma = new PrismaClient();
 
-const getStudentCoursesByStudentIdQuery = async (studentId: number) => {
+type getStudentCoursesByStudentIdQueryParamsType = {
+  StudentId: number;
+  ScholarPeriodId: number;
+};
+
+const getStudentCoursesByStudentIdQuery = async (
+  params: getStudentCoursesByStudentIdQueryParamsType,
+) => {
+  console.log("getStudentCoursesByStudentIdQuery params", params);
   const query = await prisma.students.findFirstOrThrow({
-    where: { StudentId: studentId },
+    orderBy: [{ IsEnabled: "desc" }, { Persons: { AlternativeName: "asc" } }],
+    where: {
+      StudentId: params.StudentId,
+      // StudentCourses: {
+      //   some: {
+      //     ScholarPeriodId: params.ScholarPeriodId,
+      //   },
+      // },
+    },
     include: {
       Persons: {
         select: {
@@ -13,6 +29,9 @@ const getStudentCoursesByStudentIdQuery = async (studentId: number) => {
         },
       },
       StudentCourses: {
+        where: {
+          ScholarPeriodId: params.ScholarPeriodId,
+        },
         include: {
           Courses: {
             select: {

@@ -8,7 +8,7 @@ const getAllScholarPeriodsByScholarYearIdQuery = async (
 ) => {
   const query = await prisma.scholarPeriods.findMany({
     where: { ScholarYearId: scholarYearId },
-    orderBy: { Name: "desc" },
+    orderBy: [{ IsActive: "desc" }, { Number: "desc" }, { Name: "desc" }],
   });
 
   const res = query.map((scholarPeriod: ScholarPeriodsByScholarYearIdMap) => ({

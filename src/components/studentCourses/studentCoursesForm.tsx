@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import createStudentCourseCommand from "@/repositories/studentCourses/commands/createStudentCourseCommands";
 import updateStudentCourseCommand from "@/repositories/studentCourses/commands/updateStudentCoursesCommands";
 import {
@@ -58,7 +58,7 @@ export default function StudentCourseForm({
       StudentId: action !== "create" ? (studentCoursesData?.StudentId ?? 0) : 0,
       ScholarPeriodId:
         action !== "create"
-          ? (studentCoursesData?.StudentCourses[0].ScholarPeriodId ??
+          ? (studentCoursesData?.StudentCourses[0]?.ScholarPeriodId ??
             scholarPeriods[0].ScholarPeriodId)
           : scholarPeriods[0].ScholarPeriodId,
       StudentCourses:
@@ -141,6 +141,20 @@ export default function StudentCourseForm({
     updateQuery(Object.fromEntries(currentParams));
   };
 
+  useEffect(() => {
+    if (studentCoursesData?.StudentCourses && action !== "create") {
+      // Map the existing student courses to the format expected by the form
+      const mappedCourses = studentCoursesData.StudentCourses.map(
+        (studentCourse) => ({
+          CourseId: studentCourse.CourseId,
+        }),
+      );
+
+      // Set the StudentCourses field value
+      form.setFieldValue("StudentCourses", mappedCourses);
+    }
+  }, [studentCoursesData?.StudentCourses, action, form.setFieldValue]);
+
   return (
     <form
       onSubmit={(e) => {
@@ -215,9 +229,14 @@ export default function StudentCourseForm({
                 )}
                 setItemSelected={(x: { ScholarPeriodId: number }) => {
                   field.handleChange(x && x.ScholarPeriodId);
+                  handleUrlParameterChange(
+                    "scholarPeriod",
+                    `${x.ScholarPeriodId}`,
+                  );
                 }}
                 disabled={action === "view"}
                 showSearch
+                notClearable
               />
               <div className="text-xs text-red-500">
                 {field.state.meta.errors
@@ -357,6 +376,7 @@ export default function StudentCourseForm({
                     </div>
                   </div>
                 ))}
+                {/* <pre>{JSON.stringify(field.state.value, null, 2)}</pre> */}
               </div>
             </div>
           )}
