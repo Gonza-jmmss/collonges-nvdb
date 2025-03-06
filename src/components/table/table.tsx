@@ -6,14 +6,12 @@ import Icon from "@/components/common/icon";
 import Combobox from "@/components/common/combobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import {
   Table,
   TableBody,
@@ -22,10 +20,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 // A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
 import { rankItem } from "@tanstack/match-sorter-utils";
-
 import {
   ColumnFiltersState,
   FilterFn,
@@ -39,9 +35,9 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-
 import DebouncedInput from "@/components/common/debouncedInput";
 import Filter from "@/components/common/filter";
+import frFR from "@/lang/fr-FR";
 
 declare module "@tanstack/react-table" {
   //add fuzzy filter to the filterFns
@@ -111,6 +107,7 @@ export default function TableComponent<T>({
   expandable,
   expandedContent,
 }: TableProps<T>) {
+  const t = frFR;
   // const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -258,7 +255,7 @@ export default function TableComponent<T>({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                    {t.table.noResults}
                   </TableCell>
                 </TableRow>
               )}
@@ -288,7 +285,7 @@ export default function TableComponent<T>({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="ml-auto">
-                  Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+                  {t.table.columns} <ChevronDownIcon className="ml-2 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
 
@@ -401,7 +398,7 @@ export default function TableComponent<T>({
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      {t.table.noResults}
                     </TableCell>
                   </TableRow>
                 )}
@@ -468,14 +465,14 @@ export default function TableComponent<T>({
               </div>
             </Button>
             <span className="flex items-center gap-1">
-              <div>Page</div>
+              <div>{t.table.page}</div>
               <strong>
-                {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getState().pagination.pageIndex + 1} {t.table.of}{" "}
                 {table.getPageCount().toLocaleString()}
               </strong>
             </span>
             <span className="flex items-center gap-1">
-              | Go to page:
+              {t.table.goToPage}
               <Input
                 type="number"
                 defaultValue={table.getState().pagination.pageIndex + 1}

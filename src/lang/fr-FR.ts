@@ -51,6 +51,13 @@ export default {
     user: "Utilisateur",
     password: "Mot de passe",
   },
+  table: {
+    noResults: "Aucun résultat.",
+    columns: "Colonnes",
+    page: "Page",
+    of: "de",
+    goToPage: "| Aller à la page: ",
+  },
   users: {
     title: "Utilisateurs",
     user: "Utilisateur",
