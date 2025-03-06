@@ -135,9 +135,28 @@ export default function ScholarYearsTable({
     }
   };
 
+  const countActiveYears = () => {
+    return scholarYears.filter((x) => x.IsActive === true).length;
+  };
+
   return (
     <div>
       <div className="flex items-center justify-end space-x-5">
+        {countActiveYears() > 1 && (
+          <div className="flex items-center space-x-2 rounded-md border border-destructive bg-destructive px-3 py-1">
+            <Icon
+              name={
+                isValidIconName("MdWarningAmber")
+                  ? "MdWarningAmber"
+                  : "MdOutlineNotInterested"
+              }
+              className="text-2xl text-background"
+            />
+            <div className="font-semibold text-background">
+              {t.scholarYears.warningActiveYears}
+            </div>
+          </div>
+        )}
         <Button
           variant="outlineColored"
           onClick={() =>
