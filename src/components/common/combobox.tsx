@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import frFR from "@/lang/fr-FR";
 
 export default function Combobox({
   options,
@@ -28,6 +28,7 @@ export default function Combobox({
   setItemSelected,
   showSearch,
   disabled,
+  notClearable = false,
 }: {
   options: {
     [key: string]: any;
@@ -39,7 +40,10 @@ export default function Combobox({
   setItemSelected: any;
   showSearch?: boolean;
   disabled?: boolean;
+  notClearable?: boolean;
 }) {
+  const t = frFR;
+
   const [open, setOpen] = useState(false);
   const textAttributeToWork = Array.isArray(textAttribute)
     ? textAttribute[0]
@@ -75,7 +79,7 @@ export default function Combobox({
           )}
 
           <CommandList>
-            <CommandEmpty>No values found.</CommandEmpty>
+            <CommandEmpty>{t.shared.noValues}</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
                 <CommandItem
@@ -83,10 +87,16 @@ export default function Combobox({
                   value={option[valueAttribute]}
                   onSelect={() => {
                     setItemSelected(
-                      itemSelected &&
+                      // If notClearable is true, don't clear on same item selection
+                      notClearable &&
+                        itemSelected &&
                         itemSelected[valueAttribute] === option[valueAttribute]
-                        ? null
-                        : option,
+                        ? itemSelected // Keep the current selection
+                        : itemSelected &&
+                            itemSelected[valueAttribute] ===
+                              option[valueAttribute]
+                          ? null // Clear selection if not notClearable
+                          : option, // Select new option
                     );
                     setOpen(false);
                   }}

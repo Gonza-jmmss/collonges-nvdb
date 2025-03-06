@@ -45,6 +45,7 @@ export default {
       moth: "MM",
       year: "AAAA",
     },
+    noValues: "Aucune valeur trouvée.",
   },
   login: {
     user: "Utilisateur",
@@ -358,6 +359,7 @@ export default {
     columns: {
       studentId: "ID",
       alternativeName: "Étudiant",
+      isEnabled: "Est activé",
       note: "Note",
       scholarPeriodId: "Période",
       courseId: "Cours ID",
@@ -396,6 +398,8 @@ export default {
     title: "Page des périodes scolaires",
     scholarPeriod: "Période scolaire",
     create: "Créer une période scolaire",
+    warningActivePeriods:
+      "Plusieurs périodes sont actives, cela entraînera de graves problèmes",
     columns: {
       scholarPeriodId: "ID",
       name: "Période scolaire",
@@ -432,6 +436,8 @@ export default {
     title: "Page des années scolaires",
     scholarYear: "Année scolaire",
     create: "Créer une année scolaire",
+    warningActiveYears:
+      "Plusieurs années sont actives, cela entraînera de graves problèmes",
     columns: {
       scholarYearId: "ID",
       name: "Année scolaire",
