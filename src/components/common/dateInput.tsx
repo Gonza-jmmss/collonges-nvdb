@@ -139,7 +139,7 @@ export default function DateInput({
       isValidDate(dateValues.Day, dateValues.Month, dateValues.Year)
     ) {
       setItemSelected(
-        new Date(dateValues.Year, dateValues.Month - 1, dateValues.Day),
+        new Date(dateValues.Year, dateValues.Month - 1, dateValues.Day + 1),
       );
     }
 
