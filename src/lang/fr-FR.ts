@@ -435,10 +435,14 @@ export default {
       updateError:
         "Une erreur s'est produite pendant la modification du période scolaire",
       updateFailure: "Échec de la modification du période scolaire",
-      deleteSuccess: "Période scolaire désactivé avec succès",
+      deleteSuccess: "Période scolaire supprimé avec succès",
       deleteError:
         "Une erreur s'est produite pendant la suppression du période scolaire",
       deleteFailure: "Échec de la suppression du période scolaire",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de supprimer le période scolaire ?",
+      description: "Le période scolaire sera supprimé",
     },
   },
   scholarYears: {
@@ -469,10 +473,14 @@ export default {
       updateError:
         "Une erreur s'est produite pendant la modification du année scolaire",
       updateFailure: "Échec de la modification du année scolaire",
-      deleteSuccess: "Année scolaire désactivé avec succès",
+      deleteSuccess: "Année scolaire supprimé avec succès",
       deleteError:
         "Une erreur s'est produite pendant la suppression du année scolaire",
       deleteFailure: "Échec de la suppression du année scolaire",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de supprimer le année scolaire ?",
+      description: "Le année scolaire sera supprimé",
     },
   },
   levels: {

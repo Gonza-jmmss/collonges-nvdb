@@ -197,8 +197,8 @@ export default function ScholarPeriodsTable({
       <DeleteModal
         openModal={openModal}
         closeModal={closeModal}
-        titleText={t.modules.deleteModal.title}
-        descriptionText={t.modules.deleteModal.description}
+        titleText={t.scholarPeriods.deleteModal.title}
+        descriptionText={t.scholarPeriods.deleteModal.description}
         deletefunction={() =>
           deleteScholarPeriod(selectedScholarPeriodToDelete)
         }

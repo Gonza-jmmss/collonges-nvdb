@@ -179,8 +179,8 @@ export default function ScholarYearsTable({
       <DeleteModal
         openModal={openModal}
         closeModal={closeModal}
-        titleText={t.modules.deleteModal.title}
-        descriptionText={t.modules.deleteModal.description}
+        titleText={t.scholarYears.deleteModal.title}
+        descriptionText={t.scholarYears.deleteModal.description}
         deletefunction={() => deleteScholarYear(selectedScholarPeriodToDelete)}
       />
     </div>
