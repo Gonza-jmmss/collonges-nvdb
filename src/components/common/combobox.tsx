@@ -69,7 +69,12 @@ export default function Combobox({
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0">
+      {/* <PopoverContent className="p-0"> */}
+      <PopoverContent
+        className="p-0"
+        align="start"
+        style={{ width: "var(--radix-popover-trigger-width)" }}
+      >
         <Command>
           {showSearch && (
             <CommandInput
@@ -102,15 +107,24 @@ export default function Combobox({
                   }}
                   className="cursor-pointer"
                 >
-                  <div className="flex w-full items-center justify-between">
-                    <div className="pr-2">
+                  <div className="flex w-full items-center">
+                    <div
+                      className={cn(
+                        "pr-2",
+                        itemSelected &&
+                          itemSelected[valueAttribute] ===
+                            option[valueAttribute]
+                          ? "font-medium text-primary"
+                          : "",
+                      )}
+                    >
                       {typeof textAttributeToShow === "function"
                         ? textAttributeToShow(option)
                         : option[textAttributeToShow]}
                     </div>
                     <CheckIcon
                       className={cn(
-                        "ml-auto h-4 w-4",
+                        "ml-auto h-4 w-4 text-primary",
                         itemSelected &&
                           itemSelected[valueAttribute] ===
                             option[valueAttribute]
