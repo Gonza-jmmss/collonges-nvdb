@@ -16,7 +16,7 @@ const createStudentCourseCommand = async (params: StudentCorseParams) => {
     ScholarPeriodId: number;
   }[] = [];
 
-  if (params.StudentCourses !== null)
+  if (params.StudentCourses && params.StudentCourses.length > 0) {
     params.StudentCourses.forEach((element) => {
       studentCourseToCreate.push({
         StudentId: params.StudentId,
@@ -25,6 +25,7 @@ const createStudentCourseCommand = async (params: StudentCorseParams) => {
         ScholarPeriodId: params.ScholarPeriodId,
       });
     });
+  }
 
   const command = await prisma.studentCourses.createMany({
     data: studentCourseToCreate,

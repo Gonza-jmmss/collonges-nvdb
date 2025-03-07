@@ -52,8 +52,8 @@ export default function StudentCoursesTable({
   const columns = useMemo<ColumnDef<StudentCoursesViewModel, any>[]>(
     () => [
       {
-        accessorKey: "StudentId",
-        id: "StudentId",
+        accessorKey: "",
+        id: "1",
         header: () => <Header text="" />,
         cell: ({ row }) => (
           <div
@@ -98,6 +98,14 @@ export default function StudentCoursesTable({
           </div>
         ),
         size: 5,
+      },
+      {
+        accessorKey: "",
+        id: "2",
+        header: () => <Header text={t.studentCourses.columns.coursesAsigned} />,
+        filterFn: "equalsString",
+        cell: ({ row }) => <span>{row.original.StudentCourses.length}</span>,
+        size: 20,
       },
       // {
       //   accessorKey: "StudentId",

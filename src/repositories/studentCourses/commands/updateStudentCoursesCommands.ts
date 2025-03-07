@@ -57,6 +57,7 @@ const updateStudentCourseCommand = async (params: StudentCorseParams) => {
   // delete Courses
   const deleteCourses = prisma.studentCourses.deleteMany({
     where: {
+      StudentId: params.StudentId,
       CourseId: {
         in: coursesToDelete,
       },

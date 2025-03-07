@@ -15,6 +15,7 @@ export default {
     studentCourses: "Cours des étudiant",
     scholarPeriods: "Périodes scolaires",
     scholarYears: "Années scolaires",
+    levels: "Niveaux scolaires",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -365,6 +366,7 @@ export default {
     create: "Créer un cours des étudiants",
     columns: {
       studentId: "ID",
+      coursesAsigned: "Cours attribués",
       alternativeName: "Étudiant",
       isEnabled: "Est activé",
       note: "Note",
@@ -471,6 +473,52 @@ export default {
       deleteError:
         "Une erreur s'est produite pendant la suppression du année scolaire",
       deleteFailure: "Échec de la suppression du année scolaire",
+    },
+  },
+  levels: {
+    title: "Page des niveaux scolaires",
+    levels: "Niveaux scolaires",
+    create: "Créer un niveau scolaire",
+    columns: {
+      coursesAsigned: "Cours attribués",
+      name: "Niveau scolaire",
+      isEnabled: "Est activé",
+    },
+    expanded: {
+      courseName: "Cours",
+      courseCode: "Code cours",
+    },
+    form: {
+      name: "Niveau scolaire",
+      isEnabled: "Est activé",
+      levelCourses: "Cours",
+      addCourse: "Ajouter cours",
+      coursePeriod: "Trimestre",
+      scholarPeriodId: "Période",
+    },
+    validations: {
+      coursesValidation: "Les courses sont obligatoires",
+    },
+    notifications: {
+      createSuccess: "Niveaux scolaire créé avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création du niveaux scolaire",
+      createFailure: "Échec de la création du niveaux scolaire",
+      updateSuccess: "Niveaux scolaire modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification du niveaux scolaire",
+      updateFailure: "Échec de la modification du niveaux scolaire",
+      deleteSuccess: "Niveaux scolaire désactivé avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression du niveaux scolaire",
+      deleteFailure: "Échec de la suppression du niveaux scolaire",
+    },
+    deleteModal: {
+      disableTitle: "Êtes-vous sûr de désactiver le niveau scolaire ?",
+      disableDescription:
+        "Comme le niveau a des cours attribués le niveau scolaire sera désactivé",
+      deleteTitle: "Êtes-vous sûr de supprimer le niveau scolaire ?",
+      deleteDescription: "Le niveau scolaire sera supprimé",
     },
   },
   reports: {

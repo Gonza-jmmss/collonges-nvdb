@@ -251,16 +251,16 @@ export default function StudentCourseForm({
         <form.Field
           name="StudentCourses"
           mode="array"
-          validators={{
-            onSubmitAsync: (value) => {
-              if (value === null || value === undefined) {
-                return t.studentCourses.validations.coursesValidation;
-              }
-              return z.array(z.any()).min(1).safeParse(value.value).success
-                ? undefined
-                : t.studentCourses.validations.coursesValidation;
-            },
-          }}
+          // validators={{
+          //   onSubmitAsync: (value) => {
+          //     if (value === null || value === undefined) {
+          //       return t.studentCourses.validations.coursesValidation;
+          //     }
+          //     return z.array(z.any()).min(1).safeParse(value.value).success
+          //       ? undefined
+          //       : t.studentCourses.validations.coursesValidation;
+          //   },
+          // }}
           children={(field) => (
             <div className="flex flex-col space-y-5">
               <div className="grid grid-cols-6">
@@ -306,12 +306,13 @@ export default function StudentCourseForm({
                     }}
                     disabled={action === "view"}
                     showSearch
+                    notClearable
                   />
-                  <div className="text-xs text-red-500">
+                  {/* <div className="text-xs text-red-500">
                     {field.state.meta.errors
                       ? field.state.meta.errors.join(", ")
                       : null}
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="space-y-3 rounded-md border bg-muted p-2">
