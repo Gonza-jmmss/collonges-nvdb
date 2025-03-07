@@ -189,7 +189,9 @@ export default function ScholarPeriodsTable({
         data={scholarPeriods}
         className=""
         onRowClick={(row) =>
-          router.push(`/courses/scholarPeriods/${row.StudentId}?action="view"`)
+          router.push(
+            `/courses/scholarPeriods/${row.ScholarPeriodId}?action="view"`,
+          )
         }
       />
       <DeleteModal
