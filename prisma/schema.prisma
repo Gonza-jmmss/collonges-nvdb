@@ -98,6 +98,7 @@ model Courses {
   CreatedAt      DateTime         @default(now())
   CoursePeriods  CoursePeriods    @relation(fields: [CoursePeriodId], references: [CoursePeriodId], onUpdate: NoAction, map: "FK_Courses_CoursePeriods")
   CourseTypes    CourseTypes      @relation(fields: [CourseTypeId], references: [CourseTypeId], onUpdate: NoAction, map: "FK_Courses_CourseTypes")
+  LevelCourses   LevelCourses[]
   StudentCourses StudentCourses[]
 
   @@schema("Courses")
@@ -366,6 +367,29 @@ model ScholarPeriods {
   CreatedAt       DateTime         @default(now())
   ScholarYears    ScholarYears     @relation(fields: [ScholarYearId], references: [ScholarYearId], onUpdate: NoAction, map: "FK_ScholarPeriods_ScholarYears")
   StudentCourses  StudentCourses[]
+
+  @@schema("Courses")
+}
+
+model LevelCourses {
+  LevelCourseId Int       @id(map: "PK__LevelCou__4289BA75D061A78C") @default(autoincrement())
+  LevelId       Int
+  CourseId      Int
+  UpdatedAt     DateTime?
+  CreatedAt     DateTime  @default(now())
+  Courses       Courses   @relation(fields: [CourseId], references: [CourseId], onUpdate: NoAction, map: "FK_LevelCourses_Courses")
+  Levels        Levels    @relation(fields: [LevelId], references: [LevelId], onUpdate: NoAction, map: "FK_LevelCourses_Levels")
+
+  @@schema("Courses")
+}
+
+model Levels {
+  LevelId      Int            @id(map: "PK__Levels__09F03C26D263CB7B") @default(autoincrement())
+  Name         String         @db.VarChar(255)
+  IsEnabled    Boolean
+  UpdatedAt    DateTime?
+  CreatedAt    DateTime       @default(now())
+  LevelCourses LevelCourses[]
 
   @@schema("Courses")
 }
