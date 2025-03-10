@@ -87,7 +87,7 @@ export default function RoleModuleElementForm({
       }
       toast({
         title: `${t.roleModuleElements.notifications.createSuccess}`,
-        description: `${t.roleModuleElements.title} : ${response.ModuleId !== null && response.ModuleId}${response.ModuleElementId !== null && response.ModuleElementId}-${response.RoleId}`,
+        description: `${t.roleModuleElements.title} : ${response.ModuleId !== null ? response.ModuleId : ""}${response.ModuleElementId !== null ? response.ModuleElementId : ""}-${response.RoleId}`,
       });
 
       router.push("/settings/roleModuleElements");
@@ -114,7 +114,7 @@ export default function RoleModuleElementForm({
       }
       toast({
         title: `${t.roleModuleElements.notifications.updateSuccess}`,
-        description: `${t.roleModuleElements.title} : ${response.ModuleId !== null && response.ModuleId}${response.ModuleElementId !== null && response.ModuleElementId}-${response.RoleId}`,
+        description: `${t.roleModuleElements.title} : ${response.ModuleId !== null ? response.ModuleId : ""}${response.ModuleElementId !== null ? response.ModuleElementId : ""}-${response.RoleId}`,
       });
 
       router.push("/settings/roleModuleElements");

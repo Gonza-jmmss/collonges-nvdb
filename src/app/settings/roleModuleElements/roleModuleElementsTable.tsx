@@ -130,7 +130,7 @@ export default function RoleModuleElementsTable({
       }
       toast({
         title: `${t.roleModuleElements.notifications.deleteSuccess}`,
-        description: `${t.roleModuleElements.title} : ${response.ModuleId !== null && response.ModuleId}${response.ModuleElementId !== null && response.ModuleElementId}-${response.RoleId}`,
+        description: `${t.roleModuleElements.title} : ${response.ModuleId !== null ? response.ModuleId : ""}${response.ModuleElementId !== null ? response.ModuleElementId : ""}-${response.RoleId}`,
       });
       router.refresh();
       closeModal();
