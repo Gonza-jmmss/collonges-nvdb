@@ -16,6 +16,7 @@ export default {
     scholarPeriods: "Périodes scolaires",
     scholarYears: "Années scolaires",
     levels: "Niveaux scolaires",
+    teacherCourses: "Cours de professeur",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -363,7 +364,7 @@ export default {
   studentCourses: {
     title: "Page des cours des étudiants",
     studentCourse: "Cours des étudiant",
-    create: "Créer un cours des étudiants",
+    create: "Ajouter des cours au étudiant",
     columns: {
       studentId: "ID",
       coursesAsigned: "Cours attribués",
@@ -500,6 +501,53 @@ export default {
       name: "Niveau scolaire",
       isEnabled: "Est activé",
       levelCourses: "Cours",
+      addCourse: "Ajouter cours",
+      coursePeriod: "Trimestre",
+      scholarPeriodId: "Période",
+    },
+    validations: {
+      coursesValidation: "Les courses sont obligatoires",
+    },
+    notifications: {
+      createSuccess: "Niveaux scolaire créé avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création du niveaux scolaire",
+      createFailure: "Échec de la création du niveaux scolaire",
+      updateSuccess: "Niveaux scolaire modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification du niveaux scolaire",
+      updateFailure: "Échec de la modification du niveaux scolaire",
+      deleteSuccess: "Niveaux scolaire désactivé avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression du niveaux scolaire",
+      deleteFailure: "Échec de la suppression du niveaux scolaire",
+    },
+    deleteModal: {
+      disableTitle: "Êtes-vous sûr de désactiver le niveau scolaire ?",
+      disableDescription:
+        "Comme le niveau a des cours attribués le niveau scolaire sera désactivé",
+      deleteTitle: "Êtes-vous sûr de supprimer le niveau scolaire ?",
+      deleteDescription: "Le niveau scolaire sera supprimé",
+    },
+  },
+  teacherCourses: {
+    title: "Page des cours de professeur(e)",
+    teacherCourses: "Cours de professeur",
+    create: "Ajouter des cours au professeur",
+    columns: {
+      coursesAsigned: "Cours attribués",
+      userName: "Professeur(e)",
+      isEnabled: "Est activé",
+    },
+    expanded: {
+      name: "Cours",
+      courseCode: "Code cours",
+      creditAmount: "Crédits",
+    },
+    form: {
+      name: "Niveau scolaire",
+      isEnabled: "Est activé",
+      teacherCourses: "Cours",
       addCourse: "Ajouter cours",
       coursePeriod: "Trimestre",
       scholarPeriodId: "Période",
