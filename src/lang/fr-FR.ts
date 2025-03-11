@@ -17,6 +17,7 @@ export default {
     scholarYears: "Années scolaires",
     levels: "Niveaux scolaires",
     teacherCourses: "Cours de professeur",
+    gradeCoefficients: "Coefficients de note",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -509,18 +510,18 @@ export default {
       coursesValidation: "Les courses sont obligatoires",
     },
     notifications: {
-      createSuccess: "Niveaux scolaire créé avec succès",
+      createSuccess: "Niveau scolaire créé avec succès",
       createError:
-        "Une erreur s'est produite pendant la création du niveaux scolaire",
-      createFailure: "Échec de la création du niveaux scolaire",
-      updateSuccess: "Niveaux scolaire modifié avec succès",
+        "Une erreur s'est produite pendant la création du niveau scolaire",
+      createFailure: "Échec de la création du niveau scolaire",
+      updateSuccess: "Niveau scolaire modifié avec succès",
       updateError:
-        "Une erreur s'est produite pendant la modification du niveaux scolaire",
-      updateFailure: "Échec de la modification du niveaux scolaire",
-      deleteSuccess: "Niveaux scolaire désactivé avec succès",
+        "Une erreur s'est produite pendant la modification du niveau scolaire",
+      updateFailure: "Échec de la modification du niveau scolaire",
+      deleteSuccess: "Niveau scolaire désactivé avec succès",
       deleteError:
-        "Une erreur s'est produite pendant la suppression du niveaux scolaire",
-      deleteFailure: "Échec de la suppression du niveaux scolaire",
+        "Une erreur s'est produite pendant la suppression du niveau scolaire",
+      deleteFailure: "Échec de la suppression du niveau scolaire",
     },
     deleteModal: {
       disableTitle: "Êtes-vous sûr de désactiver le niveau scolaire ?",
@@ -533,7 +534,6 @@ export default {
   teacherCourses: {
     title: "Page des cours de professeur(e)",
     teacherCourses: "Cours de professeur",
-    create: "Ajouter des cours au professeur",
     columns: {
       coursesAsigned: "Cours attribués",
       userName: "Professeur(e)",
@@ -545,36 +545,47 @@ export default {
       creditAmount: "Crédits",
     },
     form: {
-      name: "Niveau scolaire",
-      isEnabled: "Est activé",
       teacherCourses: "Cours",
       addCourse: "Ajouter cours",
       coursePeriod: "Trimestre",
       scholarPeriodId: "Période",
     },
-    validations: {
-      coursesValidation: "Les courses sont obligatoires",
+  },
+  gradeCoefficients: {
+    title: "Page des coefficients de note",
+    gradeCoefficients: "Coefficients de note",
+    gradeCoefficient: "Coefficient de note",
+    create: "Créer un coefficient de note",
+    columns: {
+      name: "Coefficients de note",
+      coefficient: "Pourcentage",
+      isEnabled: "Est activé",
+    },
+    form: {
+      name: "Coefficients de note",
+      coefficient: "Pourcentage",
+      isEnabled: "Est activé",
     },
     notifications: {
-      createSuccess: "Niveaux scolaire créé avec succès",
+      createSuccess: "Coefficient de note créé avec succès",
       createError:
-        "Une erreur s'est produite pendant la création du niveaux scolaire",
-      createFailure: "Échec de la création du niveaux scolaire",
-      updateSuccess: "Niveaux scolaire modifié avec succès",
+        "Une erreur s'est produite pendant la création du coefficient de note",
+      createFailure: "Échec de la création du Coefficient de note",
+      updateSuccess: "Coefficient de note modifié avec succès",
       updateError:
-        "Une erreur s'est produite pendant la modification du niveaux scolaire",
-      updateFailure: "Échec de la modification du niveaux scolaire",
-      deleteSuccess: "Niveaux scolaire désactivé avec succès",
+        "Une erreur s'est produite pendant la modification du coefficient de note",
+      updateFailure: "Échec de la modification du coefficient de note",
+      deleteSuccess: "Coefficient de note désactivé avec succès",
       deleteError:
-        "Une erreur s'est produite pendant la suppression du niveaux scolaire",
-      deleteFailure: "Échec de la suppression du niveaux scolaire",
+        "Une erreur s'est produite pendant la suppression du coefficient de note",
+      deleteFailure: "Échec de la suppression du coefficient de note",
     },
     deleteModal: {
-      disableTitle: "Êtes-vous sûr de désactiver le niveau scolaire ?",
+      disableTitle: "Êtes-vous sûr de désactiver le coefficient de note ?",
       disableDescription:
-        "Comme le niveau a des cours attribués le niveau scolaire sera désactivé",
-      deleteTitle: "Êtes-vous sûr de supprimer le niveau scolaire ?",
-      deleteDescription: "Le niveau scolaire sera supprimé",
+        "Comme le niveau a des cours attribués le coefficient de note sera désactivé",
+      deleteTitle: "Êtes-vous sûr de supprimer le coefficient de note ?",
+      deleteDescription: "Le coefficient de note sera supprimé",
     },
   },
   reports: {
