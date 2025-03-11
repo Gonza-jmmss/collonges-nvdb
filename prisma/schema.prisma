@@ -407,3 +407,14 @@ model TeacherCourses {
 
   @@schema("Courses")
 }
+
+model GradeCoefficients {
+  GradeCoefficientId Int       @id(map: "PK__GradeCoe__6A179275586DAB81") @default(autoincrement())
+  Name               String    @db.VarChar(255)
+  Coefficient        Decimal   @db.Decimal(18, 2)
+  UpdatedAt          DateTime?
+  CreatedAt          DateTime  @default(now())
+  IsEnabled          Boolean
+
+  @@schema("Courses")
+}
