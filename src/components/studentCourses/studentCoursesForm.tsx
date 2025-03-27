@@ -52,6 +52,7 @@ export default function StudentCourseForm({
   const [periodSelected, setPeriodSelected] = useState(
     typeof urlParams?.period === "string" ? parseInt(urlParams?.period) : 4,
   );
+  const scholarPeriodIdParam = parseInt(urlParams?.scholarPeriodId as string);
 
   const form = useForm<StudentCourseFormData>({
     defaultValues: {
@@ -87,7 +88,9 @@ export default function StudentCourseForm({
         description: `${t.studentCourses.title} : ${studentCoursesData?.AlternativeName}`,
       });
 
-      router.push("/courses/studentCourses");
+      router.push(
+        `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -112,7 +115,9 @@ export default function StudentCourseForm({
         description: `${t.studentCourses.title} : ${studentCoursesData?.AlternativeName}`,
       });
 
-      router.push("/courses/studentCourses");
+      router.push(
+        `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -164,45 +169,48 @@ export default function StudentCourseForm({
       }}
       className="mt-3 grid grid-cols-1 gap-5"
     >
-      <div className="col-span-2 space-y-1">
-        <form.Field
-          name="StudentId"
-          validators={{
-            onSubmitAsync: (value) => {
-              if (value === null || value === undefined) {
-                return t.studentCourses.validations.studentValidation;
-              }
-              return z.number().min(1).safeParse(value.value).success
-                ? undefined
-                : t.studentCourses.validations.studentValidation;
-            },
-          }}
-          children={(field) => (
-            <>
-              <span>{t.studentCourses.form.studentId}</span>
-              <Combobox
-                options={studentsWithNoCourses}
-                textAttribute="AlternativeName"
-                valueAttribute="StudentId"
-                placeholder={t.studentCourses.form.studentId}
-                itemSelected={studentsWithNoCourses.find(
-                  (x) => x.StudentId === field.state.value,
-                )}
-                setItemSelected={(x: { StudentId: number }) => {
-                  field.handleChange(x && x.StudentId);
-                }}
-                disabled={action === "view"}
-                showSearch
-              />
-              <div className="text-xs text-red-500">
-                {field.state.meta.errors
-                  ? field.state.meta.errors.join(", ")
-                  : null}
-              </div>
-            </>
-          )}
-        />
-      </div>
+      {/* <pre>{JSON.stringify(scholarPeriodIdParam, null, 2)}</pre> */}
+      {action === "create" && (
+        <div className="col-span-2 space-y-1">
+          <form.Field
+            name="StudentId"
+            validators={{
+              onSubmitAsync: (value) => {
+                if (value === null || value === undefined) {
+                  return t.studentCourses.validations.studentValidation;
+                }
+                return z.number().min(1).safeParse(value.value).success
+                  ? undefined
+                  : t.studentCourses.validations.studentValidation;
+              },
+            }}
+            children={(field) => (
+              <>
+                <span>{t.studentCourses.form.studentId}</span>
+                <Combobox
+                  options={studentsWithNoCourses}
+                  textAttribute="AlternativeName"
+                  valueAttribute="StudentId"
+                  placeholder={t.studentCourses.form.studentId}
+                  itemSelected={studentsWithNoCourses.find(
+                    (x) => x.StudentId === field.state.value,
+                  )}
+                  setItemSelected={(x: { StudentId: number }) => {
+                    field.handleChange(x && x.StudentId);
+                  }}
+                  disabled={action !== "create"}
+                  showSearch
+                />
+                <div className="text-xs text-red-500">
+                  {field.state.meta.errors
+                    ? field.state.meta.errors.join(", ")
+                    : null}
+                </div>
+              </>
+            )}
+          />
+        </div>
+      )}
       <div className="col-span-2 space-y-1">
         <form.Field
           name="ScholarPeriodId"
@@ -230,7 +238,7 @@ export default function StudentCourseForm({
                 setItemSelected={(x: { ScholarPeriodId: number }) => {
                   field.handleChange(x && x.ScholarPeriodId);
                   handleUrlParameterChange(
-                    "scholarPeriod",
+                    "scholarPeriodId",
                     `${x.ScholarPeriodId}`,
                   );
                 }}
@@ -283,6 +291,7 @@ export default function StudentCourseForm({
                       setPeriodSelected(x && x.key);
                       handleUrlParameterChange("period", `${x.key}`);
                     }}
+                    notClearable
                   />
                 </div>
                 <span className="col-span-2 mt-3 md:col-span-1">
@@ -390,7 +399,11 @@ export default function StudentCourseForm({
               type="button"
               variant={"secondary"}
               className="w-[30%]"
-              onClick={() => router.push("/courses/studentCourses")}
+              onClick={() =>
+                router.push(
+                  `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}`,
+                )
+              }
             >
               {t.shared.cancel}
             </Button>

@@ -27,7 +27,7 @@ export default function StudentCoursesTable({
   studentCoursesData: StudentCoursesViewModel[];
   scholarYears: ScholarYearsViewModel[];
   scholarPeriods: ScholarPeriodsViewModel[];
-  urlParams?: { [key: string]: string | string[] | undefined };
+  urlParams: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const router = useRouter();
@@ -37,16 +37,20 @@ export default function StudentCoursesTable({
 
   const [scholarYearFilter, setScholarYearFilter] =
     useState<ScholarYearsViewModel>(
-      typeof urlParams?.scholarYear === "string"
-        ? scholarYears[parseInt(urlParams?.scholarYear)]
+      typeof urlParams.scholarYear === "string"
+        ? scholarYears[parseInt(urlParams.scholarYear)]
         : scholarYears[0],
     );
 
+  const scholarPeriodIdParam =
+    typeof urlParams.scholarPeriodId === "string"
+      ? parseInt(urlParams.scholarPeriodId)
+      : undefined;
+
   const [scholarPeriodFilter, setScholarPeriodFilter] =
     useState<ScholarPeriodsViewModel>(
-      typeof urlParams?.scholarPeriod === "string"
-        ? scholarPeriods[parseInt(urlParams?.scholarPeriod)]
-        : scholarPeriods[0],
+      scholarPeriods.find((x) => x.ScholarPeriodId === scholarPeriodIdParam) ||
+        scholarPeriods[0],
     );
 
   const columns = useMemo<ColumnDef<StudentCoursesViewModel, any>[]>(
@@ -191,7 +195,7 @@ export default function StudentCoursesTable({
                 className="cursor-pointer text-xl hover:text-primary"
                 onClick={() =>
                   router.push(
-                    `/courses/studentCourses/${row.row.original.StudentId}?action="edit"${scholarPeriodFilter.ScholarPeriodId !== 0 ? `&scholarPeriod=${scholarPeriodFilter.ScholarPeriodId}` : ""}`,
+                    `/courses/studentCourses/${row.row.original.StudentId}?action="edit"${scholarPeriodFilter.ScholarPeriodId !== 0 ? `&scholarPeriodId=${scholarPeriodFilter.ScholarPeriodId}` : ""}`,
                   )
                 }
               />
@@ -253,13 +257,18 @@ export default function StudentCoursesTable({
   };
 
   const handleUrlParameterChange = (key: string, value: string) => {
-    const currentParams = new URLSearchParams();
-    Object.entries(urlParams || {}).forEach(([k, v]) => {
-      if (typeof v === "string") {
-        currentParams.set(k, v);
-      }
-    });
+    const currentParams = new URLSearchParams(window.location.search);
     currentParams.set(key, value);
+
+    // Update URL without replacing current parameters
+    const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+
+    // Use router.push or history.pushState depending on your navigation setup
+    // router.push(newUrl);
+    // or
+    window.history.pushState({}, "", newUrl);
+
+    // If you need to update some state as well
     updateQuery(Object.fromEntries(currentParams));
   };
 
@@ -293,7 +302,10 @@ export default function StudentCoursesTable({
             )}
             setItemSelected={(x: ScholarPeriodsViewModel) => {
               setScholarPeriodFilter(x && x);
-              handleUrlParameterChange("scholarPeriod", `${x.ScholarPeriodId}`);
+              handleUrlParameterChange(
+                "scholarPeriodId",
+                `${x.ScholarPeriodId}`,
+              );
             }}
             notClearable
           />
@@ -302,7 +314,7 @@ export default function StudentCoursesTable({
           variant="outlineColored"
           onClick={() =>
             router.push(
-              `/courses/studentCourses/create?action="create"${scholarPeriodFilter ? `&scholarPeriod=${scholarPeriodFilter.ScholarPeriodId}` : ""}`,
+              `/courses/studentCourses/create?action="create"${scholarPeriodFilter ? `&scholarPeriodId=${scholarPeriodFilter.ScholarPeriodId}` : ""}`,
             )
           }
         >

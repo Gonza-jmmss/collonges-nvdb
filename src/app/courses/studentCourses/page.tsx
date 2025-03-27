@@ -22,13 +22,13 @@ export default async function StudentsCoursesPage({
   const scholarYear = searchParams.scholarYear
     ? parseInt(searchParams.scholarYear as string)
     : scholarYears[0].ScholarYearId;
-  const scholarPeriod = searchParams.scholarPeriod
-    ? parseInt(searchParams.scholarPeriod as string)
+  const scholarPeriodId = searchParams.scholarPeriodId
+    ? parseInt(searchParams.scholarPeriodId as string)
     : scholarPeriods[0].ScholarPeriodId;
 
   const studentCourses = await getAllStudentCoursesQuery({
     ScholarYearId: scholarYear,
-    ScholarPeriodId: scholarPeriod,
+    ScholarPeriodId: scholarPeriodId,
   });
 
   const scholarPeriodsTous = [

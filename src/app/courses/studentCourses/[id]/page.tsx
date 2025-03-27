@@ -37,8 +37,8 @@ export default async function StudentCoursesPage({
   if (params.id != "create") {
     studentCourses = await getStudentCoursesByStudentIdQuery({
       StudentId: Number(params.id),
-      ScholarPeriodId: searchParams.scholarPeriod
-        ? parseInt(searchParams.scholarPeriod as string)
+      ScholarPeriodId: searchParams.scholarPeriodId
+        ? parseInt(searchParams.scholarPeriodId as string)
         : scholarPeriods[0].ScholarPeriodId,
     });
   } else {
@@ -62,6 +62,7 @@ export default async function StudentCoursesPage({
             allCourses={allCourses}
             scholarPeriods={scholarPeriods}
             action={action}
+            urlParams={searchParams}
           />
         </div>
         {/* <pre>{JSON.stringify(studentCourses, null, 2)}</pre>
