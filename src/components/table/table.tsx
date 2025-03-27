@@ -95,7 +95,7 @@ interface TableProps<T> {
   minimalMode?: boolean;
   noBorders?: boolean;
   expandable?: boolean;
-  expandedContent?: React.ReactNode;
+  expandedContent?: React.ReactNode | ((row: T) => React.ReactNode);
 }
 export default function TableComponent<T>({
   columns,
@@ -243,7 +243,11 @@ export default function TableComponent<T>({
                     {row.getIsExpanded() && (
                       <TableRow>
                         <TableCell colSpan={row.getAllCells().length}>
-                          <div>{expandedContent}</div>
+                          <div>
+                            {typeof expandedContent === "function"
+                              ? expandedContent(row.original)
+                              : expandedContent}
+                          </div>
                         </TableCell>
                       </TableRow>
                     )}
@@ -386,7 +390,11 @@ export default function TableComponent<T>({
                       {row.getIsExpanded() && (
                         <TableRow>
                           <TableCell colSpan={row.getAllCells().length}>
-                            <div>{expandedContent}</div>
+                            <div>
+                              {typeof expandedContent === "function"
+                                ? expandedContent(row.original)
+                                : expandedContent}
+                            </div>
                           </TableCell>
                         </TableRow>
                       )}
