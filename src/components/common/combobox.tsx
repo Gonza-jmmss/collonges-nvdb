@@ -45,9 +45,9 @@ export default function Combobox({
   const t = frFR;
 
   const [open, setOpen] = useState(false);
-  const textAttributeToWork = Array.isArray(textAttribute)
-    ? textAttribute[0]
-    : textAttribute;
+  // const textAttributeToWork = Array.isArray(textAttribute)
+  //   ? textAttribute[0]
+  //   : textAttribute;
 
   const textAttributeToShow = Array.isArray(textAttribute)
     ? (option: any) => textAttribute.map((attr) => option[attr]).join(", ")
@@ -60,11 +60,13 @@ export default function Combobox({
           variant="combobox"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between"
+          className="w-full justify-between truncate overflow-ellipsis"
           disabled={disabled}
         >
           {itemSelected
-            ? itemSelected[textAttributeToWork]
+            ? typeof textAttributeToShow === "function"
+              ? textAttributeToShow(itemSelected)
+              : itemSelected[textAttributeToShow]
             : placeholder || "Select..."}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
