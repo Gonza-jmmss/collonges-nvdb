@@ -21,7 +21,6 @@ const getAllGradeCoefficientsQuery = cache(
     const res = query.map((gradeCoefficient: GradeCoefficientsMap) => ({
       GradeCoefficientId: gradeCoefficient.GradeCoefficientId,
       Name: gradeCoefficient.Name,
-      Coefficient: gradeCoefficient.Coefficient,
       CoefficientNumber: Number(gradeCoefficient.Coefficient) * 100,
       IsEnabled: gradeCoefficient.IsEnabled,
     }));

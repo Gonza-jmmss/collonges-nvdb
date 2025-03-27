@@ -8,11 +8,7 @@ export default async function GradeCoefficientsPage({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
-  // const isEnabled = searchParams?.isEnabled === "false" ? false : true;
-  // const period =
-  //   typeof searchParams?.period === "string"
-  //     ? parseInt(searchParams?.period)
-  //     : 4;
+
   const isEnabled =
     searchParams?.isEnabled === undefined
       ? true

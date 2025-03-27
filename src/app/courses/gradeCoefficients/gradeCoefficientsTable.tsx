@@ -43,10 +43,6 @@ export default function GradeCoefficientsTable({
     urlParams?.isEnabled === "false" ? false : true || true,
   );
 
-  const [periodFilter, setPeriodFilter] = useState(
-    typeof urlParams?.period === "string" ? parseInt(urlParams?.period) : 4,
-  );
-
   const columns = useMemo<ColumnDef<GradeCoefficientsViewModel, any>[]>(
     () => [
       {

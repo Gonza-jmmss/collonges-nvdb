@@ -3,7 +3,6 @@ import { Decimal } from "@prisma/client/runtime/library";
 export type GradeCoefficientsViewModel = {
   GradeCoefficientId: number;
   Name: string;
-  Coefficient: Decimal;
   CoefficientNumber: number;
   IsEnabled: boolean;
 };

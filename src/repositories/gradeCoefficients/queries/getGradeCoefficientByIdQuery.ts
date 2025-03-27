@@ -9,7 +9,6 @@ const getGradeCoefficientByIdQuery = async (gradeCoefficientId: number) => {
 
   const res = {
     ...query,
-    Coefficient: query.Coefficient,
     CoefficientNumber: Number(query.Coefficient) * 100,
   };
 
