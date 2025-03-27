@@ -47,11 +47,14 @@ export default function Sidebar({
                       : segments[0].toLowerCase()) ? (
                       <Button
                         key={index}
-                        className="flex w-[85%] cursor-default justify-start hover:bg-transparent"
+                        className="flex w-[85%] cursor-default justify-start"
                         variant="ghost"
                       >
                         {isMouseOver ? (
-                          <div className="flex space-x-3 text-primary">
+                          <div
+                            className="flex cursor-pointer space-x-3 text-primary"
+                            onClick={() => router.push(`${element.Path}`)}
+                          >
                             <Icon
                               name={
                                 isValidIconName(element.Icon)
@@ -98,7 +101,7 @@ export default function Sidebar({
                         ) : (
                           <div
                             className="cursor-pointer"
-                            onClick={() => router.push(`${element.Path}`)}
+                            // onClick={() => router.push(`${element.Path}`)}
                           >
                             <Icon
                               name={
