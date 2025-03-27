@@ -35,10 +35,6 @@ export default function StudentsTable({
     urlParams?.isEnabled === "false" ? false : true || true,
   );
 
-  const handleUrlParameterChange = (key: string, value: string) => {
-    updateQuery({ [key]: value });
-  };
-
   const closeModal = () => {
     setOpenModal(false);
     setSelectedStudentToDelete(0);
@@ -145,6 +141,22 @@ export default function StudentsTable({
         description: `${error}`,
       });
     }
+  };
+
+  const handleUrlParameterChange = (key: string, value: string) => {
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.set(key, value);
+
+    // Update URL without replacing current parameters
+    const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+
+    // Use router.push or history.pushState depending on your navigation setup
+    // router.push(newUrl);
+    // or
+    window.history.pushState({}, "", newUrl);
+
+    // If you need to update some state as well
+    updateQuery(Object.fromEntries(currentParams));
   };
 
   return (
