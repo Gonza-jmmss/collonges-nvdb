@@ -29,6 +29,12 @@ export type LevelCoursesExtendedViewModel = {
   CourseCode: string | null;
 };
 
+export type CurentLevelsViewModel = {
+  LevelId: number;
+  Name: string;
+  IsEnabled: boolean;
+};
+
 export type LevelsMap = {
   LevelId: number;
   Name: string;
@@ -50,4 +56,12 @@ export type LevelCoursesMap = {
     EnglishName: string;
     CourseCode: string | null;
   };
+};
+
+export type CurrentLevelsMap = {
+  LevelId: number;
+  Name: string;
+  IsEnabled: boolean;
+  UpdatedAt: Date | null;
+  CreatedAt: Date;
 };

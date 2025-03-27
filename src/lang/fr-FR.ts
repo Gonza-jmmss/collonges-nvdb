@@ -18,6 +18,7 @@ export default {
     levels: "Niveaux scolaires",
     teacherCourses: "Cours de professeur",
     gradeCoefficients: "Coefficients de note",
+    studentCourseGrades: "Notes",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -25,6 +26,7 @@ export default {
   shared: {
     save: "Enregistrer",
     cancel: "Annuler",
+    confirm: "Confirmer",
     yes: "Oui",
     no: "Non",
     exportPDF: "Exporter en PDF",
@@ -533,7 +535,7 @@ export default {
   },
   teacherCourses: {
     title: "Page des cours de professeur(e)",
-    teacherCourses: "Cours de professeur",
+    teacherCourses: "Cours de professeur(e)",
     columns: {
       coursesAsigned: "Cours attribués",
       userName: "Professeur(e)",
@@ -549,6 +551,12 @@ export default {
       addCourse: "Ajouter cours",
       coursePeriod: "Trimestre",
       scholarPeriodId: "Période",
+    },
+    notifications: {
+      updateSuccess: "Cours de professeur(e) modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification des cours de professeur(e)",
+      updateFailure: "Échec de la modification dus cours de professeur(e)",
     },
   },
   gradeCoefficients: {
@@ -586,6 +594,80 @@ export default {
         "Comme le niveau a des cours attribués le coefficient de note sera désactivé",
       deleteTitle: "Êtes-vous sûr de supprimer le coefficient de note ?",
       deleteDescription: "Le coefficient de note sera supprimé",
+    },
+  },
+  studentCourseGrades: {
+    title: "Page des Notes",
+    studentCourseGrades: "Notes",
+    create: "Ajouter des notes",
+    level: "Niveaux scolaires",
+    tabs: {
+      orderedByActivity: "Classé par avtivité",
+      orderedByStudent: "Classé par studient",
+    },
+    columnsByStudent: {
+      courseName: "Cours",
+      courseCode: "Cours code",
+      studentName: "Étudiant",
+      grade: "Moyen",
+      levelName: "Niveau",
+    },
+    expandedByStudent: {
+      description: "Acticité",
+      gradeCoefficientName: "Type",
+      grade: "Note",
+      createdAt: "Date",
+      userName: "Professeur(e)",
+    },
+    columnsByActivity: {
+      description: "Activité",
+      gradeCoefficientName: "Type",
+      createdAt: "Date",
+      userName: "Professeur(e)",
+      levelName: "Niveau",
+    },
+    expandedByActivity: {
+      studentName: "Étudiant",
+      averageGrade: "Moyen",
+      grade: "Note de l'activité",
+    },
+    form: {
+      course: "Course",
+      gradeCoefficientId: "Coefficients de note",
+      description: "Description",
+      students: "Étudiants",
+      grade: "Note",
+      clearGrades: "Effacer notes",
+    },
+    notifications: {
+      createSuccess: "Notes créés avec succès",
+      createError: "Une erreur s'est produite pendant la création du notes",
+      createFailure: "Échec de la création du notes",
+      updateSuccess: "Notes modifiés avec succès",
+      updateError: "Une erreur s'est produite pendant la modification du notes",
+      updateFailure: "Échec de la modification du notes",
+      deleteSuccess: "Notes désactivés avec succès",
+      deleteError: "Une erreur s'est produite pendant la suppression du Notes",
+      deleteFailure: "Échec de la suppression du Notes",
+    },
+    validations: {
+      gradeCoefficientValidation: "Le Coefficients de note est obligatoire",
+      coursesValidation: "Les cours sont obligatoires",
+    },
+    delteModalValidation: {
+      title: "L'activité a des notes assignées",
+      description:
+        "Pour supprimer l'activité, vous devez d'abord effacer toutes les notes, puis revenir et supprimer l'activité",
+    },
+    deleteModal: {
+      deleteTitle: "Êtes-vous sûr de supprimer les notes ?",
+      deleteDescription: "L'activité sera supprimé",
+    },
+    confirmtionModal: {
+      title:
+        "Êtes-vous sûr de vouloir sauvegarder une activité avec toutes ses notes vides ?",
+      description:
+        "L'activité sera sauvegardée, mais elle ne changera pas la moyenne des notes",
     },
   },
   reports: {

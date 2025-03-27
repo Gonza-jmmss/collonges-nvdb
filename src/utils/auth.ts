@@ -154,7 +154,7 @@ export const authConfig = {
 
           // get path without last "/create" or "/(any number)"
           const extractBasePath = (path: string) => {
-            const match = path.match(/^(.*?)(\/(?:create|\d+))$/);
+            const match = path.match(/^(.*?)(\/(?:create|edit|\d+))$/);
             return match ? match[1] : path;
           };
 

@@ -104,3 +104,38 @@ export type StudentCoursesByScholarPeriodIdMap = {
   CreatedAt: Date;
   StudentCourseId: number;
 };
+
+export type StudentsByCourseIdMap = {
+  StudentCourseId: number;
+  StudentId: number;
+  CourseId: number;
+  Note: string | null;
+  ScholarPeriodId: number;
+  UpdatedAt: Date | null;
+  CreatedAt: Date;
+  Students: {
+    StudentId: number;
+    PersonId: number;
+    StudentTypeId: number;
+    IsACA: boolean;
+    DepartmentId: number | null;
+    CollegeId: number | null;
+    RegimeId: number | null;
+    AccommodationId: number | null;
+    UpdatedAt: Date | null;
+    CreatedAt: Date;
+    IsEnabled: boolean;
+    Persons: {
+      AlternativeName: string | null;
+    };
+  };
+};
+
+export type StudentsByCourseIdViewModel = {
+  StudentCourseId: number;
+  StudentId: number;
+  CourseId: number;
+  Note: string | null;
+  ScholarPeriodId: number;
+  StudentName: string | null;
+};
