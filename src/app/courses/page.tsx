@@ -25,12 +25,16 @@ export default async function Settings() {
 
   return (
     <main className="mt-6 flex w-full justify-center">
-      <div className="mt-3 w-[80vw]">
+      <div className="mt-3 w-[70vw]">
         <div className="flex justify-center">
           <span className="text-4xl font-bold">{t.breadcrumbs.courses}</span>
         </div>
         {/* <pre>{JSON.stringify(moduleElements, null, 2)}</pre> */}
-        <div className={`mt-10 flex justify-center space-x-8`}>
+        {/* <div className={`mt-10 grid grid-cols-5 justify-items-center gap-8`}> */}
+        <div
+          className={`-ml-8 mt-10 flex flex-wrap justify-center space-x-8 space-y-8`}
+        >
+          <div />
           {moduleElements
             .filter((x) => x.ModuleElementId !== 0)
             .map((element, index) => (
@@ -40,10 +44,7 @@ export default async function Settings() {
                 className={`h-[10rem] w-[10rem]`}
                 variant="outline"
               >
-                <Link
-                  href={`${element.Path}`}
-                  className="flex flex-col space-y-2"
-                >
+                <Link href={`${element.Path}`} className="flex flex-col">
                   <Icon
                     name={
                       isValidIconName(element.Icon)
