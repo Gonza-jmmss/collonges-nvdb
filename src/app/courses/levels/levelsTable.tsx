@@ -26,8 +26,6 @@ export default function LevelsTable({
   const router = useRouter();
   const { toast } = useToast();
 
-  const [expandedContent, setExpandedContent] = useState<React.ReactNode>();
-
   const [openModal, setOpenModal] = useState(false);
   const [selectedLevelToDelete, setSelectedLevelToDelete] =
     useState<LevelsTableViewModel | null>();
@@ -60,7 +58,6 @@ export default function LevelsTable({
                         : "MdOutlineNotInterested"
                     }
                     className="cursor-pointer"
-                    onClick={() => handleRowClick(null)}
                   />
                 ) : (
                   <Icon
@@ -70,7 +67,6 @@ export default function LevelsTable({
                         : "MdOutlineNotInterested"
                     }
                     className="cursor-pointer"
-                    onClick={() => handleRowClick(row.original)}
                   />
                 )}
               </div>
@@ -192,18 +188,6 @@ export default function LevelsTable({
     }
   };
 
-  const handleRowClick = (row: LevelsTableViewModel | null) => {
-    if (row !== null)
-      setExpandedContent(
-        <Table
-          columns={columnsExtended}
-          data={row.LevelCourses}
-          minimalMode
-          noBorders
-        />,
-      );
-  };
-
   return (
     <div>
       <div className="flex items-center justify-end space-x-5">
@@ -219,7 +203,14 @@ export default function LevelsTable({
         data={levels}
         className=""
         expandable
-        expandedContent={expandedContent}
+        expandedContent={(row) => (
+          <Table
+            columns={columnsExtended}
+            data={row.LevelCourses}
+            minimalMode
+            noBorders
+          />
+        )}
       />
       <DeleteModal
         openModal={openModal}
