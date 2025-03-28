@@ -140,8 +140,11 @@ export default function RoleModuleElementForm({
   });
 
   useEffect(() => {
-    form.setFieldValue("ModuleId", null);
-    form.setFieldValue("ModuleElementId", null);
+    if (elementTypeSelected.Value === 1) {
+      form.setFieldValue("ModuleId", null);
+    } else if (elementTypeSelected.Value === 2) {
+      form.setFieldValue("ModuleElementId", null);
+    }
   }, [elementTypeSelected]);
 
   return (
@@ -171,76 +174,71 @@ export default function RoleModuleElementForm({
           notClearable
         />
       </div>
-      {elementTypeSelected.Value === 1 ? (
-        <div className="space-y-1">
-          <form.Field
-            name="ModuleElementId"
-            children={(field) => (
-              <>
-                <span
-                  className={`${elementTypeSelected.Name !== t.moduleElements.title ? "text-neutral-500" : ""}`}
-                >
-                  {t.roleModuleElements.form.moduleElementId}
-                </span>
-                <Combobox
-                  options={moduleElements}
-                  textAttribute="Name"
-                  valueAttribute="ModuleElementId"
-                  placeholder={t.roleModuleElements.form.moduleElementId}
-                  itemSelected={moduleElements.find(
-                    (x) => x.ModuleElementId === field.state.value,
-                  )}
-                  setItemSelected={(x: {
-                    ModuleElementId: number;
-                    Name: string;
-                  }) => {
-                    field.handleChange(x && x.ModuleElementId);
-                  }}
-                  // disabled={action === "view"}
-                  disabled={
-                    action === "view" ||
-                    elementTypeSelected.Name !== t.moduleElements.title
-                  }
-                  showSearch
-                />
-              </>
-            )}
-          />
-        </div>
-      ) : (
-        <div className="space-y-1">
-          <form.Field
-            name="ModuleId"
-            children={(field) => (
-              <>
-                <span
-                  className={`${elementTypeSelected.Name !== t.modules.title ? "text-neutral-500" : ""}`}
-                >
-                  {t.roleModuleElements.form.moduleId}
-                </span>
-                <Combobox
-                  options={modules}
-                  textAttribute="Name"
-                  valueAttribute="ModuleId"
-                  placeholder={t.roleModuleElements.form.moduleId}
-                  itemSelected={modules.find(
-                    (x) => x.ModuleId === field.state.value,
-                  )}
-                  setItemSelected={(x: { ModuleId: number; Name: string }) => {
-                    field.handleChange(x && x.ModuleId);
-                  }}
-                  // disabled={action === "view"}
-                  disabled={
-                    action === "view" ||
-                    elementTypeSelected.Name !== t.modules.title
-                  }
-                  showSearch
-                />
-              </>
-            )}
-          />
-        </div>
-      )}
+      <div className="space-y-1">
+        <form.Field
+          name="ModuleElementId"
+          children={(field) => (
+            <>
+              <span
+                className={`${elementTypeSelected.Name !== t.moduleElements.title ? "text-neutral-500" : ""}`}
+              >
+                {t.roleModuleElements.form.moduleElementId}
+              </span>
+              <Combobox
+                options={moduleElements}
+                textAttribute="Name"
+                valueAttribute="ModuleElementId"
+                placeholder={t.roleModuleElements.form.moduleElementId}
+                itemSelected={moduleElements.find(
+                  (x) => x.ModuleElementId === field.state.value,
+                )}
+                setItemSelected={(x: {
+                  ModuleElementId: number;
+                  Name: string;
+                }) => {
+                  field.handleChange(x && x.ModuleElementId);
+                }}
+                disabled={
+                  action === "view" ||
+                  elementTypeSelected.Name !== t.moduleElements.title
+                }
+                showSearch
+              />
+            </>
+          )}
+        />
+      </div>
+      <div className="space-y-1">
+        <form.Field
+          name="ModuleId"
+          children={(field) => (
+            <>
+              <span
+                className={`${elementTypeSelected.Name !== t.modules.title ? "text-neutral-500" : ""}`}
+              >
+                {t.roleModuleElements.form.moduleId}
+              </span>
+              <Combobox
+                options={modules}
+                textAttribute="Name"
+                valueAttribute="ModuleId"
+                placeholder={t.roleModuleElements.form.moduleId}
+                itemSelected={modules.find(
+                  (x) => x.ModuleId === field.state.value,
+                )}
+                setItemSelected={(x: { ModuleId: number; Name: string }) => {
+                  field.handleChange(x && x.ModuleId);
+                }}
+                disabled={
+                  action === "view" ||
+                  elementTypeSelected.Name !== t.modules.title
+                }
+                showSearch
+              />
+            </>
+          )}
+        />
+      </div>
       <div className="space-y-1">
         <form.Field
           name="RoleId"
