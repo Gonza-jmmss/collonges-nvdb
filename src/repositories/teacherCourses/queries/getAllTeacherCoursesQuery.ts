@@ -6,7 +6,10 @@ const prisma = new PrismaClient();
 
 const getAllTeacherCoursesQuery = cache(async () => {
   const query = await prisma.users.findMany({
-    where: { Roles: { Name: "Professeur", IsEnabled: true }, IsEnabled: true },
+    where: {
+      Roles: { Name: { in: ["Professeur", "Directeur"] }, IsEnabled: true },
+      IsEnabled: true,
+    },
     include: {
       TeacherCourses: {
         include: { Courses: true },

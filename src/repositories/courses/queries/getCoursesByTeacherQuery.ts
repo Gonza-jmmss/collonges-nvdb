@@ -16,8 +16,6 @@ type getCoursesByTeacherQueryParamsType = {
 const getCoursesByTeacherQuery = async (
   params: getCoursesByTeacherQueryParamsType,
 ) => {
-  console.log("getCoursesByTeacherQueryParamsType", params);
-
   const query = await prisma.courses.findMany({
     where: {
       IsEnabled: params.IsEnabled,
@@ -34,7 +32,8 @@ const getCoursesByTeacherQuery = async (
       CoursePeriods: true,
       TeacherCourses: {
         where: {
-          ...(params.RoreName === "Professeur" && { UserId: params.UserId }),
+          ...((params.RoreName === "Professeur" ||
+            params.RoreName === "Directeur") && { UserId: params.UserId }),
         },
       },
       LevelCourses: true,
