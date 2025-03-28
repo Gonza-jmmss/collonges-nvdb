@@ -7,7 +7,7 @@ import { RoleModuleElementViewModel } from "@/repositories/roleModuleElements/ro
 import { ModulesViewModel } from "@/repositories/modules/modulesViewModel";
 import { ModuleElementsViewModel } from "@/repositories/moduleElements/moduleElementsViewModel";
 import { RolesViewModel } from "@/repositories/roles/rolesViewModel";
-import { Field, useForm } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
 import { useToast } from "@/hooks/use-toast";
@@ -158,85 +158,89 @@ export default function RoleModuleElementForm({
         <Combobox
           options={elementType}
           textAttribute="Name"
-          valueAttribute="ModuleId"
+          valueAttribute="Value"
           placeholder={t.roleModuleElements.form.chooseElementType}
           itemSelected={elementType.find(
             (x) => x.Value === elementTypeSelected.Value,
           )}
-          setItemSelected={(x: { Value: number; Name: string }) => {
+          setItemSelected={(x: { Name: string; Value: number }) => {
             setElementTypeSelected(x);
           }}
           disabled={action === "view"}
           showSearch
+          notClearable
         />
       </div>
-      <div className="space-y-1">
-        <form.Field
-          name="ModuleElementId"
-          children={(field) => (
-            <>
-              <span
-                className={`${elementTypeSelected.Name !== t.moduleElements.title ? "text-neutral-500" : ""}`}
-              >
-                {t.roleModuleElements.form.moduleElementId}
-              </span>
-              <Combobox
-                options={moduleElements}
-                textAttribute="Name"
-                valueAttribute="ModuleElementId"
-                placeholder={t.roleModuleElements.form.moduleElementId}
-                itemSelected={moduleElements.find(
-                  (x) => x.ModuleElementId === field.state.value,
-                )}
-                setItemSelected={(x: {
-                  ModuleElementId: number;
-                  Name: string;
-                }) => {
-                  field.handleChange(x && x.ModuleElementId);
-                }}
-                // disabled={action === "view"}
-                disabled={
-                  action === "view" ||
-                  elementTypeSelected.Name !== t.moduleElements.title
-                }
-                showSearch
-              />
-            </>
-          )}
-        />
-      </div>
-      <div className="space-y-1">
-        <form.Field
-          name="ModuleId"
-          children={(field) => (
-            <>
-              <span
-                className={`${elementTypeSelected.Name !== t.modules.title ? "text-neutral-500" : ""}`}
-              >
-                {t.roleModuleElements.form.moduleId}
-              </span>
-              <Combobox
-                options={modules}
-                textAttribute="Name"
-                valueAttribute="ModuleId"
-                placeholder={t.roleModuleElements.form.moduleId}
-                itemSelected={modules.find(
-                  (x) => x.ModuleId === field.state.value,
-                )}
-                setItemSelected={(x: { ModuleId: number; Name: string }) => {
-                  field.handleChange(x && x.ModuleId);
-                }}
-                // disabled={action === "view"}
-                disabled={
-                  action === "view" ||
-                  elementTypeSelected.Name !== t.modules.title
-                }
-                showSearch
-              />
-            </>
-          )}
-        />
-      </div>
+      {elementTypeSelected.Value === 1 ? (
+        <div className="space-y-1">
+          <form.Field
+            name="ModuleElementId"
+            children={(field) => (
+              <>
+                <span
+                  className={`${elementTypeSelected.Name !== t.moduleElements.title ? "text-neutral-500" : ""}`}
+                >
+                  {t.roleModuleElements.form.moduleElementId}
+                </span>
+                <Combobox
+                  options={moduleElements}
+                  textAttribute="Name"
+                  valueAttribute="ModuleElementId"
+                  placeholder={t.roleModuleElements.form.moduleElementId}
+                  itemSelected={moduleElements.find(
+                    (x) => x.ModuleElementId === field.state.value,
+                  )}
+                  setItemSelected={(x: {
+                    ModuleElementId: number;
+                    Name: string;
+                  }) => {
+                    field.handleChange(x && x.ModuleElementId);
+                  }}
+                  // disabled={action === "view"}
+                  disabled={
+                    action === "view" ||
+                    elementTypeSelected.Name !== t.moduleElements.title
+                  }
+                  showSearch
+                />
+              </>
+            )}
+          />
+        </div>
+      ) : (
+        <div className="space-y-1">
+          <form.Field
+            name="ModuleId"
+            children={(field) => (
+              <>
+                <span
+                  className={`${elementTypeSelected.Name !== t.modules.title ? "text-neutral-500" : ""}`}
+                >
+                  {t.roleModuleElements.form.moduleId}
+                </span>
+                <Combobox
+                  options={modules}
+                  textAttribute="Name"
+                  valueAttribute="ModuleId"
+                  placeholder={t.roleModuleElements.form.moduleId}
+                  itemSelected={modules.find(
+                    (x) => x.ModuleId === field.state.value,
+                  )}
+                  setItemSelected={(x: { ModuleId: number; Name: string }) => {
+                    field.handleChange(x && x.ModuleId);
+                  }}
+                  // disabled={action === "view"}
+                  disabled={
+                    action === "view" ||
+                    elementTypeSelected.Name !== t.modules.title
+                  }
+                  showSearch
+                />
+              </>
+            )}
+          />
+        </div>
+      )}
       <div className="space-y-1">
         <form.Field
           name="RoleId"
