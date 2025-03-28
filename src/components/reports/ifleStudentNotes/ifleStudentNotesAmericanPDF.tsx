@@ -444,7 +444,7 @@ export default function ifleStudentNotesAmericanPDF({
       // // guideLine for the logos /////////////////////////
 
       // const fileName = `English transcript ${studentName} ${studentNotesData.CourseNotes[0].ScholarYear} ${studentNotesData.CourseNotes[0].Quarter}`;
-      const fileName = `Transcript T${studentNotesData.CourseNotes[0].Quarter} ${studentNotesData.CourseNotes[0].ScholarYear}  ${studentName} ${CollegeAbbreviationText}`;
+      const fileName = `Transcript T${studentNotesData.CourseNotes[studentNotesData.CourseNotes.length - 1].Quarter} ${studentNotesData.CourseNotes[studentNotesData.CourseNotes.length - 1].ScholarYear}  ${studentName} ${CollegeAbbreviationText}`;
       doc.output("dataurlnewwindow");
       doc.save(fileName);
     } catch (error) {
