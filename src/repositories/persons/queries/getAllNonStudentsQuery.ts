@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { PersonsViewModel } from "../persionsViewModel";
+import { PersonsMap } from "../persionsViewModel";
 
 const prisma = new PrismaClient();
 
@@ -16,7 +16,7 @@ const getAllNonStudentsQuery = async () => {
     },
   });
 
-  const res = query.map((person: PersonsViewModel) => ({
+  const res = query.map((person: PersonsMap) => ({
     PersonId: person.PersonId,
     AlternativeName: person.AlternativeName,
     Email: person.Email,

@@ -21,7 +21,7 @@ export type PersonViewModel = {
   DBaseCode: string | null;
 };
 
-export type PersonsViewModel = {
+export type PersonsMap = {
   PersonId: number;
   FirstName: string | null;
   LastName: string | null;
@@ -40,10 +40,10 @@ export type PersonsViewModel = {
   CountryId: number | null;
   BirthCountryId: number | null;
   Email: string | null;
-  Image: string | null;
   DBaseCode: string | null;
   UpdatedAt: Date | null;
   CreatedAt: Date;
+  ImageName: string | null;
 };
 
 export type NonStudentsViewModel = {
