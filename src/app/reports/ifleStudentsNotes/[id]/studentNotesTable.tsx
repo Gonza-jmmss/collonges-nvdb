@@ -59,6 +59,7 @@ export default function StudentsTable({
           />
         ),
         filterFn: "equalsString",
+        size: 350,
       },
       {
         accessorKey: "CreditAmount",
@@ -119,6 +120,7 @@ export default function StudentsTable({
           />
         ),
         filterFn: "equalsString",
+        size: 350,
       },
       {
         accessorKey: "CreditAmount",
