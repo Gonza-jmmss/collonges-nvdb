@@ -106,17 +106,6 @@ export default function GradeCoefficientsTable({
     [],
   );
 
-  const handleUrlParameterChange = (key: string, value: string) => {
-    const currentParams = new URLSearchParams();
-    Object.entries(urlParams || {}).forEach(([k, v]) => {
-      if (typeof v === "string") {
-        currentParams.set(k, v);
-      }
-    });
-    currentParams.set(key, value);
-    updateQuery(Object.fromEntries(currentParams));
-  };
-
   const deleteGradeCoefficient = async (GradeCoefficientId: number) => {
     try {
       const GradeCoefficientToDelete = {
@@ -142,6 +131,22 @@ export default function GradeCoefficientsTable({
         description: `${error}`,
       });
     }
+  };
+
+  const handleUrlParameterChange = (key: string, value: string) => {
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.set(key, value);
+
+    // Update URL without replacing current parameters
+    const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+
+    // Use router.push or history.pushState depending on your navigation setup
+    // router.push(newUrl);
+    // or
+    window.history.pushState({}, "", newUrl);
+
+    // If you need to update some state as well
+    updateQuery(Object.fromEntries(currentParams));
   };
 
   return (
