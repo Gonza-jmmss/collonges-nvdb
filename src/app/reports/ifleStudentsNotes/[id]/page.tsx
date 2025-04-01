@@ -4,17 +4,25 @@ import IFLEStudentNotesAmericanPDF from "@/components/reports/ifleStudentNotes/i
 import { TabsComponent } from "@/components/common/tabs";
 import FrenchTranscript from "@/components/reports/ifleStudentNotes/frenchTranscript";
 import AmericanTranscript from "@/components/reports/ifleStudentNotes/americanTranscript";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import Icon from "@/components/common/icon";
+import isValidIconName from "@/functions/isValidIconName";
 import frFR from "@/lang/fr-FR";
 
 export default async function ifleStudentsNotesPage({
   params,
+  searchParams,
 }: {
   params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
 
+  const pageIndexParam = parseInt(searchParams.pageIndex as string);
+  const pageSizeParam = parseInt(searchParams.pageSize as string);
+
   const studentNotes = await getQuarterNotesByStudentId(parseInt(params.id));
-  // const studentNotes = await studentNotesQuery.execute(parseInt(params.id));
 
   const tabs = [
     {
@@ -30,8 +38,22 @@ export default async function ifleStudentsNotesPage({
   ];
 
   return (
-    <main className="mt-5 flex justify-center">
+    <main className="relative mt-5 flex justify-center">
       <div className="mt-3 w-[80vw]">
+        <Button asChild className={`absolute left-0`} variant="ghost">
+          <Link
+            href={`/reports/ifleStudentsNotes?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`}
+          >
+            <Icon
+              name={
+                isValidIconName("MdArrowBack")
+                  ? "MdArrowBack"
+                  : "MdOutlineNotInterested"
+              }
+              className="text-xl"
+            />
+          </Link>
+        </Button>
         <div className="flex items-center justify-between">
           <div>
             <span className="text-xl font-semibold">{`${t.reports.ifleStudentsNotes.titlePage} : `}</span>

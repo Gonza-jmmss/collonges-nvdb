@@ -228,7 +228,7 @@ export default function StudentCourseGradesForm({
   }, [studentByCouse, form.setFieldValue]);
 
   const eraseGrades = () => {
-    console.log("studentByCouse", form.getFieldValue("StudentCourses"));
+    // console.log("studentByCouse", form.getFieldValue("StudentCourses"));
     const mappedStuents = form
       .getFieldValue("StudentCourses")
       ?.map((studentCourses) => ({

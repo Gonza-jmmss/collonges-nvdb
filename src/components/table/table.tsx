@@ -34,10 +34,14 @@ import {
   getExpandedRowModel,
   useReactTable,
   VisibilityState,
+  PaginationState,
 } from "@tanstack/react-table";
 import DebouncedInput from "@/components/common/debouncedInput";
 import Filter from "@/components/common/filter";
+import { useUpdateQuery } from "@/hooks/useUpdateQuery";
+// import { useRouter } from "next/navigation";
 import frFR from "@/lang/fr-FR";
+import { set } from "zod";
 
 declare module "@tanstack/react-table" {
   //add fuzzy filter to the filterFns
@@ -96,6 +100,8 @@ interface TableProps<T> {
   noBorders?: boolean;
   expandable?: boolean;
   expandedContent?: React.ReactNode | ((row: T) => React.ReactNode);
+  pageIndexParam?: number;
+  pageSizeParam?: number;
 }
 export default function TableComponent<T>({
   columns,
@@ -106,12 +112,15 @@ export default function TableComponent<T>({
   noBorders,
   expandable,
   expandedContent,
+  pageIndexParam,
+  pageSizeParam,
 }: TableProps<T>) {
   const t = frFR;
+  const updateQuery = useUpdateQuery();
+
   // const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -120,13 +129,12 @@ export default function TableComponent<T>({
 
   const [isColumnSearch, setIsColumnSearch] = React.useState(false);
 
-  const [rowsNumber, setRowsNumber] = React.useState({ key: "10", value: 10 });
-
   const [expanded, setExpanded] = React.useState<ExpandedState>({});
 
-  React.useEffect(() => {
-    table.setPageSize(rowsNumber.value);
-  }, [rowsNumber]);
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: pageIndexParam !== undefined ? pageIndexParam : 0,
+    pageSize: pageSizeParam !== undefined ? pageSizeParam : 10,
+  });
 
   const table = useReactTable({
     data,
@@ -139,26 +147,45 @@ export default function TableComponent<T>({
       globalFilter,
       columnVisibility,
       expanded,
+      pagination,
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
     onExpandedChange: setExpanded,
     // getSubRows: (row) => row.subRows,
     // getSubRows: (row) => row.children,
-    globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter (most common use case for fuzzy filter)
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(), //client side filtering
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
     getRowCanExpand: () => expandable || false,
     getExpandedRowModel: getExpandedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
+    // onRowSelectionChange: setRowSelection,
     // onSortingChange: setSorting,
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,
+    globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter (most common use case for fuzzy filter)
+    //
   });
+
+  const handleUrlParameterChange = (key: string, value: string) => {
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.set(key, value);
+
+    // Update URL without replacing current parameters
+    const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+
+    window.history.pushState({}, "", newUrl);
+  };
+
+  React.useEffect(() => {
+    console.log("pagination", pagination);
+    handleUrlParameterChange("pageIndex", `${pagination.pageIndex}`);
+    handleUrlParameterChange("pageSize", `${pagination.pageSize}`);
+  }, [pagination]);
 
   return (
     <div className="w-full">
@@ -192,17 +219,10 @@ export default function TableComponent<T>({
                             asc: (
                               <Icon
                                 name={"MdOutlineNorth"}
-                                // size={13}
                                 className="ml-0.5"
                               />
                             ),
-                            desc: (
-                              <Icon
-                                name={"MdSouth"}
-                                // size={13}
-                                className="ml-0.5"
-                              />
-                            ),
+                            desc: <Icon name={"MdSouth"} className="ml-0.5" />,
                           }[header.column.getIsSorted() as string] ?? null}
                         </div>
                         {isColumnSearch && header.column.getCanFilter() ? (
@@ -277,7 +297,8 @@ export default function TableComponent<T>({
                 className="w-[30vw]"
               />
             </div>
-            <div
+            {/* Columns filter (Not working) */}
+            {/* <div
               className={`mx-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border`}
               onClick={() => setIsColumnSearch(!isColumnSearch)}
             >
@@ -285,7 +306,7 @@ export default function TableComponent<T>({
                 name={"MdManageSearch"}
                 className={`text-xl ${isColumnSearch ? "text-primary hover:text-neutral-700" : "text-neutral-700 hover:text-primary"}`}
               />
-            </div>
+            </div> */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="ml-auto">
@@ -497,13 +518,24 @@ export default function TableComponent<T>({
                 textAttribute="key"
                 valueAttribute="value"
                 placeholder="rows"
-                itemSelected={rowsNumber}
-                setItemSelected={setRowsNumber}
+                itemSelected={paginationValues.find(
+                  (x) => x.value === table.getState().pagination.pageSize,
+                )}
+                setItemSelected={(x: { value: number }) =>
+                  table.setPageSize(x.value)
+                }
               />
             </div>
           </div>
         </>
       )}
+      {/* <pre>
+        {JSON.stringify(
+          { columnFilters: table.getState().columnFilters },
+          null,
+          2,
+        )}
+      </pre> */}
     </div>
   );
 }
