@@ -2,6 +2,7 @@ import getStudentCoursesByStudentIdQuery from "@/repositories/studentCourses/que
 import getStudentsWithNoCoursesQuery from "@/repositories/studentCourses/queries/getSudentsWithNoCoursesQuery";
 import getAllCoursesQuery from "@/repositories/courses/queries/getAllCoursesQuery";
 import getLastsScholarPeriodsQuery from "@/repositories/scholarPeriods/queries/getLastsScholarPeriodsQuery";
+import getAllLevelsQuery from "@/repositories/levels/queries/getAllLevelsQuery";
 import StudentCourseForm from "@/components/studentCourses/studentCoursesForm";
 import frFR from "@/lang/fr-FR";
 
@@ -34,6 +35,8 @@ export default async function StudentCoursesPage({
 
   const scholarPeriods = await getLastsScholarPeriodsQuery();
 
+  const scholarLevels = await getAllLevelsQuery({ IsEnabled: true });
+
   if (params.id != "create") {
     studentCourses = await getStudentCoursesByStudentIdQuery({
       StudentId: Number(params.id),
@@ -61,6 +64,7 @@ export default async function StudentCoursesPage({
             courses={courses}
             allCourses={allCourses}
             scholarPeriods={scholarPeriods}
+            scholarLevels={scholarLevels}
             action={action}
             urlParams={searchParams}
           />

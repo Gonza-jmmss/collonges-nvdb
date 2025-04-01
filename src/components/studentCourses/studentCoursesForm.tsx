@@ -9,10 +9,12 @@ import {
 } from "@/repositories/studentCourses/studentCoursesViewModel";
 import { CourseViewModel } from "@/repositories/courses/coursesViewModel";
 import { ScholarPeriodsViewModel } from "@/repositories/scholarPeriods/scholarPeriodsViewModel";
+import { LevelsTableViewModel } from "@/repositories/levels/levelsViewModel";
 import { StudentCourseSchema } from "@/zodSchemas/studentCourses";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
+import ToggleButton from "@/components/common/toggleButton";
 import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
 import enumToArray from "@/functions/enumToArray";
@@ -31,6 +33,7 @@ export default function StudentCourseForm({
   courses,
   allCourses,
   scholarPeriods,
+  scholarLevels,
   action,
   urlParams,
 }: {
@@ -39,6 +42,7 @@ export default function StudentCourseForm({
   courses: CourseViewModel[];
   allCourses: CourseViewModel[];
   scholarPeriods: ScholarPeriodsViewModel[];
+  scholarLevels: LevelsTableViewModel[];
   action: string | undefined;
   urlParams?: { [key: string]: string | string[] | undefined };
 }) {
@@ -48,6 +52,8 @@ export default function StudentCourseForm({
   const updateQuery = useUpdateQuery();
 
   const [isPending, setIsPending] = useState(false);
+
+  const [isLevelCourses, setIsLevelCourses] = useState(true);
 
   const [periodSelected, setPeriodSelected] = useState(
     typeof urlParams?.period === "string" ? parseInt(urlParams?.period) : 4,
@@ -275,54 +281,99 @@ export default function StudentCourseForm({
                 <span className="col-span-6">
                   {t.studentCourses.form.addCourse}
                 </span>
-                <span className="col-span-2 mt-3 md:col-span-1">
-                  {t.studentCourses.form.coursePeriod}
-                </span>
-                <div className="col-span-4 mt-2 md:col-span-5">
-                  <Combobox
-                    options={enumToArray(PeriodEnum)}
-                    textAttribute="value"
-                    valueAttribute="key"
-                    placeholder={t.courses.form.periodNumber}
-                    itemSelected={enumToArray(PeriodEnum).find(
-                      (x) => x.key === periodSelected,
-                    )}
-                    setItemSelected={(x: { key: number }) => {
-                      setPeriodSelected(x && x.key);
-                      handleUrlParameterChange("period", `${x.key}`);
+                <div className="col-span-6 mt-3">
+                  <ToggleButton
+                    options={[
+                      { key: true, value: t.studentCourses.form.scholarLevels },
+                      { key: false, value: t.studentCourses.form.courses },
+                    ]}
+                    setItemSelected={(x: { key: boolean; value: string }) => {
+                      setIsLevelCourses(x.key);
                     }}
-                    notClearable
+                    itemSelected={isLevelCourses}
                   />
                 </div>
-                <span className="col-span-2 mt-3 md:col-span-1">
-                  {t.studentCourses.form.studentCourses}
-                </span>
-                <div className="col-span-4 mt-2 md:col-span-5">
-                  <Combobox
-                    options={courses}
-                    textAttribute={["Name", "CourseCode"]}
-                    valueAttribute="CourseId"
-                    placeholder={t.studentCourses.form.studentCourses}
-                    setItemSelected={(x: { CourseId: number }) => {
-                      if (
-                        !field.state.value
-                          ?.map((v) => v.CourseId)
-                          .includes(x.CourseId)
-                      )
-                        field.pushValue({
-                          CourseId: x && x.CourseId,
-                        });
-                    }}
-                    disabled={action === "view"}
-                    showSearch
-                    notClearable
-                  />
-                  {/* <div className="text-xs text-red-500">
+                {isLevelCourses ? (
+                  <>
+                    <span className="col-span-2 mt-5">
+                      {t.studentCourses.form.scholarLevels}
+                    </span>
+                    <div className="col-span-4 mt-4">
+                      <Combobox
+                        options={scholarLevels}
+                        textAttribute={"Name"}
+                        valueAttribute="LevelId"
+                        placeholder={t.studentCourses.form.scholarLevels}
+                        setItemSelected={(x: LevelsTableViewModel) => {
+                          x.LevelCourses.map((courses) => {
+                            if (
+                              !field.state.value
+                                ?.map((v) => v.CourseId)
+                                .includes(courses.CourseId)
+                            )
+                              field.pushValue({
+                                CourseId: courses.CourseId,
+                              });
+                          });
+                        }}
+                        disabled={action === "view"}
+                        showSearch
+                        notClearable
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span className="col-span-2 mt-5 md:col-span-1">
+                      {t.studentCourses.form.coursePeriod}
+                    </span>
+                    <div className="col-span-4 mt-4 md:col-span-5">
+                      <Combobox
+                        options={enumToArray(PeriodEnum)}
+                        textAttribute="value"
+                        valueAttribute="key"
+                        placeholder={t.courses.form.periodNumber}
+                        itemSelected={enumToArray(PeriodEnum).find(
+                          (x) => x.key === periodSelected,
+                        )}
+                        setItemSelected={(x: { key: number }) => {
+                          setPeriodSelected(x && x.key);
+                          handleUrlParameterChange("period", `${x.key}`);
+                        }}
+                        notClearable
+                      />
+                    </div>
+                    <span className="col-span-2 mt-3 md:col-span-1">
+                      {t.studentCourses.form.studentCourses}
+                    </span>
+                    <div className="col-span-4 mt-2 md:col-span-5">
+                      <Combobox
+                        options={courses}
+                        textAttribute={["Name", "CourseCode"]}
+                        valueAttribute="CourseId"
+                        placeholder={t.studentCourses.form.studentCourses}
+                        setItemSelected={(x: { CourseId: number }) => {
+                          if (
+                            !field.state.value
+                              ?.map((v) => v.CourseId)
+                              .includes(x.CourseId)
+                          )
+                            field.pushValue({
+                              CourseId: x && x.CourseId,
+                            });
+                        }}
+                        disabled={action === "view"}
+                        showSearch
+                        notClearable
+                      />
+                      {/* <div className="text-xs text-red-500">
                     {field.state.meta.errors
                       ? field.state.meta.errors.join(", ")
                       : null}
                   </div> */}
-                </div>
+                    </div>
+                  </>
+                )}
               </div>
               <div className="space-y-3 rounded-md border bg-muted p-2">
                 <div className="grid grid-cols-12">

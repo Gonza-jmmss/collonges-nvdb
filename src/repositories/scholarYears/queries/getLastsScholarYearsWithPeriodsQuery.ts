@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const getLastsScholarYearsWithPeriodsQuery = async () => {
   const query = await prisma.scholarYears.findMany({
     take: 10,
-    orderBy: { Name: "desc" },
+    orderBy: [{ IsActive: "desc" }, { Name: "desc" }],
     where: {
       ScholarPeriods: {
         some: {}, // Empty object means "at least one record exists"

@@ -383,6 +383,8 @@ export default {
       studentId: "Étudiant",
       studentCourses: "Cours",
       addCourse: "Ajouter cours",
+      scholarLevels: "Niveaux scolaires",
+      courses: "Cours",
       coursePeriod: "Trimestre",
       scholarPeriodId: "Période",
     },
