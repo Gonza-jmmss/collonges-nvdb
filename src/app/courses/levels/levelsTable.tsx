@@ -7,6 +7,7 @@ import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import DeleteModal from "@/components/common/deleteModal";
 import { Button } from "@/components/ui/button";
+import ToggleButton from "@/components/common/toggleButton";
 import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
 import { useToast } from "@/hooks/use-toast";
@@ -15,16 +16,20 @@ import {
   LevelCoursesExtendedViewModel,
 } from "@/repositories/levels/levelsViewModel";
 import { useRouter } from "next/navigation";
+import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import frFR from "@/lang/fr-FR";
 
 export default function LevelsTable({
   levels,
+  urlParams,
 }: {
   levels: LevelsTableViewModel[];
+  urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const router = useRouter();
   const { toast } = useToast();
+  const updateQuery = useUpdateQuery();
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedLevelToDelete, setSelectedLevelToDelete] =
@@ -34,6 +39,10 @@ export default function LevelsTable({
     setOpenModal(false);
     setSelectedLevelToDelete(null);
   };
+
+  const [showEnabledFilter, setShowEnabledFilter] = useState(
+    urlParams?.isEnabled === "false" ? false : true || true,
+  );
 
   const columns = useMemo<ColumnDef<LevelsTableViewModel, any>[]>(
     () => [
@@ -188,9 +197,38 @@ export default function LevelsTable({
     }
   };
 
+  const handleUrlParameterChange = (key: string, value: string) => {
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.set(key, value);
+
+    // Update URL without replacing current parameters
+    const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+
+    // Use router.push or history.pushState depending on your navigation setup
+    // router.push(newUrl);
+    // or
+    window.history.pushState({}, "", newUrl);
+
+    // If you need to update some state as well
+    updateQuery(Object.fromEntries(currentParams));
+  };
+
   return (
     <div>
       <div className="flex items-center justify-end space-x-5">
+        <div className="w-[25rem]">
+          <ToggleButton
+            options={[
+              { key: true, value: t.shared.enables },
+              { key: false, value: t.shared.disables },
+            ]}
+            setItemSelected={(x: { key: boolean; value: string }) => {
+              setShowEnabledFilter(x.key);
+              handleUrlParameterChange("isEnabled", `${x.key}`);
+            }}
+            itemSelected={showEnabledFilter}
+          />
+        </div>
         <Button
           variant="outlineColored"
           onClick={() => router.push(`/courses/levels/create?action="create"`)}

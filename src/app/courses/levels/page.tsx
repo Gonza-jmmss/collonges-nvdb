@@ -2,10 +2,19 @@ import LevelsTable from "./levelsTable";
 import getAllLevelsQuery from "@/repositories/levels/queries/getAllLevelsQuery";
 import frFR from "@/lang/fr-FR";
 
-export default async function LevelsPage() {
+export default async function LevelsPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const t = frFR;
 
-  const levels = await getAllLevelsQuery();
+  const isEnabled =
+    searchParams?.isEnabled === undefined
+      ? true
+      : searchParams.isEnabled === "true";
+
+  const levels = await getAllLevelsQuery({ IsEnabled: isEnabled });
 
   return (
     <main>
