@@ -44,6 +44,10 @@ export default function LevelsTable({
     urlParams?.isEnabled === "false" ? false : true || true,
   );
 
+  const levelToDeleteCondition =
+    selectedLevelToDelete?.LevelCourses &&
+    selectedLevelToDelete?.LevelCourses.length > 0;
+
   const columns = useMemo<ColumnDef<LevelsTableViewModel, any>[]>(
     () => [
       {
@@ -135,11 +139,12 @@ export default function LevelsTable({
               }
             />
             <Icon
-              name={
-                isValidIconName("MdDelete")
-                  ? "MdDelete"
-                  : "MdOutlineNotInterested"
-              }
+              name={`${
+                row.row.original.LevelCourses &&
+                row.row.original.LevelCourses.length > 0
+                  ? "MdNotInterested"
+                  : "MdDelete"
+              }`}
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() => {
                 setOpenModal(true);
@@ -254,17 +259,16 @@ export default function LevelsTable({
         openModal={openModal}
         closeModal={closeModal}
         titleText={
-          selectedLevelToDelete?.LevelCourses &&
-          selectedLevelToDelete?.LevelCourses.length > 0
+          levelToDeleteCondition
             ? t.levels.deleteModal.disableTitle
             : t.levels.deleteModal.deleteTitle
         }
         descriptionText={
-          selectedLevelToDelete?.LevelCourses &&
-          selectedLevelToDelete?.LevelCourses.length > 0
+          levelToDeleteCondition
             ? t.levels.deleteModal.disableDescription
             : t.levels.deleteModal.deleteDescription
         }
+        disable={levelToDeleteCondition}
         deletefunction={() => deleteLevel(selectedLevelToDelete?.LevelId || 0)}
       />
     </div>
