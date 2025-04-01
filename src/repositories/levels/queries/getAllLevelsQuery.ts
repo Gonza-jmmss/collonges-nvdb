@@ -3,8 +3,13 @@ import { LevelsMap, LevelCoursesMap } from "../levelsViewModel";
 
 const prisma = new PrismaClient();
 
-const getAllLevelsQuery = async () => {
+type getAllLevelsQueryParamsType = {
+  IsEnabled: boolean;
+};
+
+const getAllLevelsQuery = async (params: getAllLevelsQueryParamsType) => {
   const query = await prisma.levels.findMany({
+    where: { IsEnabled: params.IsEnabled },
     include: {
       LevelCourses: {
         include: {
