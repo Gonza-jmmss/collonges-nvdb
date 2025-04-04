@@ -58,7 +58,8 @@ export default function StudentCourseForm({
   const [periodSelected, setPeriodSelected] = useState(
     typeof urlParams?.period === "string" ? parseInt(urlParams?.period) : 4,
   );
-  const scholarPeriodIdParam = parseInt(urlParams?.scholarPeriodId as string);
+  const scholarPeriodIdParam =
+    parseInt(urlParams?.scholarPeriodId as string) || 0;
 
   const form = useForm<StudentCourseFormData>({
     defaultValues: {
@@ -66,8 +67,13 @@ export default function StudentCourseForm({
       ScholarPeriodId:
         action !== "create"
           ? (studentCoursesData?.StudentCourses[0]?.ScholarPeriodId ??
-            scholarPeriods[0].ScholarPeriodId)
-          : scholarPeriods[0].ScholarPeriodId,
+            (scholarPeriods.find(
+              (x) => x.ScholarPeriodId == scholarPeriodIdParam,
+            )?.ScholarPeriodId ||
+              scholarPeriods[0].ScholarPeriodId))
+          : scholarPeriods.find(
+              (x) => x.ScholarPeriodId == scholarPeriodIdParam,
+            )?.ScholarPeriodId || scholarPeriods[0].ScholarPeriodId,
       StudentCourses:
         action !== "create"
           ? (studentCoursesData?.StudentCourses?.map((studentCourse) => ({
@@ -143,9 +149,6 @@ export default function StudentCourseForm({
     // Update URL without replacing current parameters
     const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
 
-    // Use router.push or history.pushState depending on your navigation setup
-    // router.push(newUrl);
-    // or
     window.history.pushState({}, "", newUrl);
 
     // If you need to update some state as well
