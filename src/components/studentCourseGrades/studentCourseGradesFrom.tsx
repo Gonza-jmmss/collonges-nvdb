@@ -192,9 +192,6 @@ export default function StudentCourseGradesForm({
     // Update URL without replacing current parameters
     const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
 
-    // Use router.push or history.pushState depending on your navigation setup
-    // router.push(newUrl);
-    // or
     window.history.pushState({}, "", newUrl);
 
     // If you need to update some state as well
@@ -204,13 +201,13 @@ export default function StudentCourseGradesForm({
   useEffect(() => {
     if (courses.length > 0) {
       handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
-    } else handleUrlParameterChange("courseId", `${0}`);
+    }
   }, [urlParams?.periodId]);
 
   useEffect(() => {
     if (courses.length > 0) {
       handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
-    } else handleUrlParameterChange("courseId", `${0}`);
+    }
   }, [urlParams?.levelId]);
 
   useEffect(() => {
@@ -433,13 +430,33 @@ export default function StudentCourseGradesForm({
                                   value={
                                     field.state.value?.toLocaleString() || ""
                                   }
-                                  onChange={(e) =>
-                                    field.handleChange(
-                                      parseFloat(
-                                        e.target.value,
-                                      ).toLocaleString(),
-                                    )
-                                  }
+                                  // onChange={(e) =>
+                                  //   field.handleChange(
+                                  //     parseFloat(
+                                  //       e.target.value,
+                                  //     ).toLocaleString(),
+                                  //   )
+                                  // }
+                                  /////////////
+                                  // onChange={(e) => {
+                                  //   field.handleChange(e.target.value);
+                                  // }}
+                                  ////////////////
+                                  onChange={(e) => {
+                                    let value = e.target.value;
+
+                                    // Check if the input has a decimal point
+                                    if (value.includes(".")) {
+                                      const parts = value.split(".");
+
+                                      // Limit to 2 decimal places by truncating any additional digits
+                                      if (parts[1].length > 2) {
+                                        value = `${parts[0]}.${parts[1].substring(0, 2)}`;
+                                      }
+                                    }
+
+                                    field.handleChange(value);
+                                  }}
                                   disabled={action === "view"}
                                 />
                               </>

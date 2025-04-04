@@ -337,6 +337,7 @@ export default function StudentCoruseGradesByStudentTable({
               )}
               setItemSelected={(x: { key: number }) => {
                 handleUrlParameterChange("periodId", `${x.key}`);
+                handleUrlParameterChange("courseId", `${0}`);
               }}
               notClearable
             />
@@ -350,6 +351,7 @@ export default function StudentCoruseGradesByStudentTable({
               itemSelected={levels.find((x) => x.LevelId === levelIdSelected)}
               setItemSelected={(x: CurentLevelsViewModel) => {
                 handleUrlParameterChange("levelId", `${x ? x.LevelId : null}`);
+                handleUrlParameterChange("courseId", `${0}`);
               }}
             />
           </div>

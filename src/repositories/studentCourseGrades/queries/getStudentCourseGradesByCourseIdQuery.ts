@@ -39,9 +39,9 @@ const getStudentCourseGradesByCourseIdQuery = async (
   });
 
   const res = {
-    GradeCoefficientId: query[0].GradeCoefficientId,
-    UserId: query[0].UserId,
-    Description: query[0].Description,
+    GradeCoefficientId: query[0].GradeCoefficientId || 0, // the || 0 is to test If that solves a problem
+    UserId: query[0].UserId || 0, // the || 0 is to test If that solves a problem
+    Description: query[0].Description || "", // the || "" is to test If that solves a problem
     StudentCourses: query.map(
       (studentCourseGrade: StudentCourseGradesByCourseIdMap) => ({
         StudentCourseGradeId: studentCourseGrade.StudenCourseGradeId,

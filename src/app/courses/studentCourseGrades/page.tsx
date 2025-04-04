@@ -35,7 +35,7 @@ export default async function StudentCourseGradesPage({
   });
 
   const courseIdSelected =
-    searchParams?.course === undefined
+    searchParams?.courseId === undefined || searchParams?.courseId === "0"
       ? courses.length > 0
         ? courses[0].CourseId
         : 0

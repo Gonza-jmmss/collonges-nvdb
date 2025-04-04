@@ -226,16 +226,6 @@ export default function StudentCoruseGradesByActivityTable({
         // ),
       },
       {
-        accessorKey: "AverageGrade",
-        id: "AverageGrade",
-        header: () => (
-          <Header
-            text={t.studentCourseGrades.expandedByActivity.averageGrade}
-          />
-        ),
-        filterFn: "equalsString",
-      },
-      {
         accessorKey: "Grade",
         id: "Grade",
         header: () => (
@@ -245,6 +235,17 @@ export default function StudentCoruseGradesByActivityTable({
         cell: (row) => (
           <span>{row.getValue() === "NaN" ? "-" : row.getValue()}</span>
         ),
+      },
+      {
+        accessorKey: "AverageGrade",
+        id: "AverageGrade",
+        header: () => (
+          <Header
+            text={t.studentCourseGrades.expandedByActivity.averageGrade}
+          />
+        ),
+        filterFn: "equalsString",
+        size: 30,
       },
     ],
     [],
@@ -299,18 +300,6 @@ export default function StudentCoruseGradesByActivityTable({
     updateQuery(Object.fromEntries(currentParams));
   };
 
-  useEffect(() => {
-    if (courses.length > 0) {
-      handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
-    } else handleUrlParameterChange("courseId", `${0}`);
-  }, [urlParams?.periodId]);
-
-  useEffect(() => {
-    if (courses.length > 0) {
-      handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
-    } else handleUrlParameterChange("courseId", `${0}`);
-  }, [urlParams?.levelId]);
-
   return (
     <div>
       <div className="mt-3 flex items-center justify-between">
@@ -327,6 +316,7 @@ export default function StudentCoruseGradesByActivityTable({
               )}
               setItemSelected={(x: { key: number }) => {
                 handleUrlParameterChange("periodId", `${x.key}`);
+                handleUrlParameterChange("courseId", `${0}`);
               }}
               notClearable
             />
@@ -340,6 +330,7 @@ export default function StudentCoruseGradesByActivityTable({
               itemSelected={levels.find((x) => x.LevelId === levelIdSelected)}
               setItemSelected={(x: CurentLevelsViewModel) => {
                 handleUrlParameterChange("levelId", `${x ? x.LevelId : null}`);
+                handleUrlParameterChange("courseId", `${0}`);
               }}
             />
           </div>
