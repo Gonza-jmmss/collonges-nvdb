@@ -2,11 +2,13 @@
 
 import { useState, useMemo } from "react";
 import deleteScholarPeriodCommand from "@/repositories/scholarPeriods/commands/deleteScholarPeriodCommand";
+import disableScholarPeriodCommand from "@/repositories/scholarPeriods/commands/disableScholarPeriodCommand";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import DeleteModal from "@/components/common/deleteModal";
 import { Button } from "@/components/ui/button";
+import Modal from "@/components/common/modal";
 import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
 import formatDate from "@/functions/formatDate";
@@ -25,12 +27,20 @@ export default function ScholarPeriodsTable({
   const { toast } = useToast();
 
   const [openModal, setOpenModal] = useState(false);
+  const [openDeleteModalValidation, setOpenDeleteModalValidation] =
+    useState(false);
   const [selectedScholarPeriodToDelete, setSelectedScholarPeriodToDelete] =
-    useState(0);
+    useState<ScholarPeriodsViewModel | null>(null);
 
   const closeModal = () => {
     setOpenModal(false);
-    setSelectedScholarPeriodToDelete(0);
+    setSelectedScholarPeriodToDelete(null);
+  };
+
+  const deleteScholarPeriodCondition = (
+    scholarPeriod: ScholarPeriodsViewModel | null,
+  ) => {
+    return scholarPeriod ? scholarPeriod.IsDeletable : false;
   };
 
   const columns = useMemo<ColumnDef<ScholarPeriodsViewModel, any>[]>(
@@ -109,20 +119,33 @@ export default function ScholarPeriodsTable({
                 )
               }
             />
-            <Icon
-              name={
-                isValidIconName("MdDelete")
-                  ? "MdDelete"
-                  : "MdOutlineNotInterested"
-              }
-              className="cursor-pointer text-xl hover:text-primary"
-              onClick={() => {
-                setOpenModal(true);
-                setSelectedScholarPeriodToDelete(
-                  row.row.original.ScholarPeriodId,
-                );
-              }}
-            />
+            {deleteScholarPeriodCondition(row.row.original) ? (
+              <>
+                <Icon
+                  name={`${!row.row.original.IsActive ? "MdDelete" : "MdNotInterested"}`}
+                  className="cursor-pointer text-xl text-primary hover:text-destructive"
+                  onClick={() => {
+                    setOpenModal(true);
+                    setSelectedScholarPeriodToDelete(row.row.original);
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <Icon
+                  name={`${!row.row.original.IsActive ? "MdDelete" : "MdNotInterested"}`}
+                  className="cursor-pointer text-xl hover:text-primary"
+                  onClick={() => {
+                    if (row.row.original.IsActive) {
+                      setOpenModal(true);
+                      setSelectedScholarPeriodToDelete(row.row.original);
+                    } else {
+                      setOpenDeleteModalValidation(true);
+                    }
+                  }}
+                />
+              </>
+            )}
           </div>
         ),
       },
@@ -130,9 +153,13 @@ export default function ScholarPeriodsTable({
     [],
   );
 
-  const deleteScholarPeriod = async (ScholarPeriodId: number) => {
+  const deleteScholarPeriod = async (
+    ScholarPeriod: ScholarPeriodsViewModel,
+  ) => {
     try {
-      const scholarPeriodToDelete = { ScholarPeriodId: ScholarPeriodId };
+      const scholarPeriodToDelete = {
+        ScholarPeriodId: ScholarPeriod.ScholarPeriodId,
+      };
       const response = await deleteScholarPeriodCommand(scholarPeriodToDelete);
 
       if (!response) {
@@ -140,7 +167,7 @@ export default function ScholarPeriodsTable({
       }
       toast({
         title: `${t.scholarPeriods.notifications.deleteSuccess}`,
-        description: `${t.scholarPeriods.title} : ${response.Name}`,
+        description: `${t.scholarPeriods.title} : ${ScholarPeriod.Name}`,
       });
       router.refresh();
       closeModal();
@@ -148,6 +175,33 @@ export default function ScholarPeriodsTable({
       toast({
         variant: "destructive",
         title: `${t.scholarPeriods.notifications.deleteError}`,
+        description: `${error}`,
+      });
+    }
+  };
+
+  const disabledScholarPeriod = async (
+    ScholarPeriod: ScholarPeriodsViewModel,
+  ) => {
+    try {
+      const scholarPeriodToDelete = {
+        ScholarPeriodId: ScholarPeriod.ScholarPeriodId,
+      };
+      const response = await disableScholarPeriodCommand(scholarPeriodToDelete);
+
+      if (!response) {
+        throw new Error(`${t.scholarPeriods.notifications.disableFailure}`);
+      }
+      toast({
+        title: `${t.scholarPeriods.notifications.disableSuccess}`,
+        description: `${t.scholarPeriods.title} : ${ScholarPeriod.Name}`,
+      });
+      router.refresh();
+      closeModal();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: `${t.scholarPeriods.notifications.disableError}`,
         description: `${error}`,
       });
     }
@@ -197,12 +251,44 @@ export default function ScholarPeriodsTable({
       <DeleteModal
         openModal={openModal}
         closeModal={closeModal}
-        titleText={t.scholarPeriods.deleteModal.title}
-        descriptionText={t.scholarPeriods.deleteModal.description}
-        deletefunction={() =>
-          deleteScholarPeriod(selectedScholarPeriodToDelete)
+        titleText={
+          !selectedScholarPeriodToDelete?.IsActive
+            ? t.scholarPeriods.deleteModal.title
+            : t.scholarPeriods.deleteModal.disableTitle
         }
+        descriptionText={
+          !selectedScholarPeriodToDelete?.IsActive
+            ? t.scholarPeriods.deleteModal.description
+            : t.scholarPeriods.deleteModal.disableDescription
+        }
+        deletefunction={() => {
+          if (selectedScholarPeriodToDelete) {
+            !selectedScholarPeriodToDelete.IsActive
+              ? deleteScholarPeriod(selectedScholarPeriodToDelete)
+              : disabledScholarPeriod(selectedScholarPeriodToDelete);
+          }
+        }}
+        disable={selectedScholarPeriodToDelete?.IsActive}
       />
+      <Modal
+        openModal={openDeleteModalValidation}
+        closeModal={() => setOpenDeleteModalValidation(false)}
+      >
+        <div className="flex w-full flex-col items-center space-y-1">
+          <div className="mt-2 text-lg font-semibold">{`${t.scholarPeriods.delteModalValidation.title}`}</div>
+          <div>{`${t.scholarPeriods.delteModalValidation.description}`}</div>
+        </div>
+        <div className="mt-5 flex w-full justify-center space-x-5">
+          <Button
+            type="button"
+            variant={"secondary"}
+            className="w-[30%]"
+            onClick={() => setOpenDeleteModalValidation(false)}
+          >
+            {t.shared.cancel}
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }
