@@ -1,11 +1,11 @@
 import ScholarPeriodsTable from "./scholarPeriodsTable";
-import getAllScholarPeriodsQuery from "@/repositories/scholarPeriods/queries/getAllScholarPeriodsQuery";
+import getAllScholarPeriodsTableQuery from "@/repositories/scholarPeriods/queries/getAllScholarPeriodsTableQuery";
 import frFR from "@/lang/fr-FR";
 
 export default async function ScholarPeriodsPage({}: {}) {
   const t = frFR;
 
-  const scholarPeriods = await getAllScholarPeriodsQuery();
+  const scholarPeriods = await getAllScholarPeriodsTableQuery();
 
   return (
     <main>

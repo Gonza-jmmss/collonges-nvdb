@@ -418,7 +418,7 @@ export default {
     columns: {
       scholarPeriodId: "ID",
       name: "Période scolaire",
-      number: "Nombre",
+      number: "Trimestre",
       fromDate: "À partir de",
       toDate: "Jusqu'à",
       isActive: "Est activé",
@@ -426,29 +426,40 @@ export default {
     },
     form: {
       name: "Période scolaire",
-      number: "Nombre",
+      number: "Trimestre",
       fromDate: "À partir de",
       toDate: "Jusqu'à",
       isActive: "Est activé",
       scholarYearId: "Année",
     },
     notifications: {
-      createSuccess: "Période scolaire créé avec succès",
+      createSuccess: "Période scolaire créée avec succès",
       createError:
-        "Une erreur s'est produite pendant la création du période scolaire",
-      createFailure: "Échec de la création du période scolaire",
-      updateSuccess: "Période scolaire modifié avec succès",
+        "Une erreur s'est produite pendant la création de la période scolaire",
+      createFailure: "Échec de la création de la période scolaire",
+      updateSuccess: "Période scolaire modifiée avec succès",
       updateError:
-        "Une erreur s'est produite pendant la modification du période scolaire",
-      updateFailure: "Échec de la modification du période scolaire",
-      deleteSuccess: "Période scolaire supprimé avec succès",
+        "Une erreur s'est produite pendant la modification de la période scolaire",
+      updateFailure: "Échec de la modification de la période scolaire",
+      deleteSuccess: "Période scolaire supprimée avec succès",
       deleteError:
-        "Une erreur s'est produite pendant la suppression du période scolaire",
-      deleteFailure: "Échec de la suppression du période scolaire",
+        "Une erreur s'est produite pendant la suppression de la période scolaire",
+      deleteFailure: "Échec de la suppression de la période scolaire",
+      disableSuccess: "Période scolaire désactivée avec succès",
+      disableError:
+        "Une erreur s'est produite pendant la désactivation de la période scolaire",
+      disableFailure: "Échec de la désactivation de la période scolaire",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de supprimer le période scolaire ?",
-      description: "Le période scolaire sera supprimé",
+      title: "Êtes-vous sûr de supprimer la période scolaire ?",
+      description: "La période scolaire sera supprimée",
+      disableTitle: "Êtes-vous sûr de désactiver la période scolaire ?",
+      disableDescription: "La période scolaire sera désactivée",
+    },
+    delteModalValidation: {
+      title: "La période scolaire a des cours assignées",
+      description:
+        "Les périodes scolaires avec des cours assignés ne peuvent pas être supprimées",
     },
   },
   scholarYears: {
@@ -635,7 +646,7 @@ export default {
     },
     form: {
       course: "Course",
-      gradeCoefficientId: "Coefficients de note",
+      gradeCoefficientId: "Type d'activité",
       description: "Description",
       students: "Étudiants",
       grade: "Note",
