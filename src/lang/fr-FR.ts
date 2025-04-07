@@ -425,7 +425,7 @@ export default {
       scholarYearName: "Année",
     },
     form: {
-      name: "Période scolaire",
+      name: "Mon de la période scolaire",
       number: "Trimestre",
       fromDate: "À partir de",
       toDate: "Jusqu'à",
@@ -496,8 +496,15 @@ export default {
       deleteFailure: "Échec de la suppression du année scolaire",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de supprimer le année scolaire ?",
-      description: "Le année scolaire sera supprimé",
+      title: "Êtes-vous sûr de supprimer l'année scolaire ?",
+      description: "L'année scolaire sera supprimée",
+      disableTitle: "Êtes-vous sûr de désactiver l'année scolaire ?",
+      disableDescription: "L'année scolaire sera désactivée",
+    },
+    delteModalValidation: {
+      title: "L'année scolaire a des périodes assignées",
+      description:
+        "Les années scolaires avec des périodes assignés ne peuvent pas être supprimées",
     },
   },
   levels: {

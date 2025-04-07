@@ -228,13 +228,13 @@ export default function ScholarYearsTable({
         closeModal={closeModal}
         titleText={
           !selectedScholarYearToDelete?.IsActive
-            ? t.scholarPeriods.deleteModal.title
-            : t.scholarPeriods.deleteModal.disableTitle
+            ? t.scholarYears.deleteModal.title
+            : t.scholarYears.deleteModal.disableTitle
         }
         descriptionText={
           !selectedScholarYearToDelete?.IsActive
-            ? t.scholarPeriods.deleteModal.description
-            : t.scholarPeriods.deleteModal.disableDescription
+            ? t.scholarYears.deleteModal.description
+            : t.scholarYears.deleteModal.disableDescription
         }
         deletefunction={() => {
           if (selectedScholarYearToDelete) {
@@ -250,8 +250,8 @@ export default function ScholarYearsTable({
         closeModal={() => setOpenDeleteModalValidation(false)}
       >
         <div className="flex w-full flex-col items-center space-y-1">
-          <div className="mt-2 text-lg font-semibold">{`${t.scholarPeriods.delteModalValidation.title}`}</div>
-          <div>{`${t.scholarPeriods.delteModalValidation.description}`}</div>
+          <div className="mt-2 text-lg font-semibold">{`${t.scholarYears.delteModalValidation.title}`}</div>
+          <div>{`${t.scholarYears.delteModalValidation.description}`}</div>
         </div>
         <div className="mt-5 flex w-full justify-center space-x-5">
           <Button
