@@ -2,11 +2,13 @@
 
 import { useState, useMemo } from "react";
 import deleteScholarYearCommand from "@/repositories/scholarYears/commands/deleteScholarYearCommand";
+import disableScholarYearCommand from "@/repositories/scholarYears/commands/disableScholarYearCommand";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import DeleteModal from "@/components/common/deleteModal";
 import { Button } from "@/components/ui/button";
+import Modal from "@/components/common/modal";
 import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
 import formatDate from "@/functions/formatDate";
@@ -25,13 +27,22 @@ export default function ScholarYearsTable({
   const { toast } = useToast();
 
   const [openModal, setOpenModal] = useState(false);
-  const [selectedScholarPeriodToDelete, setSelectedScholarPeriodToDelete] =
-    useState(0);
+  const [openDeleteModalValidation, setOpenDeleteModalValidation] =
+    useState(false);
+  const [selectedScholarYearToDelete, setSelectedScholarYearToDelete] =
+    useState<ScholarYearsViewModel | null>(null);
 
   const closeModal = () => {
     setOpenModal(false);
-    setSelectedScholarPeriodToDelete(0);
+    setSelectedScholarYearToDelete(null);
   };
+
+  const deleteScholarYearCondition = (
+    scholarYear: ScholarYearsViewModel | null,
+  ) => {
+    return scholarYear ? scholarYear.IsDeletable : false;
+  };
+
   const columns = useMemo<ColumnDef<ScholarYearsViewModel, any>[]>(
     () => [
       {
@@ -91,20 +102,33 @@ export default function ScholarYearsTable({
                 )
               }
             />
-            <Icon
-              name={
-                isValidIconName("MdDelete")
-                  ? "MdDelete"
-                  : "MdOutlineNotInterested"
-              }
-              className="cursor-pointer text-xl hover:text-primary"
-              onClick={() => {
-                setOpenModal(true);
-                setSelectedScholarPeriodToDelete(
-                  row.row.original.ScholarYearId,
-                );
-              }}
-            />
+            {deleteScholarYearCondition(row.row.original) ? (
+              <>
+                <Icon
+                  name={`${!row.row.original.IsActive ? "MdDelete" : "MdNotInterested"}`}
+                  className="cursor-pointer text-xl text-primary hover:text-destructive"
+                  onClick={() => {
+                    setOpenModal(true);
+                    setSelectedScholarYearToDelete(row.row.original);
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <Icon
+                  name={`${!row.row.original.IsActive ? "MdDelete" : "MdNotInterested"}`}
+                  className="cursor-pointer text-xl hover:text-primary"
+                  onClick={() => {
+                    if (row.row.original.IsActive) {
+                      setOpenModal(true);
+                      setSelectedScholarYearToDelete(row.row.original);
+                    } else {
+                      setOpenDeleteModalValidation(true);
+                    }
+                  }}
+                />
+              </>
+            )}
           </div>
         ),
       },
@@ -112,10 +136,33 @@ export default function ScholarYearsTable({
     [],
   );
 
-  const deleteScholarYear = async (ScholarYearId: number) => {
+  const deleteScholarYear = async (ScholarYear: ScholarYearsViewModel) => {
     try {
-      const scholarYearToDelete = { ScholarYearId: ScholarYearId };
+      const scholarYearToDelete = { ScholarYearId: ScholarYear.ScholarYearId };
       const response = await deleteScholarYearCommand(scholarYearToDelete);
+
+      if (!response) {
+        throw new Error(`${t.scholarYears.notifications.deleteFailure}`);
+      }
+      toast({
+        title: `${t.scholarYears.notifications.deleteSuccess}`,
+        description: `${t.scholarYears.title} : ${response.Name}`,
+      });
+      router.refresh();
+      closeModal();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: `${t.scholarYears.notifications.deleteError}`,
+        description: `${error}`,
+      });
+    }
+  };
+
+  const disableScholarYear = async (ScholarYear: ScholarYearsViewModel) => {
+    try {
+      const scholarYearToDelete = { ScholarYearId: ScholarYear.ScholarYearId };
+      const response = await disableScholarYearCommand(scholarYearToDelete);
 
       if (!response) {
         throw new Error(`${t.scholarYears.notifications.deleteFailure}`);
@@ -179,10 +226,44 @@ export default function ScholarYearsTable({
       <DeleteModal
         openModal={openModal}
         closeModal={closeModal}
-        titleText={t.scholarYears.deleteModal.title}
-        descriptionText={t.scholarYears.deleteModal.description}
-        deletefunction={() => deleteScholarYear(selectedScholarPeriodToDelete)}
+        titleText={
+          !selectedScholarYearToDelete?.IsActive
+            ? t.scholarPeriods.deleteModal.title
+            : t.scholarPeriods.deleteModal.disableTitle
+        }
+        descriptionText={
+          !selectedScholarYearToDelete?.IsActive
+            ? t.scholarPeriods.deleteModal.description
+            : t.scholarPeriods.deleteModal.disableDescription
+        }
+        deletefunction={() => {
+          if (selectedScholarYearToDelete) {
+            !selectedScholarYearToDelete.IsActive
+              ? deleteScholarYear(selectedScholarYearToDelete)
+              : disableScholarYear(selectedScholarYearToDelete);
+          }
+        }}
+        disable={selectedScholarYearToDelete?.IsActive}
       />
+      <Modal
+        openModal={openDeleteModalValidation}
+        closeModal={() => setOpenDeleteModalValidation(false)}
+      >
+        <div className="flex w-full flex-col items-center space-y-1">
+          <div className="mt-2 text-lg font-semibold">{`${t.scholarPeriods.delteModalValidation.title}`}</div>
+          <div>{`${t.scholarPeriods.delteModalValidation.description}`}</div>
+        </div>
+        <div className="mt-5 flex w-full justify-center space-x-5">
+          <Button
+            type="button"
+            variant={"secondary"}
+            className="w-[30%]"
+            onClick={() => setOpenDeleteModalValidation(false)}
+          >
+            {t.shared.cancel}
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }

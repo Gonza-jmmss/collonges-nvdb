@@ -1,11 +1,11 @@
 import ScholarYearsTable from "./scholarYearsTable";
-import getAllScholarYearsQuery from "@/repositories/scholarYears/queries/getAllScholarYearsQuery";
+import getAllScholarYearsTableQuery from "@/repositories/scholarYears/queries/getAllScholarYearsQueryTable";
 import frFR from "@/lang/fr-FR";
 
 export default async function ScholarYearsPage({}: {}) {
   const t = frFR;
 
-  const scholarYears = await getAllScholarYearsQuery();
+  const scholarYears = await getAllScholarYearsTableQuery();
 
   return (
     <main>
