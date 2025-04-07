@@ -63,6 +63,7 @@ const getStudentCourseGradeByActivityQuery = async (
       const studentEntry: StudentCourseGradeByActivity = {
         StudentCourseGradeId: studentCourseGrade.StudenCourseGradeId,
         StudentCourseId: studentCourseGrade.StudentCourseId,
+        CourseId: studentCourseGrade.StudentCourses.CourseId,
         StudentId: studentCourseGrade.StudentCourses.StudentId,
         StudentName:
           studentCourseGrade.StudentCourses.Students.Persons.AlternativeName,
@@ -73,6 +74,7 @@ const getStudentCourseGradeByActivityQuery = async (
       // If this description is not in our map yet, create the base object
       if (!groupMap[description]) {
         groupMap[description] = {
+          CourseId: studentCourseGrade.StudentCourses.CourseId,
           Description: studentCourseGrade.Description,
           CreatedAt: studentCourseGrade.CreatedAt,
           UserId: studentCourseGrade.UserId,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import deleteStudentCourseGradesCommand from "@/repositories/studentCourseGrades/commands/deleteStudentCourseGradesCommand";
 import {
   StudentCourseGradesByStudentCourseViewModel,
@@ -179,13 +179,16 @@ export default function StudentCoruseGradesByStudentTable({
           />
         ),
         filterFn: "equalsString",
-        size: 40,
+        size: 100,
       },
       {
         accessorKey: "Grade",
         id: "Grade",
         header: () => (
           <Header text={t.studentCourseGrades.expandedByStudent.grade} />
+        ),
+        cell: (row) => (
+          <span>{row.getValue() === "NaN" ? "-" : row.getValue()}</span>
         ),
         filterFn: "equalsString",
         size: 40,
@@ -225,11 +228,11 @@ export default function StudentCoruseGradesByStudentTable({
                 isValidIconName("MdEdit") ? "MdEdit" : "MdOutlineNotInterested"
               }
               className="cursor-pointer text-xl hover:text-primary"
-              onClick={() =>
+              onClick={() => {
                 router.push(
-                  `/courses/studentCourseGrades/edit?action="edit"&periodId=${periodIdSelected}&levelId=${levelIdSelected}&courseId=${courseIdSelected}&description=${row.row.original.Description}&createdAt=${encodeURIComponent(row.row.original.CreatedAt.toUTCString())}&tab=${tabValue}`,
-                )
-              }
+                  `/courses/studentCourseGrades/edit?action="edit"&periodId=${periodIdSelected}&levelId=${levelIdSelected}&courseId=${row.row.original.CourseId}&description=${row.row.original.Description}&createdAt=${encodeURIComponent(row.row.original.CreatedAt.toUTCString())}&tab=${tabValue}`,
+                );
+              }}
             />
             <Icon
               name={
@@ -308,18 +311,6 @@ export default function StudentCoruseGradesByStudentTable({
     // If you need to update some state as well
     updateQuery(Object.fromEntries(currentParams));
   };
-
-  useEffect(() => {
-    if (courses.length > 0) {
-      handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
-    } else handleUrlParameterChange("courseId", `${0}`);
-  }, [urlParams?.periodId]);
-
-  useEffect(() => {
-    if (courses.length > 0) {
-      handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
-    } else handleUrlParameterChange("courseId", `${0}`);
-  }, [urlParams?.levelId]);
 
   return (
     <div>

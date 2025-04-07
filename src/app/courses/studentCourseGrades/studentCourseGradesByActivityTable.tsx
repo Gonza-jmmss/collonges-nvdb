@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import deleteStudentCourseGradesCommand from "@/repositories/studentCourseGrades/commands/deleteStudentCourseGradesCommand";
 import {
   StudentCourseGradeByActivityViewModel,
@@ -181,11 +181,11 @@ export default function StudentCoruseGradesByActivityTable({
                 isValidIconName("MdEdit") ? "MdEdit" : "MdOutlineNotInterested"
               }
               className="cursor-pointer text-xl hover:text-primary"
-              onClick={() =>
+              onClick={() => {
                 router.push(
-                  `/courses/studentCourseGrades/edit?action="edit"&periodId=${periodIdSelected}&levelId=${levelIdSelected}&courseId=${courseIdSelected}&description=${row.row.original.Description}&createdAt=${encodeURIComponent(row.row.original.CreatedAt.toUTCString())}&tab=${tabValue}`,
-                )
-              }
+                  `/courses/studentCourseGrades/edit?action="edit"&periodId=${periodIdSelected}&levelId=${levelIdSelected}&courseId=${row.row.original.CourseId}&description=${row.row.original.Description}&createdAt=${encodeURIComponent(row.row.original.CreatedAt.toUTCString())}&tab=${tabValue}`,
+                );
+              }}
             />
             <Icon
               name={

@@ -4,6 +4,9 @@ import StudentCourseGradesForm from "@/components/studentCourseGrades/studentCou
 import getCoursesByTeacherQuery from "@/repositories/courses/queries/getCoursesByTeacherQuery";
 import getCurrentLevelsQuery from "@/repositories/levels/queries/getCurrentLevelsQuery";
 import getStudentsByCourseIdQuery from "@/repositories/studentCourses/queries/getStudentsByCourseIdQuery";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import Icon from "@/components/common/icon";
 import { auth } from "@/utils/auth";
 import frFR from "@/lang/fr-FR";
 
@@ -28,8 +31,9 @@ export default async function Page({
 
   const descriptionParam = searchParams.description as string;
   const createdAtParam = new Date(searchParams.createdAt as string);
+  const tabParam = searchParams.tab as string;
 
-  if (params.id != "create") {
+  if (params.id !== "create") {
     studentCourseGrade = await getStudentCourseGradesByCourseIdQuery({
       CourseId: courseIdParam,
       Description: descriptionParam,
@@ -63,7 +67,14 @@ export default async function Page({
     ${action != "create" ? `: ${action == "edit" ? descriptionParam : t.studentCourseGrades.create}` : ""}`}`;
 
   return (
-    <div className="mt-5 flex justify-center">
+    <div className="relative mt-5 flex justify-center">
+      <Button asChild className={`absolute -left-16 top-3`} variant="ghost">
+        <Link
+          href={`/courses/studentCourseGrades?periodId=${periodIdParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}&tab=${tabParam}`}
+        >
+          <Icon name={"MdArrowBack"} className="text-xl" />
+        </Link>
+      </Button>
       {/* <div className="mt-3 w-[70vw] rounded-md border bg-muted/60 p-5 shadow-md lg:w-[50vw]"> */}
       <div className="mt-3 w-[70vw] rounded-md border bg-muted/60 p-5 shadow-md">
         <div className="flex items-center justify-between text-lg font-medium">

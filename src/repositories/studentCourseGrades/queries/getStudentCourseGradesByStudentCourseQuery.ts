@@ -71,6 +71,7 @@ const getStudentCourseGradesByStudentCourseQuery = async (
     ),
     StudentCourseGrades: studentCourse.StudentCourseGrades.map(
       (studentCourseGrade: StudentCourseGradesByStudentCourseMap) => ({
+        CourseId: studentCourse.CourseId,
         StudentCourseGradeId: studentCourseGrade.StudenCourseGradeId,
         Description: studentCourseGrade.Description,
         GradeCoefficientName: studentCourseGrade.GradeCoefficients.Name,
