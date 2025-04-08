@@ -578,6 +578,7 @@ export default {
       teacherCourses: "Cours",
       addCourse: "Ajouter cours",
       coursePeriod: "Trimestre",
+      level: "Niveau scolaire",
       scholarPeriodId: "Période",
     },
     notifications: {
@@ -626,13 +627,6 @@ export default {
       disableTitle: "Êtes-vous sûr de désactiver le coefficient de note ?",
       disableDescription: "Le coefficient de note sera désactivé",
     },
-    // deleteModal: {
-    //   disableTitle: "Êtes-vous sûr de désactiver le coefficient de note ?",
-    //   disableDescription:
-    //     "Comme le niveau a des cours assignés le coefficient de note sera désactivé",
-    //   deleteTitle: "Êtes-vous sûr de supprimer le coefficient de note ?",
-    //   deleteDescription: "Le coefficient de note sera supprimé",
-    // },
   },
   studentCourseGrades: {
     title: "Page des Notes",

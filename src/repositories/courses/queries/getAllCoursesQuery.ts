@@ -9,6 +9,7 @@ const prisma = new PrismaClient();
 type getAllCoursesQueryParamsType = {
   IsEnabled: boolean;
   Period: number;
+  LevelId?: number | null;
 };
 
 const getAllCoursesQuery = cache(
@@ -17,6 +18,10 @@ const getAllCoursesQuery = cache(
       where: {
         IsEnabled: params.IsEnabled,
         ...(params.Period !== 0 && { PeriodNumber: params.Period }),
+        ...(params.LevelId &&
+          params.LevelId !== null && {
+            LevelCourses: { some: { LevelId: params.LevelId } },
+          }),
       },
       include: {
         CoursePeriods: true,

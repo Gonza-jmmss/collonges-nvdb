@@ -5,7 +5,9 @@ const prisma = new PrismaClient();
 
 const getCurrentLevelsQuery = async () => {
   const query = await prisma.levels.findMany({
-    where: { IsEnabled: true },
+    where: {
+      IsEnabled: true,
+    },
   });
 
   const res = query.map((level: CurrentLevelsMap) => ({

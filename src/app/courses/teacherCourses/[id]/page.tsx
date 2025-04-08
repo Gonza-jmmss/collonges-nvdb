@@ -1,6 +1,7 @@
 import getAllCoursesQuery from "@/repositories/courses/queries/getAllCoursesQuery";
 import TeacherCoursesForm from "@/components/teacherCourses/teacherCoursesForm";
 import getTeacherCoursesByIdQuery from "@/repositories/teacherCourses/queries/getTeacherCoursesByIdQuery";
+import getCurrentLevelsQuery from "@/repositories/levels/queries/getCurrentLevelsQuery";
 import frFR from "@/lang/fr-FR";
 
 export default async function Page({
@@ -29,15 +30,19 @@ export default async function Page({
   const period = searchParams?.period
     ? parseInt(searchParams.period as string)
     : 4;
+  const levelId = parseInt(searchParams.levelId as string) || null;
 
   const courses = await getAllCoursesQuery({
     IsEnabled: true,
     Period: period,
+    LevelId: levelId,
   });
   const allCourses = await getAllCoursesQuery({
     IsEnabled: true,
     Period: 0,
   });
+
+  const levels = await getCurrentLevelsQuery();
 
   return (
     <div className="mt-5 flex justify-center">
@@ -50,7 +55,9 @@ export default async function Page({
             teacherCoursesData={teacherCourses}
             courses={courses}
             allCourses={allCourses}
+            levels={levels}
             action={action}
+            urlParams={searchParams}
           />
         </div>
         {/* <pre>{JSON.stringify(teacherCourses, null, 2)}</pre> */}

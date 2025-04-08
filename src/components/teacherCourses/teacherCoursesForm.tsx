@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import updateTeacherCourseCommand from "@/repositories/teacherCourses/commands/updateTeacherCourses";
 import { TeacherCoursesByIdViewModel } from "@/repositories/teacherCourses/teacherCoursesViewModel";
-import { CourseViewModel } from "@/repositories/courses/coursesViewModel";
 import { TeacherCourseSchema } from "@/zodSchemas/teacherCoursesSchema";
+import { CourseViewModel } from "@/repositories/courses/coursesViewModel";
+import { CurentLevelsViewModel } from "@/repositories/levels/levelsViewModel";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
@@ -24,12 +25,14 @@ export default function TeacherCoursesForm({
   teacherCoursesData,
   courses,
   allCourses,
+  levels,
   action,
   urlParams,
 }: {
   teacherCoursesData: TeacherCoursesByIdViewModel;
   courses: CourseViewModel[];
   allCourses: CourseViewModel[];
+  levels: CurentLevelsViewModel[];
   action: string | undefined;
   urlParams?: { [key: string]: string | string[] | undefined };
 }) {
@@ -41,8 +44,10 @@ export default function TeacherCoursesForm({
   const [isPending, setIsPending] = useState(false);
 
   const [periodSelected, setPeriodSelected] = useState(
-    typeof urlParams?.period === "string" ? parseInt(urlParams?.period) : 4,
+    urlParams?.period ? parseInt(urlParams.period as string) : 4,
   );
+  const levelIdParam =
+    urlParams?.levelId !== null ? parseInt(urlParams?.levelId as string) : null;
 
   const form = useForm<TeacherCourseFormData>({
     defaultValues: {
@@ -85,6 +90,8 @@ export default function TeacherCoursesForm({
     }
   };
 
+  // useEffect(() => {}, [levelSelected]);
+
   const handleUrlParameterChange = (key: string, value: string) => {
     const currentParams = new URLSearchParams(window.location.search);
     currentParams.set(key, value);
@@ -92,9 +99,6 @@ export default function TeacherCoursesForm({
     // Update URL without replacing current parameters
     const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
 
-    // Use router.push or history.pushState depending on your navigation setup
-    // router.push(newUrl);
-    // or
     window.history.pushState({}, "", newUrl);
 
     // If you need to update some state as well
@@ -128,7 +132,7 @@ export default function TeacherCoursesForm({
                     options={enumToArray(PeriodEnum)}
                     textAttribute="value"
                     valueAttribute="key"
-                    placeholder={t.courses.form.periodNumber}
+                    placeholder={t.teacherCourses.form.coursePeriod}
                     itemSelected={enumToArray(PeriodEnum).find(
                       (x) => x.key === periodSelected,
                     )}
@@ -136,6 +140,27 @@ export default function TeacherCoursesForm({
                       setPeriodSelected(x && x.key);
                       handleUrlParameterChange("period", `${x.key}`);
                     }}
+                  />
+                </div>
+                <span className="col-span-2 mt-3 md:col-span-1">
+                  {t.teacherCourses.form.level}
+                </span>
+                <div className="col-span-4 mt-2 md:col-span-5">
+                  <Combobox
+                    options={levels}
+                    textAttribute="Name"
+                    valueAttribute="LevelId"
+                    placeholder={t.studentCourseGrades.level}
+                    itemSelected={levels.find(
+                      (x) => x.LevelId === levelIdParam,
+                    )}
+                    setItemSelected={(x: CurentLevelsViewModel) => {
+                      handleUrlParameterChange(
+                        "levelId",
+                        `${x ? x.LevelId : null}`,
+                      );
+                    }}
+                    disabled={action === "view"}
                   />
                 </div>
                 <span className="col-span-2 mt-3 md:col-span-1">
