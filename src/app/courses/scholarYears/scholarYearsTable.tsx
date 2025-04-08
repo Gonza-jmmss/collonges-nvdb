@@ -105,8 +105,8 @@ export default function ScholarYearsTable({
             {deleteScholarYearCondition(row.row.original) ? (
               <>
                 <Icon
-                  name={`${!row.row.original.IsActive ? "MdDelete" : "MdNotInterested"}`}
-                  className="cursor-pointer text-xl text-primary hover:text-destructive"
+                  name={`${row.row.original.IsActive ? "MdNotInterested" : "MdDelete"}`}
+                  className={`cursor-pointer text-xl ${row.row.original.IsActive ? "hover:text-primary" : "text-primary hover:text-destructive"}`}
                   onClick={() => {
                     setOpenModal(true);
                     setSelectedScholarYearToDelete(row.row.original);
