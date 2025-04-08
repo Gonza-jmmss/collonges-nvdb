@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import deleteGradeCoefficientCommand from "@/repositories/gradeCoefficients/commands/deleteGradeCoefficientCommand";
+import disableGradeCoefficientCommand from "@/repositories/gradeCoefficients/commands/disableGradeCoefficientCommand";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
@@ -43,6 +44,9 @@ export default function GradeCoefficientsTable({
     urlParams?.isEnabled === "false" ? false : true || true,
   );
 
+  const gradeCoefficintToDeleteCondition =
+    selectedGradeCoefficientToDelete?.IsEnabled;
+
   const columns = useMemo<ColumnDef<GradeCoefficientsViewModel, any>[]>(
     () => [
       {
@@ -79,7 +83,6 @@ export default function GradeCoefficientsTable({
               name={
                 isValidIconName("MdEdit") ? "MdEdit" : "MdOutlineNotInterested"
               }
-              // className="cursor-pointer text-xl"
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() =>
                 router.push(
@@ -88,12 +91,10 @@ export default function GradeCoefficientsTable({
               }
             />
             <Icon
-              name={
-                isValidIconName("MdDelete")
-                  ? "MdDelete"
-                  : "MdOutlineNotInterested"
-              }
-              className="cursor-pointer text-xl hover:text-primary"
+              name={`${
+                row.row.original.IsEnabled ? "MdNotInterested" : "MdDelete"
+              }`}
+              className={`cursor-pointer text-xl ${row.row.original.IsEnabled ? "hover:text-primary" : "text-primary hover:text-destructive"}`}
               onClick={() => {
                 setOpenModal(true);
                 setSelectedGradeCoefficientToDelete(row.row.original);
@@ -133,6 +134,33 @@ export default function GradeCoefficientsTable({
     }
   };
 
+  const disableGradeCoefficient = async (GradeCoefficientId: number) => {
+    try {
+      const GradeCoefficientToDisable = {
+        GradeCoefficientId: GradeCoefficientId,
+      };
+      const response = await disableGradeCoefficientCommand(
+        GradeCoefficientToDisable,
+      );
+
+      if (!response) {
+        throw new Error(`${t.gradeCoefficients.notifications.disableFailure}`);
+      }
+      toast({
+        title: `${t.gradeCoefficients.notifications.disableSuccess}`,
+        description: `${t.gradeCoefficients.title} : ${response.Name}`,
+      });
+      router.refresh();
+      closeModal();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: `${t.gradeCoefficients.notifications.disableError}`,
+        description: `${error}`,
+      });
+    }
+  };
+
   const handleUrlParameterChange = (key: string, value: string) => {
     const currentParams = new URLSearchParams(window.location.search);
     currentParams.set(key, value);
@@ -140,9 +168,6 @@ export default function GradeCoefficientsTable({
     // Update URL without replacing current parameters
     const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
 
-    // Use router.push or history.pushState depending on your navigation setup
-    // router.push(newUrl);
-    // or
     window.history.pushState({}, "", newUrl);
 
     // If you need to update some state as well
@@ -184,27 +209,39 @@ export default function GradeCoefficientsTable({
           )
         }
       />
-      <DeleteModal
+      {/* <DeleteModal
         openModal={openModal}
         closeModal={closeModal}
         titleText={t.gradeCoefficients.deleteModal.deleteTitle}
         descriptionText={t.gradeCoefficients.deleteModal.deleteDescription}
-        // titleText={
-        //   selectedGradeCoefficientToDelete?.LevelCourses &&
-        //   selectedGradeCoefficientToDelete?.LevelCourses.length > 0
-        //     ? t.gradeCoefficients.deleteModal.disableTitle
-        //     : t.gradeCoefficients.deleteModal.deleteTitle
-        // }
-        // descriptionText={
-        //   selectedGradeCoefficientToDelete?.LevelCourses &&
-        //   selectedGradeCoefficientToDelete?.LevelCourses.length > 0
-        //     ? t.gradeCoefficients.deleteModal.disableDescription
-        //     : t.gradeCoefficients.deleteModal.deleteDescription
-        // }
         deletefunction={() =>
           deleteGradeCoefficient(
             selectedGradeCoefficientToDelete?.GradeCoefficientId || 0,
           )
+        }
+      /> */}
+      <DeleteModal
+        openModal={openModal}
+        closeModal={closeModal}
+        titleText={
+          gradeCoefficintToDeleteCondition
+            ? t.gradeCoefficients.deleteModal.disableTitle
+            : t.gradeCoefficients.deleteModal.deleteTitle
+        }
+        descriptionText={
+          gradeCoefficintToDeleteCondition
+            ? t.gradeCoefficients.deleteModal.disableDescription
+            : t.gradeCoefficients.deleteModal.deleteDescription
+        }
+        disable={gradeCoefficintToDeleteCondition}
+        deletefunction={() =>
+          gradeCoefficintToDeleteCondition
+            ? disableGradeCoefficient(
+                selectedGradeCoefficientToDelete?.GradeCoefficientId || 0,
+              )
+            : deleteGradeCoefficient(
+                selectedGradeCoefficientToDelete?.GradeCoefficientId || 0,
+              )
         }
       />
     </div>

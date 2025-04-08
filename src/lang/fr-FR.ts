@@ -615,14 +615,24 @@ export default {
       deleteError:
         "Une erreur s'est produite pendant la suppression du coefficient de note",
       deleteFailure: "Échec de la suppression du coefficient de note",
+      disableSuccess: "Coefficient de note désactivé avec succès",
+      disableError:
+        "Une erreur s'est produite pendant la désactivation du coefficient de note",
+      disableFailure: "Échec de la désactivation du coefficient de note",
     },
     deleteModal: {
-      disableTitle: "Êtes-vous sûr de désactiver le coefficient de note ?",
-      disableDescription:
-        "Comme le niveau a des cours assignés le coefficient de note sera désactivé",
       deleteTitle: "Êtes-vous sûr de supprimer le coefficient de note ?",
       deleteDescription: "Le coefficient de note sera supprimé",
+      disableTitle: "Êtes-vous sûr de désactiver le coefficient de note ?",
+      disableDescription: "Le coefficient de note sera désactivé",
     },
+    // deleteModal: {
+    //   disableTitle: "Êtes-vous sûr de désactiver le coefficient de note ?",
+    //   disableDescription:
+    //     "Comme le niveau a des cours assignés le coefficient de note sera désactivé",
+    //   deleteTitle: "Êtes-vous sûr de supprimer le coefficient de note ?",
+    //   deleteDescription: "Le coefficient de note sera supprimé",
+    // },
   },
   studentCourseGrades: {
     title: "Page des Notes",
