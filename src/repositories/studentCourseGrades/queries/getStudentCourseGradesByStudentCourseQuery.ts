@@ -22,6 +22,7 @@ const getStudentCourseGradesByStudentCourseQuery = async (
       Courses: {
         include: {
           LevelCourses: {
+            where: { Levels: { IsEnabled: true } },
             include: {
               Levels: true,
             },
