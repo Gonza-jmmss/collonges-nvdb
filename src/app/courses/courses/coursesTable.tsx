@@ -62,7 +62,8 @@ export default function CoursesTable({
         accessorKey: "CourseCode",
         id: "CourseCode",
         header: () => <Header text={t.courses.columns.courseCode} />,
-        cell: (x) => x.getValue().slice(0, -2),
+        cell: (x) =>
+          x.getValue().includes("/") ? x.getValue().slice(0, -2) : x.getValue(),
         filterFn: "equalsString",
         size: 30,
       },
@@ -139,9 +140,6 @@ export default function CoursesTable({
     // Update URL without replacing current parameters
     const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
 
-    // Use router.push or history.pushState depending on your navigation setup
-    // router.push(newUrl);
-    // or
     window.history.pushState({}, "", newUrl);
 
     // If you need to update some state as well
