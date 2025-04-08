@@ -370,7 +370,7 @@ export default {
     create: "Ajouter des cours au étudiant",
     columns: {
       studentId: "ID",
-      coursesAsigned: "Cours attribués",
+      coursesAsigned: "Cours assignés",
       alternativeName: "Étudiant",
       isEnabled: "Est activé",
       note: "Note",
@@ -482,18 +482,18 @@ export default {
       isActive: "Est activé",
     },
     notifications: {
-      createSuccess: "Année scolaire créé avec succès",
+      createSuccess: "Année scolaire créée avec succès",
       createError:
         "Une erreur s'est produite pendant la création du année scolaire",
       createFailure: "Échec de la création du année scolaire",
-      updateSuccess: "Année scolaire modifié avec succès",
+      updateSuccess: "Année scolaire modifiée avec succès",
       updateError:
-        "Une erreur s'est produite pendant la modification du année scolaire",
-      updateFailure: "Échec de la modification du année scolaire",
-      deleteSuccess: "Année scolaire supprimé avec succès",
+        "Une erreur s'est produite pendant la modification de l'année scolaire",
+      updateFailure: "Échec de la modification de l'année scolaire",
+      deleteSuccess: "Année scolaire supprimée avec succès",
       deleteError:
-        "Une erreur s'est produite pendant la suppression du année scolaire",
-      deleteFailure: "Échec de la suppression du année scolaire",
+        "Une erreur s'est produite pendant la désactivation de l'année scolaire",
+      deleteFailure: "Échec de la désactivation de l'année scolaire",
     },
     deleteModal: {
       title: "Êtes-vous sûr de supprimer l'année scolaire ?",
@@ -512,7 +512,7 @@ export default {
     levels: "Niveaux scolaires",
     create: "Créer un niveau scolaire",
     columns: {
-      coursesAsigned: "Cours attribués",
+      coursesAsigned: "Cours assignés",
       name: "Niveau scolaire",
       isEnabled: "Est activé",
     },
@@ -540,24 +540,32 @@ export default {
       updateError:
         "Une erreur s'est produite pendant la modification du niveau scolaire",
       updateFailure: "Échec de la modification du niveau scolaire",
-      deleteSuccess: "Niveau scolaire désactivé avec succès",
+      deleteSuccess: "Niveau scolaire supprimé avec succès",
       deleteError:
         "Une erreur s'est produite pendant la suppression du niveau scolaire",
       deleteFailure: "Échec de la suppression du niveau scolaire",
+      disableSuccess: "Niveau scolaire désactivé avec succès",
+      disableError:
+        "Une erreur s'est produite pendant la désactivation du niveau scolaire",
+      disableFailure: "Échec de la désactivation du niveau scolaire",
     },
     deleteModal: {
-      disableTitle: "Êtes-vous sûr de désactiver le niveau scolaire ?",
-      disableDescription:
-        "Comme le niveau a des cours attribués le niveau scolaire sera désactivé",
       deleteTitle: "Êtes-vous sûr de supprimer le niveau scolaire ?",
       deleteDescription: "Le niveau scolaire sera supprimé",
+      disableTitle: "Êtes-vous sûr de désactiver le niveau scolaire ?",
+      disableDescription: "Le niveau scolaire sera désactivé",
+    },
+    delteModalValidation: {
+      title: "Le niveau scolaire a des cours assignés",
+      description:
+        "Les niveau scolaires avec des cours assignés ne peuvent pas être supprimés",
     },
   },
   teacherCourses: {
     title: "Page des cours de professeur(e)",
     teacherCourses: "Cours de professeur(e)",
     columns: {
-      coursesAsigned: "Cours attribués",
+      coursesAsigned: "Cours assignés",
       userName: "Professeur(e)",
       isEnabled: "Est activé",
     },
@@ -611,7 +619,7 @@ export default {
     deleteModal: {
       disableTitle: "Êtes-vous sûr de désactiver le coefficient de note ?",
       disableDescription:
-        "Comme le niveau a des cours attribués le coefficient de note sera désactivé",
+        "Comme le niveau a des cours assignés le coefficient de note sera désactivé",
       deleteTitle: "Êtes-vous sûr de supprimer le coefficient de note ?",
       deleteDescription: "Le coefficient de note sera supprimé",
     },
