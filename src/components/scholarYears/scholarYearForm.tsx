@@ -39,7 +39,7 @@ export default function ScholarYearForm({
         action !== "create" ? (scholarYearData?.FromDate ?? null) : null,
       ToDate: action !== "create" ? (scholarYearData?.ToDate ?? null) : null,
       IsActive:
-        action !== "create" ? (scholarYearData?.IsActive ?? true) : true,
+        action !== "create" ? (scholarYearData?.IsActive ?? false) : false,
     },
     onSubmit: async ({ value }) => {
       //   console.log("formData", value);
