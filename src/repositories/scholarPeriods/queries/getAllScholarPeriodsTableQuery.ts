@@ -6,7 +6,11 @@ const prisma = new PrismaClient();
 const getAllScholarPeriodsTableQuery = async () => {
   const query = await prisma.scholarPeriods.findMany({
     // orderBy: [{ IsActive: "desc" }, { Number: "desc" }, { Name: "desc" }],
-    orderBy: [{ IsActive: "desc" }, { Number: "desc" }, { CreatedAt: "desc" }],
+    orderBy: [
+      { IsActive: "desc" },
+      { ScholarYears: { Name: "desc" } },
+      { Number: "desc" },
+    ],
     include: {
       ScholarYears: true,
       StudentCourses: true,
