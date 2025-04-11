@@ -10,6 +10,7 @@ type getAllCoursesQueryParamsType = {
   IsEnabled: boolean;
   Period: number;
   LevelId?: number | null;
+  ScholarYearId?: number | null;
 };
 
 const getAllCoursesQuery = cache(
@@ -21,6 +22,12 @@ const getAllCoursesQuery = cache(
         ...(params.LevelId &&
           params.LevelId !== null && {
             LevelCourses: { some: { LevelId: params.LevelId } },
+          }),
+        ...(params.ScholarYearId &&
+          params.ScholarYearId !== null && {
+            StudentCourses: {
+              some: { ScholarPeriods: { ScholarYearId: params.ScholarYearId } },
+            },
           }),
       },
       include: {

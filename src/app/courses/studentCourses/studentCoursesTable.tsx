@@ -15,43 +15,55 @@ import {
 } from "@/repositories/studentCourses/studentCoursesViewModel";
 import { ScholarYearsViewModel } from "@/repositories/scholarYears/scholarYearsViewModel";
 import { ScholarPeriodsViewModel } from "@/repositories/scholarPeriods/scholarPeriodsViewModel";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import frFR from "@/lang/fr-FR";
 
 export default function StudentCoursesTable({
   studentCoursesData,
+  scholarYearSelected,
   scholarYears,
+  scholarPeriodSelected,
   scholarPeriods,
+  pageIndex,
+  pageSize,
   urlParams,
 }: {
   studentCoursesData: StudentCoursesViewModel[];
+  scholarYearSelected: number;
   scholarYears: ScholarYearsViewModel[];
+  scholarPeriodSelected: number;
   scholarPeriods: ScholarPeriodsViewModel[];
+  pageIndex: number;
+  pageSize: number;
   urlParams: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const router = useRouter();
   const updateQuery = useUpdateQuery();
+  const searchParams = useSearchParams();
+
+  const getPageIndexParam = searchParams.get("pageIndex");
+  const getPageSizeParam = searchParams.get("pageSize");
 
   const [expandedContent, setExpandedContent] = useState<React.ReactNode>();
 
-  const [scholarYearFilter, setScholarYearFilter] =
-    useState<ScholarYearsViewModel>(
-      typeof urlParams.scholarYear === "string"
-        ? scholarYears[parseInt(urlParams.scholarYear)]
-        : scholarYears[0],
-    );
+  // const [scholarYearFilter, setScholarYearFilter] =
+  //   useState<ScholarYearsViewModel>(
+  //     typeof urlParams.scholarYearId === "string"
+  //       ? scholarYears[parseInt(urlParams.scholarYearId)]
+  //       : scholarYears[0],
+  //   );
 
-  const scholarPeriodIdParam =
-    typeof urlParams.scholarPeriodId === "string"
-      ? parseInt(urlParams.scholarPeriodId)
-      : undefined;
+  // const scholarPeriodIdParam =
+  //   typeof urlParams.scholarPeriodId === "string"
+  //     ? parseInt(urlParams.scholarPeriodId)
+  //     : undefined;
 
-  const [scholarPeriodFilter, setScholarPeriodFilter] =
-    useState<ScholarPeriodsViewModel>(
-      scholarPeriods.find((x) => x.ScholarPeriodId === scholarPeriodIdParam) ||
-        scholarPeriods[0],
-    );
+  // const [scholarPeriodFilter, setScholarPeriodFilter] =
+  //   useState<ScholarPeriodsViewModel>(
+  //     scholarPeriods.find((x) => x.ScholarPeriodId === scholarPeriodIdParam) ||
+  //       scholarPeriods[0],
+  //   );
 
   const columns = useMemo<ColumnDef<StudentCoursesViewModel, any>[]>(
     () => [
@@ -185,7 +197,8 @@ export default function StudentCoursesTable({
             className="flex space-x-1"
             onClick={(event) => event.stopPropagation()}
           >
-            {row.row.original.IsEnabled && (
+            {/* {row.row.original.IsEnabled && scholarPeriodIdParam !== 0 && ( */}
+            {row.row.original.IsEnabled && scholarPeriodSelected !== 0 && (
               <Icon
                 name={
                   isValidIconName("MdEdit")
@@ -193,9 +206,14 @@ export default function StudentCoursesTable({
                     : "MdOutlineNotInterested"
                 }
                 className="cursor-pointer text-xl hover:text-primary"
+                // onClick={() =>
+                //   router.push(
+                //     `/courses/studentCourses/${row.row.original.StudentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}${scholarPeriodFilter.ScholarPeriodId !== 0 ? `&scholarPeriodId=${scholarPeriodFilter.ScholarPeriodId}` : ""}&scholarYearId=${scholarYearFilter.ScholarYearId}`,
+                //   )
+                // }
                 onClick={() =>
                   router.push(
-                    `/courses/studentCourses/${row.row.original.StudentId}?action="edit"${scholarPeriodFilter.ScholarPeriodId !== 0 ? `&scholarPeriodId=${scholarPeriodFilter.ScholarPeriodId}` : ""}`,
+                    `/courses/studentCourses/${row.row.original.StudentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&scholarYearId=${scholarYearSelected}`,
                   )
                 }
               />
@@ -204,7 +222,14 @@ export default function StudentCoursesTable({
         ),
       },
     ],
-    [scholarPeriodFilter.ScholarPeriodId],
+    [
+      // scholarPeriodFilter.ScholarPeriodId,
+      scholarPeriodSelected,
+      scholarYearSelected,
+      // scholarPeriodIdParam,
+      getPageIndexParam,
+      getPageSizeParam,
+    ],
   );
 
   const columnsExtended = useMemo<
@@ -263,9 +288,6 @@ export default function StudentCoursesTable({
     // Update URL without replacing current parameters
     const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
 
-    // Use router.push or history.pushState depending on your navigation setup
-    // router.push(newUrl);
-    // or
     window.history.pushState({}, "", newUrl);
 
     // If you need to update some state as well
@@ -281,12 +303,16 @@ export default function StudentCoursesTable({
             textAttribute="Name"
             valueAttribute="ScholarYearId"
             placeholder={t.courses.form.periodNumber}
+            // itemSelected={scholarYears.find(
+            //   (x) => x.ScholarYearId === scholarYearFilter.ScholarYearId,
+            // )}
             itemSelected={scholarYears.find(
-              (x) => x.ScholarYearId === scholarYearFilter.ScholarYearId,
+              (x) => x.ScholarYearId === scholarYearSelected,
             )}
             setItemSelected={(x: ScholarYearsViewModel) => {
-              setScholarYearFilter(x && x);
-              handleUrlParameterChange("scholarYear", `${x.ScholarYearId}`);
+              // setScholarYearFilter(x && x);
+              handleUrlParameterChange("scholarYearId", `${x.ScholarYearId}`);
+              handleUrlParameterChange("scholarPeriodId", `${null}`);
             }}
             notClearable
           />
@@ -297,11 +323,14 @@ export default function StudentCoursesTable({
             textAttribute="Name"
             valueAttribute="ScholarPeriodId"
             placeholder={t.courses.form.periodNumber}
+            // itemSelected={scholarPeriods.find(
+            //   (x) => x.ScholarPeriodId === scholarPeriodFilter.ScholarPeriodId,
+            // )}
             itemSelected={scholarPeriods.find(
-              (x) => x.ScholarPeriodId === scholarPeriodFilter.ScholarPeriodId,
+              (x) => x.ScholarPeriodId === scholarPeriodSelected,
             )}
             setItemSelected={(x: ScholarPeriodsViewModel) => {
-              setScholarPeriodFilter(x && x);
+              // setScholarPeriodFilter(x && x);
               handleUrlParameterChange(
                 "scholarPeriodId",
                 `${x.ScholarPeriodId}`,
@@ -312,9 +341,14 @@ export default function StudentCoursesTable({
         </div>
         <Button
           variant="outlineColored"
+          // onClick={() =>
+          //   router.push(
+          //     `/courses/studentCourses/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}${scholarPeriodFilter ? `&scholarPeriodId=${scholarPeriodFilter.ScholarPeriodId}` : ""}&scholarYearId=${scholarYearFilter.ScholarYearId}`,
+          //   )
+          // }
           onClick={() =>
             router.push(
-              `/courses/studentCourses/create?action="create"${scholarPeriodFilter ? `&scholarPeriodId=${scholarPeriodFilter.ScholarPeriodId}` : ""}`,
+              `/courses/studentCourses/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}${scholarPeriodSelected ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&scholarYearId=${scholarYearSelected}`,
             )
           }
         >
@@ -327,6 +361,8 @@ export default function StudentCoursesTable({
         className=""
         expandable
         expandedContent={expandedContent}
+        pageIndexParam={pageIndex}
+        pageSizeParam={pageSize}
       />
     </div>
   );

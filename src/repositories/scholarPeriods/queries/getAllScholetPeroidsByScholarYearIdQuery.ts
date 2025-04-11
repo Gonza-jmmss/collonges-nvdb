@@ -3,11 +3,15 @@ import { ScholarPeriodsByScholarYearIdMap } from "../scholarPeriodsViewModel";
 
 const prisma = new PrismaClient();
 
+type getAllScholarPeriodsByScholarYearIdQueryParams = {
+  ScholarYearId: number;
+};
+
 const getAllScholarPeriodsByScholarYearIdQuery = async (
-  scholarYearId: number,
+  params: getAllScholarPeriodsByScholarYearIdQueryParams,
 ) => {
   const query = await prisma.scholarPeriods.findMany({
-    where: { ScholarYearId: scholarYearId },
+    where: { ScholarYearId: params.ScholarYearId },
     orderBy: [{ IsActive: "desc" }, { Number: "desc" }, { Name: "desc" }],
   });
 

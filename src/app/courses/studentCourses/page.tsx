@@ -11,24 +11,42 @@ export default async function StudentsCoursesPage({
 }) {
   const t = frFR;
 
-  const scholarYears = await getLastsScholarYearsWithPeriodsQuery();
-  const scholarPeriods = await getAllScholarPeriodsByScholarYearIdQuery(
-    searchParams.scholarYear
-      ? parseInt(searchParams.scholarYear as string)
-      : scholarYears[0].ScholarYearId,
-  );
+  const pageIndex = searchParams?.pageIndex
+    ? parseInt(searchParams.pageIndex as string)
+    : 0;
 
-  // getAllStudentCoursesQuery Params
-  const scholarYear = searchParams.scholarYear
-    ? parseInt(searchParams.scholarYear as string)
+  const pageSize = searchParams?.pageSize
+    ? parseInt(searchParams.pageSize as string)
+    : 10;
+
+  const scholarYears = await getLastsScholarYearsWithPeriodsQuery();
+
+  const scholarYearIdParam = searchParams.scholarYearId
+    ? parseInt(searchParams.scholarYearId as string)
     : scholarYears[0].ScholarYearId;
-  const scholarPeriodId = searchParams.scholarPeriodId
-    ? parseInt(searchParams.scholarPeriodId as string)
-    : scholarPeriods[0].ScholarPeriodId;
+
+  const scholarPeriods = await getAllScholarPeriodsByScholarYearIdQuery({
+    ScholarYearId: scholarYearIdParam,
+  });
+
+  // const scholarYear = searchParams.scholarYear
+  //   ? parseInt(searchParams.scholarYear as string)
+  //   : scholarYears[0].ScholarYearId;
+  // const courseIdSelected =
+  //   searchParams?.courseId === undefined || searchParams?.courseId === "0"
+  //     ? courses.length > 0
+  //       ? courses[0].CourseId
+  //       : 0
+  //     : parseInt(searchParams.courseId as string);
+
+  const scholarPeriodIdParam =
+    searchParams.scholarPeriodId && searchParams.scholarPeriodId !== "null"
+      ? parseInt(searchParams.scholarPeriodId as string)
+      : scholarPeriods[0].ScholarPeriodId;
 
   const studentCourses = await getAllStudentCoursesQuery({
-    ScholarYearId: scholarYear,
-    ScholarPeriodId: scholarPeriodId,
+    ScholarYearId: scholarYearIdParam,
+    ScholarPeriodId: scholarPeriodIdParam,
   });
 
   const scholarPeriodsTous = [
@@ -54,8 +72,12 @@ export default async function StudentsCoursesPage({
         </div>
         <StudentCoursesTable
           studentCoursesData={studentCourses}
+          scholarYearSelected={scholarYearIdParam}
           scholarYears={scholarYears}
+          scholarPeriodSelected={scholarPeriodIdParam}
           scholarPeriods={scholarPeriodsTous}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
           urlParams={searchParams}
         />
         {/* <pre>{JSON.stringify(studentCourses, null, 2)}</pre> */}

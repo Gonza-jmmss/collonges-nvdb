@@ -12,7 +12,7 @@ export default {
     moduleElements: "Éléments du module",
     roleModuleElements: "Éléments du module de rôle",
     courses: "Cours",
-    studentCourses: "Cours des étudiant",
+    studentCourses: "Cours des étudiants",
     scholarPeriods: "Périodes scolaires",
     scholarYears: "Années scolaires",
     levels: "Niveaux scolaires",
@@ -260,7 +260,7 @@ export default {
   },
   students: {
     pageTitle: "Page des étudiants",
-    student: "Étudiant",
+    student: "Étudiant(e)",
     create: "Créer un étudiant",
     columns: {
       id: "ID",
@@ -307,22 +307,22 @@ export default {
       contactValidation: "Le contact est obligatoire",
     },
     notifications: {
-      createSuccess: "Étudiant créé avec succès",
+      createSuccess: "Étudiant(e) créé avec succès",
       createError:
-        "Une erreur s'est produite pendant la création de l'étudiant",
-      createFailure: "Échec de la création de l'étudiant",
-      updateSuccess: "Étudiant modifié avec succès",
+        "Une erreur s'est produite pendant la création de l'étudiant(e)",
+      createFailure: "Échec de la création de l'étudiant(e)",
+      updateSuccess: "Étudiant(e) modifié avec succès",
       updateError:
-        "Une erreur s'est produite pendant la modification de l'étudiant",
-      updateFailure: "Échec de la modification de l'étudiant",
-      deleteSuccess: "Étudiant désactivé avec succès",
+        "Une erreur s'est produite pendant la modification de l'étudiant(e)",
+      updateFailure: "Échec de la modification de l'étudiant(e)",
+      deleteSuccess: "Étudiant(e) désactivé avec succès",
       deleteError:
-        "Une erreur s'est produite pendant la désactivation de l'étudiant",
-      deleteFailure: "Échec de la désactivation de l'étudiant",
+        "Une erreur s'est produite pendant la désactivation de l'étudiant(e)",
+      deleteFailure: "Échec de la désactivation de l'étudiant(e)",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de désactiver l'étudiant ?",
-      description: "L'étudiant sera désactivé",
+      title: "Êtes-vous sûr de désactiver l'étudiant(e) ?",
+      description: "L'étudiant(e) sera désactivé",
     },
   },
   courses: {
@@ -366,12 +366,12 @@ export default {
   },
   studentCourses: {
     title: "Page des cours des étudiants",
-    studentCourse: "Cours des étudiant",
+    studentCourse: "Cours des étudiant(e)",
     create: "Ajouter des cours au étudiant",
     columns: {
       studentId: "ID",
       coursesAsigned: "Cours assignés",
-      alternativeName: "Étudiant",
+      alternativeName: "Étudiant(e)",
       isEnabled: "Est activé",
       note: "Note",
       scholarPeriodId: "Période",
@@ -380,13 +380,14 @@ export default {
       courseCode: "Code cours",
     },
     form: {
-      studentId: "Étudiant",
+      studentId: "Étudiant(e)",
       studentCourses: "Cours",
       addCourse: "Ajouter cours",
       scholarLevels: "Niveaux scolaires",
       courses: "Cours",
       coursePeriod: "Trimestre",
       scholarPeriodId: "Période",
+      scholarYearId: "Année scolaire",
     },
     validations: {
       studentValidation: "Le étudiant est obligatoire",
@@ -394,14 +395,14 @@ export default {
       coursesValidation: "Les courses sont obligatoires",
     },
     notifications: {
-      createSuccess: "Cours ajoutés de l'étudiant avec succès",
+      createSuccess: "Cours ajoutés de l'étudiant(e) avec succès",
       createError:
-        "Une erreur s'est produite pendant l'ajout du cours de l'étudiant",
-      createFailure: "Échec de l'ajout du cours de l'étudiant",
-      updateSuccess: "Cours modifiés de l'étudiant avec succès",
+        "Une erreur s'est produite pendant l'ajout du cours de l'étudiant(e)",
+      createFailure: "Échec de l'ajout du cours de l'étudiant(e)",
+      updateSuccess: "Cours modifiés de l'étudiant(e) avec succès",
       updateError:
-        "Une erreur s'est produite pendant la modification du cours de l'étudiant",
-      updateFailure: "Échec de la modification du cours de l'étudiant",
+        "Une erreur s'est produite pendant la modification du cours de l'étudiant(e)",
+      updateFailure: "Échec de la modification du cours de l'étudiant(e)",
 
       // deleteSuccess: "Cours de l'étudiant désactivé avec succès",
       // deleteError:
@@ -640,7 +641,7 @@ export default {
     columnsByStudent: {
       courseName: "Cours",
       courseCode: "Cours code",
-      studentName: "Étudiant",
+      studentName: "Étudiant(e)",
       grade: "Moyen",
       levelName: "Niveau",
     },
@@ -659,8 +660,8 @@ export default {
       levelName: "Niveau",
     },
     expandedByActivity: {
-      studentName: "Étudiant",
-      averageGrade: "Moyen",
+      studentName: "Étudiant(e)",
+      averageGrade: "Moyen de l'étudiant(e)",
       grade: "Note de l'activité",
     },
     form: {
@@ -709,7 +710,7 @@ export default {
       titlePage: "Notes des étudiants IFLE de",
       secretariatName: "Marta Oliver",
       data: {
-        studentName: "Nom de l'étudiant",
+        studentName: "Nom de l'étudiant(e)",
         birthdate: "Date de naissance",
         place: "Lieu",
         country: "Pays",

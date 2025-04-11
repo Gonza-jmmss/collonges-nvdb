@@ -3,9 +3,21 @@ import { ScholarPeriodMap } from "../scholarPeriodsViewModel";
 
 const prisma = new PrismaClient();
 
-const getLastsScholarPeriodsQuery = async () => {
+type getLastsScholarPeriodsQueryParamsType = {
+  ScholarYearId?: number | null;
+};
+
+const getLastsScholarPeriodsQuery = async (
+  params: getLastsScholarPeriodsQueryParamsType,
+) => {
   const query = await prisma.scholarPeriods.findMany({
     take: 10,
+    where: {
+      ...(params.ScholarYearId &&
+        params.ScholarYearId !== null && {
+          ScholarYearId: params.ScholarYearId,
+        }),
+    },
     orderBy: [{ IsActive: "desc" }, { Number: "desc" }, { Name: "desc" }],
     include: {
       ScholarYears: true,

@@ -3,14 +3,15 @@
 import { useState, useEffect } from "react";
 import createStudentCourseCommand from "@/repositories/studentCourses/commands/createStudentCourseCommands";
 import updateStudentCourseCommand from "@/repositories/studentCourses/commands/updateStudentCoursesCommands";
+import { StudentCourseSchema } from "@/zodSchemas/studentCourses";
 import {
   StudentsWithNoCoursesViewModel,
   StudentCoursesByStudentIdViewModel,
 } from "@/repositories/studentCourses/studentCoursesViewModel";
 import { CourseViewModel } from "@/repositories/courses/coursesViewModel";
 import { ScholarPeriodsViewModel } from "@/repositories/scholarPeriods/scholarPeriodsViewModel";
+import { ScholarYearsViewModel } from "@/repositories/scholarYears/scholarYearsViewModel";
 import { LevelsTableViewModel } from "@/repositories/levels/levelsViewModel";
-import { StudentCourseSchema } from "@/zodSchemas/studentCourses";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
@@ -33,7 +34,10 @@ export default function StudentCourseForm({
   courses,
   allCourses,
   scholarPeriods,
+  scholarYears,
   scholarLevels,
+  pageIndexParam,
+  pageSizeParam,
   action,
   urlParams,
 }: {
@@ -42,7 +46,10 @@ export default function StudentCourseForm({
   courses: CourseViewModel[];
   allCourses: CourseViewModel[];
   scholarPeriods: ScholarPeriodsViewModel[];
+  scholarYears: ScholarYearsViewModel[];
   scholarLevels: LevelsTableViewModel[];
+  pageIndexParam: number;
+  pageSizeParam: number;
   action: string | undefined;
   urlParams?: { [key: string]: string | string[] | undefined };
 }) {
@@ -60,6 +67,10 @@ export default function StudentCourseForm({
   );
   const scholarPeriodIdParam =
     parseInt(urlParams?.scholarPeriodId as string) || 0;
+  const scholarYearIdParam =
+    urlParams?.scholarYearId !== null
+      ? parseInt(urlParams?.scholarYearId as string)
+      : null;
 
   const form = useForm<StudentCourseFormData>({
     defaultValues: {
@@ -101,7 +112,7 @@ export default function StudentCourseForm({
       });
 
       router.push(
-        `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}`,
+        `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}&scholarYearId=${scholarYearIdParam}&pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
       );
       router.refresh();
     } catch (error) {
@@ -128,7 +139,7 @@ export default function StudentCourseForm({
       });
 
       router.push(
-        `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}`,
+        `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}&scholarYearId=${scholarYearIdParam}&pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
       );
       router.refresh();
     } catch (error) {
@@ -221,6 +232,25 @@ export default function StudentCourseForm({
         </div>
       )}
       <div className="col-span-2 space-y-1">
+        <span>{t.studentCourses.form.scholarYearId}</span>
+        <Combobox
+          options={scholarYears}
+          textAttribute="Name"
+          valueAttribute="ScholarYearId"
+          placeholder={t.studentCourses.form.scholarYearId}
+          itemSelected={scholarYears.find(
+            (x) => x.ScholarYearId === scholarYearIdParam,
+          )}
+          setItemSelected={(x: ScholarYearsViewModel) => {
+            handleUrlParameterChange(
+              "scholarYearId",
+              `${x ? x.ScholarYearId : null}`,
+            );
+          }}
+          disabled={action !== "create"}
+        />
+      </div>
+      <div className="col-span-2 space-y-1">
         <form.Field
           name="ScholarPeriodId"
           validators={{
@@ -251,7 +281,7 @@ export default function StudentCourseForm({
                     `${x.ScholarPeriodId}`,
                   );
                 }}
-                disabled={action === "view"}
+                disabled={action !== "create"}
                 showSearch
                 notClearable
               />
@@ -455,7 +485,7 @@ export default function StudentCourseForm({
               className="w-[30%]"
               onClick={() =>
                 router.push(
-                  `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}`,
+                  `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}&scholarYearId=${scholarYearIdParam}&pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
                 )
               }
             >

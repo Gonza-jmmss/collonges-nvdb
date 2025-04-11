@@ -11,7 +11,7 @@ type DeleteScholarYearParams = {
 
 const deleteScholarYearCommand = async (params: DeleteScholarYearParams) => {
   const scholarPeriodsByYearId = await getAllScholarPeriodsByScholarYearIdQuery(
-    params.ScholarYearId,
+    { ScholarYearId: params.ScholarYearId },
   );
 
   if (scholarPeriodsByYearId.length > 0) {
