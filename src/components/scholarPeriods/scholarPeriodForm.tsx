@@ -46,7 +46,7 @@ export default function ScholarPeriodForm({
         action !== "create" ? (scholarPeriodData?.FromDate ?? null) : null,
       ToDate: action !== "create" ? (scholarPeriodData?.ToDate ?? null) : null,
       IsActive:
-        action !== "create" ? (scholarPeriodData?.IsActive ?? true) : true,
+        action !== "create" ? (scholarPeriodData?.IsActive ?? false) : false,
       ScholarYearId:
         action !== "create"
           ? (scholarPeriodData?.ScholarYearId ?? scholarYears[0].ScholarYearId)
