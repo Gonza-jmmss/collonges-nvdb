@@ -8,22 +8,31 @@ export default async function CoursesPage({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
+
+  const pageIndex = searchParams?.pageIndex
+    ? parseInt(searchParams.pageIndex as string)
+    : 0;
+
+  const pageSize = searchParams?.pageSize
+    ? parseInt(searchParams.pageSize as string)
+    : 10;
+
   // const isEnabled = searchParams?.isEnabled === "false" ? false : true;
   // const period =
   //   typeof searchParams?.period === "string"
   //     ? parseInt(searchParams?.period)
   //     : 4;
-  const isEnabled =
+  const isEnabledParam =
     searchParams?.isEnabled === undefined
       ? true
       : searchParams.isEnabled === "true";
-  const period = searchParams?.period
-    ? parseInt(searchParams.period as string)
+  const periodNumberParam = searchParams?.periodNumber
+    ? parseInt(searchParams.periodNumber as string)
     : 4;
 
   const courses = await getAllCoursesQuery({
-    IsEnabled: isEnabled,
-    Period: period,
+    IsEnabled: isEnabledParam,
+    Period: periodNumberParam,
   });
 
   return (
@@ -32,7 +41,14 @@ export default async function CoursesPage({
         <div className="flex justify-between space-x-3">
           <span className="text-xl font-semibold">{t.courses.title}</span>
         </div>
-        <CoursesTable coursesData={courses} urlParams={searchParams} />
+        <CoursesTable
+          coursesData={courses}
+          isEnabledSelected={isEnabledParam}
+          periodNumberSelected={periodNumberParam}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          urlParams={searchParams}
+        />
         {/* <pre>{JSON.stringify(students, null, 2)}</pre> */}
       </div>
     </main>

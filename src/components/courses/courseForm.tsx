@@ -19,10 +19,16 @@ type CoursFormData = z.infer<typeof CourseSchema>;
 
 export default function CourseForm({
   courseData,
+  pageIndexParam,
+  pageSizeParam,
   action,
+  urlParams,
 }: {
   courseData: CourseViewModel | null;
-  action: string;
+  pageIndexParam: number;
+  pageSizeParam: number;
+  action: string | undefined;
+  urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const { toast } = useToast();
@@ -32,6 +38,10 @@ export default function CourseForm({
 
   const coursePeriods = [{ CoursePeriodId: 1, Name: "Quarter" }];
   const CourseTypes = [{ CourseTypeId: 1, Name: "IFLE" }];
+
+  const periodNumberParam = parseInt(urlParams?.periodNumber as string) || 0;
+  const isEnabledParam =
+    urlParams?.isEnabled === undefined ? true : urlParams.isEnabled === "true";
 
   const form = useForm<CoursFormData>({
     defaultValues: {
@@ -66,7 +76,9 @@ export default function CourseForm({
         description: `${t.courses.title} : ${response.Name}`,
       });
 
-      router.push("/courses/courses");
+      router.push(
+        `/courses/courses?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&isEnabled=${isEnabledParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -91,7 +103,9 @@ export default function CourseForm({
         description: `${t.courses.title} : ${response.Name}`,
       });
 
-      router.push("/courses/courses");
+      router.push(
+        `/courses/courses?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&isEnabled=${isEnabledParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -292,7 +306,11 @@ export default function CourseForm({
               type="button"
               variant={"secondary"}
               className="w-[30%]"
-              onClick={() => router.back()}
+              onClick={() =>
+                router.push(
+                  `/courses/courses?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&isEnabled=${isEnabledParam}`,
+                )
+              }
             >
               {t.shared.cancel}
             </Button>
@@ -310,7 +328,11 @@ export default function CourseForm({
             <Button
               variant={"secondary"}
               className="w-[30%]"
-              onClick={() => router.back()}
+              onClick={() =>
+                router.push(
+                  `/courses/courses?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&isEnabled=${isEnabledParam}`,
+                )
+              }
             >
               {t.shared.cancel}
             </Button>

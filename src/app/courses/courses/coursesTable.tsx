@@ -16,30 +16,38 @@ import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { CoursesViewModel } from "@/repositories/courses/coursesViewModel";
 import { PeriodEnum } from "@/enum/periodEnum";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import frFR from "@/lang/fr-FR";
 
 export default function CoursesTable({
   coursesData,
+  isEnabledSelected,
+  periodNumberSelected,
+  pageIndex,
+  pageSize,
   urlParams,
 }: {
   coursesData: CoursesViewModel[];
+  isEnabledSelected: boolean;
+  periodNumberSelected: number;
+  pageIndex: number;
+  pageSize: number;
   urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const router = useRouter();
   const { toast } = useToast();
   const updateQuery = useUpdateQuery();
+  const searchParams = useSearchParams();
+
+  const getPageIndexParam = searchParams.get("pageIndex");
+  const getPageSizeParam = searchParams.get("pageSize");
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedModuleToDisable, setSelectedModuleToDisable] = useState(0);
 
   const [showEnabledFilter, setShowEnabledFilter] = useState(
     urlParams?.isEnabled === "false" ? false : true || true,
-  );
-
-  const [periodFilter, setPeriodFilter] = useState(
-    typeof urlParams?.period === "string" ? parseInt(urlParams?.period) : 4,
   );
 
   const columns = useMemo<ColumnDef<CoursesViewModel, any>[]>(
@@ -107,7 +115,7 @@ export default function CoursesTable({
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() =>
                 router.push(
-                  `/courses/courses/${row.row.original.CourseId}?action="edit"`,
+                  `/courses/courses/${row.row.original.CourseId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&isEnabled=${isEnabledSelected}`,
                 )
               }
             />
@@ -130,7 +138,12 @@ export default function CoursesTable({
         ),
       },
     ],
-    [],
+    [
+      getPageIndexParam,
+      getPageSizeParam,
+      isEnabledSelected,
+      periodNumberSelected,
+    ],
   );
 
   const handleUrlParameterChange = (key: string, value: string) => {
@@ -184,11 +197,10 @@ export default function CoursesTable({
             valueAttribute="key"
             placeholder={t.courses.form.periodNumber}
             itemSelected={enumToArray(PeriodEnum).find(
-              (x) => x.key === periodFilter,
+              (x) => x.key === periodNumberSelected,
             )}
             setItemSelected={(x: { key: number }) => {
-              setPeriodFilter(x && x.key);
-              handleUrlParameterChange("period", `${x.key}`);
+              handleUrlParameterChange("periodNumber", `${x.key}`);
             }}
           />
         </div>
@@ -207,7 +219,11 @@ export default function CoursesTable({
         </div>
         <Button
           variant="outlineColored"
-          onClick={() => router.push(`/courses/courses/create?action="create"`)}
+          onClick={() =>
+            router.push(
+              `/courses/courses/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&isEnabled=${isEnabledSelected}`,
+            )
+          }
         >
           <span>{t.courses.create}</span>
         </Button>
@@ -216,8 +232,12 @@ export default function CoursesTable({
         columns={columns}
         data={coursesData}
         className=""
+        pageIndexParam={pageIndex}
+        pageSizeParam={pageSize}
         onRowClick={(row) =>
-          router.push(`/courses/courses/${row.CourseId}?action="view"`)
+          router.push(
+            `/courses/courses/${row.CourseId}?action="view"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&isEnabled=${isEnabledSelected}`,
+          )
         }
       />
       <DeleteModal
