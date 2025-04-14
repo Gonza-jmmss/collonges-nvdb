@@ -8,7 +8,6 @@ import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import DeleteModal from "@/components/common/deleteModal";
 import ToggleButton from "@/components/common/toggleButton";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
@@ -19,9 +18,11 @@ import frFR from "@/lang/fr-FR";
 
 export default function GradeCoefficientsTable({
   gradeCoefficients,
+  isEnabledSelected,
   urlParams,
 }: {
   gradeCoefficients: GradeCoefficientsViewModel[];
+  isEnabledSelected: boolean;
   urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
@@ -40,9 +41,9 @@ export default function GradeCoefficientsTable({
     setSelectedGradeCoefficientToDelete(null);
   };
 
-  const [showEnabledFilter, setShowEnabledFilter] = useState(
-    urlParams?.isEnabled === "false" ? false : true || true,
-  );
+  // const [showEnabledFilter, setShowEnabledFilter] = useState(
+  //   urlParams?.isEnabled === "false" ? false : true || true,
+  // );
 
   const gradeCoefficintToDeleteCondition =
     selectedGradeCoefficientToDelete?.IsEnabled;
@@ -60,6 +61,7 @@ export default function GradeCoefficientsTable({
         id: "CoefficientNumber",
         header: () => <Header text={t.gradeCoefficients.columns.coefficient} />,
         filterFn: "equalsString",
+        cell: (x) => <span>{`${x.getValue()} %`}</span>,
       },
       {
         accessorKey: "IsEnabled",
@@ -80,9 +82,7 @@ export default function GradeCoefficientsTable({
             onClick={(event) => event.stopPropagation()}
           >
             <Icon
-              name={
-                isValidIconName("MdEdit") ? "MdEdit" : "MdOutlineNotInterested"
-              }
+              name="MdEdit"
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() =>
                 router.push(
@@ -184,10 +184,10 @@ export default function GradeCoefficientsTable({
               { key: false, value: t.shared.disables },
             ]}
             setItemSelected={(x: { key: boolean; value: string }) => {
-              setShowEnabledFilter(x.key);
+              // setShowEnabledFilter(x.key);
               handleUrlParameterChange("isEnabled", `${x.key}`);
             }}
-            itemSelected={showEnabledFilter}
+            itemSelected={isEnabledSelected}
           />
         </div>
         <Button
@@ -209,17 +209,6 @@ export default function GradeCoefficientsTable({
           )
         }
       />
-      {/* <DeleteModal
-        openModal={openModal}
-        closeModal={closeModal}
-        titleText={t.gradeCoefficients.deleteModal.deleteTitle}
-        descriptionText={t.gradeCoefficients.deleteModal.deleteDescription}
-        deletefunction={() =>
-          deleteGradeCoefficient(
-            selectedGradeCoefficientToDelete?.GradeCoefficientId || 0,
-          )
-        }
-      /> */}
       <DeleteModal
         openModal={openModal}
         closeModal={closeModal}
