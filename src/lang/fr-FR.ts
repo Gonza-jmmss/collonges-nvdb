@@ -666,6 +666,7 @@ export default {
     },
     form: {
       course: "Course",
+      level: "Niveau scolaire",
       gradeCoefficientId: "Type d'activité",
       description: "Description",
       students: "Étudiants",

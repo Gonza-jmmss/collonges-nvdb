@@ -20,10 +20,13 @@ export default async function Page({
   const t = frFR;
   const session = await auth();
 
+  const pageIndexParam = parseInt(searchParams.pageIndex as string);
+  const pageSizeParam = parseInt(searchParams.pageSize as string);
+
   let studentCourseGrade;
 
   const action = (searchParams.action as string).replace(/"/g, "");
-  const periodIdParam = parseInt(searchParams.periodId as string);
+  const periodNumberParam = parseInt(searchParams.periodNumber as string);
   // const levelIdParam = parseInt(searchParams.levelId as string) || null;
   const levelIdParam = parseInt(searchParams.levelId as string) || null;
 
@@ -45,7 +48,7 @@ export default async function Page({
 
   const courses = await getCoursesByTeacherQuery({
     IsEnabled: true,
-    Period: periodIdParam,
+    Period: periodNumberParam,
     RoreName: session ? session.user.userData.Roles.Name : "",
     UserId: session ? parseInt(session.user.id) : 0,
     LevelId: levelIdParam,
@@ -70,7 +73,7 @@ export default async function Page({
     <div className="relative mt-5 flex justify-center">
       <Button asChild className={`absolute -left-16 top-3`} variant="ghost">
         <Link
-          href={`/courses/studentCourseGrades?periodId=${periodIdParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}&tab=${tabParam}`}
+          href={`/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}&tab=${tabParam}`}
         >
           <Icon name={"MdArrowBack"} className="text-xl" />
         </Link>
@@ -87,8 +90,10 @@ export default async function Page({
             levels={levels}
             studentByCouse={studentByCouse}
             gradeCoefficients={gradeCoefficients}
-            action={action}
             tearcherId={session ? parseInt(session.user.id) : 0}
+            pageIndexParam={pageIndexParam}
+            pageSizeParam={pageSizeParam}
+            action={action}
             urlParams={searchParams}
           />
         </div>

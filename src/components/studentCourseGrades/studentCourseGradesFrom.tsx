@@ -31,6 +31,8 @@ export default function StudentCourseGradesForm({
   studentByCouse,
   gradeCoefficients,
   tearcherId,
+  pageIndexParam,
+  pageSizeParam,
   action,
   urlParams,
 }: {
@@ -40,6 +42,8 @@ export default function StudentCourseGradesForm({
   gradeCoefficients: GradeCoefficientsViewModel[];
   studentByCouse: StudentsByCourseIdViewModel[];
   tearcherId: number;
+  pageIndexParam: number;
+  pageSizeParam: number;
   action: string | undefined;
   urlParams?: { [key: string]: string | string[] | undefined };
 }) {
@@ -53,7 +57,7 @@ export default function StudentCourseGradesForm({
   const [confirmedStudentCourseGradeData, setConfirmedStudentCourseGradeData] =
     useState<StudentCourseGradeFormData | null>(null);
 
-  const periodIdParam = parseInt(urlParams?.periodId as string);
+  const periodNumberParam = parseInt(urlParams?.periodNumber as string);
   const levelIdParam =
     urlParams?.levelId !== null ? parseInt(urlParams?.levelId as string) : null;
   const courseIdParam = parseInt(urlParams?.courseId as string);
@@ -116,7 +120,7 @@ export default function StudentCourseGradesForm({
       });
 
       router.push(
-        `/courses/studentCourseGrades?periodId=${periodIdParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}&tab=${tabParam}`,
+        `/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}&tab=${tabParam}`,
       );
       router.refresh();
     } catch (error) {
@@ -160,7 +164,7 @@ export default function StudentCourseGradesForm({
       });
 
       router.push(
-        `/courses/studentCourseGrades?periodId=${periodIdParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}&tab=${tabParam}`,
+        `/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}&tab=${tabParam}`,
       );
       router.refresh();
     } catch (error) {
@@ -198,15 +202,25 @@ export default function StudentCourseGradesForm({
     updateQuery(Object.fromEntries(currentParams));
   };
 
+  const [periodNumberRender, setPeriodNumberRender] = useState(0);
   useEffect(() => {
-    if (courses.length > 0) {
-      handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
+    if (periodNumberRender > 0) {
+      if (courses.length > 0) {
+        handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
+      }
+    } else {
+      setPeriodNumberRender(1);
     }
-  }, [urlParams?.periodId]);
+  }, [urlParams?.periodNumber]);
 
+  const [levelIdRender, setLevelIdRender] = useState(0);
   useEffect(() => {
-    if (courses.length > 0) {
-      handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
+    if (levelIdRender > 0) {
+      if (courses.length > 0) {
+        handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
+      }
+    } else {
+      setLevelIdRender(1);
     }
   }, [urlParams?.levelId]);
 
@@ -234,7 +248,6 @@ export default function StudentCourseGradesForm({
         Grade: NaN.toLocaleString(),
       }));
 
-    console.log("mappedStuents", mappedStuents);
     // Set the StudentCourses field value
     form.setFieldValue(
       "StudentCourses",
@@ -266,10 +279,10 @@ export default function StudentCourseGradesForm({
               valueAttribute="key"
               placeholder={t.courses.form.periodNumber}
               itemSelected={enumToArray(PeriodEnum).find(
-                (x) => x.key === periodIdParam,
+                (x) => x.key === periodNumberParam,
               )}
               setItemSelected={(x: { key: number }) => {
-                handleUrlParameterChange("periodId", `${x.key}`);
+                handleUrlParameterChange("periodNumber", `${x.key}`);
               }}
               disabled={action !== "create"}
               notClearable
@@ -486,7 +499,7 @@ export default function StudentCourseGradesForm({
                 className="w-[30%]"
                 onClick={() =>
                   router.push(
-                    `/courses/studentCourseGrades?periodId=${periodIdParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}&tab=${tabParam}`,
+                    `/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}&tab=${tabParam}`,
                   )
                 }
               >

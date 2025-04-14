@@ -5,6 +5,9 @@ import getStudentCourseGradeByActivityQuery from "@/repositories/studentCourseGr
 import getCoursesByTeacherQuery from "@/repositories/courses/queries/getCoursesByTeacherQuery";
 import getCurrentLevelsQuery from "@/repositories/levels/queries/getCurrentLevelsQuery";
 import { TabsComponent } from "@/components/common/tabs";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import Icon from "@/components/common/icon";
 import { auth } from "@/utils/auth";
 import frFR from "@/lang/fr-FR";
 
@@ -16,8 +19,15 @@ export default async function StudentCourseGradesPage({
   const t = frFR;
   const session = await auth();
 
-  const periodIdSelected = searchParams?.periodId
-    ? parseInt(searchParams.periodId as string)
+  const pageIndex = searchParams?.pageIndex
+    ? parseInt(searchParams.pageIndex as string)
+    : 0;
+  const pageSize = searchParams?.pageSize
+    ? parseInt(searchParams.pageSize as string)
+    : 10;
+
+  const periodNumberSelected = searchParams?.periodNumber
+    ? parseInt(searchParams.periodNumber as string)
     : 4;
 
   const levelIdSelected = searchParams?.levelId
@@ -28,7 +38,7 @@ export default async function StudentCourseGradesPage({
 
   const courses = await getCoursesByTeacherQuery({
     IsEnabled: true,
-    Period: periodIdSelected,
+    Period: periodNumberSelected,
     RoreName: session ? session.user.userData.Roles.Name : "",
     UserId: session ? parseInt(session.user.id) : 0,
     LevelId: levelIdSelected,
@@ -60,12 +70,14 @@ export default async function StudentCourseGradesPage({
       body: (
         <StudentCoruseGradesByActivityTable
           studentCourseGradesByActivity={studentCourseGradesByActivity}
-          periodIdSelected={periodIdSelected}
+          periodNumberSelected={periodNumberSelected}
           courses={courses}
           courseIdSelected={courseIdSelected}
           levels={levels}
           levelIdSelected={levelIdSelected}
           tabValue="StudentCoruseGradesByActivityTable"
+          pageIndex={pageIndex}
+          pageSize={pageSize}
           urlParams={searchParams}
         />
       ),
@@ -78,13 +90,15 @@ export default async function StudentCourseGradesPage({
           studentCourseGradesByStudentCourse={
             studentCourseGradesByStudentCourse
           }
-          periodIdSelected={periodIdSelected}
+          periodNumberSelected={periodNumberSelected}
           courses={courses}
           courseIdSelected={courseIdSelected}
           levels={levels}
           levelIdSelected={levelIdSelected}
-          urlParams={searchParams}
           tabValue="StudentCoruseGradesByStudentTable"
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          urlParams={searchParams}
         />
       ),
     },
@@ -95,22 +109,25 @@ export default async function StudentCourseGradesPage({
     : tabs[0].id;
 
   return (
-    <main>
-      <div className="mt-3 w-[80vw]">
-        <div className="flex justify-between space-x-3">
-          <span className="text-xl font-semibold">
-            {t.studentCourseGrades.title}
-          </span>
-        </div>
-        <TabsComponent
-          tabs={tabs}
-          className="mt-5 w-full"
-          tabListClassName="w-[30rem]"
-          defaultValue={tabSelected}
-        />
-        {/* <pre>{JSON.stringify(studentCourseGradesByActivity, null, 2)}</pre> */}
-        {/* <pre>{JSON.stringify(studentCourseGradesByStudentCourse, null, 2)}</pre> */}
+    <main className="relative mt-3 w-[80vw]">
+      <Button asChild className={`absolute -left-16 top-0`} variant="ghost">
+        <Link href={`/courses`}>
+          <Icon name={"MdArrowBack"} className="text-xl" />
+        </Link>
+      </Button>
+      <div className="flex justify-between space-x-3">
+        <span className="text-xl font-semibold">
+          {t.studentCourseGrades.title}
+        </span>
       </div>
+      <TabsComponent
+        tabs={tabs}
+        className="mt-5 w-full"
+        tabListClassName="w-[30rem]"
+        defaultValue={tabSelected}
+      />
+      {/* <pre>{JSON.stringify(studentCourseGradesByActivity, null, 2)}</pre> */}
+      {/* <pre>{JSON.stringify(studentCourseGradesByStudentCourse, null, 2)}</pre> */}
     </main>
   );
 }

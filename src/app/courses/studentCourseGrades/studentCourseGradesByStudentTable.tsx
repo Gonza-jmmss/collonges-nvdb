@@ -21,32 +21,40 @@ import Modal from "@/components/common/modal";
 import { PeriodEnum } from "@/enum/periodEnum";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import frFR from "@/lang/fr-FR";
 
 export default function StudentCoruseGradesByStudentTable({
   studentCourseGradesByStudentCourse,
-  periodIdSelected,
+  periodNumberSelected,
   courses,
   courseIdSelected,
   levels,
   levelIdSelected,
   tabValue,
+  pageIndex,
+  pageSize,
   urlParams,
 }: {
   studentCourseGradesByStudentCourse: StudentCourseGradesByStudentCourseViewModel[];
-  periodIdSelected: number;
+  periodNumberSelected: number;
   courses: CourseViewModel[];
   courseIdSelected: number;
   levels: CurentLevelsViewModel[];
   levelIdSelected: number | null;
   tabValue: string;
+  pageIndex: number;
+  pageSize: number;
   urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const router = useRouter();
   const { toast } = useToast();
   const updateQuery = useUpdateQuery();
+  const searchParams = useSearchParams();
+
+  const getPageIndexParam = searchParams.get("pageIndex");
+  const getPageSizeParam = searchParams.get("pageSize");
 
   const [openModal, setOpenModal] = useState(false);
   const [
@@ -230,7 +238,7 @@ export default function StudentCoruseGradesByStudentTable({
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() => {
                 router.push(
-                  `/courses/studentCourseGrades/edit?action="edit"&periodId=${periodIdSelected}&levelId=${levelIdSelected}&courseId=${row.row.original.CourseId}&description=${row.row.original.Description}&createdAt=${encodeURIComponent(row.row.original.CreatedAt.toUTCString())}&tab=${tabValue}`,
+                  `/courses/studentCourseGrades/edit?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&levelId=${levelIdSelected}&courseId=${row.row.original.CourseId}&description=${row.row.original.Description}&createdAt=${encodeURIComponent(row.row.original.CreatedAt.toUTCString())}&tab=${tabValue}`,
                 );
               }}
             />
@@ -324,10 +332,10 @@ export default function StudentCoruseGradesByStudentTable({
               valueAttribute="key"
               placeholder={t.courses.form.periodNumber}
               itemSelected={enumToArray(PeriodEnum).find(
-                (x) => x.key === periodIdSelected,
+                (x) => x.key === periodNumberSelected,
               )}
               setItemSelected={(x: { key: number }) => {
-                handleUrlParameterChange("periodId", `${x.key}`);
+                handleUrlParameterChange("periodNumber", `${x.key}`);
                 handleUrlParameterChange("courseId", `${0}`);
               }}
               notClearable
@@ -366,7 +374,7 @@ export default function StudentCoruseGradesByStudentTable({
           variant="outlineColored"
           onClick={() =>
             router.push(
-              `/courses/studentCourseGrades/create?action="create"&periodId=${periodIdSelected}&levelId=${levelIdSelected}&courseId=${courseIdSelected}&tab=${tabValue}`,
+              `/courses/studentCourseGrades/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&levelId=${levelIdSelected}&courseId=${courseIdSelected}&tab=${tabValue}`,
             )
           }
         >
@@ -377,6 +385,8 @@ export default function StudentCoruseGradesByStudentTable({
         columns={columns}
         data={studentCourseGradesByStudentCourse}
         className=""
+        pageIndexParam={pageIndex}
+        pageSizeParam={pageSize}
         expandable
         expandedContent={(row) => (
           <Table
