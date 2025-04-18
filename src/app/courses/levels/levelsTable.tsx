@@ -11,27 +11,36 @@ import DeleteModal from "@/components/common/deleteModal";
 import { Button } from "@/components/ui/button";
 import ToggleButton from "@/components/common/toggleButton";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import { useToast } from "@/hooks/use-toast";
 import {
   LevelsTableViewModel,
   LevelCoursesExtendedViewModel,
 } from "@/repositories/levels/levelsViewModel";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import frFR from "@/lang/fr-FR";
 
 export default function LevelsTable({
   levels,
+  isEnabledSelected,
+  pageIndex,
+  pageSize,
   urlParams,
 }: {
   levels: LevelsTableViewModel[];
+  isEnabledSelected: boolean;
+  pageIndex: number;
+  pageSize: number;
   urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const router = useRouter();
   const { toast } = useToast();
   const updateQuery = useUpdateQuery();
+  const searchParams = useSearchParams();
+
+  const getPageIndexParam = searchParams.get("pageIndex");
+  const getPageSizeParam = searchParams.get("pageSize");
 
   const [openModal, setOpenModal] = useState(false);
   const [openDeleteModalValidation, setOpenDeleteModalValidation] =
@@ -69,33 +78,13 @@ export default function LevelsTable({
             {row.original.LevelCourses.length > 0 && row.getCanExpand() ? (
               <div onClick={row.getToggleExpandedHandler()}>
                 {row.getIsExpanded() ? (
-                  <Icon
-                    name={
-                      isValidIconName("MdArrowDownward")
-                        ? "MdArrowDownward"
-                        : "MdOutlineNotInterested"
-                    }
-                    className="cursor-pointer"
-                  />
+                  <Icon name="MdArrowDownward" className="cursor-pointer" />
                 ) : (
-                  <Icon
-                    name={
-                      isValidIconName("MdArrowForward")
-                        ? "MdArrowForward"
-                        : "MdOutlineNotInterested"
-                    }
-                    className="cursor-pointer"
-                  />
+                  <Icon name="MdArrowForward" className="cursor-pointer" />
                 )}
               </div>
             ) : (
-              <Icon
-                name={
-                  isValidIconName("MdHorizontalRule")
-                    ? "MdHorizontalRule"
-                    : "MdOutlineNotInterested"
-                }
-              />
+              <Icon name="MdHorizontalRule" />
             )}
           </div>
         ),
@@ -133,13 +122,11 @@ export default function LevelsTable({
             onClick={(event) => event.stopPropagation()}
           >
             <Icon
-              name={
-                isValidIconName("MdEdit") ? "MdEdit" : "MdOutlineNotInterested"
-              }
+              name="MdEdit"
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() =>
                 router.push(
-                  `/courses/levels/${row.row.original?.LevelId}?action="edit"`,
+                  `/courses/levels/${row.row.original?.LevelId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}`,
                 )
               }
             />
@@ -174,7 +161,7 @@ export default function LevelsTable({
         ),
       },
     ],
-    [],
+    [getPageIndexParam, getPageSizeParam, isEnabledSelected],
   );
 
   const columnsExtended = useMemo<
@@ -275,7 +262,11 @@ export default function LevelsTable({
         </div>
         <Button
           variant="outlineColored"
-          onClick={() => router.push(`/courses/levels/create?action="create"`)}
+          onClick={() =>
+            router.push(
+              `/courses/levels/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}`,
+            )
+          }
         >
           <span>{t.levels.create}</span>
         </Button>
@@ -284,6 +275,8 @@ export default function LevelsTable({
         columns={columns}
         data={levels}
         className=""
+        pageIndexParam={pageIndex}
+        pageSizeParam={pageSize}
         expandable
         expandedContent={(row) => (
           <Table

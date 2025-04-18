@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
 import ToggleButton from "@/components/common/toggleButton";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import enumToArray from "@/functions/enumToArray";
 import { PeriodEnum } from "@/enum/periodEnum";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
@@ -27,12 +26,16 @@ export default function LevelForm({
   levelData,
   courses,
   allCourses,
+  pageIndexParam,
+  pageSizeParam,
   action,
   urlParams,
 }: {
   levelData: LevelsViewModel;
   courses: CourseViewModel[];
   allCourses: CourseViewModel[];
+  pageIndexParam: number;
+  pageSizeParam: number;
   action: string | undefined;
   urlParams?: { [key: string]: string | string[] | undefined };
 }) {
@@ -42,6 +45,9 @@ export default function LevelForm({
   const updateQuery = useUpdateQuery();
 
   const [isPending, setIsPending] = useState(false);
+
+  const isEnabledParam =
+    urlParams?.isEnabled === undefined ? true : urlParams.isEnabled === "true";
 
   const [periodSelected, setPeriodSelected] = useState(
     typeof urlParams?.period === "string" ? parseInt(urlParams?.period) : 4,
@@ -78,7 +84,9 @@ export default function LevelForm({
         description: `${t.levels.title} : ${response?.level.Name}`,
       });
 
-      router.push("/courses/levels");
+      router.push(
+        `/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -103,7 +111,9 @@ export default function LevelForm({
         description: `${t.levels.title} : ${formData?.Name}`,
       });
 
-      router.push("/courses/levels");
+      router.push(
+        `/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -123,9 +133,6 @@ export default function LevelForm({
     // Update URL without replacing current parameters
     const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
 
-    // Use router.push or history.pushState depending on your navigation setup
-    // router.push(newUrl);
-    // or
     window.history.pushState({}, "", newUrl);
 
     // If you need to update some state as well
@@ -264,11 +271,7 @@ export default function LevelForm({
                         } `}
                       </div>
                       <Icon
-                        name={
-                          isValidIconName("MdClose")
-                            ? "MdClose"
-                            : "MdOutlineNotInterested"
-                        }
+                        name="MdClose"
                         className="col-span-1 cursor-pointer place-self-center text-xl hover:text-primary"
                         onClick={() => field.removeValue(index)}
                       />
@@ -288,7 +291,11 @@ export default function LevelForm({
               type="button"
               variant={"secondary"}
               className="w-[30%]"
-              onClick={() => router.push("/courses/levels")}
+              onClick={() =>
+                router.push(
+                  `/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+                )
+              }
             >
               {t.shared.cancel}
             </Button>
@@ -306,7 +313,11 @@ export default function LevelForm({
             <Button
               variant={"secondary"}
               className="w-[30%]"
-              onClick={() => router.back()}
+              onClick={() =>
+                router.push(
+                  `/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+                )
+              }
             >
               {t.shared.cancel}
             </Button>
