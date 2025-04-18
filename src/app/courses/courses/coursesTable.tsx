@@ -7,7 +7,6 @@ import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import DeleteModal from "@/components/common/deleteModal";
 import ToggleButton from "@/components/common/toggleButton";
 import Combobox from "@/components/common/combobox";
@@ -23,6 +22,7 @@ export default function CoursesTable({
   coursesData,
   isEnabledSelected,
   periodNumberSelected,
+  userRoleName,
   pageIndex,
   pageSize,
   urlParams,
@@ -30,6 +30,7 @@ export default function CoursesTable({
   coursesData: CoursesViewModel[];
   isEnabledSelected: boolean;
   periodNumberSelected: number;
+  userRoleName: string | undefined;
   pageIndex: number;
   pageSize: number;
   urlParams?: { [key: string]: string | string[] | undefined };
@@ -107,33 +108,36 @@ export default function CoursesTable({
             className="flex space-x-1"
             onClick={(event) => event.stopPropagation()}
           >
-            <Icon
-              name={
-                isValidIconName("MdEdit") ? "MdEdit" : "MdOutlineNotInterested"
-              }
-              // className="cursor-pointer text-xl"
-              className="cursor-pointer text-xl hover:text-primary"
-              onClick={() =>
-                router.push(
-                  `/courses/courses/${row.row.original.CourseId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&isEnabled=${isEnabledSelected}`,
-                )
-              }
-            />
-            <div
-              onClick={() => {
-                setOpenModal(true);
-                setSelectedModuleToDisable(row.row.original.CourseId);
-              }}
-            >
-              <Icon
-                name={
-                  isValidIconName("MdDelete")
-                    ? "MdDelete"
-                    : "MdOutlineNotInterested"
-                }
-                className="cursor-pointer text-xl hover:text-primary"
-              />
-            </div>
+            {userRoleName !== "Professeur" && (
+              <>
+                <Icon
+                  name="MdEdit"
+                  // className="cursor-pointer text-xl"
+                  className="cursor-pointer text-xl hover:text-primary"
+                  onClick={() =>
+                    router.push(
+                      `/courses/courses/${row.row.original.CourseId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&isEnabled=${isEnabledSelected}`,
+                    )
+                  }
+                />
+                {row.row.original.IsEnabled ? (
+                  <Icon
+                    name={`${
+                      row.row.original.IsEnabled
+                        ? "MdNotInterested"
+                        : "MdDelete"
+                    }`}
+                    className="cursor-pointer text-xl hover:text-primary"
+                    onClick={() => {
+                      setOpenModal(true);
+                      setSelectedModuleToDisable(row.row.original.CourseId);
+                    }}
+                  />
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
           </div>
         ),
       },
@@ -217,16 +221,18 @@ export default function CoursesTable({
             itemSelected={showEnabledFilter}
           />
         </div>
-        <Button
-          variant="outlineColored"
-          onClick={() =>
-            router.push(
-              `/courses/courses/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&isEnabled=${isEnabledSelected}`,
-            )
-          }
-        >
-          <span>{t.courses.create}</span>
-        </Button>
+        {userRoleName !== "Professeur" && (
+          <Button
+            variant="outlineColored"
+            onClick={() =>
+              router.push(
+                `/courses/courses/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&isEnabled=${isEnabledSelected}`,
+              )
+            }
+          >
+            <span>{t.courses.create}</span>
+          </Button>
+        )}
       </div>
       <Table
         columns={columns}
