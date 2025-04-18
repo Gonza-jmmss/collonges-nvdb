@@ -10,7 +10,6 @@ import DateInput from "@/components/common/dateInput";
 import Combobox from "@/components/common/combobox";
 import ToggleButton from "@/components/common/toggleButton";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import { Button } from "@/components/ui/button";
 import { CountryViewModel } from "@/repositories/countries/countriesViewModel";
 import { CollegeViewModel } from "@/repositories/colleges/collegesViewModel";
@@ -29,26 +28,35 @@ type StudentFormData = z.infer<typeof StudentPersonSchema>;
 
 export default function StudentForm({
   studentData,
-  action,
   countries,
   colleges,
   regimes,
   contactTypes,
   nonStudents,
+  pageIndexParam,
+  pageSizeParam,
+  action,
+  urlParams,
 }: {
   studentData: StudentFormData | null;
-  action: string;
   countries: CountryViewModel[];
   colleges: CollegeViewModel[];
   regimes: RegimeViewModel[];
   contactTypes: ContactTypeViewModel[];
   nonStudents: NonStudentsViewModel[];
+  pageIndexParam: number;
+  pageSizeParam: number;
+  action: string | undefined;
+  urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const { toast } = useToast();
   const router = useRouter();
-  const [isPending, setIsPending] = useState(false);
 
+  const isEnabledParam =
+    urlParams?.isEnabled === undefined ? true : urlParams.isEnabled === "true";
+
+  const [isPending, setIsPending] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
 
   const imageInputRef = useRef<HTMLInputElement | null>(null);
@@ -169,7 +177,9 @@ export default function StudentForm({
         // description: `${t.students.student} : ${response}`,
       });
 
-      router.push("/students");
+      router.push(
+        `/students/students?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -211,7 +221,9 @@ export default function StudentForm({
         }
       }
 
-      router.push("/students");
+      router.push(
+        `/students/students?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -282,14 +294,7 @@ export default function StudentForm({
                       className="flex space-x-2"
                       onClick={() => imageInputRef.current?.click()}
                     >
-                      <Icon
-                        name={
-                          isValidIconName("MdCloudUpload")
-                            ? "MdCloudUpload"
-                            : "MdOutlineNotInterested"
-                        }
-                        className="text-3xl"
-                      />
+                      <Icon name="MdCloudUpload" className="text-3xl" />
                       <span>{t.students.form.personImage}</span>
                     </Button>
                   </div>
@@ -790,14 +795,7 @@ export default function StudentForm({
                     size={"icon"}
                     onClick={() => field.removeValue(index)}
                   >
-                    <Icon
-                      name={
-                        isValidIconName("MdClose")
-                          ? "MdClose"
-                          : "MdOutlineNotInterested"
-                      }
-                      className="text-xl"
-                    />
+                    <Icon name="MdClose" className="text-xl" />
                   </Button>
                 </div>
                 {contact.PersonId === null && contact.LoadType === null && (
@@ -1174,7 +1172,11 @@ export default function StudentForm({
             type="button"
             variant={"secondary"}
             className="w-[40%]"
-            onClick={() => router.back()}
+            onClick={() =>
+              router.push(
+                `/students/students?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+              )
+            }
           >
             {t.shared.cancel}
           </Button>
@@ -1193,7 +1195,11 @@ export default function StudentForm({
             // type="button"
             variant={"secondary"}
             className="w-[40%]"
-            onClick={() => router.back()}
+            onClick={() =>
+              router.push(
+                `/students/students?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+              )
+            }
           >
             {t.shared.cancel}
           </Button>

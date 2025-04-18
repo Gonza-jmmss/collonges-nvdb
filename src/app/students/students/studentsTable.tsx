@@ -9,24 +9,35 @@ import ToggleButton from "@/components/common/toggleButton";
 import DeleteModal from "@/components/common/deleteModal";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import { useToast } from "@/hooks/use-toast";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { StudentsViewModel } from "@/repositories/students/studentsViewModel";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import frFR from "@/lang/fr-FR";
 
 export default function StudentsTable({
   studentsData,
+  isEnabledSelected,
+  userRoleName,
+  pageIndex,
+  pageSize,
   urlParams,
 }: {
   studentsData: StudentsViewModel[];
+  isEnabledSelected: boolean;
+  userRoleName: string | undefined;
+  pageIndex: number;
+  pageSize: number;
   urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const router = useRouter();
   const { toast } = useToast();
   const updateQuery = useUpdateQuery();
+  const searchParams = useSearchParams();
+
+  const getPageIndexParam = searchParams.get("pageIndex");
+  const getPageSizeParam = searchParams.get("pageSize");
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedStudentToDelete, setSelectedStudentToDelete] = useState(0);
@@ -88,30 +99,28 @@ export default function StudentsTable({
             className="flex space-x-1"
             onClick={(event) => event.stopPropagation()}
           >
-            <Icon
-              name={
-                isValidIconName("MdEdit") ? "MdEdit" : "MdOutlineNotInterested"
-              }
-              className="cursor-pointer text-xl hover:text-primary"
-              onClick={() =>
-                router.push(
-                  `/students/${row.row.original.StudentId}?action="edit"`,
-                )
-              }
-            />
-            {row.row.original.IsEnabled === true && (
-              <Icon
-                name={
-                  isValidIconName("MdDelete")
-                    ? "MdDelete"
-                    : "MdOutlineNotInterested"
-                }
-                className="cursor-pointer text-xl hover:text-primary"
-                onClick={() => {
-                  setOpenModal(true);
-                  setSelectedStudentToDelete(row.row.original.StudentId);
-                }}
-              />
+            {userRoleName !== "Professeur" && (
+              <>
+                <Icon
+                  name="MdEdit"
+                  className="cursor-pointer text-xl hover:text-primary"
+                  onClick={() =>
+                    router.push(
+                      `/students/students/${row.row.original.StudentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}`,
+                    )
+                  }
+                />
+                {row.row.original.IsEnabled === true && (
+                  <Icon
+                    name="MdDelete"
+                    className="cursor-pointer text-xl hover:text-primary"
+                    onClick={() => {
+                      setOpenModal(true);
+                      setSelectedStudentToDelete(row.row.original.StudentId);
+                    }}
+                  />
+                )}
+              </>
             )}
           </div>
         ),
@@ -150,9 +159,6 @@ export default function StudentsTable({
     // Update URL without replacing current parameters
     const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
 
-    // Use router.push or history.pushState depending on your navigation setup
-    // router.push(newUrl);
-    // or
     window.history.pushState({}, "", newUrl);
 
     // If you need to update some state as well
@@ -175,19 +181,29 @@ export default function StudentsTable({
             itemSelected={showEnabledFilter}
           />
         </div>
-        <Button
-          variant="outlineColored"
-          onClick={() => router.push(`/students/create?action="create"`)}
-        >
-          <span>{t.students.create}</span>
-        </Button>
+        {userRoleName !== "Professeur" && (
+          <Button
+            variant="outlineColored"
+            onClick={() =>
+              router.push(
+                `/students/students/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}`,
+              )
+            }
+          >
+            <span>{t.students.create}</span>
+          </Button>
+        )}
       </div>
       <Table
         columns={columns}
         data={studentsData}
         className=""
+        pageIndexParam={pageIndex}
+        pageSizeParam={pageSize}
         onRowClick={(row) =>
-          router.push(`/students/${row.StudentId}?action="view"`)
+          router.push(
+            `/students/students/${row.StudentId}?action="view"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}`,
+          )
         }
       />
       <DeleteModal
