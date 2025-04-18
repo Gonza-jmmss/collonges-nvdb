@@ -63,11 +63,13 @@ export default function Combobox({
           className="w-full justify-between truncate overflow-ellipsis"
           disabled={disabled}
         >
-          {itemSelected
-            ? typeof textAttributeToShow === "function"
-              ? textAttributeToShow(itemSelected)
-              : itemSelected[textAttributeToShow]
-            : placeholder || "Select..."}
+          <div className="truncate overflow-ellipsis text-start">
+            {itemSelected
+              ? typeof textAttributeToShow === "function"
+                ? textAttributeToShow(itemSelected)
+                : itemSelected[textAttributeToShow]
+              : placeholder || "Select..."}
+          </div>
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
