@@ -22,10 +22,14 @@ type ScholarPeriodFormData = z.infer<typeof ScholarPeriodSchema>;
 export default function ScholarPeriodForm({
   scholarPeriodData,
   scholarYears,
+  pageIndexParam,
+  pageSizeParam,
   action,
 }: {
   scholarPeriodData: ScholarPeriodsViewModel | null;
   scholarYears: ScholarYearsViewModel[];
+  pageIndexParam: number;
+  pageSizeParam: number;
   action: string | undefined;
 }) {
   const t = frFR;
@@ -71,7 +75,9 @@ export default function ScholarPeriodForm({
         description: `${t.scholarPeriods.title} : ${response?.Name}`,
       });
 
-      router.push("/courses/scholarPeriods");
+      router.push(
+        `/courses/scholarPeriods?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -96,7 +102,9 @@ export default function ScholarPeriodForm({
         description: `${t.scholarPeriods.title} : ${response?.Name}`,
       });
 
-      router.push("/courses/scholarPeriods");
+      router.push(
+        `/courses/scholarPeriods?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -278,7 +286,11 @@ export default function ScholarPeriodForm({
               type="button"
               variant={"secondary"}
               className="w-[30%]"
-              onClick={() => router.push("/courses/scholarPeriods")}
+              onClick={() =>
+                router.push(
+                  `/courses/scholarPeriods?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
+                )
+              }
             >
               {t.shared.cancel}
             </Button>
@@ -296,7 +308,11 @@ export default function ScholarPeriodForm({
             <Button
               variant={"secondary"}
               className="w-[30%]"
-              onClick={() => router.back()}
+              onClick={() =>
+                router.push(
+                  `/courses/scholarPeriods?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
+                )
+              }
             >
               {t.shared.cancel}
             </Button>

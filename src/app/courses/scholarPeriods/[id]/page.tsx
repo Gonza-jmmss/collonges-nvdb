@@ -8,11 +8,15 @@ export default async function ScholarPeriodsPage({
   searchParams,
 }: {
   params: { id: string };
-  searchParams: { action: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   let scholarPeriod;
-  const action = searchParams.action?.replace(/"/g, "");
+  const action =
+    searchParams?.action && (searchParams.action as string).replace(/"/g, "");
+
+  const pageIndexParam = parseInt(searchParams.pageIndex as string);
+  const pageSizeParam = parseInt(searchParams.pageSize as string);
 
   if (params.id != "create") {
     scholarPeriod = await getScholarPeriodByIdQuery(Number(params.id));
@@ -26,7 +30,7 @@ export default async function ScholarPeriodsPage({
     ${action != "create" ? `: ${scholarPeriod ? scholarPeriod.Name : ""}` : ""}`}`;
 
   return (
-    <div className="mt-5 flex justify-center">
+    <main className="mt-5 flex justify-center">
       <div className="mt-3 w-[70vw] rounded-md border bg-muted/60 p-5 shadow-md">
         <div className="flex items-center justify-between text-lg font-medium">
           {pagetitle}
@@ -35,11 +39,13 @@ export default async function ScholarPeriodsPage({
           <ScholarPeriodForm
             scholarPeriodData={scholarPeriod}
             scholarYears={scholarYears}
+            pageIndexParam={pageIndexParam}
+            pageSizeParam={pageSizeParam}
             action={action}
           />
         </div>
         {/* <pre>{JSON.stringify(module, null, 2)}</pre> */}
       </div>
-    </div>
+    </main>
   );
 }

@@ -10,21 +10,28 @@ import DeleteModal from "@/components/common/deleteModal";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/common/modal";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import formatDate from "@/functions/formatDate";
 import { useToast } from "@/hooks/use-toast";
 import { ScholarPeriodsViewModel } from "@/repositories/scholarPeriods/scholarPeriodsViewModel";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import frFR from "@/lang/fr-FR";
 
 export default function ScholarPeriodsTable({
   scholarPeriods,
+  pageIndex,
+  pageSize,
 }: {
   scholarPeriods: ScholarPeriodsViewModel[];
+  pageIndex: number;
+  pageSize: number;
 }) {
   const t = frFR;
   const router = useRouter();
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+
+  const getPageIndexParam = searchParams.get("pageIndex");
+  const getPageSizeParam = searchParams.get("pageSize");
 
   const [openModal, setOpenModal] = useState(false);
   const [openDeleteModalValidation, setOpenDeleteModalValidation] =
@@ -109,13 +116,11 @@ export default function ScholarPeriodsTable({
             onClick={(event) => event.stopPropagation()}
           >
             <Icon
-              name={
-                isValidIconName("MdEdit") ? "MdEdit" : "MdOutlineNotInterested"
-              }
+              name="MdEdit"
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() =>
                 router.push(
-                  `/courses/scholarPeriods/${row.row.original.ScholarPeriodId}?action="edit"`,
+                  `/courses/scholarPeriods/${row.row.original.ScholarPeriodId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}`,
                 )
               }
             />
@@ -150,7 +155,7 @@ export default function ScholarPeriodsTable({
         ),
       },
     ],
-    [],
+    [getPageIndexParam, getPageSizeParam],
   );
 
   const deleteScholarPeriod = async (
@@ -216,14 +221,7 @@ export default function ScholarPeriodsTable({
       <div className="flex items-center justify-end space-x-5">
         {countActivePeriods() > 1 && (
           <div className="flex items-center space-x-2 rounded-md border border-destructive bg-destructive px-3 py-1">
-            <Icon
-              name={
-                isValidIconName("MdWarningAmber")
-                  ? "MdWarningAmber"
-                  : "MdOutlineNotInterested"
-              }
-              className="text-2xl text-background"
-            />
+            <Icon name="MdWarningAmber" className="text-2xl text-background" />
             <div className="font-semibold text-background">
               {t.scholarPeriods.warningActivePeriods}
             </div>
@@ -232,7 +230,9 @@ export default function ScholarPeriodsTable({
         <Button
           variant="outlineColored"
           onClick={() =>
-            router.push(`/courses/scholarPeriods/create?action="create"`)
+            router.push(
+              `/courses/scholarPeriods/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}`,
+            )
           }
         >
           <span>{t.students.create}</span>
@@ -242,9 +242,11 @@ export default function ScholarPeriodsTable({
         columns={columns}
         data={scholarPeriods}
         className=""
+        pageIndexParam={pageIndex}
+        pageSizeParam={pageSize}
         onRowClick={(row) =>
           router.push(
-            `/courses/scholarPeriods/${row.ScholarPeriodId}?action="view"`,
+            `/courses/scholarPeriods/${row.ScholarPeriodId}?action="view"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}`,
           )
         }
       />
