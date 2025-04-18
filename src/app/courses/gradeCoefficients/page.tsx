@@ -12,6 +12,13 @@ export default async function GradeCoefficientsPage({
 }) {
   const t = frFR;
 
+  const pageIndex = searchParams?.pageIndex
+    ? parseInt(searchParams.pageIndex as string)
+    : 0;
+  const pageSize = searchParams?.pageSize
+    ? parseInt(searchParams.pageSize as string)
+    : 10;
+
   const isEnabledParam =
     searchParams.isEnabled === undefined
       ? true
@@ -36,6 +43,9 @@ export default async function GradeCoefficientsPage({
       <GradeCoefficientsTable
         gradeCoefficients={gradeCoefficients}
         isEnabledSelected={isEnabledParam}
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+        urlParams={searchParams}
       />
       {/* <pre>{JSON.stringify(gradeCoefficients, null, 2)}</pre> */}
     </main>

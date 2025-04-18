@@ -22,6 +22,7 @@ const getAllGradeCoefficientsQuery = cache(
       GradeCoefficientId: gradeCoefficient.GradeCoefficientId,
       Name: gradeCoefficient.Name,
       CoefficientNumber: Number(gradeCoefficient.Coefficient) * 100,
+      CoefficientNumberText: `${Number(gradeCoefficient.Coefficient) * 100}%`,
       IsEnabled: gradeCoefficient.IsEnabled,
     }));
 

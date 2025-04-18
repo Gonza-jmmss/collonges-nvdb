@@ -4,6 +4,7 @@ export type GradeCoefficientsViewModel = {
   GradeCoefficientId: number;
   Name: string;
   CoefficientNumber: number;
+  CoefficientNumberText?: string;
   IsEnabled: boolean;
 };
 

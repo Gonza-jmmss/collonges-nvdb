@@ -13,22 +13,30 @@ import ToggleButton from "@/components/common/toggleButton";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { GradeCoefficientsViewModel } from "@/repositories/gradeCoefficients/gradeCoefficientsViewModel";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import frFR from "@/lang/fr-FR";
 
 export default function GradeCoefficientsTable({
   gradeCoefficients,
   isEnabledSelected,
+  pageIndex,
+  pageSize,
   urlParams,
 }: {
   gradeCoefficients: GradeCoefficientsViewModel[];
   isEnabledSelected: boolean;
+  pageIndex: number;
+  pageSize: number;
   urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const router = useRouter();
   const { toast } = useToast();
   const updateQuery = useUpdateQuery();
+  const searchParams = useSearchParams();
+
+  const getPageIndexParam = searchParams.get("pageIndex");
+  const getPageSizeParam = searchParams.get("pageSize");
 
   const [openModal, setOpenModal] = useState(false);
   const [
@@ -86,7 +94,7 @@ export default function GradeCoefficientsTable({
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() =>
                 router.push(
-                  `/courses/gradeCoefficients/${row.row.original.GradeCoefficientId}?action="edit"`,
+                  `/courses/gradeCoefficients/${row.row.original.GradeCoefficientId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}`,
                 )
               }
             />
@@ -104,7 +112,7 @@ export default function GradeCoefficientsTable({
         ),
       },
     ],
-    [],
+    [getPageIndexParam, getPageSizeParam, isEnabledSelected],
   );
 
   const deleteGradeCoefficient = async (GradeCoefficientId: number) => {
@@ -193,7 +201,9 @@ export default function GradeCoefficientsTable({
         <Button
           variant="outlineColored"
           onClick={() =>
-            router.push(`/courses/gradeCoefficients/create?action="create"`)
+            router.push(
+              `/courses/gradeCoefficients/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}`,
+            )
           }
         >
           <span>{t.gradeCoefficients.create}</span>
@@ -203,6 +213,8 @@ export default function GradeCoefficientsTable({
         columns={columns}
         data={gradeCoefficients}
         className=""
+        pageIndexParam={pageIndex}
+        pageSizeParam={pageSize}
         onRowClick={(row) =>
           router.push(
             `/courses/gradeCoefficients/${row.GradeCoefficientId}?action="view"`,

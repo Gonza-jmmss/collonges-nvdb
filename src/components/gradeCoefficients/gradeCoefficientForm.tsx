@@ -8,7 +8,6 @@ import { GradeCoefficientSchema } from "@/zodSchemas/gradeCoefficientSchema";
 import { useForm } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Combobox from "@/components/common/combobox";
 import ToggleButton from "@/components/common/toggleButton";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -19,10 +18,16 @@ type GradeCoefficientFormData = z.infer<typeof GradeCoefficientSchema>;
 
 export default function GradeCoefficientForm({
   gradeCoefficientData,
+  pageIndexParam,
+  pageSizeParam,
   action,
+  urlParams,
 }: {
   gradeCoefficientData: GradeCoefficientsViewModel | null;
-  action: string;
+  pageIndexParam: number;
+  pageSizeParam: number;
+  action: string | undefined;
+  urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const { toast } = useToast();
@@ -30,8 +35,8 @@ export default function GradeCoefficientForm({
 
   const [isPending, setIsPending] = useState(false);
 
-  const coursePeriods = [{ CoursePeriodId: 1, Name: "Quarter" }];
-  const CourseTypes = [{ CourseTypeId: 1, Name: "IFLE" }];
+  const isEnabledParam =
+    urlParams?.isEnabled === undefined ? true : urlParams.isEnabled === "true";
 
   //   GradeCoefficientId: number | null;
   //     Name: string;
@@ -71,7 +76,9 @@ export default function GradeCoefficientForm({
         description: `${t.gradeCoefficients.title} : ${response.Name}`,
       });
 
-      router.push("/courses/gradeCoefficients");
+      router.push(
+        `/courses/gradeCoefficients?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -96,7 +103,9 @@ export default function GradeCoefficientForm({
         description: `${t.gradeCoefficients.title} : ${response.Name}`,
       });
 
-      router.push("/courses/gradeCoefficients");
+      router.push(
+        `/courses/gradeCoefficients?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -188,7 +197,11 @@ export default function GradeCoefficientForm({
               type="button"
               variant={"secondary"}
               className="w-[30%]"
-              onClick={() => router.back()}
+              onClick={() =>
+                router.push(
+                  `/courses/gradeCoefficients?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+                )
+              }
             >
               {t.shared.cancel}
             </Button>
@@ -206,7 +219,11 @@ export default function GradeCoefficientForm({
             <Button
               variant={"secondary"}
               className="w-[30%]"
-              onClick={() => router.back()}
+              onClick={() =>
+                router.push(
+                  `/courses/gradeCoefficients?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+                )
+              }
             >
               {t.shared.cancel}
             </Button>
