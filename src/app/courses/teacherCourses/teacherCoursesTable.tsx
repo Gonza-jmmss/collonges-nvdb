@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import {
   TeacherCoursesViewModel,
   TeacherCoursesExtendedViewModel,
@@ -20,8 +19,6 @@ export default function TeacherCoursesTable({
 }) {
   const t = frFR;
   const router = useRouter();
-
-  const [expandedContent, setExpandedContent] = useState<React.ReactNode>();
 
   const columns = useMemo<ColumnDef<TeacherCoursesViewModel, any>[]>(
     () => [
@@ -39,35 +36,13 @@ export default function TeacherCoursesTable({
             {row.original.TeacherCourses.length > 0 && row.getCanExpand() ? (
               <div onClick={row.getToggleExpandedHandler()}>
                 {row.getIsExpanded() ? (
-                  <Icon
-                    name={
-                      isValidIconName("MdArrowDownward")
-                        ? "MdArrowDownward"
-                        : "MdOutlineNotInterested"
-                    }
-                    className="cursor-pointer"
-                    onClick={() => handleRowClick(null)}
-                  />
+                  <Icon name="MdArrowDownward" className="cursor-pointer" />
                 ) : (
-                  <Icon
-                    name={
-                      isValidIconName("MdArrowForward")
-                        ? "MdArrowForward"
-                        : "MdOutlineNotInterested"
-                    }
-                    className="cursor-pointer"
-                    onClick={() => handleRowClick(row.original)}
-                  />
+                  <Icon name="MdArrowForward" className="cursor-pointer" />
                 )}
               </div>
             ) : (
-              <Icon
-                name={
-                  isValidIconName("MdHorizontalRule")
-                    ? "MdHorizontalRule"
-                    : "MdOutlineNotInterested"
-                }
-              />
+              <Icon name="MdHorizontalRule" />
             )}
           </div>
         ),
@@ -105,9 +80,7 @@ export default function TeacherCoursesTable({
             onClick={(event) => event.stopPropagation()}
           >
             <Icon
-              name={
-                isValidIconName("MdEdit") ? "MdEdit" : "MdOutlineNotInterested"
-              }
+              name="MdEdit"
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() =>
                 router.push(
@@ -150,25 +123,20 @@ export default function TeacherCoursesTable({
     [],
   );
 
-  const handleRowClick = (row: TeacherCoursesViewModel | null) => {
-    if (row !== null)
-      setExpandedContent(
-        <Table
-          columns={columnsExtended}
-          data={row.TeacherCourses}
-          minimalMode
-          noBorders
-        />,
-      );
-  };
-
   return (
     <Table
       columns={columns}
       data={teacherCourses}
       className=""
       expandable
-      expandedContent={expandedContent}
+      expandedContent={(row) => (
+        <Table
+          columns={columnsExtended}
+          data={row.TeacherCourses}
+          minimalMode
+          noBorders
+        />
+      )}
     />
   );
 }
