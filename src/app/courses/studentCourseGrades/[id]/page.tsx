@@ -70,7 +70,7 @@ export default async function Page({
     ${action != "create" ? `: ${action == "edit" ? descriptionParam : t.studentCourseGrades.create}` : ""}`}`;
 
   return (
-    <div className="relative mt-5 flex justify-center">
+    <main className="relative mt-5 flex justify-center">
       <Button asChild className={`absolute -left-16 top-3`} variant="ghost">
         <Link
           href={`/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}&tab=${tabParam}`}
@@ -98,7 +98,9 @@ export default async function Page({
           />
         </div>
         {/* <pre>{JSON.stringify(studentCourseGrade, null, 2)}</pre> */}
+        {/* <pre>{JSON.stringify(pageIndexParam, null, 2)}</pre>
+        <pre>{JSON.stringify(pageSizeParam, null, 2)}</pre> */}
       </div>
-    </div>
+    </main>
   );
 }

@@ -40,7 +40,7 @@ const createStudentCourseGradesCommand = async (
           const studentCourseGradeToCreate = {
             StudentCourseId: element.StudentCourseId || 0,
             Grade: (element.Grade !== null
-              ? element.Grade
+              ? parseFloat(element.Grade).toFixed(2)
               : NaN
             ).toLocaleString(),
             GradeCoefficientId: params.GradeCoefficientId || 0,

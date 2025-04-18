@@ -14,7 +14,6 @@ import Header from "@/components/table/header";
 import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import enumToArray from "@/functions/enumToArray";
 import formatDate from "@/functions/formatDate";
 import Modal from "@/components/common/modal";
@@ -70,7 +69,7 @@ export default function StudentCoruseGradesByStudentTable({
   const activityGradesEmptyCondition = (
     studentCourse: StudentCourseGradesExtendedViewModel,
   ) => {
-    return studentCourseGradesByStudentCourse
+    return !studentCourseGradesByStudentCourse
       .map((student) => student.StudentCourseGrades)
       .map(
         (studentCourseGrade) =>
@@ -78,8 +77,15 @@ export default function StudentCoruseGradesByStudentTable({
             (x) => x.Description === studentCourse.Description,
           )?.Grade,
       )
-      .some((x) => x === "NaN");
+      .some((x) => x !== "NaN");
   };
+  // const activityGradesEmptyCondition = (
+  //     studentCourseGrade: StudentCourseGradeByActivityViewModel,
+  //   ) => {
+  //     return !studentCourseGrade.Activities.map(
+  //       (activity) => activity.Grade,
+  //     ).some((grade) => grade !== "NaN");
+  //   };
 
   const columns = useMemo<
     ColumnDef<StudentCourseGradesByStudentCourseViewModel, any>[]
@@ -100,33 +106,13 @@ export default function StudentCoruseGradesByStudentTable({
             row.getCanExpand() ? (
               <div onClick={row.getToggleExpandedHandler()}>
                 {row.getIsExpanded() ? (
-                  <Icon
-                    name={
-                      isValidIconName("MdArrowDownward")
-                        ? "MdArrowDownward"
-                        : "MdOutlineNotInterested"
-                    }
-                    className="cursor-pointer"
-                  />
+                  <Icon name="MdArrowDownward" className="cursor-pointer" />
                 ) : (
-                  <Icon
-                    name={
-                      isValidIconName("MdArrowForward")
-                        ? "MdArrowForward"
-                        : "MdOutlineNotInterested"
-                    }
-                    className="cursor-pointer"
-                  />
+                  <Icon name="MdArrowForward" className="cursor-pointer" />
                 )}
               </div>
             ) : (
-              <Icon
-                name={
-                  isValidIconName("MdHorizontalRule")
-                    ? "MdHorizontalRule"
-                    : "MdOutlineNotInterested"
-                }
-              />
+              <Icon name="MdHorizontalRule" />
             )}
           </div>
         ),
@@ -232,9 +218,7 @@ export default function StudentCoruseGradesByStudentTable({
             onClick={(event) => event.stopPropagation()}
           >
             <Icon
-              name={
-                isValidIconName("MdEdit") ? "MdEdit" : "MdOutlineNotInterested"
-              }
+              name="MdEdit"
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() => {
                 router.push(
@@ -243,11 +227,7 @@ export default function StudentCoruseGradesByStudentTable({
               }}
             />
             <Icon
-              name={
-                isValidIconName("MdDelete")
-                  ? "MdDelete"
-                  : "MdOutlineNotInterested"
-              }
+              name="MdDelete"
               className={`cursor-pointer text-xl hover:text-destructive ${
                 activityGradesEmptyCondition(row.row.original) === true
                   ? "text-primary"
@@ -262,7 +242,7 @@ export default function StudentCoruseGradesByStudentTable({
         ),
       },
     ],
-    [],
+    [getPageIndexParam, getPageSizeParam],
   );
 
   const deleteStudentCourseGrades = async (
@@ -311,9 +291,6 @@ export default function StudentCoruseGradesByStudentTable({
     // Update URL without replacing current parameters
     const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
 
-    // Use router.push or history.pushState depending on your navigation setup
-    // router.push(newUrl);
-    // or
     window.history.pushState({}, "", newUrl);
 
     // If you need to update some state as well
@@ -323,11 +300,11 @@ export default function StudentCoruseGradesByStudentTable({
   return (
     <div>
       <div className="mt-3 flex items-center justify-between">
-        <div className="-ml-3 flex flex-wrap justify-start space-x-3 space-y-3 2xl:flex-row 2xl:items-center 2xl:space-y-0">
+        <div className="-ml-3 flex flex-wrap justify-start space-x-3 space-y-3 xl:flex-row xl:items-center xl:space-y-0">
           <div />
-          <div className="w-[15rem]">
+          <div className="w-[12rem]">
             <Combobox
-              options={enumToArray(PeriodEnum)}
+              options={enumToArray(PeriodEnum).slice(1)}
               textAttribute="value"
               valueAttribute="key"
               placeholder={t.courses.form.periodNumber}
@@ -341,7 +318,7 @@ export default function StudentCoruseGradesByStudentTable({
               notClearable
             />
           </div>
-          <div className="w-[15rem]">
+          <div className="w-[12rem]">
             <Combobox
               options={levels}
               textAttribute="Name"
@@ -354,7 +331,7 @@ export default function StudentCoruseGradesByStudentTable({
               }}
             />
           </div>
-          <div className="w-[30rem]">
+          <div className="w-[28.9rem]">
             <Combobox
               options={courses}
               textAttribute={["CourseCode", "Name"]}
@@ -366,6 +343,7 @@ export default function StudentCoruseGradesByStudentTable({
               setItemSelected={(x: CourseViewModel) => {
                 handleUrlParameterChange("courseId", `${x.CourseId}`);
               }}
+              showSearch
               notClearable
             />
           </div>

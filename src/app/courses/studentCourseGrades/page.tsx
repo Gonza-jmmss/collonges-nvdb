@@ -5,10 +5,11 @@ import getStudentCourseGradeByActivityQuery from "@/repositories/studentCourseGr
 import getCoursesByTeacherQuery from "@/repositories/courses/queries/getCoursesByTeacherQuery";
 import getCurrentLevelsQuery from "@/repositories/levels/queries/getCurrentLevelsQuery";
 import { TabsComponent } from "@/components/common/tabs";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { auth } from "@/utils/auth";
+import { PeriodEnum } from "@/enum/periodEnum";
 import frFR from "@/lang/fr-FR";
 
 export default async function StudentCourseGradesPage({
@@ -20,15 +21,19 @@ export default async function StudentCourseGradesPage({
   const session = await auth();
 
   const pageIndex = searchParams?.pageIndex
-    ? parseInt(searchParams.pageIndex as string)
+    ? searchParams?.pageIndex !== "NaN"
+      ? parseInt(searchParams.pageIndex as string)
+      : 0
     : 0;
   const pageSize = searchParams?.pageSize
-    ? parseInt(searchParams.pageSize as string)
+    ? searchParams?.pageSize !== "NaN"
+      ? parseInt(searchParams.pageSize as string)
+      : 10
     : 10;
 
   const periodNumberSelected = searchParams?.periodNumber
     ? parseInt(searchParams.periodNumber as string)
-    : 4;
+    : PeriodEnum["Cours d'été"];
 
   const levelIdSelected = searchParams?.levelId
     ? searchParams.levelId !== "null"
@@ -54,11 +59,13 @@ export default async function StudentCourseGradesPage({
   const studentCourseGradesByStudentCourse =
     await getStudentCourseGrandesByStudentCourseQuery({
       CourseId: courseIdSelected,
+      PeriodNumber: periodNumberSelected,
     });
 
   const studentCourseGradesByActivity =
     await getStudentCourseGradeByActivityQuery({
       CourseId: courseIdSelected,
+      PeriodNumber: periodNumberSelected,
     });
 
   const levels = await getCurrentLevelsQuery();
@@ -110,7 +117,7 @@ export default async function StudentCourseGradesPage({
 
   return (
     <main className="relative mt-3 w-[80vw]">
-      <Button asChild className={`absolute -left-16 top-0`} variant="ghost">
+      <Button asChild className={`absolute -left-16 -top-1`} variant="ghost">
         <Link href={`/courses`}>
           <Icon name={"MdArrowBack"} className="text-xl" />
         </Link>
@@ -128,6 +135,8 @@ export default async function StudentCourseGradesPage({
       />
       {/* <pre>{JSON.stringify(studentCourseGradesByActivity, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(studentCourseGradesByStudentCourse, null, 2)}</pre> */}
+      {/* <pre>{JSON.stringify(pageIndex, null, 2)}</pre>
+      <pre>{JSON.stringify(pageSize, null, 2)}</pre> */}
     </main>
   );
 }

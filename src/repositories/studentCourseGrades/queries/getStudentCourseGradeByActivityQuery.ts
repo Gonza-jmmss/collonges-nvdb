@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import getActiveScholarYearQuery from "@/repositories/scholarYears/queries/getActiveScholarYearQuery";
 import {
   StudentCourseGradeByActivityViewModel,
   StudentCourseGradeByActivity,
@@ -10,14 +11,30 @@ const prisma = new PrismaClient();
 
 type getStudentCourseGradeByActivityQueryParamsType = {
   CourseId: number;
+  PeriodNumber: number;
 };
 
 const getStudentCourseGradeByActivityQuery = async (
   params: getStudentCourseGradeByActivityQueryParamsType,
 ) => {
+  const activeScholarYear = await getActiveScholarYearQuery();
+
   const query = await prisma.studentCourseGrades.findMany({
-    where: { StudentCourses: { CourseId: params.CourseId } },
-    orderBy: { CreatedAt: "desc" },
+    where: {
+      StudentCourses: {
+        CourseId: params.CourseId,
+        ScholarPeriods: {
+          ScholarYearId: activeScholarYear.ScholarYearId,
+          Number: params.PeriodNumber,
+        },
+      },
+    },
+    orderBy: [
+      {
+        CreatedAt: "desc",
+      },
+      { StudentCourses: { Students: { Persons: { AlternativeName: "asc" } } } },
+    ],
     include: {
       GradeCoefficients: true,
       Users: true,

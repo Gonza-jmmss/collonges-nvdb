@@ -86,19 +86,23 @@ export default function StudentCourseGradesForm({
     },
     onSubmit: async ({ value }) => {
       // console.log("formData", value);
-      action === "create" && createValidation(value);
-      action === "edit" && updateValidation(value);
+      action && gradesValidation(value, action);
     },
   });
 
-  const createValidation = async (formData: StudentCourseGradeFormData) => {
-    const studentCoursesHasGrades =
+  const gradesValidation = async (
+    formData: StudentCourseGradeFormData,
+    action: string,
+  ) => {
+    const allStudentCoursesHasGrades =
       form
         .getFieldValue("StudentCourses")
         ?.map((studentCourse) => studentCourse.Grade)
-        .some((grade) => grade === "NaN") === false;
-    if (studentCoursesHasGrades) {
-      await createStudentCourseGrades(formData);
+        .some((grade) => grade !== "NaN" && grade !== "") === true;
+
+    if (allStudentCoursesHasGrades) {
+      action === "create" && createStudentCourseGrades(formData);
+      action === "edit" && updateStudentCourseGrades(formData);
     } else {
       setOpenModal(true);
       setConfirmedStudentCourseGradeData(formData);
@@ -132,20 +136,6 @@ export default function StudentCourseGradesForm({
     } finally {
       setIsPending(false);
       openModal === true && closeModal();
-    }
-  };
-
-  const updateValidation = async (formData: StudentCourseGradeFormData) => {
-    const studentCoursesHasGrades =
-      form
-        .getFieldValue("StudentCourses")
-        ?.map((studentCourse) => studentCourse.Grade)
-        .some((grade) => grade === "NaN") === false;
-    if (studentCoursesHasGrades) {
-      await updateStudentCourseGrades(formData);
-    } else {
-      setOpenModal(true);
-      setConfirmedStudentCourseGradeData(formData);
     }
   };
 
@@ -314,11 +304,6 @@ export default function StudentCourseGradesForm({
             notClearable
           />
         </div>
-        {/* {action === "edit" && (
-          <div className="col-span-2 text-emerald-500">
-            Est-ce que il est possible de changer le cours?
-          </div>
-        )} */}
         <div className="col-span-1 space-y-1">
           <form.Field
             name="Description"
@@ -359,7 +344,8 @@ export default function StudentCourseGradesForm({
                 <span>{t.studentCourseGrades.form.gradeCoefficientId}</span>
                 <Combobox
                   options={gradeCoefficients}
-                  textAttribute="Name"
+                  // textAttribute="Name"
+                  textAttribute={["Name", "CoefficientNumberText"]}
                   valueAttribute="GradeCoefficientId"
                   placeholder={t.studentCourseGrades.form.gradeCoefficientId}
                   itemSelected={gradeCoefficients.find(
@@ -396,9 +382,6 @@ export default function StudentCourseGradesForm({
             }}
             children={(field) => (
               <div className="flex flex-col space-y-5 rounded-md border bg-muted p-2">
-                {/* <span className="col-span-2 text-lg font-semibold">
-                {t.studentCourseGrades.form.students}
-              </span> */}
                 <div className="flex items-center justify-between">
                   <span className="col-span-2 text-lg font-semibold">
                     {t.studentCourseGrades.form.students}
@@ -435,26 +418,14 @@ export default function StudentCourseGradesForm({
                               <>
                                 <span>{t.studentCourseGrades.form.grade}</span>
                                 <Input
-                                  id="FirstName"
-                                  name="FirstName"
+                                  id="Grade"
+                                  name="Grade"
                                   type="number"
                                   placeholder={``}
                                   className="w-20 bg-background/30 text-center"
                                   value={
                                     field.state.value?.toLocaleString() || ""
                                   }
-                                  // onChange={(e) =>
-                                  //   field.handleChange(
-                                  //     parseFloat(
-                                  //       e.target.value,
-                                  //     ).toLocaleString(),
-                                  //   )
-                                  // }
-                                  /////////////
-                                  // onChange={(e) => {
-                                  //   field.handleChange(e.target.value);
-                                  // }}
-                                  ////////////////
                                   onChange={(e) => {
                                     let value = e.target.value;
 
@@ -466,6 +437,14 @@ export default function StudentCourseGradesForm({
                                       if (parts[1].length > 2) {
                                         value = `${parts[0]}.${parts[1].substring(0, 2)}`;
                                       }
+                                    }
+
+                                    // Convert to number for comparison
+                                    const numValue = parseFloat(value);
+
+                                    // If value is greater than 20, cap it at 20
+                                    if (!isNaN(numValue) && numValue > 20) {
+                                      value = "20";
                                     }
 
                                     field.handleChange(value);

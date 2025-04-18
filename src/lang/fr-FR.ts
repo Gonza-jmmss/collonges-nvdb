@@ -22,6 +22,9 @@ export default {
   },
   shortcuts: {
     transcripts: "Transcripts",
+    grades: "Notes",
+    courses: "Cours",
+    students: "Étudiants",
   },
   shared: {
     save: "Enregistrer",
@@ -635,8 +638,8 @@ export default {
     create: "Ajouter des notes",
     level: "Niveaux scolaires",
     tabs: {
-      orderedByActivity: "Classé par avtivité",
-      orderedByStudent: "Classé par studient",
+      orderedByActivity: "Trié par activité",
+      orderedByStudent: "Trié par étudiant",
     },
     columnsByStudent: {
       courseName: "Cours",
@@ -701,7 +704,8 @@ export default {
       title:
         "Êtes-vous sûr de vouloir sauvegarder une activité avec toutes ses notes vides ?",
       description:
-        "L'activité sera sauvegardée, mais elle ne changera pas la moyenne des notes",
+        "L'activité sera sauvegardée sans notes, mais cela n'affectera pas la moyenne des notes",
+      // "L'activité sera sauvegardée sans notes",
     },
   },
   reports: {
