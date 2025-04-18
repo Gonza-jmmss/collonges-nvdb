@@ -4,6 +4,7 @@ import LevelForm from "@/components/levels/levelForm";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { PeriodEnum } from "@/enum/periodEnum";
 import frFR from "@/lang/fr-FR";
 
 export default async function Page({
@@ -35,17 +36,17 @@ export default async function Page({
   const pagetitle = `${`${t.shared[action as keyof typeof t.shared]} ${t.levels.levels} 
     ${action != "create" ? `: ${level ? level.Name : ""}` : ""}`}`;
 
-  const period = searchParams?.period
-    ? parseInt(searchParams.period as string)
-    : 4;
+  const periodNumber = searchParams?.periodNumber
+    ? parseInt(searchParams.periodNumber as string)
+    : PeriodEnum["Cours d'été"];
 
   const courses = await getAllCoursesQuery({
     IsEnabled: true,
-    Period: period,
+    PeriodNumber: periodNumber,
   });
   const allCourses = await getAllCoursesQuery({
     IsEnabled: true,
-    Period: 0,
+    PeriodNumber: 0,
   });
 
   return (

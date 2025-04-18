@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 type getAllCoursesQueryParamsType = {
   IsEnabled: boolean;
-  Period: number;
+  PeriodNumber: number;
   LevelId?: number | null;
   ScholarYearId?: number | null;
 };
@@ -18,7 +18,7 @@ const getAllCoursesQuery = cache(
     const query = await prisma.courses.findMany({
       where: {
         IsEnabled: params.IsEnabled,
-        ...(params.Period !== 0 && { PeriodNumber: params.Period }),
+        ...(params.PeriodNumber !== 0 && { PeriodNumber: params.PeriodNumber }),
         ...(params.LevelId &&
           params.LevelId !== null && {
             LevelCourses: { some: { LevelId: params.LevelId } },

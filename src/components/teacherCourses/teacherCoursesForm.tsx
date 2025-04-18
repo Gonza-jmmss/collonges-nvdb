@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import updateTeacherCourseCommand from "@/repositories/teacherCourses/commands/updateTeacherCourses";
 import { TeacherCoursesByIdViewModel } from "@/repositories/teacherCourses/teacherCoursesViewModel";
 import { TeacherCourseSchema } from "@/zodSchemas/teacherCoursesSchema";
@@ -10,7 +10,6 @@ import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import enumToArray from "@/functions/enumToArray";
 import { PeriodEnum } from "@/enum/periodEnum";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
@@ -43,9 +42,8 @@ export default function TeacherCoursesForm({
 
   const [isPending, setIsPending] = useState(false);
 
-  const [periodSelected, setPeriodSelected] = useState(
-    urlParams?.period ? parseInt(urlParams.period as string) : 4,
-  );
+  const periodNumberParam =
+    parseInt(urlParams?.periodNumber as string) || PeriodEnum["Cours d'été"];
   const levelIdParam =
     urlParams?.levelId !== null ? parseInt(urlParams?.levelId as string) : null;
 
@@ -60,7 +58,7 @@ export default function TeacherCoursesForm({
           : null,
     },
     onSubmit: async ({ value }) => {
-      console.log("formData", value);
+      // console.log("formData", value);
       action === "edit" && updateLevel(value);
     },
   });
@@ -89,8 +87,6 @@ export default function TeacherCoursesForm({
       setIsPending(false);
     }
   };
-
-  // useEffect(() => {}, [levelSelected]);
 
   const handleUrlParameterChange = (key: string, value: string) => {
     const currentParams = new URLSearchParams(window.location.search);
@@ -134,11 +130,10 @@ export default function TeacherCoursesForm({
                     valueAttribute="key"
                     placeholder={t.teacherCourses.form.coursePeriod}
                     itemSelected={enumToArray(PeriodEnum).find(
-                      (x) => x.key === periodSelected,
+                      (x) => x.key === periodNumberParam,
                     )}
                     setItemSelected={(x: { key: number }) => {
-                      setPeriodSelected(x && x.key);
-                      handleUrlParameterChange("period", `${x.key}`);
+                      handleUrlParameterChange("periodNumber", `${x.key}`);
                     }}
                   />
                 </div>
@@ -218,11 +213,7 @@ export default function TeacherCoursesForm({
                         } `}
                       </div>
                       <Icon
-                        name={
-                          isValidIconName("MdClose")
-                            ? "MdClose"
-                            : "MdOutlineNotInterested"
-                        }
+                        name="MdClose"
                         className="col-span-1 cursor-pointer place-self-center text-xl hover:text-primary"
                         onClick={() => field.removeValue(index)}
                       />

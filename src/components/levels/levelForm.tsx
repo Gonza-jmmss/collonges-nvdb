@@ -46,12 +46,10 @@ export default function LevelForm({
 
   const [isPending, setIsPending] = useState(false);
 
+  const periodNumberParam =
+    parseInt(urlParams?.periodNumber as string) || PeriodEnum["Cours d'été"];
   const isEnabledParam =
     urlParams?.isEnabled === undefined ? true : urlParams.isEnabled === "true";
-
-  const [periodSelected, setPeriodSelected] = useState(
-    typeof urlParams?.period === "string" ? parseInt(urlParams?.period) : 4,
-  );
 
   const form = useForm<LevelsFormData>({
     defaultValues: {
@@ -208,11 +206,10 @@ export default function LevelForm({
                     valueAttribute="key"
                     placeholder={t.courses.form.periodNumber}
                     itemSelected={enumToArray(PeriodEnum).find(
-                      (x) => x.key === periodSelected,
+                      (x) => x.key === periodNumberParam,
                     )}
                     setItemSelected={(x: { key: number }) => {
-                      setPeriodSelected(x && x.key);
-                      handleUrlParameterChange("period", `${x.key}`);
+                      handleUrlParameterChange("periodNumber", `${x.key}`);
                     }}
                   />
                 </div>

@@ -4,6 +4,7 @@ import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { auth } from "@/utils/auth";
+import { PeriodEnum } from "@/enum/periodEnum";
 import frFR from "@/lang/fr-FR";
 
 export default async function CoursesPage({
@@ -23,22 +24,17 @@ export default async function CoursesPage({
     ? parseInt(searchParams.pageSize as string)
     : 10;
 
-  // const isEnabled = searchParams?.isEnabled === "false" ? false : true;
-  // const period =
-  //   typeof searchParams?.period === "string"
-  //     ? parseInt(searchParams?.period)
-  //     : 4;
   const isEnabledParam =
     searchParams?.isEnabled === undefined
       ? true
       : searchParams.isEnabled === "true";
   const periodNumberParam = searchParams?.periodNumber
     ? parseInt(searchParams.periodNumber as string)
-    : 4;
+    : PeriodEnum["Cours d'été"];
 
   const courses = await getAllCoursesQuery({
     IsEnabled: isEnabledParam,
-    Period: periodNumberParam,
+    PeriodNumber: periodNumberParam,
   });
 
   return (

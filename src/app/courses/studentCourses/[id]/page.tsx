@@ -8,7 +8,7 @@ import StudentCourseForm from "@/components/studentCourses/studentCoursesForm";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
+import { PeriodEnum } from "@/enum/periodEnum";
 import frFR from "@/lang/fr-FR";
 
 export default async function StudentCoursesPage({
@@ -28,19 +28,19 @@ export default async function StudentCoursesPage({
 
   const studentsWithNoCourses = await getStudentsWithNoCoursesQuery();
 
-  const periodIdParam = searchParams?.period
-    ? parseInt(searchParams.period as string)
-    : 4;
+  const periodNumberParam = searchParams?.periodNumber
+    ? parseInt(searchParams.periodNumber as string)
+    : PeriodEnum["Cours d'été"];
 
   const scholarYearIdParam = parseInt(searchParams.scholarYearId as string);
 
   const courses = await getAllCoursesQuery({
     IsEnabled: true,
-    Period: periodIdParam,
+    PeriodNumber: periodNumberParam,
   });
   const allCourses = await getAllCoursesQuery({
     IsEnabled: true,
-    Period: 0,
+    PeriodNumber: 0,
   });
 
   const scholarPeriods = await getLastsScholarPeriodsQuery({
@@ -76,20 +76,6 @@ export default async function StudentCoursesPage({
         </Link>
       </Button>
       <div className="mt-3 w-[70vw] rounded-md border bg-muted/60 p-5 shadow-md lg:w-[50vw]">
-        {/* <Button asChild className={`absolute left-0`} variant="ghost">
-          <Link
-            href={`/courses/studentCourses?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&scholarPeriodId=${scholarPeriodIdParam}&scholarYearId=${scholarYearIdParam}`}
-          >
-            <Icon
-              name={
-                isValidIconName("MdArrowBack")
-                  ? "MdArrowBack"
-                  : "MdOutlineNotInterested"
-              }
-              className="text-xl"
-            />
-          </Link>
-        </Button> */}
         <div className="flex items-center justify-between text-lg font-medium">
           {pagetitle}
         </div>
