@@ -2,6 +2,9 @@ import StudentCoursesTable from "./studentCoursesTable";
 import getAllStudentCoursesQuery from "@/repositories/studentCourses/queries/getAllStudentCoursesQuery";
 import getLastsScholarYearsWithPeriodsQuery from "@/repositories/scholarYears/queries/getLastsScholarYearsWithPeriodsQuery";
 import getAllScholarPeriodsByScholarYearIdQuery from "@/repositories/scholarPeriods/queries/getAllScholetPeroidsByScholarYearIdQuery";
+import Icon from "@/components/common/icon";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import frFR from "@/lang/fr-FR";
 
 export default async function StudentsCoursesPage({
@@ -63,25 +66,26 @@ export default async function StudentsCoursesPage({
   ];
 
   return (
-    <main>
-      <div className="mt-3 w-[80vw]">
-        <div className="flex justify-between space-x-3">
-          <span className="text-xl font-semibold">
-            {t.studentCourses.title}
-          </span>
-        </div>
-        <StudentCoursesTable
-          studentCoursesData={studentCourses}
-          scholarYearSelected={scholarYearIdParam}
-          scholarYears={scholarYears}
-          scholarPeriodSelected={scholarPeriodIdParam}
-          scholarPeriods={scholarPeriodsTous}
-          pageIndex={pageIndex}
-          pageSize={pageSize}
-          urlParams={searchParams}
-        />
-        {/* <pre>{JSON.stringify(studentCourses, null, 2)}</pre> */}
+    <main className="relative mt-3 w-[80vw]">
+      <Button asChild className={`absolute -left-16 -top-1`} variant="ghost">
+        <Link href={`/courses`}>
+          <Icon name={"MdArrowBack"} className="text-xl" />
+        </Link>
+      </Button>
+      <div className="flex justify-between space-x-3">
+        <span className="text-xl font-semibold">{t.studentCourses.title}</span>
       </div>
+      <StudentCoursesTable
+        studentCoursesData={studentCourses}
+        scholarYearSelected={scholarYearIdParam}
+        scholarYears={scholarYears}
+        scholarPeriodSelected={scholarPeriodIdParam}
+        scholarPeriods={scholarPeriodsTous}
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+        urlParams={searchParams}
+      />
+      {/* <pre>{JSON.stringify(studentCourses, null, 2)}</pre> */}
     </main>
   );
 }

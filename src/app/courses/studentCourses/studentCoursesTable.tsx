@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import {
   StudentCoursesViewModel,
@@ -45,26 +44,6 @@ export default function StudentCoursesTable({
   const getPageIndexParam = searchParams.get("pageIndex");
   const getPageSizeParam = searchParams.get("pageSize");
 
-  const [expandedContent, setExpandedContent] = useState<React.ReactNode>();
-
-  // const [scholarYearFilter, setScholarYearFilter] =
-  //   useState<ScholarYearsViewModel>(
-  //     typeof urlParams.scholarYearId === "string"
-  //       ? scholarYears[parseInt(urlParams.scholarYearId)]
-  //       : scholarYears[0],
-  //   );
-
-  // const scholarPeriodIdParam =
-  //   typeof urlParams.scholarPeriodId === "string"
-  //     ? parseInt(urlParams.scholarPeriodId)
-  //     : undefined;
-
-  // const [scholarPeriodFilter, setScholarPeriodFilter] =
-  //   useState<ScholarPeriodsViewModel>(
-  //     scholarPeriods.find((x) => x.ScholarPeriodId === scholarPeriodIdParam) ||
-  //       scholarPeriods[0],
-  //   );
-
   const columns = useMemo<ColumnDef<StudentCoursesViewModel, any>[]>(
     () => [
       {
@@ -81,35 +60,13 @@ export default function StudentCoursesTable({
             {row.original.StudentCourses.length > 0 && row.getCanExpand() ? (
               <div onClick={row.getToggleExpandedHandler()}>
                 {row.getIsExpanded() ? (
-                  <Icon
-                    name={
-                      isValidIconName("MdArrowDownward")
-                        ? "MdArrowDownward"
-                        : "MdOutlineNotInterested"
-                    }
-                    className="cursor-pointer"
-                    onClick={() => handleRowClick(null)}
-                  />
+                  <Icon name="MdArrowDownward" className="cursor-pointer" />
                 ) : (
-                  <Icon
-                    name={
-                      isValidIconName("MdArrowForward")
-                        ? "MdArrowForward"
-                        : "MdOutlineNotInterested"
-                    }
-                    className="cursor-pointer"
-                    onClick={() => handleRowClick(row.original)}
-                  />
+                  <Icon name="MdArrowForward" className="cursor-pointer" />
                 )}
               </div>
             ) : (
-              <Icon
-                name={
-                  isValidIconName("MdHorizontalRule")
-                    ? "MdHorizontalRule"
-                    : "MdOutlineNotInterested"
-                }
-              />
+              <Icon name="MdHorizontalRule" />
             )}
           </div>
         ),
@@ -197,20 +154,10 @@ export default function StudentCoursesTable({
             className="flex space-x-1"
             onClick={(event) => event.stopPropagation()}
           >
-            {/* {row.row.original.IsEnabled && scholarPeriodIdParam !== 0 && ( */}
             {row.row.original.IsEnabled && scholarPeriodSelected !== 0 && (
               <Icon
-                name={
-                  isValidIconName("MdEdit")
-                    ? "MdEdit"
-                    : "MdOutlineNotInterested"
-                }
+                name="MdEdit"
                 className="cursor-pointer text-xl hover:text-primary"
-                // onClick={() =>
-                //   router.push(
-                //     `/courses/studentCourses/${row.row.original.StudentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}${scholarPeriodFilter.ScholarPeriodId !== 0 ? `&scholarPeriodId=${scholarPeriodFilter.ScholarPeriodId}` : ""}&scholarYearId=${scholarYearFilter.ScholarYearId}`,
-                //   )
-                // }
                 onClick={() =>
                   router.push(
                     `/courses/studentCourses/${row.row.original.StudentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&scholarYearId=${scholarYearSelected}`,
@@ -223,10 +170,8 @@ export default function StudentCoursesTable({
       },
     ],
     [
-      // scholarPeriodFilter.ScholarPeriodId,
       scholarPeriodSelected,
       scholarYearSelected,
-      // scholarPeriodIdParam,
       getPageIndexParam,
       getPageSizeParam,
     ],
@@ -269,18 +214,6 @@ export default function StudentCoursesTable({
     [],
   );
 
-  const handleRowClick = (row: StudentCoursesViewModel | null) => {
-    if (row !== null)
-      setExpandedContent(
-        <Table
-          columns={columnsExtended}
-          data={row.StudentCourses}
-          minimalMode
-          noBorders
-        />,
-      );
-  };
-
   const handleUrlParameterChange = (key: string, value: string) => {
     const currentParams = new URLSearchParams(window.location.search);
     currentParams.set(key, value);
@@ -303,14 +236,10 @@ export default function StudentCoursesTable({
             textAttribute="Name"
             valueAttribute="ScholarYearId"
             placeholder={t.courses.form.periodNumber}
-            // itemSelected={scholarYears.find(
-            //   (x) => x.ScholarYearId === scholarYearFilter.ScholarYearId,
-            // )}
             itemSelected={scholarYears.find(
               (x) => x.ScholarYearId === scholarYearSelected,
             )}
             setItemSelected={(x: ScholarYearsViewModel) => {
-              // setScholarYearFilter(x && x);
               handleUrlParameterChange("scholarYearId", `${x.ScholarYearId}`);
               handleUrlParameterChange("scholarPeriodId", `${null}`);
             }}
@@ -323,14 +252,10 @@ export default function StudentCoursesTable({
             textAttribute="Name"
             valueAttribute="ScholarPeriodId"
             placeholder={t.courses.form.periodNumber}
-            // itemSelected={scholarPeriods.find(
-            //   (x) => x.ScholarPeriodId === scholarPeriodFilter.ScholarPeriodId,
-            // )}
             itemSelected={scholarPeriods.find(
               (x) => x.ScholarPeriodId === scholarPeriodSelected,
             )}
             setItemSelected={(x: ScholarPeriodsViewModel) => {
-              // setScholarPeriodFilter(x && x);
               handleUrlParameterChange(
                 "scholarPeriodId",
                 `${x.ScholarPeriodId}`,
@@ -341,11 +266,6 @@ export default function StudentCoursesTable({
         </div>
         <Button
           variant="outlineColored"
-          // onClick={() =>
-          //   router.push(
-          //     `/courses/studentCourses/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}${scholarPeriodFilter ? `&scholarPeriodId=${scholarPeriodFilter.ScholarPeriodId}` : ""}&scholarYearId=${scholarYearFilter.ScholarYearId}`,
-          //   )
-          // }
           onClick={() =>
             router.push(
               `/courses/studentCourses/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}${scholarPeriodSelected ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&scholarYearId=${scholarYearSelected}`,
@@ -359,10 +279,17 @@ export default function StudentCoursesTable({
         columns={columns}
         data={studentCoursesData}
         className=""
-        expandable
-        expandedContent={expandedContent}
         pageIndexParam={pageIndex}
         pageSizeParam={pageSize}
+        expandable
+        expandedContent={(row) => (
+          <Table
+            columns={columnsExtended}
+            data={row.StudentCourses}
+            minimalMode
+            noBorders
+          />
+        )}
       />
     </div>
   );

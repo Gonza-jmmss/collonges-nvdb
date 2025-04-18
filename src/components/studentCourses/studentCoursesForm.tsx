@@ -62,9 +62,7 @@ export default function StudentCourseForm({
 
   const [isLevelCourses, setIsLevelCourses] = useState(true);
 
-  const [periodSelected, setPeriodSelected] = useState(
-    typeof urlParams?.period === "string" ? parseInt(urlParams?.period) : 4,
-  );
+  const periodNumberParam = parseInt(urlParams?.periodNumber as string);
   const scholarPeriodIdParam =
     parseInt(urlParams?.scholarPeriodId as string) || 0;
   const scholarYearIdParam =
@@ -367,11 +365,11 @@ export default function StudentCourseForm({
                         valueAttribute="key"
                         placeholder={t.courses.form.periodNumber}
                         itemSelected={enumToArray(PeriodEnum).find(
-                          (x) => x.key === periodSelected,
+                          (x) => x.key === periodNumberParam,
                         )}
                         setItemSelected={(x: { key: number }) => {
-                          setPeriodSelected(x && x.key);
-                          handleUrlParameterChange("period", `${x.key}`);
+                          // setPeriodSelected(x && x.key);
+                          handleUrlParameterChange("periodNumber", `${x.key}`);
                         }}
                         notClearable
                       />
