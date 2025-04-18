@@ -3,6 +3,7 @@ import CourseForm from "@/components/courses/courseForm";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
+import { PeriodEnum } from "@/enum/periodEnum";
 import frFR from "@/lang/fr-FR";
 
 export default async function Page({
@@ -22,7 +23,7 @@ export default async function Page({
 
   const periodNumberParam = searchParams.periodNumber
     ? parseInt(searchParams.periodNumber as string)
-    : 4;
+    : PeriodEnum["Cours d'été"];
   const isEnabledParam =
     searchParams.isEnabled === undefined
       ? true

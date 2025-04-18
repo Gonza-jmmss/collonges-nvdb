@@ -13,6 +13,7 @@ import ToggleButton from "@/components/common/toggleButton";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { PeriodEnum } from "@/enum/periodEnum";
 import frFR from "@/lang/fr-FR";
 
 type CoursFormData = z.infer<typeof CourseSchema>;
@@ -39,7 +40,8 @@ export default function CourseForm({
   const coursePeriods = [{ CoursePeriodId: 1, Name: "Quarter" }];
   const CourseTypes = [{ CourseTypeId: 1, Name: "IFLE" }];
 
-  const periodNumberParam = parseInt(urlParams?.periodNumber as string) || 0;
+  const periodNumberParam =
+    parseInt(urlParams?.periodNumber as string) || PeriodEnum["Cours d'été"];
   const isEnabledParam =
     urlParams?.isEnabled === undefined ? true : urlParams.isEnabled === "true";
 
