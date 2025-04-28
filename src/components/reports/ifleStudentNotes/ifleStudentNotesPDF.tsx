@@ -380,7 +380,7 @@ export default function ifleStudentNotesPDF({
       // // guideLine for the logos /////////////////////////
 
       // const fileName = `Transcript francais ${studentName} ${studentNotesData.CourseNotes[0].ScholarYear} ${studentNotesData.CourseNotes[0].Quarter}`;
-      const fileName = `Relevé Officiel des Cours et des Notes T${studentNotesData.CourseNotes[0].Quarter} ${studentNotesData.CourseNotes[0].ScholarYear}  ${studentName}`;
+      const fileName = `Relevé Officiel des Cours et des Notes T${studentNotesData.CourseNotes[studentNotesData.CourseNotes.length - 1].Quarter} ${studentNotesData.CourseNotes[studentNotesData.CourseNotes.length - 1].ScholarYear}  ${studentName}`;
       doc.output("dataurlnewwindow");
       doc.save(fileName);
     } catch (error) {

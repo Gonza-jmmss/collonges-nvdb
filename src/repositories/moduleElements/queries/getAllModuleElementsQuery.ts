@@ -8,9 +8,14 @@ const prisma = new PrismaClient();
 
 const getAllModuleElementsQuery = cache(async () => {
   const query = await prisma.moduleElements.findMany({
-    orderBy: {
-      Location: { sort: "asc", nulls: "last" },
-    },
+    orderBy: [
+      {
+        ModuleId: { sort: "desc", nulls: "last" },
+      },
+      {
+        Location: { sort: "asc", nulls: "last" },
+      },
+    ],
     include: {
       Modules: true,
     },

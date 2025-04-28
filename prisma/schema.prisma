@@ -359,17 +359,18 @@ model CourseTypes {
   @@schema("Courses")
 }
 
-model GradeCoefficients {
-  GradeCoefficientId  Int                   @id(map: "PK__GradeCoe__6A179275CDE26C7E") @default(autoincrement())
-  Name                String                @db.NVarChar(255)
-  Coefficient         Decimal               @db.Decimal(18, 2)
-  UpdatedAt           DateTime?
-  CreatedAt           DateTime              @default(now())
-  IsEnabled           Boolean
-  StudentCourseGrades StudentCourseGrades[]
-
-  @@schema("Courses")
-}
+model ScholarPeriods {
+  ScholarPeriodId Int              @id(map: "PK_ScholarPeriod") @default(autoincrement())
+  Name            String           @db.NVarChar(50)
+  Number          Int
+  FromDate        DateTime?        @db.Date
+  ToDate          DateTime?        @db.Date
+  IsActive        Boolean
+  ScholarYearId   Int
+  UpdatedAt       DateTime?
+  CreatedAt       DateTime         @default(now())
+  ScholarYears    ScholarYears     @relation(fields: [ScholarYearId], references: [ScholarYearId], onUpdate: NoAction, map: "FK_ScholarPeriods_ScholarYears")
+  StudentCourses  StudentCourses[]
 
 model LevelCourses {
   LevelCourseId Int       @id(map: "PK__LevelCou__4289BA75F320A595") @default(autoincrement())
@@ -394,18 +395,26 @@ model Levels {
   @@schema("Courses")
 }
 
-model ScholarPeriods {
-  ScholarPeriodId Int              @id(map: "PK_ScholarPeriod") @default(autoincrement())
-  Name            String           @db.NVarChar(50)
-  Number          Int
-  FromDate        DateTime?        @db.Date
-  ToDate          DateTime?        @db.Date
-  IsActive        Boolean
-  ScholarYearId   Int
+model TeacherCourses {
+  TeacherCourseId Int       @id(map: "PK__TeacherC__73CDCFBB55E27CC9") @default(autoincrement())
+  UserId          Int
+  CourseId        Int
   UpdatedAt       DateTime?
-  CreatedAt       DateTime         @default(now())
-  ScholarYears    ScholarYears     @relation(fields: [ScholarYearId], references: [ScholarYearId], onUpdate: NoAction, map: "FK_ScholarPeriods_ScholarYears")
-  StudentCourses  StudentCourses[]
+  CreatedAt       DateTime  @default(now())
+  Courses         Courses   @relation(fields: [CourseId], references: [CourseId], onUpdate: NoAction, map: "FK_TeacherCourses_Courses")
+  Users           Users     @relation(fields: [UserId], references: [UserId], onUpdate: NoAction, map: "FK_TeacherCourses_Users")
+
+  @@schema("Courses")
+}
+
+model GradeCoefficients {
+  GradeCoefficientId  Int                   @id(map: "PK__GradeCoe__6A179275586DAB81") @default(autoincrement())
+  Name                String                @db.NVarChar(255)
+  Coefficient         Decimal               @db.Decimal(18, 2)
+  UpdatedAt           DateTime?
+  CreatedAt           DateTime              @default(now())
+  IsEnabled           Boolean
+  StudentCourseGrades StudentCourseGrades[]
 
   @@schema("Courses")
 }
@@ -422,18 +431,6 @@ model StudentCourseGrades {
   GradeCoefficients   GradeCoefficients @relation(fields: [GradeCoefficientId], references: [GradeCoefficientId], onUpdate: NoAction, map: "FK_StudentCourseGrades_GradeCoefficients")
   StudentCourses      StudentCourses    @relation(fields: [StudentCourseId], references: [StudentCourseId], onUpdate: NoAction, map: "FK_StudentCourseGrades_StudentCourses")
   Users               Users             @relation(fields: [UserId], references: [UserId], onUpdate: NoAction, map: "FK_StudentCourseGrades_Users")
-
-  @@schema("Courses")
-}
-
-model TeacherCourses {
-  TeacherCourseId Int       @id(map: "PK__TeacherC__73CDCFBBD7E7AF22") @default(autoincrement())
-  UserId          Int
-  CourseId        Int
-  UpdatedAt       DateTime?
-  CreatedAt       DateTime  @default(now())
-  Courses         Courses   @relation(fields: [CourseId], references: [CourseId], onUpdate: NoAction, map: "FK_TeacherCourses_Courses")
-  Users           Users     @relation(fields: [UserId], references: [UserId], onUpdate: NoAction, map: "FK_TeacherCourses_Users")
 
   @@schema("Courses")
 }

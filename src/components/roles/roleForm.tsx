@@ -141,6 +141,7 @@ export default function RoleForm({
                   field.handleChange(x && x.key);
                 }}
                 itemSelected={field.state.value}
+                disabled={action === "view"}
               />
             </>
           )}

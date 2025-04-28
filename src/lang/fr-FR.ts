@@ -11,13 +11,25 @@ export default {
     modules: "Modules",
     moduleElements: "Éléments du module",
     roleModuleElements: "Éléments du module de rôle",
+    courses: "Cours",
+    studentCourses: "Cours des étudiants",
+    scholarPeriods: "Périodes scolaires",
+    scholarYears: "Années scolaires",
+    levels: "Niveaux scolaires",
+    teacherCourses: "Cours de professeur",
+    gradeCoefficients: "Coefficients de note",
+    studentCourseGrades: "Notes",
   },
   shortcuts: {
     transcripts: "Transcripts",
+    grades: "Notes",
+    courses: "Cours",
+    students: "Étudiants",
   },
   shared: {
     save: "Enregistrer",
     cancel: "Annuler",
+    confirm: "Confirmer",
     yes: "Oui",
     no: "Non",
     exportPDF: "Exporter en PDF",
@@ -28,14 +40,31 @@ export default {
     create: "Créer",
     edit: "Modifier",
     delete: "Supprimer",
-    desable: "Désactiver",
+    disable: "Désactiver",
     view: "Visualiser",
     actions: "Actions",
     page: "Page",
+    female: "Femelle",
+    male: "Mâle",
+    enables: "Actifs",
+    disables: "Inactifs",
+    dateInput: {
+      day: "JJ",
+      moth: "MM",
+      year: "AAAA",
+    },
+    noValues: "Aucune valeur trouvée.",
   },
   login: {
     user: "Utilisateur",
     password: "Mot de passe",
+  },
+  table: {
+    noResults: "Aucun résultat.",
+    columns: "Colonnes",
+    page: "Page",
+    of: "de",
+    goToPage: "| Aller à la page: ",
   },
   users: {
     title: "Utilisateurs",
@@ -55,6 +84,10 @@ export default {
       role: "Rôle",
       isEnabled: "Utilisateur actif",
     },
+    validations: {
+      passwordValidation: "Le mot de passe doit contenir au moins 8 lettres",
+      repeatPasswordValidation: "Les mots de passe ne correspondent pas",
+    },
     notifications: {
       createSuccess: "Utilisateur créé avec succès",
       createError:
@@ -64,7 +97,7 @@ export default {
       updateError:
         "Une erreur s'est produite pendant la modification de l'utilisateur",
       updateFailure: "Échec de la modification de l'utilisateur",
-      deleteSuccess: "Utilisateur désactivé  avec succès",
+      deleteSuccess: "Utilisateur désactivé avec succès",
       deleteError:
         "Une erreur s'est produite pendant la désactivation de l'utilisateur",
       deleteFailure: "Échec de la désactivation de l'utilisateur",
@@ -74,8 +107,8 @@ export default {
       updatePasswordFailure: "Échec de la modification du mot de passe",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de supprimer l'utilisateur ?",
-      description: "L'utilisateur sera définitivement supprimé",
+      title: "Êtes-vous sûr de désactiver l'utilisateur ?",
+      description: "L'utilisateur sera désactivé",
     },
   },
   roles: {
@@ -104,8 +137,8 @@ export default {
       deleteFailure: "Échec de la désactivation du rôle",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de supprimer le rôle ?",
-      description: "Le rôle sera définitivement supprimé",
+      title: "Êtes-vous sûr de désactiver le rôle ?",
+      description: "Le rôle sera désactivé",
     },
   },
   modules: {
@@ -228,16 +261,451 @@ export default {
       description: "L'élément de rôle sera définitivement supprimé",
     },
   },
-  student: {
+  students: {
     pageTitle: "Page des étudiants",
-    student: "Étudiant",
+    student: "Étudiant(e)",
+    create: "Créer un étudiant",
     columns: {
       id: "ID",
       dBaseCode: "Code DBase",
       studentName: "Nom",
       studentType: "Type d'étudiant",
       isACA: "Est ACA",
+      isEnabled: "Actif",
       actions: "Actions",
+    },
+    form: {
+      firstName: "Prénom",
+      lastName: "Nom",
+      birthDate: "Date de naissance",
+      sex: "Sexe",
+      telephone: "Téléphone",
+      workTelephone: "Téléphone professionnel",
+      birthCity: "Ville de naissance",
+      address1: "Adresse",
+      birthCountryId: "Pays de naissance",
+      email: "E-mail",
+      dBaseCode: "Code DBase",
+      personImage: "Image",
+      contactTypeId: "Type de contact",
+      studentTypeId: "Type d'étudiant",
+      countryId: "Pays",
+      contactCity: "Ville",
+      isACA: "Est ACA",
+      collegeId: "Université",
+      regimeId: "Régime",
+      isEnabled: "Est activé",
+      addContact: "Ajouter un contact",
+      contact: "Contact",
+      personId: "Nom du contact",
+      loadContactData: "Charger les informations",
+      selectContact: "Sélectionner un contact",
+    },
+    validations: {
+      sexValidation: "Le champ sexe est obligatoire",
+      bithDateValidation: "La date de naissance est obligatoire",
+      contactTypeValidation: "Le type de contact est obligatoire",
+      countryValidation: "Le pays de naissance est obligatoire",
+      regimeValidation: "Le régime est obligatoire",
+      contactValidation: "Le contact est obligatoire",
+    },
+    notifications: {
+      createSuccess: "Étudiant(e) créé avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création de l'étudiant(e)",
+      createFailure: "Échec de la création de l'étudiant(e)",
+      updateSuccess: "Étudiant(e) modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification de l'étudiant(e)",
+      updateFailure: "Échec de la modification de l'étudiant(e)",
+      deleteSuccess: "Étudiant(e) désactivé avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la désactivation de l'étudiant(e)",
+      deleteFailure: "Échec de la désactivation de l'étudiant(e)",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de désactiver l'étudiant(e) ?",
+      description: "L'étudiant(e) sera désactivé",
+    },
+  },
+  courses: {
+    title: "Page des cours",
+    course: "Cours",
+    create: "Créer un cours",
+    columns: {
+      courseId: "ID",
+      name: "Cours",
+      courseCode: "Code cours",
+      periodNumber: "Trimestre",
+      creditAmount: "Crédits",
+      isEnabled: "Est activé",
+    },
+    form: {
+      name: "Nom français",
+      englishName: "Nom anglais",
+      courseCode: "Code cours",
+      creditAmount: "Crédits",
+      coursePeriodId: "Type de période",
+      periodNumber: "N° Trimestre",
+      courseTypeId: "Type de cours",
+      isEnabled: "Est activé",
+    },
+    notifications: {
+      createSuccess: "Cours créé avec succès",
+      createError: "Une erreur s'est produite pendant la création du cours",
+      createFailure: "Échec de la création du cours",
+      updateSuccess: "Cours modifié avec succès",
+      updateError: "Une erreur s'est produite pendant la modification du cours",
+      updateFailure: "Échec de la modification du cours",
+      deleteSuccess: "Cours désactivé avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la désactivation du cours",
+      deleteFailure: "Échec de la désactivation du cours",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de désactiver le cours ?",
+      description: "Le cours sera désactivé",
+    },
+  },
+  studentCourses: {
+    title: "Page des cours des étudiants",
+    studentCourse: "Cours des étudiant(e)",
+    create: "Ajouter des cours au étudiant",
+    columns: {
+      studentId: "ID",
+      coursesAsigned: "Cours assignés",
+      alternativeName: "Étudiant(e)",
+      isEnabled: "Est activé",
+      note: "Note",
+      scholarPeriodId: "Période",
+      courseId: "Cours ID",
+      name: "Cours",
+      courseCode: "Code cours",
+    },
+    form: {
+      studentId: "Étudiant(e)",
+      studentCourses: "Cours",
+      addCourse: "Ajouter cours",
+      scholarLevels: "Niveaux scolaires",
+      courses: "Cours",
+      coursePeriod: "Trimestre",
+      scholarPeriodId: "Période",
+      scholarYearId: "Année scolaire",
+    },
+    validations: {
+      studentValidation: "Le étudiant est obligatoire",
+      scholarPeriodValidation: "La période scolaire est obligatoire",
+      coursesValidation: "Les courses sont obligatoires",
+    },
+    notifications: {
+      createSuccess: "Cours ajoutés de l'étudiant(e) avec succès",
+      createError:
+        "Une erreur s'est produite pendant l'ajout du cours de l'étudiant(e)",
+      createFailure: "Échec de l'ajout du cours de l'étudiant(e)",
+      updateSuccess: "Cours modifiés de l'étudiant(e) avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification du cours de l'étudiant(e)",
+      updateFailure: "Échec de la modification du cours de l'étudiant(e)",
+
+      // deleteSuccess: "Cours de l'étudiant désactivé avec succès",
+      // deleteError:
+      //   "Une erreur s'est produite pendant la désactivation du cours de l'étudiant",
+      // deleteFailure: "Échec de la désactivation du cours de l'étudiant",
+    },
+  },
+  scholarPeriods: {
+    title: "Page des périodes scolaires",
+    scholarPeriod: "Période scolaire",
+    create: "Créer une période scolaire",
+    warningActivePeriods:
+      "Plusieurs périodes sont actives, cela entraînera de graves problèmes",
+    columns: {
+      scholarPeriodId: "ID",
+      name: "Période scolaire",
+      number: "Trimestre",
+      fromDate: "À partir de",
+      toDate: "Jusqu'à",
+      isActive: "Est activé",
+      scholarYearName: "Année",
+    },
+    form: {
+      name: "Mon de la période scolaire",
+      number: "Trimestre",
+      fromDate: "À partir de",
+      toDate: "Jusqu'à",
+      isActive: "Est activé",
+      scholarYearId: "Année",
+    },
+    notifications: {
+      createSuccess: "Période scolaire créée avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création de la période scolaire",
+      createFailure: "Échec de la création de la période scolaire",
+      updateSuccess: "Période scolaire modifiée avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification de la période scolaire",
+      updateFailure: "Échec de la modification de la période scolaire",
+      deleteSuccess: "Période scolaire supprimée avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression de la période scolaire",
+      deleteFailure: "Échec de la suppression de la période scolaire",
+      disableSuccess: "Période scolaire désactivée avec succès",
+      disableError:
+        "Une erreur s'est produite pendant la désactivation de la période scolaire",
+      disableFailure: "Échec de la désactivation de la période scolaire",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de supprimer la période scolaire ?",
+      description: "La période scolaire sera supprimée",
+      disableTitle: "Êtes-vous sûr de désactiver la période scolaire ?",
+      disableDescription: "La période scolaire sera désactivée",
+    },
+    delteModalValidation: {
+      title: "La période scolaire a des cours assignées",
+      description:
+        "Les périodes scolaires avec des cours assignés ne peuvent pas être supprimées",
+    },
+  },
+  scholarYears: {
+    title: "Page des années scolaires",
+    scholarYear: "Année scolaire",
+    create: "Créer une année scolaire",
+    warningActiveYears:
+      "Plusieurs années sont actives, cela entraînera de graves problèmes",
+    columns: {
+      scholarYearId: "ID",
+      name: "Année scolaire",
+      fromDate: "À partir de",
+      toDate: "Jusqu'à",
+      isActive: "Est activé",
+    },
+    form: {
+      name: "Année scolaire",
+      fromDate: "À partir de",
+      toDate: "Jusqu'à",
+      isActive: "Est activé",
+    },
+    notifications: {
+      createSuccess: "Année scolaire créée avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création du année scolaire",
+      createFailure: "Échec de la création du année scolaire",
+      updateSuccess: "Année scolaire modifiée avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification de l'année scolaire",
+      updateFailure: "Échec de la modification de l'année scolaire",
+      deleteSuccess: "Année scolaire supprimée avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la désactivation de l'année scolaire",
+      deleteFailure: "Échec de la désactivation de l'année scolaire",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de supprimer l'année scolaire ?",
+      description: "L'année scolaire sera supprimée",
+      disableTitle: "Êtes-vous sûr de désactiver l'année scolaire ?",
+      disableDescription: "L'année scolaire sera désactivée",
+    },
+    delteModalValidation: {
+      title: "L'année scolaire a des périodes assignées",
+      description:
+        "Les années scolaires avec des périodes assignés ne peuvent pas être supprimées",
+    },
+  },
+  levels: {
+    title: "Page des niveaux scolaires",
+    levels: "Niveaux scolaires",
+    create: "Créer un niveau scolaire",
+    columns: {
+      coursesAsigned: "Cours assignés",
+      name: "Niveau scolaire",
+      isEnabled: "Est activé",
+    },
+    expanded: {
+      courseName: "Cours",
+      courseCode: "Code cours",
+    },
+    form: {
+      name: "Niveau scolaire",
+      isEnabled: "Est activé",
+      levelCourses: "Cours",
+      addCourse: "Ajouter cours",
+      coursePeriod: "Trimestre",
+      scholarPeriodId: "Période",
+    },
+    validations: {
+      coursesValidation: "Les courses sont obligatoires",
+    },
+    notifications: {
+      createSuccess: "Niveau scolaire créé avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création du niveau scolaire",
+      createFailure: "Échec de la création du niveau scolaire",
+      updateSuccess: "Niveau scolaire modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification du niveau scolaire",
+      updateFailure: "Échec de la modification du niveau scolaire",
+      deleteSuccess: "Niveau scolaire supprimé avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression du niveau scolaire",
+      deleteFailure: "Échec de la suppression du niveau scolaire",
+      disableSuccess: "Niveau scolaire désactivé avec succès",
+      disableError:
+        "Une erreur s'est produite pendant la désactivation du niveau scolaire",
+      disableFailure: "Échec de la désactivation du niveau scolaire",
+    },
+    deleteModal: {
+      deleteTitle: "Êtes-vous sûr de supprimer le niveau scolaire ?",
+      deleteDescription: "Le niveau scolaire sera supprimé",
+      disableTitle: "Êtes-vous sûr de désactiver le niveau scolaire ?",
+      disableDescription: "Le niveau scolaire sera désactivé",
+    },
+    delteModalValidation: {
+      title: "Le niveau scolaire a des cours assignés",
+      description:
+        "Les niveau scolaires avec des cours assignés ne peuvent pas être supprimés",
+    },
+  },
+  teacherCourses: {
+    title: "Page des cours de professeur(e)",
+    teacherCourses: "Cours de professeur(e)",
+    columns: {
+      coursesAsigned: "Cours assignés",
+      userName: "Professeur(e)",
+      isEnabled: "Est activé",
+    },
+    expanded: {
+      name: "Cours",
+      courseCode: "Code cours",
+      creditAmount: "Crédits",
+    },
+    form: {
+      teacherCourses: "Cours",
+      addCourse: "Ajouter cours",
+      coursePeriod: "Trimestre",
+      level: "Niveau scolaire",
+      scholarPeriodId: "Période",
+    },
+    notifications: {
+      updateSuccess: "Cours de professeur(e) modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification des cours de professeur(e)",
+      updateFailure: "Échec de la modification dus cours de professeur(e)",
+    },
+  },
+  gradeCoefficients: {
+    title: "Page des coefficients de note",
+    gradeCoefficients: "Coefficients de note",
+    gradeCoefficient: "Coefficient de note",
+    create: "Créer un coefficient de note",
+    columns: {
+      name: "Coefficients de note",
+      coefficient: "Pourcentage",
+      isEnabled: "Est activé",
+    },
+    form: {
+      name: "Coefficients de note",
+      coefficient: "Pourcentage",
+      isEnabled: "Est activé",
+    },
+    notifications: {
+      createSuccess: "Coefficient de note créé avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création du coefficient de note",
+      createFailure: "Échec de la création du Coefficient de note",
+      updateSuccess: "Coefficient de note modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification du coefficient de note",
+      updateFailure: "Échec de la modification du coefficient de note",
+      deleteSuccess: "Coefficient de note désactivé avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression du coefficient de note",
+      deleteFailure: "Échec de la suppression du coefficient de note",
+      disableSuccess: "Coefficient de note désactivé avec succès",
+      disableError:
+        "Une erreur s'est produite pendant la désactivation du coefficient de note",
+      disableFailure: "Échec de la désactivation du coefficient de note",
+    },
+    deleteModal: {
+      deleteTitle: "Êtes-vous sûr de supprimer le coefficient de note ?",
+      deleteDescription: "Le coefficient de note sera supprimé",
+      disableTitle: "Êtes-vous sûr de désactiver le coefficient de note ?",
+      disableDescription: "Le coefficient de note sera désactivé",
+    },
+  },
+  studentCourseGrades: {
+    title: "Page des Notes",
+    studentCourseGrades: "Notes",
+    create: "Ajouter des notes",
+    level: "Niveaux scolaires",
+    tabs: {
+      orderedByActivity: "Trié par activité",
+      orderedByStudent: "Trié par étudiant",
+    },
+    columnsByStudent: {
+      courseName: "Cours",
+      courseCode: "Cours code",
+      studentName: "Étudiant(e)",
+      grade: "Moyen",
+      levelName: "Niveau",
+    },
+    expandedByStudent: {
+      description: "Acticité",
+      gradeCoefficientName: "Type",
+      grade: "Note",
+      createdAt: "Date",
+      userName: "Professeur(e)",
+    },
+    columnsByActivity: {
+      description: "Activité",
+      gradeCoefficientName: "Type",
+      createdAt: "Date",
+      userName: "Professeur(e)",
+      levelName: "Niveau",
+    },
+    expandedByActivity: {
+      studentName: "Étudiant(e)",
+      averageGrade: "Moyen de l'étudiant(e)",
+      grade: "Note de l'activité",
+    },
+    form: {
+      course: "Course",
+      level: "Niveau scolaire",
+      gradeCoefficientId: "Type d'activité",
+      description: "Description",
+      students: "Étudiants",
+      grade: "Note",
+      clearGrades: "Effacer notes",
+    },
+    notifications: {
+      createSuccess: "Notes créés avec succès",
+      createError: "Une erreur s'est produite pendant la création du notes",
+      createFailure: "Échec de la création du notes",
+      updateSuccess: "Notes modifiés avec succès",
+      updateError: "Une erreur s'est produite pendant la modification du notes",
+      updateFailure: "Échec de la modification du notes",
+      deleteSuccess: "Notes désactivés avec succès",
+      deleteError: "Une erreur s'est produite pendant la suppression du Notes",
+      deleteFailure: "Échec de la suppression du Notes",
+    },
+    validations: {
+      gradeCoefficientValidation: "Le Coefficients de note est obligatoire",
+      coursesValidation: "Les cours sont obligatoires",
+    },
+    delteModalValidation: {
+      title: "L'activité a des notes assignées",
+      description:
+        "Pour supprimer l'activité, vous devez d'abord effacer toutes les notes, puis revenir et supprimer l'activité",
+    },
+    deleteModal: {
+      deleteTitle: "Êtes-vous sûr de supprimer les notes ?",
+      deleteDescription: "L'activité sera supprimé",
+    },
+    confirmtionModal: {
+      title:
+        "Êtes-vous sûr de vouloir sauvegarder une activité avec toutes ses notes vides ?",
+      description:
+        "L'activité sera sauvegardée sans notes, mais cela n'affectera pas la moyenne des notes",
+      // "L'activité sera sauvegardée sans notes",
     },
   },
   reports: {
@@ -247,7 +715,7 @@ export default {
       titlePage: "Notes des étudiants IFLE de",
       secretariatName: "Marta Oliver",
       data: {
-        studentName: "Nom de l'étudiant",
+        studentName: "Nom de l'étudiant(e)",
         birthdate: "Date de naissance",
         place: "Lieu",
         country: "Pays",

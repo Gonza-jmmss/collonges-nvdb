@@ -1,31 +1,3 @@
-# # Already working dockerfile
-# FROM node:18.17-bullseye
-
-# RUN apt-get update && apt-get install -y curl \
-#     && curl -fsSL https://bun.sh/install | bash
-
-# WORKDIR /app
-
-# # Copy configuration files first
-# COPY package.json bun.lockb ./
-# COPY prisma ./prisma
-
-# # Install dependencies and generate Prisma client
-# RUN /root/.bun/bin/bun install
-# RUN /root/.bun/bin/bun prisma generate
-
-# # Copy rest of the application
-# COPY . .
-
-# # Expose application port
-# EXPOSE 3000
-
-# # Start the application
-# CMD ["/root/.bun/bin/bun", "run", "dev"]
-# # Already working dockerfile
-
-##############################
-
 # Use Node.js 18 as the base image
 FROM node:18-bullseye as builder
 
@@ -89,22 +61,21 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-
 # PROD
-ENV NODE_ENV production
-ENV NEXTAUTH_URL "http://srvifle:3128"
-ENV NEXT_PUBLIC_NEXTAUTH_URL "http://srvifle:3128"
-ENV NEXTAUTH_URL_INTERNAL "http://localhost:3000"
-ENV COOKIE_DOMAIN "srvifle"
-ENV NEXT_PUBLIC_URL: "http://srvifle:3128"
-
-# SERVER TEST
-# ENV NODE_ENV test
-# ENV NEXTAUTH_URL "http://srvifle:3129"
-# ENV NEXT_PUBLIC_NEXTAUTH_URL "http://srvifle:3129"
+# ENV NODE_ENV production
+# ENV NEXTAUTH_URL "http://srvifle:3128"
+# ENV NEXT_PUBLIC_NEXTAUTH_URL "http://srvifle:3128"
 # ENV NEXTAUTH_URL_INTERNAL "http://localhost:3000"
 # ENV COOKIE_DOMAIN "srvifle"
-# ENV NEXT_PUBLIC_URL: "http://srvifle:3129"
+# ENV NEXT_PUBLIC_URL: "http://srvifle:3128"
+
+# SERVER TEST
+ENV NODE_ENV test
+ENV NEXTAUTH_URL "http://srvifle:3129"
+ENV NEXT_PUBLIC_NEXTAUTH_URL "http://srvifle:3129"
+ENV NEXTAUTH_URL_INTERNAL "http://localhost:3000"
+ENV COOKIE_DOMAIN "srvifle"
+ENV NEXT_PUBLIC_URL: "http://srvifle:3129"
 
 # DEV
 # ENV NEXTAUTH_URL "http://localhost:3128"

@@ -137,7 +137,7 @@ export default function RolesTable({
         titleText={t.roles.deleteModal.title}
         descriptionText={t.roles.deleteModal.description}
         deletefunction={() => deleteRole(selectedRoleToDelete)}
-        desable
+        disable
       />
     </div>
   );

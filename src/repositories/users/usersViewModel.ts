@@ -25,3 +25,13 @@ export type UserViewModel = {
   RoleName: string;
   IsEnabled: boolean;
 } | null;
+
+export type TeachersMap = {
+  UserId: number;
+  UserName: string;
+  Password: string;
+  UpdatedAt?: Date | null;
+  CreatedAt: Date;
+  RoleId: number;
+  IsEnabled: boolean;
+};

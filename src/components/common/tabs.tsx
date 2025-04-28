@@ -11,16 +11,18 @@ interface TabsComponentProps {
   tabs: Tab[];
   className?: string;
   tabListClassName?: string;
+  defaultValue?: string;
 }
 
 export function TabsComponent({
   tabs,
   className,
   tabListClassName,
+  defaultValue,
 }: TabsComponentProps) {
   return (
     <Tabs
-      defaultValue={tabs[0]?.id || ""}
+      defaultValue={defaultValue || tabs[0]?.id}
       className={cn("w-[400px]", className)}
     >
       <TabsList

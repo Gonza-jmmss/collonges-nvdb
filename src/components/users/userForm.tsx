@@ -67,7 +67,7 @@ export default function UserForm({
       }
       toast({
         title: `${t.users.notifications.createSuccess}`,
-        description: `${t.users.title} : ${response.UserName}`,
+        description: `${t.users.user} : ${response.UserName}`,
       });
 
       router.push("/settings/users");
@@ -92,7 +92,7 @@ export default function UserForm({
       }
       toast({
         title: `${t.users.notifications.updateSuccess}`,
-        description: `${t.users.title} : ${response.UserName}`,
+        description: `${t.users.user} : ${response.UserName}`,
       });
 
       router.push("/settings/users");
@@ -117,7 +117,7 @@ export default function UserForm({
       }
       toast({
         title: `${t.users.notifications.updatePasswordSuccess}`,
-        description: `${t.users.title} : ${response.UserName}`,
+        description: `${t.users.user} : ${response.UserName}`,
       });
 
       router.push("/settings/users");
@@ -179,6 +179,7 @@ export default function UserForm({
                       field.handleChange(x && x.key);
                     }}
                     itemSelected={field.state.value}
+                    disabled={action === "view"}
                   />
                 </>
               )}
@@ -218,7 +219,7 @@ export default function UserForm({
               validators={{
                 onChange: z
                   .string()
-                  .min(8, "Le mot de passe doit contenir au moins 8 lettres"),
+                  .min(8, t.users.validations.passwordValidation),
               }}
               children={(field) => (
                 <>
@@ -247,7 +248,7 @@ export default function UserForm({
                 onChangeListenTo: ["Password"],
                 onChange: ({ value, fieldApi }) => {
                   if (value !== fieldApi.form.getFieldValue("Password")) {
-                    return "Les mots de passe ne correspondent pas";
+                    return t.users.validations.repeatPasswordValidation;
                   }
                   return undefined;
                 },

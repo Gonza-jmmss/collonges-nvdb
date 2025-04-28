@@ -1,17 +1,17 @@
+"use client";
+
 import * as React from "react";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import Icon from "@/components/common/icon";
 import Combobox from "@/components/common/combobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import {
   Table,
   TableBody,
@@ -20,33 +20,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 // A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
-import {
-  RankingInfo,
-  rankItem,
-  compareItems,
-} from "@tanstack/match-sorter-utils";
-
+import { rankItem } from "@tanstack/match-sorter-utils";
 import {
   ColumnFiltersState,
   FilterFn,
-  ColumnDef,
-  SortingFn,
+  ExpandedState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  sortingFns,
+  getExpandedRowModel,
   useReactTable,
-  SortingState,
   VisibilityState,
+  PaginationState,
 } from "@tanstack/react-table";
-
 import DebouncedInput from "@/components/common/debouncedInput";
 import Filter from "@/components/common/filter";
-import { Value } from "@radix-ui/react-select";
+import { useUpdateQuery } from "@/hooks/useUpdateQuery";
+// import { useRouter } from "next/navigation";
+import frFR from "@/lang/fr-FR";
 import { set } from "zod";
 
 declare module "@tanstack/react-table" {
@@ -103,6 +97,11 @@ interface TableProps<T> {
   onRowClick?: (row: any) => void;
   className?: string;
   minimalMode?: boolean;
+  noBorders?: boolean;
+  expandable?: boolean;
+  expandedContent?: React.ReactNode | ((row: T) => React.ReactNode);
+  pageIndexParam?: number;
+  pageSizeParam?: number;
 }
 export default function TableComponent<T>({
   columns,
@@ -110,11 +109,18 @@ export default function TableComponent<T>({
   onRowClick,
   className,
   minimalMode,
+  noBorders,
+  expandable,
+  expandedContent,
+  pageIndexParam,
+  pageSizeParam,
 }: TableProps<T>) {
+  const t = frFR;
+  const updateQuery = useUpdateQuery();
+
   // const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -123,11 +129,12 @@ export default function TableComponent<T>({
 
   const [isColumnSearch, setIsColumnSearch] = React.useState(false);
 
-  const [rowsNumber, setRowsNumber] = React.useState({ key: "10", value: 10 });
+  const [expanded, setExpanded] = React.useState<ExpandedState>({});
 
-  React.useEffect(() => {
-    table.setPageSize(rowsNumber.value);
-  }, [rowsNumber]);
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: pageIndexParam !== undefined ? pageIndexParam : 0,
+    pageSize: pageSizeParam !== undefined ? pageSizeParam : 10,
+  });
 
   const table = useReactTable({
     data,
@@ -139,40 +146,57 @@ export default function TableComponent<T>({
       columnFilters,
       globalFilter,
       columnVisibility,
+      expanded,
+      pagination,
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter (most common use case for fuzzy filter)
+    onExpandedChange: setExpanded,
+    // getSubRows: (row) => row.subRows,
+    // getSubRows: (row) => row.children,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(), //client side filtering
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
+    getRowCanExpand: () => expandable || false,
+    getExpandedRowModel: getExpandedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
+    // onRowSelectionChange: setRowSelection,
     // onSortingChange: setSorting,
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,
+    globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter (most common use case for fuzzy filter)
+    //
   });
+
+  const handleUrlParameterChange = (key: string, value: string) => {
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.set(key, value);
+
+    // Update URL without replacing current parameters
+    const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+
+    window.history.pushState({}, "", newUrl);
+  };
+
+  React.useEffect(() => {
+    console.log("pagination", pagination);
+    handleUrlParameterChange("pageIndex", `${pagination.pageIndex}`);
+    handleUrlParameterChange("pageSize", `${pagination.pageSize}`);
+  }, [pagination]);
 
   return (
     <div className="w-full">
       {minimalMode ? (
-        <div className="rounded-md border">
+        <div className={`${noBorders ? "" : "rounded-md border"}`}>
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
-                      // <TableHead key={header.id}>
-                      //   {header.isPlaceholder
-                      //     ? null
-                      //     : flexRender(
-                      //         header.column.columnDef.header,
-                      //         header.getContext(),
-                      //       )}
-                      // </TableHead>
                       <TableHead
                         key={header.id}
                         style={{
@@ -195,17 +219,10 @@ export default function TableComponent<T>({
                             asc: (
                               <Icon
                                 name={"MdOutlineNorth"}
-                                // size={13}
                                 className="ml-0.5"
                               />
                             ),
-                            desc: (
-                              <Icon
-                                name={"MdSouth"}
-                                // size={13}
-                                className="ml-0.5"
-                              />
-                            ),
+                            desc: <Icon name={"MdSouth"} className="ml-0.5" />,
                           }[header.column.getIsSorted() as string] ?? null}
                         </div>
                         {isColumnSearch && header.column.getCanFilter() ? (
@@ -222,27 +239,39 @@ export default function TableComponent<T>({
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    onClick={() => onRowClick?.(row.original)}
-                    className={`${onRowClick != null && "cursor-pointer"}`}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        style={{
-                          width: cell.column.columnDef.size || "auto",
-                        }}
-                        onClick={(event) => event.stopPropagation()}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
+                  <React.Fragment key={row.id}>
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      onClick={() => onRowClick?.(row.original)}
+                      className={`${onRowClick != null && "cursor-pointer"}`}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                          style={{
+                            width: cell.column.columnDef.size || "auto",
+                          }}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                    {row.getIsExpanded() && (
+                      <TableRow>
+                        <TableCell colSpan={row.getAllCells().length}>
+                          <div>
+                            {typeof expandedContent === "function"
+                              ? expandedContent(row.original)
+                              : expandedContent}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
                 ))
               ) : (
                 <TableRow>
@@ -250,7 +279,7 @@ export default function TableComponent<T>({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                    {t.table.noResults}
                   </TableCell>
                 </TableRow>
               )}
@@ -268,7 +297,8 @@ export default function TableComponent<T>({
                 className="w-[30vw]"
               />
             </div>
-            <div
+            {/* Columns filter (Not working) */}
+            {/* <div
               className={`mx-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border`}
               onClick={() => setIsColumnSearch(!isColumnSearch)}
             >
@@ -276,11 +306,11 @@ export default function TableComponent<T>({
                 name={"MdManageSearch"}
                 className={`text-xl ${isColumnSearch ? "text-primary hover:text-neutral-700" : "text-neutral-700 hover:text-primary"}`}
               />
-            </div>
+            </div> */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="ml-auto">
-                  Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+                  {t.table.columns} <ChevronDownIcon className="ml-2 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
 
@@ -312,14 +342,6 @@ export default function TableComponent<T>({
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
                       return (
-                        // <TableHead key={header.id}>
-                        //   {header.isPlaceholder
-                        //     ? null
-                        //     : flexRender(
-                        //         header.column.columnDef.header,
-                        //         header.getContext(),
-                        //       )}
-                        // </TableHead>
                         <TableHead
                           key={header.id}
                           style={{
@@ -347,11 +369,7 @@ export default function TableComponent<T>({
                                 />
                               ),
                               desc: (
-                                <Icon
-                                  name={"MdSouth"}
-                                  // size={13}
-                                  className="ml-0.5"
-                                />
+                                <Icon name={"MdSouth"} className="ml-0.5" />
                               ),
                             }[header.column.getIsSorted() as string] ?? null}
                           </div>
@@ -369,26 +387,39 @@ export default function TableComponent<T>({
               <TableBody>
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                      onClick={() => onRowClick?.(row.original)}
-                      className={`${onRowClick != null && "cursor-pointer"}`}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell
-                          key={cell.id}
-                          style={{
-                            width: cell.column.columnDef.size || "auto",
-                          }}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
+                    <React.Fragment key={row.id}>
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                        onClick={() => onRowClick?.(row.original)}
+                        className={`${onRowClick != null && "cursor-pointer"}`}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell
+                            key={cell.id}
+                            style={{
+                              width: cell.column.columnDef.size || "auto",
+                            }}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                      {row.getIsExpanded() && (
+                        <TableRow>
+                          <TableCell colSpan={row.getAllCells().length}>
+                            <div>
+                              {typeof expandedContent === "function"
+                                ? expandedContent(row.original)
+                                : expandedContent}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
                   ))
                 ) : (
                   <TableRow>
@@ -396,7 +427,7 @@ export default function TableComponent<T>({
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      {t.table.noResults}
                     </TableCell>
                   </TableRow>
                 )}
@@ -463,14 +494,14 @@ export default function TableComponent<T>({
               </div>
             </Button>
             <span className="flex items-center gap-1">
-              <div>Page</div>
+              <div>{t.table.page}</div>
               <strong>
-                {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getState().pagination.pageIndex + 1} {t.table.of}{" "}
                 {table.getPageCount().toLocaleString()}
               </strong>
             </span>
             <span className="flex items-center gap-1">
-              | Go to page:
+              {t.table.goToPage}
               <Input
                 type="number"
                 defaultValue={table.getState().pagination.pageIndex + 1}
@@ -487,13 +518,24 @@ export default function TableComponent<T>({
                 textAttribute="key"
                 valueAttribute="value"
                 placeholder="rows"
-                itemSelected={rowsNumber}
-                setItemSelected={setRowsNumber}
+                itemSelected={paginationValues.find(
+                  (x) => x.value === table.getState().pagination.pageSize,
+                )}
+                setItemSelected={(x: { value: number }) =>
+                  table.setPageSize(x.value)
+                }
               />
             </div>
           </div>
         </>
       )}
+      {/* <pre>
+        {JSON.stringify(
+          { columnFilters: table.getState().columnFilters },
+          null,
+          2,
+        )}
+      </pre> */}
     </div>
   );
 }

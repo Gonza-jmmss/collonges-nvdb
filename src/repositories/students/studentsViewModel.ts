@@ -12,6 +12,7 @@ export type StudentsViewModel = {
   StudentName?: string | null;
   StudentType?: string | null;
   DBaseCode?: string | null;
+  IsEnabled: boolean;
 };
 
 export type StudentsMapViewModel = {

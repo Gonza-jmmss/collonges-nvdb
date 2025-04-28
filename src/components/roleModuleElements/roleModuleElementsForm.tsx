@@ -7,7 +7,7 @@ import { RoleModuleElementViewModel } from "@/repositories/roleModuleElements/ro
 import { ModulesViewModel } from "@/repositories/modules/modulesViewModel";
 import { ModuleElementsViewModel } from "@/repositories/moduleElements/moduleElementsViewModel";
 import { RolesViewModel } from "@/repositories/roles/rolesViewModel";
-import { Field, useForm } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
 import { useToast } from "@/hooks/use-toast";
@@ -87,7 +87,7 @@ export default function RoleModuleElementForm({
       }
       toast({
         title: `${t.roleModuleElements.notifications.createSuccess}`,
-        description: `${t.roleModuleElements.title} : ${response.ModuleId !== null && response.ModuleId}${response.ModuleElementId !== null && response.ModuleElementId}-${response.RoleId}`,
+        description: `${t.roleModuleElements.title} : ${response.ModuleId !== null ? response.ModuleId : ""}${response.ModuleElementId !== null ? response.ModuleElementId : ""}-${response.RoleId}`,
       });
 
       router.push("/settings/roleModuleElements");
@@ -114,7 +114,7 @@ export default function RoleModuleElementForm({
       }
       toast({
         title: `${t.roleModuleElements.notifications.updateSuccess}`,
-        description: `${t.roleModuleElements.title} : ${response.ModuleId !== null && response.ModuleId}${response.ModuleElementId !== null && response.ModuleElementId}-${response.RoleId}`,
+        description: `${t.roleModuleElements.title} : ${response.ModuleId !== null ? response.ModuleId : ""}${response.ModuleElementId !== null ? response.ModuleElementId : ""}-${response.RoleId}`,
       });
 
       router.push("/settings/roleModuleElements");
@@ -140,8 +140,11 @@ export default function RoleModuleElementForm({
   });
 
   useEffect(() => {
-    form.setFieldValue("ModuleId", null);
-    form.setFieldValue("ModuleElementId", null);
+    if (elementTypeSelected.Value === 1) {
+      form.setFieldValue("ModuleId", null);
+    } else if (elementTypeSelected.Value === 2) {
+      form.setFieldValue("ModuleElementId", null);
+    }
   }, [elementTypeSelected]);
 
   return (
@@ -158,16 +161,17 @@ export default function RoleModuleElementForm({
         <Combobox
           options={elementType}
           textAttribute="Name"
-          valueAttribute="ModuleId"
+          valueAttribute="Value"
           placeholder={t.roleModuleElements.form.chooseElementType}
           itemSelected={elementType.find(
             (x) => x.Value === elementTypeSelected.Value,
           )}
-          setItemSelected={(x: { Value: number; Name: string }) => {
+          setItemSelected={(x: { Name: string; Value: number }) => {
             setElementTypeSelected(x);
           }}
           disabled={action === "view"}
           showSearch
+          notClearable
         />
       </div>
       <div className="space-y-1">
@@ -194,7 +198,6 @@ export default function RoleModuleElementForm({
                 }) => {
                   field.handleChange(x && x.ModuleElementId);
                 }}
-                // disabled={action === "view"}
                 disabled={
                   action === "view" ||
                   elementTypeSelected.Name !== t.moduleElements.title
@@ -226,7 +229,6 @@ export default function RoleModuleElementForm({
                 setItemSelected={(x: { ModuleId: number; Name: string }) => {
                   field.handleChange(x && x.ModuleId);
                 }}
-                // disabled={action === "view"}
                 disabled={
                   action === "view" ||
                   elementTypeSelected.Name !== t.modules.title
