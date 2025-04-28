@@ -26,8 +26,6 @@ export default async function StudentCoursesPage({
   const pageIndexParam = parseInt(searchParams.pageIndex as string);
   const pageSizeParam = parseInt(searchParams.pageSize as string);
 
-  const studentsWithNoCourses = await getStudentsWithNoCoursesQuery();
-
   const periodNumberParam = searchParams?.periodNumber
     ? parseInt(searchParams.periodNumber as string)
     : PeriodEnum["Cours d'été"];
@@ -53,6 +51,11 @@ export default async function StudentCoursesPage({
   const scholarPeriodIdParam = searchParams.scholarPeriodId
     ? parseInt(searchParams.scholarPeriodId as string)
     : scholarPeriods[0].ScholarPeriodId;
+
+  const studentsWithNoCourses = await getStudentsWithNoCoursesQuery();
+  // const studentsWithNoCourses = await getStudentsWithNoCoursesQuery({
+  //   ScholarPeriodId: scholarPeriodIdParam,
+  // });
 
   if (params.id != "create") {
     studentCourses = await getStudentCoursesByStudentIdQuery({

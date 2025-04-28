@@ -15,7 +15,7 @@ const getAllStudentCoursesQuery = async (
   params: getAllStudentCoursesQueryParamsType,
 ) => {
   const query = await prisma.students.findMany({
-    orderBy: [{ IsEnabled: "desc" }, { Persons: { AlternativeName: "asc" } }],
+    orderBy: [{ Persons: { AlternativeName: "asc" } }],
     where: {
       IsEnabled: true,
       StudentCourses: {

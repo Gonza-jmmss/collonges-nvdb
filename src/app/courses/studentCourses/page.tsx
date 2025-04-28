@@ -32,16 +32,6 @@ export default async function StudentsCoursesPage({
     ScholarYearId: scholarYearIdParam,
   });
 
-  // const scholarYear = searchParams.scholarYear
-  //   ? parseInt(searchParams.scholarYear as string)
-  //   : scholarYears[0].ScholarYearId;
-  // const courseIdSelected =
-  //   searchParams?.courseId === undefined || searchParams?.courseId === "0"
-  //     ? courses.length > 0
-  //       ? courses[0].CourseId
-  //       : 0
-  //     : parseInt(searchParams.courseId as string);
-
   const scholarPeriodIdParam =
     searchParams.scholarPeriodId && searchParams.scholarPeriodId !== "null"
       ? parseInt(searchParams.scholarPeriodId as string)
