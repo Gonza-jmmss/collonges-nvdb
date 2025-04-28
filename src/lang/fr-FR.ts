@@ -412,6 +412,12 @@ export default {
       //   "Une erreur s'est produite pendant la désactivation du cours de l'étudiant",
       // deleteFailure: "Échec de la désactivation du cours de l'étudiant",
     },
+    confirmationModal: {
+      title:
+        "Êtes-vous sûr de vouloir supprimer un cours contenant des notes ajoutées ?",
+      description:
+        "La suppression du cours effacera définitivement toutes les notes de ce cours pour l'étudiant",
+    },
   },
   scholarPeriods: {
     title: "Page des périodes scolaires",

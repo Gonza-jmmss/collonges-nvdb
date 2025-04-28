@@ -11,7 +11,6 @@ type getStudentCoursesByStudentIdQueryParamsType = {
 const getStudentCoursesByStudentIdQuery = async (
   params: getStudentCoursesByStudentIdQueryParamsType,
 ) => {
-  console.log("getStudentCoursesByStudentIdQuery params", params);
   const query = await prisma.students.findFirstOrThrow({
     orderBy: [{ IsEnabled: "desc" }, { Persons: { AlternativeName: "asc" } }],
     where: {
