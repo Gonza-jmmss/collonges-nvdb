@@ -19,6 +19,7 @@ export default {
     teacherCourses: "Cours de professeur",
     gradeCoefficients: "Coefficients de note",
     studentCourseGrades: "Notes",
+    yearPeriods: "Périodes d'année",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -622,7 +623,7 @@ export default {
       updateError:
         "Une erreur s'est produite pendant la modification du coefficient de note",
       updateFailure: "Échec de la modification du coefficient de note",
-      deleteSuccess: "Coefficient de note désactivé avec succès",
+      deleteSuccess: "Coefficient de note supprimé avec succès",
       deleteError:
         "Une erreur s'est produite pendant la suppression du coefficient de note",
       deleteFailure: "Échec de la suppression du coefficient de note",
@@ -712,6 +713,56 @@ export default {
       description:
         "L'activité sera sauvegardée sans notes, mais cela n'affectera pas la moyenne des notes",
       // "L'activité sera sauvegardée sans notes",
+    },
+  },
+  yearPeriods: {
+    title: "Page des périodes d'année",
+    yearPeriod: "Période d'année",
+    create: "Creer une période d'année",
+    columns: {
+      name: "Période",
+      periodType: "Type de période",
+      scholarYearName: "Année",
+      isEnabled: "Est activé",
+    },
+    form: {
+      name: "Période",
+      periodType: "Type de période",
+      scholarYearId: "Année",
+      isEnabled: "Est activé",
+    },
+    validations: {
+      periodTypeValidation: "Le type de période est obligatoire",
+      scholarYearValidation: "L'année est obligatoire",
+    },
+    notifications: {
+      createSuccess: "Périodes d'année créées avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création de la période d'année",
+      createFailure: "Échec de la création de la période d'année",
+      updateSuccess: "Périodes d'année modifiée avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification de la période d'année",
+      updateFailure: "Échec de la modification de la période d'année",
+      deleteSuccess: "Périodes d'année supprimée avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression de la période d'année",
+      deleteFailure: "Échec de la suppression de la période d'année",
+      disableSuccess: "Périodes d'année désactivée avec succès",
+      disableError:
+        "Une erreur s'est produite pendant la désactivation de la période d'année",
+      disableFailure: "Échec de la désactivation de la période d'année",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de supprimer la période d'année ?",
+      description: "La période d'année sera supprimée",
+      disableTitle: "Êtes-vous sûr de désactiver la période d'année ?",
+      disableDescription: "La période d'année sera désactivée",
+    },
+    delteModalValidation: {
+      title: "La période d'année a des étudiants assignées",
+      description:
+        "Les périodes d'année avec des étudiants assignés ne peuvent pas être supprimées",
     },
   },
   reports: {
