@@ -45,6 +45,7 @@ export const StudentPersonSchema = z.object({
     CollegeId: z.number().nullable(),
     RegimeId: z.number().nullable(),
     IsEnabled: z.boolean(),
+    YearPeriodId: z.number().nullable(),
   }),
   ContactPerson: z.array(ContactPerson).nullable(),
 });
@@ -59,4 +60,5 @@ export const StudentSchema = z.object({
   RegimeId: z.number().nullable(),
   AccommodationId: z.number().nullable(),
   IsEnabled: z.boolean(),
+  YearPeriodId: z.number().nullable(),
 });

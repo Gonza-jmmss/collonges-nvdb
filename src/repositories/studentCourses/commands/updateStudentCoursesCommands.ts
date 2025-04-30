@@ -3,6 +3,7 @@
 import { PrismaClient } from "@prisma/client";
 import { StudentCourseSchema } from "@/zodSchemas/studentCourses";
 import getStudentCoursesByStudentIdQuery from "../queries/getStudentCoursesByStudentIdQuery";
+import getStuedntCoursesGradesByStudentCourseIdsQuery from "@/repositories/studentCourseGrades/queries/getStuedntCoursesGradesByStudentCourseIdsQuery";
 import { z } from "zod";
 
 const prisma = new PrismaClient();
@@ -10,7 +11,6 @@ const prisma = new PrismaClient();
 type StudentCorseParams = z.infer<typeof StudentCourseSchema>;
 
 const updateStudentCourseCommand = async (params: StudentCorseParams) => {
-  console.log("updateStudentCourseCommand params", params);
   // get studentCourses data of the student
   const studentCourse = await getStudentCoursesByStudentIdQuery({
     StudentId: params.StudentId,
@@ -28,8 +28,27 @@ const updateStudentCourseCommand = async (params: StudentCorseParams) => {
 
   // Filter the CourseIDs to delete
   const coursesToDelete = studentCoursesIds.filter(
-    (contact) => !paramsCoursesIds?.includes(contact),
+    (course) => !paramsCoursesIds?.includes(course),
   );
+
+  //Filter the CourseIDs that has grades
+  const courseIdsWithGrades = studentCourse.StudentCourses.filter(
+    (x) => x.Note !== null,
+  ).map((x) => x.CourseId);
+  const coursesWithGradesToDelete = courseIdsWithGrades.filter((course) =>
+    coursesToDelete.includes(course),
+  );
+  const coursesWithOutGradesToDelete = coursesToDelete.filter(
+    (course) => !coursesWithGradesToDelete.includes(course),
+  );
+  // Getting the studentCourseGradesIds of the courses to delete
+  const studentCourseIdsWithGrade = studentCourse.StudentCourses.filter((x) =>
+    coursesWithGradesToDelete.includes(x.CourseId),
+  ).map((x) => x.StudentCourseId);
+  const studentCourseGradesIdsToDelete =
+    await getStuedntCoursesGradesByStudentCourseIdsQuery({
+      StudentCourseId: studentCourseIdsWithGrade,
+    });
 
   // Formating data to create
   let studentCourseToCreate: {
@@ -49,12 +68,17 @@ const updateStudentCourseCommand = async (params: StudentCorseParams) => {
       });
     });
 
-  // create Courses
+  // create studentCourses
   const createCourses = prisma.studentCourses.createMany({
     data: studentCourseToCreate,
   });
 
-  // delete Courses
+  // delete StudentCourseGrades
+  const deleteStudentCourseGrades = prisma.studentCourseGrades.deleteMany({
+    where: { StudenCourseGradeId: { in: studentCourseGradesIdsToDelete } },
+  });
+
+  // delete Courses with no grades
   const deleteCourses = prisma.studentCourses.deleteMany({
     where: {
       StudentId: params.StudentId,
@@ -65,7 +89,11 @@ const updateStudentCourseCommand = async (params: StudentCorseParams) => {
   });
 
   // transaction for update data
-  const transaction = await prisma.$transaction([createCourses, deleteCourses]);
+  const transaction = await prisma.$transaction([
+    createCourses,
+    deleteStudentCourseGrades,
+    deleteCourses,
+  ]);
 
   return transaction;
 };

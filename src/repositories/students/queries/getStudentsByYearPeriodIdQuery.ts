@@ -3,12 +3,13 @@ import { StudentsMap } from "../studentsViewModel";
 
 const prisma = new PrismaClient();
 
-type getAllStudentsQueryParamsType = {
-  IsEnabled: boolean;
-  YearPeriodId?: number;
+type getStudentsByYearPeriodIdParamsType = {
+  YearPeriodId: number;
 };
 
-const getAllStudentsQuery = async (params: getAllStudentsQueryParamsType) => {
+const getStudentsByYearPeriodId = async (
+  params: getStudentsByYearPeriodIdParamsType,
+) => {
   const query = await prisma.students.findMany({
     orderBy: [
       {
@@ -20,10 +21,7 @@ const getAllStudentsQuery = async (params: getAllStudentsQueryParamsType) => {
         },
       },
     ],
-    where: {
-      IsEnabled: params.IsEnabled,
-      ...(params.YearPeriodId !== 0 && { YearPeriodId: params.YearPeriodId }),
-    },
+    where: { YearPeriodId: params.YearPeriodId },
     include: {
       Persons: {
         select: {
@@ -52,11 +50,11 @@ const getAllStudentsQuery = async (params: getAllStudentsQueryParamsType) => {
     StudentName: student.Persons?.AlternativeName,
     StudentType: student.StudentTypes?.Name,
     DBaseCode: student.Persons?.DBaseCode,
-    YearPeriodId: student.YearPeriodId,
+    YearPeriodId: student.YearPeriods.YearPeriodId,
     YearPeriodName: student.YearPeriods.Name,
   }));
 
   return res;
 };
 
-export default getAllStudentsQuery;
+export default getStudentsByYearPeriodId;

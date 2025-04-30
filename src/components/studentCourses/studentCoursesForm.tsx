@@ -16,8 +16,8 @@ import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
 import ToggleButton from "@/components/common/toggleButton";
+import Modal from "@/components/common/modal";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import enumToArray from "@/functions/enumToArray";
 import { PeriodEnum } from "@/enum/periodEnum";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
@@ -69,6 +69,15 @@ export default function StudentCourseForm({
     urlParams?.scholarYearId !== null
       ? parseInt(urlParams?.scholarYearId as string)
       : null;
+
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedStudentCourseToDelete, setSelectedStudentCourseToDelete] =
+    useState<number | null>(null);
+
+  const closeModal = () => {
+    setOpenModal(false);
+    setSelectedStudentCourseToDelete(null);
+  };
 
   const form = useForm<StudentCourseFormData>({
     defaultValues: {
@@ -449,7 +458,7 @@ export default function StudentCourseForm({
                             (x) => x.CourseId === studentCourse.CourseId,
                           )?.Note}
                       </div>
-                      {(studentCoursesData?.StudentCourses.find(
+                      {/* {(studentCoursesData?.StudentCourses.find(
                         (x) => x.CourseId === studentCourse.CourseId,
                       )?.Note !== undefined &&
                         studentCoursesData?.StudentCourses.find(
@@ -461,6 +470,27 @@ export default function StudentCourseForm({
                               ? "MdClose"
                               : "MdOutlineNotInterested"
                           }
+                          className="col-span-1 cursor-pointer place-self-end text-xl hover:text-primary"
+                          onClick={() => field.removeValue(index)}
+                        />
+                      )} */}
+                      {studentCoursesData?.StudentCourses.find(
+                        (x) => x.CourseId === studentCourse.CourseId,
+                      )?.Note !== undefined &&
+                      studentCoursesData?.StudentCourses.find(
+                        (x) => x.CourseId === studentCourse.CourseId,
+                      )?.Note !== null ? (
+                        <Icon
+                          name="MdClose"
+                          className="col-span-1 cursor-pointer place-self-end text-xl text-primary hover:text-destructive"
+                          onClick={() => {
+                            setOpenModal(true);
+                            setSelectedStudentCourseToDelete(index);
+                          }}
+                        />
+                      ) : (
+                        <Icon
+                          name="MdClose"
                           className="col-span-1 cursor-pointer place-self-end text-xl hover:text-primary"
                           onClick={() => field.removeValue(index)}
                         />
@@ -510,6 +540,36 @@ export default function StudentCourseForm({
           </div>
         )}
       </div>
+      <Modal openModal={openModal} closeModal={() => closeModal()}>
+        <div className="flex w-full flex-col items-center space-y-1">
+          <div className="mt-2 text-lg font-semibold">{`${t.studentCourses.confirmationModal.title}`}</div>
+          <div>{`${t.studentCourses.confirmationModal.description}`}</div>
+        </div>
+        <div className="mt-5 flex w-full justify-center space-x-5">
+          <Button
+            type="button"
+            variant={"secondary"}
+            className="w-[30%]"
+            onClick={() => closeModal()}
+          >
+            {t.shared.cancel}
+          </Button>
+          <Button
+            type="button"
+            variant={"default"}
+            className="w-[30%]"
+            onClick={() => {
+              form.removeFieldValue(
+                "StudentCourses",
+                selectedStudentCourseToDelete || 0,
+              );
+              closeModal();
+            }}
+          >
+            {t.shared.confirm}
+          </Button>
+        </div>
+      </Modal>
       {/* <pre>{JSON.stringify(studentCoursesData, null, 2)}</pre> */}
     </form>
   );

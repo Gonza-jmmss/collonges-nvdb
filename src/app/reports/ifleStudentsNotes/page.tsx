@@ -1,5 +1,6 @@
 import IFLEStudentsTable from "./ifleStudentsTable";
 import getAllStudentsQuery from "@/repositories/students/queries/getAllStudentsQuery";
+import getAllYearPeriodsQuery from "@/repositories/yearPeriods/queries/getAllYearPeriodsQuery";
 import frFR from "@/lang/fr-FR";
 
 export default async function ifleStudentsNotesPage({
@@ -9,9 +10,6 @@ export default async function ifleStudentsNotesPage({
 }) {
   const t = frFR;
 
-  const students = await getAllStudentsQuery({ IsEnabled: true });
-  // const students = await studentsQuery.execute();
-
   const pageIndex = searchParams?.pageIndex
     ? parseInt(searchParams.pageIndex as string)
     : 0;
@@ -19,6 +17,18 @@ export default async function ifleStudentsNotesPage({
   const pageSize = searchParams?.pageSize
     ? parseInt(searchParams.pageSize as string)
     : 10;
+
+  const yearPeriods = await getAllYearPeriodsQuery({ IsEnabled: true });
+  const yearPeriodIdSelected = searchParams?.yearPeriodId
+    ? searchParams.yearPeriodId !== "null"
+      ? parseInt(searchParams.yearPeriodId as string)
+      : yearPeriods[0].YearPeriodId
+    : yearPeriods[0].YearPeriodId;
+
+  const students = await getAllStudentsQuery({
+    IsEnabled: true,
+    YearPeriodId: yearPeriodIdSelected || 0,
+  });
 
   return (
     <main className="mt-5 flex justify-center">
@@ -30,6 +40,8 @@ export default async function ifleStudentsNotesPage({
         </div>
         <IFLEStudentsTable
           studentsData={students}
+          yearPeriods={yearPeriods}
+          yearPeriodIdSelected={yearPeriodIdSelected}
           pageIndex={pageIndex}
           pageSize={pageSize}
         />

@@ -1,19 +1,16 @@
-import StudentsTable from "./studentsTable";
-import getAllStudentsQuery from "@/repositories/students/queries/getAllStudentsQuery";
+import YearPeriodsTable from "./yearPeriodsTable";
 import getAllYearPeriodsQuery from "@/repositories/yearPeriods/queries/getAllYearPeriodsQuery";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { auth } from "@/utils/auth";
 import frFR from "@/lang/fr-FR";
 
-export default async function StudentsPage({
+export default async function YearPeriodsPage({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
-  const session = await auth();
 
   const pageIndex = searchParams?.pageIndex
     ? parseInt(searchParams.pageIndex as string)
@@ -22,24 +19,13 @@ export default async function StudentsPage({
     ? parseInt(searchParams.pageSize as string)
     : 10;
 
-  const userRoleName = session?.user.userData.Roles.Name;
-
-  // const isEnabled = searchParams?.isEnabled === "false" ? false : true;
   const isEnabledParam =
     searchParams?.isEnabled === undefined
       ? true
       : searchParams.isEnabled === "true";
 
-  const yearPeriods = await getAllYearPeriodsQuery({ IsEnabled: true });
-  const yearPeriodIdSelected = searchParams?.yearPeriodId
-    ? searchParams.yearPeriodId !== "null"
-      ? parseInt(searchParams.yearPeriodId as string)
-      : yearPeriods[0].YearPeriodId
-    : yearPeriods[0].YearPeriodId;
-
-  const students = await getAllStudentsQuery({
+  const yearPeriods = await getAllYearPeriodsQuery({
     IsEnabled: isEnabledParam,
-    YearPeriodId: yearPeriodIdSelected || 0,
   });
 
   return (
@@ -50,19 +36,16 @@ export default async function StudentsPage({
         </Link>
       </Button>
       <div className="flex justify-between space-x-3">
-        <span className="text-xl font-semibold">{t.students.pageTitle}</span>
+        <span className="text-xl font-semibold">{t.yearPeriods.title}</span>
       </div>
-      <StudentsTable
-        studentsData={students}
-        yearPeriods={yearPeriods}
-        yearPeriodIdSelected={yearPeriodIdSelected}
+      <YearPeriodsTable
+        yearPeriodsData={yearPeriods}
         isEnabledSelected={isEnabledParam}
-        userRoleName={userRoleName}
         pageIndex={pageIndex}
         pageSize={pageSize}
         urlParams={searchParams}
       />
-      {/* <pre>{JSON.stringify(students, null, 2)}</pre> */}
+      {/* <pre>{JSON.stringify(yearPeriods, null, 2)}</pre> */}
     </main>
   );
 }

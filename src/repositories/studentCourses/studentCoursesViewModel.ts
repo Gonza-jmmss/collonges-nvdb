@@ -34,6 +34,7 @@ export type StudentCoursesGroupedByStudentMap = {
   UpdatedAt: Date | null;
   CreatedAt: Date;
   IsEnabled: boolean;
+  YearPeriodId: number;
   Persons: {
     AlternativeName: string | null;
   };
@@ -71,6 +72,7 @@ export type StudentsWithNoCoursesMap = {
   UpdatedAt: Date | null;
   CreatedAt: Date;
   IsEnabled: boolean;
+  YearPeriodId: number;
   Persons: {
     AlternativeName: string | null;
   };
@@ -125,6 +127,7 @@ export type StudentsByCourseIdMap = {
     UpdatedAt: Date | null;
     CreatedAt: Date;
     IsEnabled: boolean;
+    YearPeriodId: number;
     Persons: {
       AlternativeName: string | null;
     };

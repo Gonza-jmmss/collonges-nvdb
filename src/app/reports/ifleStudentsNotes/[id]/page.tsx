@@ -22,6 +22,8 @@ export default async function ifleStudentsNotesPage({
   const pageIndexParam = parseInt(searchParams.pageIndex as string);
   const pageSizeParam = parseInt(searchParams.pageSize as string);
 
+  const yearPeriodIdParam = parseInt(searchParams.yearPeriodId as string);
+
   const studentNotes = await getQuarterNotesByStudentId(parseInt(params.id));
 
   const tabs = [
@@ -42,7 +44,7 @@ export default async function ifleStudentsNotesPage({
       <div className="mt-3 w-[80vw]">
         <Button asChild className={`absolute left-0`} variant="ghost">
           <Link
-            href={`/reports/ifleStudentsNotes?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`}
+            href={`/reports/ifleStudentsNotes?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&yearPeriodId=${yearPeriodIdParam}`}
           >
             <Icon
               name={
