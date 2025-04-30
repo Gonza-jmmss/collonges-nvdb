@@ -21,6 +21,7 @@ const updateStudentCommand = async (params: StudentParams) => {
         RegimeId: params.RegimeId,
         AccommodationId: params?.AccommodationId,
         IsEnabled: params.IsEnabled,
+        YearPeriodId: params.YearPeriodId || 0,
       },
     });
 

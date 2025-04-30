@@ -1,5 +1,6 @@
 import StudentsTable from "./studentsTable";
 import getAllStudentsQuery from "@/repositories/students/queries/getAllStudentsQuery";
+import getAllYearPeriodsQuery from "@/repositories/yearPeriods/queries/getAllYearPeriodsQuery";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -29,7 +30,17 @@ export default async function StudentsPage({
       ? true
       : searchParams.isEnabled === "true";
 
-  const students = await getAllStudentsQuery({ IsEnabled: isEnabledParam });
+  const yearPeriods = await getAllYearPeriodsQuery({ IsEnabled: true });
+  const yearPeriodIdSelected = searchParams?.yearPeriodId
+    ? searchParams.yearPeriodId !== "null"
+      ? parseInt(searchParams.yearPeriodId as string)
+      : yearPeriods[0].YearPeriodId
+    : yearPeriods[0].YearPeriodId;
+
+  const students = await getAllStudentsQuery({
+    IsEnabled: isEnabledParam,
+    YearPeriodId: yearPeriodIdSelected || 0,
+  });
 
   return (
     <main className="relative mt-3 w-[80vw]">
@@ -43,6 +54,8 @@ export default async function StudentsPage({
       </div>
       <StudentsTable
         studentsData={students}
+        yearPeriods={yearPeriods}
+        yearPeriodIdSelected={yearPeriodIdSelected}
         isEnabledSelected={isEnabledParam}
         userRoleName={userRoleName}
         pageIndex={pageIndex}

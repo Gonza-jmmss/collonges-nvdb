@@ -86,6 +86,7 @@ const getStudentByIdQuery = async (studentId: number): Promise<StudentData> => {
       CollegeId: studentQuery.CollegeId,
       RegimeId: studentQuery.RegimeId,
       IsEnabled: studentQuery.IsEnabled,
+      YearPeriodId: studentQuery.YearPeriodId,
     },
     ContactPerson: [],
   };

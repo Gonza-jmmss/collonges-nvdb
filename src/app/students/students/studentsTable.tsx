@@ -7,16 +7,20 @@ import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import ToggleButton from "@/components/common/toggleButton";
 import DeleteModal from "@/components/common/deleteModal";
-import { Button } from "@/components/ui/button";
+import Combobox from "@/components/common/combobox";
 import Icon from "@/components/common/icon";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { StudentsViewModel } from "@/repositories/students/studentsViewModel";
+import { yearPeriodsViewModel } from "@/repositories/yearPeriods/yearPeriodsViewModel";
 import { useRouter, useSearchParams } from "next/navigation";
 import frFR from "@/lang/fr-FR";
 
 export default function StudentsTable({
   studentsData,
+  yearPeriods,
+  yearPeriodIdSelected,
   isEnabledSelected,
   userRoleName,
   pageIndex,
@@ -24,6 +28,8 @@ export default function StudentsTable({
   urlParams,
 }: {
   studentsData: StudentsViewModel[];
+  yearPeriods: yearPeriodsViewModel[];
+  yearPeriodIdSelected: number | null;
   isEnabledSelected: boolean;
   userRoleName: string | undefined;
   pageIndex: number;
@@ -54,13 +60,6 @@ export default function StudentsTable({
   const columns = useMemo<ColumnDef<StudentsViewModel, any>[]>(
     () => [
       {
-        accessorKey: "StudentId",
-        id: "StudentId",
-        header: () => <Header text={t.students.columns.id} />,
-        filterFn: "equalsString",
-        size: 30,
-      },
-      {
         accessorKey: "DBaseCode",
         id: "DBaseCode",
         header: () => <Header text={t.students.columns.dBaseCode} />,
@@ -71,6 +70,12 @@ export default function StudentsTable({
         accessorKey: "StudentName",
         id: "StudentName",
         header: () => <Header text={t.students.columns.studentName} />,
+        filterFn: "equalsString",
+      },
+      {
+        accessorKey: "YearPeriodName",
+        id: "YearPeriodName",
+        header: () => <Header text={t.students.columns.yearPeriodName} />,
         filterFn: "equalsString",
       },
       {
@@ -106,7 +111,7 @@ export default function StudentsTable({
                   className="cursor-pointer text-xl hover:text-primary"
                   onClick={() =>
                     router.push(
-                      `/students/students/${row.row.original.StudentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}`,
+                      `/students/students/${row.row.original.StudentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}&yearPeriodId=${yearPeriodIdSelected}`,
                     )
                   }
                 />
@@ -126,7 +131,7 @@ export default function StudentsTable({
         ),
       },
     ],
-    [],
+    [getPageIndexParam, getPageSizeParam],
   );
 
   const disableStudent = async (StudentId: number) => {
@@ -168,6 +173,24 @@ export default function StudentsTable({
   return (
     <div>
       <div className="flex items-center justify-end space-x-5">
+        <div className="w-[15rem]">
+          <Combobox
+            options={yearPeriods}
+            textAttribute="Name"
+            valueAttribute="YearPeriodId"
+            placeholder={t.students.form.yearPeriodId}
+            itemSelected={yearPeriods.find(
+              (x) => x.YearPeriodId === yearPeriodIdSelected,
+            )}
+            setItemSelected={(x: { YearPeriodId: number }) => {
+              handleUrlParameterChange(
+                "yearPeriodId",
+                `${x ? x.YearPeriodId : null}`,
+              );
+            }}
+            showSearch
+          />
+        </div>
         <div className="w-[25rem]">
           <ToggleButton
             options={[
@@ -186,7 +209,7 @@ export default function StudentsTable({
             variant="outlineColored"
             onClick={() =>
               router.push(
-                `/students/students/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}`,
+                `/students/students/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}&yearPeriodId=${yearPeriodIdSelected}`,
               )
             }
           >
@@ -202,7 +225,7 @@ export default function StudentsTable({
         pageSizeParam={pageSize}
         onRowClick={(row) =>
           router.push(
-            `/students/students/${row.StudentId}?action="view"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}`,
+            `/students/students/${row.StudentId}?action="view"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}&yearPeriodId=${yearPeriodIdSelected}`,
           )
         }
       />

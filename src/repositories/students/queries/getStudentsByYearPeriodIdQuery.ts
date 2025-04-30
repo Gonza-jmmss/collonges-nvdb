@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { StudentsByYearPeriodIdMap } from "../studentsViewModel";
+import { StudentsMap } from "../studentsViewModel";
 
 const prisma = new PrismaClient();
 
@@ -45,7 +45,7 @@ const getStudentsByYearPeriodId = async (
     },
   });
 
-  const res = query.map((student: StudentsByYearPeriodIdMap) => ({
+  const res = query.map((student: StudentsMap) => ({
     ...student,
     StudentName: student.Persons?.AlternativeName,
     StudentType: student.StudentTypes?.Name,

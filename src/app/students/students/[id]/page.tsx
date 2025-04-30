@@ -4,6 +4,7 @@ import getAllCollegesQuery from "@/repositories/colleges/queries/getAllCollegesQ
 import getAllRegimesQuery from "@/repositories/regimes/queries/getAllRegimesQuery";
 import getAllContactTypesQuery from "@/repositories/personContactTypes/queries/getAllPersonContactTypesQuery";
 import getAllNonStudentsQuery from "@/repositories/persons/queries/getAllNonStudentsQuery";
+import getAllYearPeriodsQuery from "@/repositories/yearPeriods/queries/getAllYearPeriodsQuery";
 import StudentForm from "@/components/students/studentForm";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ export default async function Student({
   const pageIndexParam = parseInt(searchParams.pageIndex as string);
   const pageSizeParam = parseInt(searchParams.pageSize as string);
 
+  const yearPeriodIdParam = parseInt(searchParams.yearPeriodId as string);
   const isEnabledParam =
     searchParams.isEnabled === undefined
       ? true
@@ -42,12 +44,13 @@ export default async function Student({
   const regimes = await getAllRegimesQuery();
   const contactTypes = await getAllContactTypesQuery();
   const nonStudents = await getAllNonStudentsQuery();
+  const yearPeriods = await getAllYearPeriodsQuery({ IsEnabled: true });
 
   return (
     <main className="relative mt-5 flex justify-center">
       <Button asChild className={`absolute -left-16 top-3`} variant="ghost">
         <Link
-          href={`/students/students?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`}
+          href={`/students/students?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}&yearPeriodId=${yearPeriodIdParam}`}
         >
           <Icon name={"MdArrowBack"} className="text-xl" />
         </Link>
@@ -64,6 +67,7 @@ export default async function Student({
           regimes={regimes}
           contactTypes={contactTypes}
           nonStudents={nonStudents}
+          yearPeriods={yearPeriods}
           pageIndexParam={pageIndexParam}
           pageSizeParam={pageSizeParam}
           urlParams={searchParams}

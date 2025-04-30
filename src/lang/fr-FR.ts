@@ -274,6 +274,7 @@ export default {
       isACA: "Est ACA",
       isEnabled: "Actif",
       actions: "Actions",
+      yearPeriodName: "Période d'année",
     },
     form: {
       firstName: "Prénom",
@@ -296,6 +297,7 @@ export default {
       collegeId: "Université",
       regimeId: "Régime",
       isEnabled: "Est activé",
+      yearPeriodId: "Période d'année",
       addContact: "Ajouter un contact",
       contact: "Contact",
       personId: "Nom du contact",
@@ -309,6 +311,7 @@ export default {
       countryValidation: "Le pays de naissance est obligatoire",
       regimeValidation: "Le régime est obligatoire",
       contactValidation: "Le contact est obligatoire",
+      yearPeriodValidation: "La période d'année est obligatoire",
     },
     notifications: {
       createSuccess: "Étudiant(e) créé avec succès",
