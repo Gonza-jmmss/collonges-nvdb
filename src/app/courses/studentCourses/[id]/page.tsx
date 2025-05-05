@@ -52,7 +52,13 @@ export default async function StudentCoursesPage({
     ? parseInt(searchParams.scholarPeriodId as string)
     : scholarPeriods[0].ScholarPeriodId;
 
-  const studentsWithNoCourses = await getStudentsWithNoCoursesQuery();
+  const studentsWithNoCourses = await getStudentsWithNoCoursesQuery({
+    ScholarYearId: scholarYearIdParam,
+    ScholarPeriodId: scholarPeriodIdParam,
+    PeriodNumber: scholarPeriods.find(
+      (x) => x.ScholarPeriodId === scholarPeriodIdParam,
+    )?.Number,
+  });
   // const studentsWithNoCourses = await getStudentsWithNoCoursesQuery({
   //   ScholarPeriodId: scholarPeriodIdParam,
   // });

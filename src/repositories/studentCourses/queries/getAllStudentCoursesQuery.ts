@@ -3,12 +3,15 @@ import {
   StudentCoursesGroupedByStudentMap,
   StudentCourseGroupedByStudentMap,
 } from "../studentCoursesViewModel";
+import { YearPeriodsEnum } from "@/enum/yearPerdios";
+import { PeriodEnum } from "@/enum/periodEnum";
 
 const prisma = new PrismaClient();
 
 type getAllStudentCoursesQueryParamsType = {
   ScholarYearId: number;
   ScholarPeriodId: number;
+  PeriodNumber: number | null | undefined;
 };
 
 const getAllStudentCoursesQuery = async (
@@ -18,12 +21,12 @@ const getAllStudentCoursesQuery = async (
     orderBy: [{ Persons: { AlternativeName: "asc" } }],
     where: {
       IsEnabled: true,
-      StudentCourses: {
-        some: {
-          ScholarPeriods: {
-            ScholarYearId: params.ScholarYearId,
-          },
-        },
+      YearPeriods: {
+        ScholarYearId: params.ScholarYearId,
+        PeriodType:
+          params.PeriodNumber === PeriodEnum["Cours d'été"]
+            ? YearPeriodsEnum["Cours d'été"]
+            : YearPeriodsEnum["Année scolaire"],
       },
     },
     include: {
