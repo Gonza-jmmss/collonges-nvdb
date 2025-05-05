@@ -6,10 +6,15 @@ import { z } from "zod";
 
 const prisma = new PrismaClient();
 
-type PersonParams = z.infer<typeof PersonSchema>;
+type PersonParams = z.infer<typeof PersonSchema> & {
+  transactionClient?: any;
+};
 
 const createPersonCommand = async (params: PersonParams) => {
-  const command = await prisma.persons.create({
+  // Use the transaction client if provided, otherwise use the default prisma client
+  const client = params.transactionClient || prisma;
+
+  const command = await client.persons.create({
     data: {
       FirstName: params.FirstName,
       LastName: params.LastName?.toUpperCase(),
@@ -20,6 +25,7 @@ const createPersonCommand = async (params: PersonParams) => {
       WorkTelephone: params.WorkTelephone,
       BirthCity: params.BirthCity,
       Address1: params.Address1,
+      CountryId: params.CountryId,
       BirthCountryId: params.BirthCountryId,
       Email: params.Email,
       DBaseCode: params.DBaseCode,

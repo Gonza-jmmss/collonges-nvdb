@@ -6,11 +6,16 @@ import { z } from "zod";
 
 const prisma = new PrismaClient();
 
-type StudentParams = z.infer<typeof StudentSchema>;
+type StudentParams = z.infer<typeof StudentSchema> & {
+  transactionClient?: any;
+};
 
 const updateStudentCommand = async (params: StudentParams) => {
+  // Use the transaction client if provided, otherwise use the default prisma client
+  const client = params.transactionClient || prisma;
+
   if (params.StudentId !== null) {
-    const command = await prisma.students.update({
+    const command = await client.students.update({
       where: { StudentId: params.StudentId },
       data: {
         PersonId: params.PersonId,

@@ -7,12 +7,15 @@ import updatePersonCommand from "@/repositories/persons/commands/updatePersonCom
 import createPersonContactCommand from "@/repositories/personContacts/commands/createPersonContactCommand";
 import deletePersonContactCommand from "@/repositories/personContacts/commands/deletePersonContactCommand";
 import updateStudentCommand from "@/repositories/students/commands/updateStudentCommand";
+import createPersonCountryCommand from "@/repositories/personCountries/commands/createPersonCountryCommand";
+import deletePersonCountriesCommand from "@/repositories/personCountries/commands/deletePersonCountriesCommand";
 
 import { z } from "zod";
 
 type StudentParams = z.infer<typeof StudentPersonSchema>;
 
 const updateStudentPersonCommand = async (params: StudentParams) => {
+  // contacts
   // get DB contacts of the student
   const getStudentPreviousContacts = await prisma.contacts.findMany({
     where: { ContactId: params.Person.PersonId || 0 },
@@ -36,7 +39,7 @@ const updateStudentPersonCommand = async (params: StudentParams) => {
         !getStudentPreviousContactsIds?.includes(contact.PersonId),
     ) || [];
 
-  // concatenate both arrays of contact to create
+  // concatenate both arrays of contacts to create
   const contactsToCreate = contactsToCreateWithPersonINull.concat(
     contactsToCreateWithPersonIdNotNull,
   );
@@ -46,15 +49,42 @@ const updateStudentPersonCommand = async (params: StudentParams) => {
     (contact) => !contactPersonIds?.includes(contact.PersonId),
   );
 
-  // filter to get the contacts to delete
+  // filter to get the contacts to update
   const contactsToUpdate = params.ContactPerson?.filter(
     (contact) =>
       contact.PersonId !== null &&
       getStudentPreviousContactsIds?.includes(contact.PersonId),
   );
 
+  // personCountries
+  // get DB personCountries of the student
+  const getStudentPersonCountries = await prisma.personCountries.findMany({
+    where: { PersonId: params.Person.PersonId || 0 },
+  });
+
+  // ids of countries form form
+  const personCountriesIds = params.PersonCountry?.map((x) => x.CountryId);
+
+  // ids of countries form DB
+  const getStudentPreviousPersonCountriesIds = getStudentPersonCountries.map(
+    (x) => x.CountryId,
+  );
+
+  // filters to get the personCountries to create
+  const personCountriesToCreate =
+    params.PersonCountry?.filter(
+      (country) =>
+        country.CountryId !== null &&
+        !getStudentPreviousPersonCountriesIds?.includes(country.CountryId),
+    ) || [];
+
+  // filter to get the personCountries to delete
+  const personCountriesToDelete = getStudentPersonCountries
+    .filter((country) => !personCountriesIds?.includes(country.CountryId))
+    .map((x) => x.PersonCountryId);
+
   try {
-    const result = await prisma.$transaction(async () => {
+    const result = await prisma.$transaction(async (tx) => {
       // Update the main person
       const updatePerson = await updatePersonCommand(params.Person);
 
@@ -66,25 +96,46 @@ const updateStudentPersonCommand = async (params: StudentParams) => {
             ContactId: params.Person.PersonId || 0,
             PersonId: contact.PersonId,
             ContactTypeId: contact.ContactTypeId,
+            transactionClient: tx,
           });
         } else {
-          const createContact = await createPersonCommand(contact);
+          const createContact = await createPersonCommand({
+            ...contact,
+            transactionClient: tx,
+          });
           await createPersonContactCommand({
             ContactId: params.Person.PersonId || 0,
             PersonId: createContact.PersonId,
             ContactTypeId: contact.ContactTypeId,
+            transactionClient: tx,
           });
         }
       });
 
       // Delete existing contacts (Mother, Father, etc)
       contactsToDelete.map(async (contact) => {
-        await deletePersonContactCommand(contact);
+        await deletePersonContactCommand({ ...contact, transactionClient: tx });
       });
 
       // Update contact Person information
       contactsToUpdate?.map(async (contact) => {
-        await updatePersonCommand(contact);
+        await updatePersonCommand({ ...contact, transactionClient: tx });
+      });
+
+      // Create new personCountries
+      personCountriesToCreate.map(
+        async (country) =>
+          await createPersonCountryCommand({
+            PersonId: params.Person.PersonId || 0,
+            CountryId: country.CountryId || 0,
+            transactionClient: tx,
+          }),
+      );
+
+      // Delete existing personCountries
+      await deletePersonCountriesCommand({
+        personCountryIds: personCountriesToDelete,
+        transactionClient: tx,
       });
 
       // Update the student
@@ -93,6 +144,7 @@ const updateStudentPersonCommand = async (params: StudentParams) => {
         PersonId: params.Person.PersonId || 0,
         DepartmentId: null,
         AccommodationId: null,
+        transactionClient: tx,
       };
 
       let updateStudent;
