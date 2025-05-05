@@ -11,7 +11,7 @@ const getAllYearPeriodsQuery = async (
   params: getAllYearPeriodsQueryParamsType,
 ) => {
   const query = await prisma.yearPeriods.findMany({
-    orderBy: { CreatedAt: "desc" },
+    orderBy: [{ ScholarYearId: "desc" }, { PeriodType: "desc" }],
     where: { IsEnabled: params.IsEnabled },
     include: { ScholarYears: true, Students: true },
   });
