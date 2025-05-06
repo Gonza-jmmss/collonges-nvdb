@@ -235,7 +235,7 @@ export default function ScholarPeriodsTable({
             )
           }
         >
-          <span>{t.students.create}</span>
+          <span>{t.scholarPeriods.create}</span>
         </Button>
       </div>
       <Table
