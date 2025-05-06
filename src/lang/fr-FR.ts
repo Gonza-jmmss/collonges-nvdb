@@ -20,6 +20,7 @@ export default {
     gradeCoefficients: "Coefficients de note",
     studentCourseGrades: "Notes",
     yearPeriods: "Périodes d'année",
+    contactTypes: "Types de contacts",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -377,7 +378,7 @@ export default {
   studentCourses: {
     title: "Page des cours des étudiants",
     studentCourse: "Cours des étudiant(e)",
-    create: "Ajouter des cours au étudiant",
+    create: "Ajouter des cours",
     columns: {
       studentId: "ID",
       coursesAsigned: "Cours assignés",
@@ -442,7 +443,7 @@ export default {
       scholarYearName: "Année",
     },
     form: {
-      name: "Mon de la période scolaire",
+      name: "Nom de la période scolaire",
       number: "Trimestre",
       fromDate: "À partir de",
       toDate: "Jusqu'à",
@@ -742,19 +743,19 @@ export default {
       scholarYearValidation: "L'année est obligatoire",
     },
     notifications: {
-      createSuccess: "Périodes d'année créées avec succès",
+      createSuccess: "Période d'année créées avec succès",
       createError:
         "Une erreur s'est produite pendant la création de la période d'année",
       createFailure: "Échec de la création de la période d'année",
-      updateSuccess: "Périodes d'année modifiée avec succès",
+      updateSuccess: "Période d'année modifiée avec succès",
       updateError:
         "Une erreur s'est produite pendant la modification de la période d'année",
       updateFailure: "Échec de la modification de la période d'année",
-      deleteSuccess: "Périodes d'année supprimée avec succès",
+      deleteSuccess: "Période d'année supprimée avec succès",
       deleteError:
         "Une erreur s'est produite pendant la suppression de la période d'année",
       deleteFailure: "Échec de la suppression de la période d'année",
-      disableSuccess: "Périodes d'année désactivée avec succès",
+      disableSuccess: "Période d'année désactivée avec succès",
       disableError:
         "Une erreur s'est produite pendant la désactivation de la période d'année",
       disableFailure: "Échec de la désactivation de la période d'année",
@@ -769,6 +770,40 @@ export default {
       title: "La période d'année a des étudiants assignées",
       description:
         "Les périodes d'année avec des étudiants assignés ne peuvent pas être supprimées",
+    },
+  },
+  contactTypes: {
+    title: "Page des types de contacts",
+    contactType: "Type de contact",
+    create: "Creer un type de contact",
+    columns: {
+      name: "Type de contact",
+    },
+    form: {
+      name: "Type de contact",
+    },
+    notifications: {
+      createSuccess: "Type de contact d'année créées avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création du type de contact",
+      createFailure: "Échec de la création du type de contact",
+      updateSuccess: "Type de contact d'année modifiée avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification du type de contact",
+      updateFailure: "Échec de la modification du type de contact",
+      deleteSuccess: "Type de contact d'année supprimée avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression du type de contact",
+      deleteFailure: "Échec de la suppression du type de contact",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de supprimer le type de contact ?",
+      description: "Le type de contact sera supprimée",
+    },
+    delteModalValidation: {
+      title: "Le type de contact a des contacts assignées",
+      description:
+        "Le type de contact avec des contacts assignés ne peuvent pas être supprimées",
     },
   },
   reports: {
