@@ -594,7 +594,7 @@ export default function StudentForm({
                   value={field.state.value || ""}
                   onChange={(e) => field.handleChange(e.target.value)}
                   disabled={action === "view"}
-                  required
+                  // required
                 />
               </>
             )}
@@ -680,7 +680,7 @@ export default function StudentForm({
                                   <div>
                                     <Combobox
                                       options={countries}
-                                      textAttribute="Name"
+                                      textAttribute={["Name", "ISO3"]}
                                       valueAttribute="CountryId"
                                       placeholder={t.students.form.countryId}
                                       itemSelected={countries.find(
@@ -852,95 +852,6 @@ export default function StudentForm({
           )}
         />
       </div>
-      {/* <div className="col-span-1 grid grid-cols-1 gap-5 md:col-span-2 md:grid-cols-2 lg:grid-cols-3">
-        <div className="space-y-1">
-          <form.Field
-            name="Student.StudentTypeId"
-            children={(field) => (
-              <>
-                <span>{t.students.form.studentTypeId}</span>
-                <Combobox
-                  options={studentType}
-                  textAttribute="Name"
-                  valueAttribute="StudentTypeId"
-                  placeholder={t.students.form.birthCountryId}
-                  itemSelected={studentType.find(
-                    (x) => x.StudentTypeId === field.state.value,
-                  )}
-                  setItemSelected={(x: { StudentTypeId: number }) => {
-                    field.handleChange(x && x.StudentTypeId);
-                  }}
-                  disabled={true}
-                  showSearch
-                />
-              </>
-            )}
-          />
-        </div>
-        <div className="space-y-1">
-          <form.Field
-            name="Student.CollegeId"
-            children={(field) => (
-              <>
-                <span>{t.students.form.collegeId}</span>
-                <Combobox
-                  options={colleges}
-                  textAttribute="Name"
-                  valueAttribute="CollegeId"
-                  placeholder={t.students.form.collegeId}
-                  itemSelected={colleges.find(
-                    (x) => x.CollegeId === field.state.value,
-                  )}
-                  setItemSelected={(x: { CollegeId: number }) => {
-                    field.handleChange(x && x.CollegeId);
-                  }}
-                  disabled={action === "view"}
-                  showSearch
-                />
-              </>
-            )}
-          />
-        </div>
-        <div className="space-y-1">
-          <form.Field
-            name="Student.RegimeId"
-            validators={{
-              onSubmitAsync: (value) => {
-                if (value === null || value === undefined) {
-                  return t.students.validations.regimeValidation;
-                }
-                return z.number().min(0).safeParse(value.value).success
-                  ? undefined
-                  : t.students.validations.regimeValidation;
-              },
-            }}
-            children={(field) => (
-              <>
-                <span>{t.students.form.regimeId}</span>
-                <Combobox
-                  options={regimes}
-                  textAttribute="Name"
-                  valueAttribute="RegimeId"
-                  placeholder={t.students.form.regimeId}
-                  itemSelected={regimes.find(
-                    (x) => x.RegimeId === field.state.value,
-                  )}
-                  setItemSelected={(x: { RegimeId: number }) => {
-                    field.handleChange(x && x.RegimeId);
-                  }}
-                  disabled={action === "view"}
-                  showSearch
-                />
-                <div className="text-xs text-red-500">
-                  {field.state.meta.errors
-                    ? field.state.meta.errors.join(", ")
-                    : null}
-                </div>
-              </>
-            )}
-          />
-        </div>
-      </div> */}
       <div className="space-y-1">
         <form.Field
           name="Student.IsACA"
