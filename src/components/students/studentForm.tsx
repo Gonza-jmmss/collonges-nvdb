@@ -860,9 +860,8 @@ export default function StudentForm({
               <span>{t.students.form.isACA}</span>
               <ToggleButton
                 options={[
-                  { key: true, value: t.shared.no },
-
-                  { key: false, value: t.shared.yes },
+                  { key: false, value: t.shared.no },
+                  { key: true, value: t.shared.yes },
                 ]}
                 setItemSelected={(x: { key: boolean; value: string }) => {
                   field.handleChange(x && x.key);
@@ -883,7 +882,6 @@ export default function StudentForm({
               <ToggleButton
                 options={[
                   { key: false, value: t.shared.no },
-
                   { key: true, value: t.shared.yes },
                 ]}
                 setItemSelected={(x: { key: boolean; value: string }) => {
