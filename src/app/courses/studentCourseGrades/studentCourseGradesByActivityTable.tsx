@@ -121,6 +121,9 @@ export default function StudentCoruseGradesByActivityTable({
             text={t.studentCourseGrades.columnsByActivity.gradeCoefficientName}
           />
         ),
+        cell: (row) => (
+          <span>{`${row.row.original.GradeCoefficientName}, ${row.row.original.GradeCoefficientPercentage}%`}</span>
+        ),
         filterFn: "equalsString",
         size: 80,
       },

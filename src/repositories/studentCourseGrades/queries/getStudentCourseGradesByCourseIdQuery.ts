@@ -23,10 +23,10 @@ const getStudentCourseGradesByCourseIdQuery = async (
     where: {
       StudentCourses: { CourseId: params.CourseId },
       Description: params.Description,
-      CreatedAt: {
-        gte: createdAtStart, // Start of the second
-        lt: createdAtEnd, // Less than the next second
-      },
+      // CreatedAt: {
+      //   gte: createdAtStart, // Start of the second
+      //   lt: createdAtEnd, // Less than the next second
+      // },
     },
     include: {
       StudentCourses: {

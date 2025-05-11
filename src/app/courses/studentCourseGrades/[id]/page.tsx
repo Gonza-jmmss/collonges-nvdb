@@ -58,6 +58,7 @@ export default async function Page({
 
   const studentByCouse = await getStudentsByCourseIdQuery({
     CourseId: courseIdParam,
+    PeriodNumber: periodNumberParam,
   });
 
   const gradeCoefficients = await getAllGradeCoefficientsQuery({
@@ -98,8 +99,6 @@ export default async function Page({
           />
         </div>
         {/* <pre>{JSON.stringify(studentCourseGrade, null, 2)}</pre> */}
-        {/* <pre>{JSON.stringify(pageIndexParam, null, 2)}</pre>
-        <pre>{JSON.stringify(pageSizeParam, null, 2)}</pre> */}
       </div>
     </main>
   );

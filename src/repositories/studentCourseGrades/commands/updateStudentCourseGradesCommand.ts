@@ -50,8 +50,19 @@ const updateStudentCourseGradesCommand = async (
             Description: params.Description || "",
           };
 
+          // if Student has no StudentCourseGeadeId, create new StudentCourseGeade
           if (!element.StudentCourseGradeId) {
-            return null;
+            // Use the transaction client (tx) instead of prisma
+            const command = await tx.studentCourseGrades.create({
+              data: studentCourseGradeToUpdate,
+            });
+
+            // Update grade using the transaction client
+            await updateGradeOfSudentCourseCommand({
+              StudentCourseId: command.StudentCourseId,
+              transactionClient: tx, // Pass the transaction client
+            });
+            return command;
           }
 
           // Use the transaction client (tx) instead of prisma

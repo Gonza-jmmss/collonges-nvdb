@@ -30,9 +30,6 @@ const getStudentCourseGradeByActivityQuery = async (
       },
     },
     orderBy: [
-      {
-        CreatedAt: "desc",
-      },
       { StudentCourses: { Students: { Persons: { AlternativeName: "asc" } } } },
     ],
     include: {
@@ -100,6 +97,8 @@ const getStudentCourseGradeByActivityQuery = async (
           Coefficient: Number(studentCourseGrade.GradeCoefficients.Coefficient),
           GradeCoefficientId: studentCourseGrade.GradeCoefficientId,
           GradeCoefficientName: studentCourseGrade.GradeCoefficients.Name,
+          GradeCoefficientPercentage:
+            Number(studentCourseGrade.GradeCoefficients.Coefficient) * 100,
           LevelName:
             studentCourseGrade.StudentCourses.Courses.LevelCourses.length === 1
               ? studentCourseGrade.StudentCourses.Courses.LevelCourses[0].Levels

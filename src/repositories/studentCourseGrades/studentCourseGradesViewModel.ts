@@ -43,6 +43,7 @@ export type StudentCourseGradesByStudentCourseViewModel = {
     StudentCourseGradeId: number;
     Description: string;
     GradeCoefficientName: string;
+    GradeCoefficientPercentage: number;
     Grade: string;
     CreatedAt: Date;
     UserId: number;
@@ -52,10 +53,14 @@ export type StudentCourseGradesByStudentCourseViewModel = {
 
 export type StudentCourseGradesExtendedViewModel = {
   CourseId: number;
+  StudentCourseGradeId: number;
   Description: string;
   GradeCoefficientName: string;
+  GradeCoefficientPercentage: number;
   Grade: string;
   CreatedAt: Date;
+  UserId: number;
+  UserName: string;
 };
 
 export type StudentCourseByStudentCourseMap = {
@@ -250,6 +255,7 @@ export type StudentCourseGradeByActivityViewModel = {
   Coefficient: number;
   GradeCoefficientId: number;
   GradeCoefficientName: string;
+  GradeCoefficientPercentage: number;
   LevelName: string;
   LevelCourses: { Level: string }[];
   Activities: StudentCourseGradeByActivity[];

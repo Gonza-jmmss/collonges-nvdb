@@ -5,6 +5,8 @@ import {
   LevelCoursesMap,
   StudentCourseGradesByStudentCourseMap,
 } from "../studentCourseGradesViewModel";
+import { YearPeriodsEnum } from "@/enum/yearPerdios";
+import { PeriodEnum } from "@/enum/periodEnum";
 
 const prisma = new PrismaClient();
 
@@ -22,10 +24,19 @@ const getStudentCourseGradesByStudentCourseQuery = async (
     orderBy: { Students: { Persons: { AlternativeName: "asc" } } },
     where: {
       CourseId: params.CourseId,
-      ScholarPeriods: {
-        ScholarYearId: activeScholarYear.ScholarYearId,
-        Number: params.PeriodNumber,
+      Students: {
+        YearPeriods: {
+          ScholarYearId: activeScholarYear.ScholarYearId,
+          PeriodType:
+            params.PeriodNumber === PeriodEnum["Cours d'été"]
+              ? YearPeriodsEnum["Cours d'été"]
+              : YearPeriodsEnum["Année scolaire"],
+        },
       },
+      // ScholarPeriods: {
+      //   ScholarYearId: activeScholarYear.ScholarYearId,
+      //   Number: params.PeriodNumber,
+      // },
     },
     include: {
       Courses: {
@@ -85,6 +96,8 @@ const getStudentCourseGradesByStudentCourseQuery = async (
         StudentCourseGradeId: studentCourseGrade.StudenCourseGradeId,
         Description: studentCourseGrade.Description,
         GradeCoefficientName: studentCourseGrade.GradeCoefficients.Name,
+        GradeCoefficientPercentage:
+          Number(studentCourseGrade.GradeCoefficients.Coefficient) * 100,
         Grade: studentCourseGrade.Grade,
         CreatedAt: studentCourseGrade.CreatedAt,
         UserId: studentCourseGrade.UserId,

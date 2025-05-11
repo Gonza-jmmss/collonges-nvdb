@@ -250,6 +250,41 @@ export default function StudentCourseGradesForm({
     setConfirmedStudentCourseGradeData(null);
   };
 
+  useEffect(() => {
+    const formStudentCoursesIds = form
+      .getFieldValue("StudentCourses")
+      ?.map((x) => x.StudentCourseId);
+    const allStudentCoursesIds = studentByCouse.map((x) => x.StudentCourseId);
+
+    // First, make sure formStudentCoursesIds is not null or undefined
+    const existingIds = formStudentCoursesIds || [];
+
+    // Find the missing IDs (ones in allStudentCoursesIds but not in formStudentCoursesIds)
+    const missingIds = allStudentCoursesIds.filter(
+      (id) => !existingIds.includes(id),
+    );
+
+    // Create new StudentCourse objects for the missing IDs
+    // Each new object will have StudentCourseId and Grade: null
+    const newStudentCourses = missingIds.map((id) => ({
+      StudentCourseGradeId: null,
+      StudentCourseId: id,
+      Grade: "NaN",
+    }));
+
+    // Get the current StudentCourses array from the form (or initialize with empty array)
+    const currentStudentCourses = form.getFieldValue("StudentCourses") || [];
+
+    // Combine current StudentCourses with new ones
+    const updatedStudentCourses = [
+      ...currentStudentCourses,
+      ...newStudentCourses,
+    ];
+
+    // Update the form with the combined array
+    form.setFieldValue("StudentCourses", updatedStudentCourses);
+  }, [studentByCouse, form]);
+
   return (
     <>
       <form
