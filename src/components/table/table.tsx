@@ -493,13 +493,17 @@ export default function TableComponent<T>({
                 <Icon name={"MdChevronRight"} className="text-xl" />
               </div>
             </Button>
-            <span className="flex items-center gap-1">
+            <div>
+              <span>{`${t.table.totalRows} `}</span>
+              <span className="font-semibold">{`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} - ${table.getState().pagination.pageIndex + 1 === table.getPageCount() ? table.getRowCount() + 1 : table.getState().pagination.pageIndex * table.getState().pagination.pageSize + table.getState().pagination.pageSize} de ${table.getRowCount() + 1}`}</span>
+            </div>
+            {/* <span className="flex items-center gap-1">
               <div>{t.table.page}</div>
               <strong>
                 {table.getState().pagination.pageIndex + 1} {t.table.of}{" "}
                 {table.getPageCount().toLocaleString()}
               </strong>
-            </span>
+            </span> */}
             <span className="flex items-center gap-1">
               {t.table.goToPage}
               <Input

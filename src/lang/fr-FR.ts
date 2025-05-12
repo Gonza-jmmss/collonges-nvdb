@@ -67,6 +67,7 @@ export default {
     page: "Page",
     of: "de",
     goToPage: "| Aller à la page: ",
+    totalRows: "Entrées  ",
   },
   users: {
     title: "Utilisateurs",
