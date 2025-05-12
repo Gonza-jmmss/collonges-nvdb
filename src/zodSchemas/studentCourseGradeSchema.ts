@@ -10,5 +10,6 @@ export const StudentCourseGradeSchema = z.object({
   GradeCoefficientId: z.number().nullable(),
   UserId: z.number().nullable(),
   Description: z.string().nullable(),
+  ActivityDate: z.date(),
   StudentCourses: z.array(StudentCourseGrade).nullable(),
 });

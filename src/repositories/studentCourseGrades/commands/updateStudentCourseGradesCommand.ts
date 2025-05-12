@@ -22,6 +22,7 @@ const updateStudentCourseGradesCommand = async (
     GradeCoefficientId: number;
     UserId: number;
     Description: string;
+    ActivityDate: Date;
     StudentCourseId: number;
     Grade: string;
     StudenCourseGradeId: number;
@@ -48,6 +49,7 @@ const updateStudentCourseGradesCommand = async (
             GradeCoefficientId: params.GradeCoefficientId || 0,
             UserId: params.UserId || 0,
             Description: params.Description || "",
+            ActivityDate: params.ActivityDate,
           };
 
           // if Student has no StudentCourseGeadeId, create new StudentCourseGeade

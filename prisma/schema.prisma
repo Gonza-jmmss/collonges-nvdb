@@ -434,6 +434,7 @@ model StudentCourseGrades {
   UpdatedAt           DateTime?
   CreatedAt           DateTime          @default(now())
   Description         String            @db.NVarChar(255)
+  ActivityDate        DateTime
   GradeCoefficients   GradeCoefficients @relation(fields: [GradeCoefficientId], references: [GradeCoefficientId], onUpdate: NoAction, map: "FK_StudentCourseGrades_GradeCoefficients")
   StudentCourses      StudentCourses    @relation(fields: [StudentCourseId], references: [StudentCourseId], onUpdate: NoAction, map: "FK_StudentCourseGrades_StudentCourses")
   Users               Users             @relation(fields: [UserId], references: [UserId], onUpdate: NoAction, map: "FK_StudentCourseGrades_Users")

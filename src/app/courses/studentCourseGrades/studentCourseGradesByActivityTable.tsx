@@ -125,13 +125,13 @@ export default function StudentCoruseGradesByActivityTable({
           <span>{`${row.row.original.GradeCoefficientName}, ${row.row.original.GradeCoefficientPercentage}%`}</span>
         ),
         filterFn: "equalsString",
-        size: 80,
+        // size: 80,
       },
       {
-        accessorKey: "CreatedAt",
-        id: "CreatedAt",
+        accessorKey: "ActivityDate",
+        id: "ActivityDate",
         header: () => (
-          <Header text={t.studentCourseGrades.columnsByActivity.createdAt} />
+          <Header text={t.studentCourseGrades.columnsByActivity.activityDate} />
         ),
         filterFn: "equalsString",
         cell: (row) =>
@@ -171,7 +171,7 @@ export default function StudentCoruseGradesByActivityTable({
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() => {
                 router.push(
-                  `/courses/studentCourseGrades/edit?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&levelId=${levelIdSelected}&courseId=${row.row.original.CourseId}&description=${row.row.original.Description}&createdAt=${encodeURIComponent(row.row.original.CreatedAt.toUTCString())}&tab=${tabValue}`,
+                  `/courses/studentCourseGrades/edit?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&levelId=${levelIdSelected}&courseId=${row.row.original.CourseId}&description=${row.row.original.Description}&activityDate=${encodeURIComponent(row.row.original.ActivityDate.toUTCString())}&tab=${tabValue}`,
                 );
               }}
             />

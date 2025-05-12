@@ -19,7 +19,7 @@ import { PeriodEnum } from "@/enum/periodEnum";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
+import { date, z } from "zod";
 import frFR from "@/lang/fr-FR";
 
 type StudentCourseGradeFormData = z.infer<typeof StudentCourseGradeSchema>;
@@ -75,6 +75,10 @@ export default function StudentCourseGradesForm({
           : tearcherId,
       Description:
         action !== "create" ? (studentCourseGradeData?.Description ?? "") : "",
+      ActivityDate:
+        action !== "create"
+          ? (studentCourseGradeData?.ActivityDate ?? new Date())
+          : new Date(),
       StudentCourses:
         action !== "create"
           ? (studentCourseGradeData?.StudentCourses?.map((studentCourse) => ({

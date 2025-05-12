@@ -91,6 +91,7 @@ const getStudentCourseGradeByActivityQuery = async (
         groupMap[description] = {
           CourseId: studentCourseGrade.StudentCourses.CourseId,
           Description: studentCourseGrade.Description,
+          ActivityDate: studentCourseGrade.ActivityDate,
           CreatedAt: studentCourseGrade.CreatedAt,
           UserId: studentCourseGrade.UserId,
           UserName: studentCourseGrade.Users.UserName,

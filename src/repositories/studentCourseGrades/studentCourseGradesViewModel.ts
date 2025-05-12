@@ -4,6 +4,7 @@ export type StudentCourseGradesByCourseIdViewModel = {
   GradeCoefficientId: number;
   UserId: number;
   Description: string;
+  ActivityDate: Date;
   StudentCourses: {
     StudentCourseGradeId: number;
     StudentCourseId: number;
@@ -19,6 +20,7 @@ export type StudentCourseGradesByCourseIdMap = {
   GradeCoefficientId: number;
   UserId: number;
   Description: string;
+  ActivityDate: Date;
   UpdatedAt: Date | null;
   CreatedAt: Date;
   StudentCourses: {
@@ -42,6 +44,7 @@ export type StudentCourseGradesByStudentCourseViewModel = {
   StudentCourseGrades: {
     StudentCourseGradeId: number;
     Description: string;
+    ActivityDate: Date;
     GradeCoefficientName: string;
     GradeCoefficientPercentage: number;
     Grade: string;
@@ -55,6 +58,7 @@ export type StudentCourseGradesExtendedViewModel = {
   CourseId: number;
   StudentCourseGradeId: number;
   Description: string;
+  ActivityDate: Date;
   GradeCoefficientName: string;
   GradeCoefficientPercentage: number;
   Grade: string;
@@ -121,6 +125,7 @@ export type StudentCourseByStudentCourseMap = {
     GradeCoefficientId: number;
     UserId: number;
     Description: string;
+    ActivityDate: Date;
     UpdatedAt: Date | null;
     CreatedAt: Date;
     GradeCoefficients: {
@@ -185,6 +190,7 @@ export type StudentCourseGradesByStudentCourseMap = {
   GradeCoefficientId: number;
   UserId: number;
   Description: string;
+  ActivityDate: Date;
   UpdatedAt: Date | null;
   CreatedAt: Date;
   GradeCoefficients: {
@@ -222,6 +228,7 @@ export type GradeCoefficientsByStudentCourseIdMap = {
     UpdatedAt: Date | null;
     CreatedAt: Date;
     Description: string;
+    ActivityDate: Date;
   }[];
 };
 
@@ -234,6 +241,7 @@ export type StudentCourseGradesByStudentCourseIdMap = {
   UpdatedAt: Date | null;
   CreatedAt: Date;
   Description: string;
+  ActivityDate: Date;
 };
 
 export type StudentCourseGradeByActivity = {
@@ -249,6 +257,7 @@ export type StudentCourseGradeByActivity = {
 export type StudentCourseGradeByActivityViewModel = {
   CourseId: number;
   Description: string | null;
+  ActivityDate: Date;
   CreatedAt: Date;
   UserId: number | null;
   UserName: string;
@@ -268,6 +277,7 @@ export type StudentCourseGradesByGradeCoefficientMap = {
   GradeCoefficientId: number;
   UserId: number;
   Description: string;
+  ActivityDate: Date;
   UpdatedAt: Date | null;
   CreatedAt: Date;
   GradeCoefficients: {

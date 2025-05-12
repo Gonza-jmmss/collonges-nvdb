@@ -95,6 +95,7 @@ const getStudentCourseGradesByStudentCourseQuery = async (
         CourseId: studentCourse.CourseId,
         StudentCourseGradeId: studentCourseGrade.StudenCourseGradeId,
         Description: studentCourseGrade.Description,
+        ActivityDate: studentCourseGrade.ActivityDate,
         GradeCoefficientName: studentCourseGrade.GradeCoefficients.Name,
         GradeCoefficientPercentage:
           Number(studentCourseGrade.GradeCoefficients.Coefficient) * 100,
