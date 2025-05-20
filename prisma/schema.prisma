@@ -256,6 +256,7 @@ model Students {
   Regimes         Regimes?         @relation(fields: [RegimeId], references: [RegimeId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Students_Regimes")
   StudentTypes    StudentTypes     @relation(fields: [StudentTypeId], references: [StudentTypeId], onUpdate: NoAction, map: "FK_Students_StudentTypes")
   YearPeriods     YearPeriods      @relation(fields: [YearPeriodId], references: [YearPeriodId], onUpdate: NoAction, map: "FK_Students_YearPeriods")
+  Users           Users[]
 
   @@schema("Students")
 }
@@ -304,9 +305,11 @@ model Users {
   CreatedAt           DateTime              @default(now())
   RoleId              Int
   IsEnabled           Boolean
+  StudentId           Int?
   StudentCourseGrades StudentCourseGrades[]
   TeacherCourses      TeacherCourses[]
   Roles               Roles                 @relation(fields: [RoleId], references: [RoleId], onUpdate: NoAction, map: "FK_Users_Roles")
+  Students            Students?             @relation(fields: [StudentId], references: [StudentId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Users_Students")
 
   @@schema("Users")
 }

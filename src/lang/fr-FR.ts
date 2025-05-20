@@ -21,6 +21,7 @@ export default {
     studentCourseGrades: "Notes",
     yearPeriods: "Périodes d'année",
     contactTypes: "Types de contacts",
+    changePassword: "Modifier le mot de passe",
   },
   shortcuts: {
     transcripts: "Transcripts",
@@ -56,6 +57,9 @@ export default {
       year: "AAAA",
     },
     noValues: "Aucune valeur trouvée.",
+    changePassword: {
+      title: "Modifier le mot de passe",
+    },
   },
   login: {
     user: "Utilisateur",
@@ -805,6 +809,31 @@ export default {
       title: "Le type de contact a des contacts assignées",
       description:
         "Le type de contact avec des contacts assignés ne peuvent pas être supprimées",
+    },
+  },
+  studentProfile: {
+    studentInfo: "Informations sur les étudiant(e)",
+    columns: {
+      courseName: "Cours",
+      courseCode: "Cours code",
+      code: "Code",
+      grade: "Moyen",
+      levelName: "Niveau",
+      scholarPeriodName: "Trimestre",
+      scholarYearName: "Année",
+    },
+    expanded: {
+      description: "Acticité",
+      activities: "Acticités",
+      gradeCoefficientName: "Type",
+      grade: "Note",
+      activityDate: "Date",
+      userName: "Professeur(e)",
+      userNameShort: "Prof",
+    },
+    changePassword: {
+      title: "Modifier le mot de passe",
+      nonUserError: "L'utilisateur n'est pas trouvé",
     },
   },
   reports: {

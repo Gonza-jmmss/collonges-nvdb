@@ -13,6 +13,8 @@ export interface UserData {
   CreatedAt: Date;
   RoleId: number;
   Roles: Role;
+  IsEnabled: boolean;
+  StudentId: number | null;
 }
 
 export interface RoleModule {

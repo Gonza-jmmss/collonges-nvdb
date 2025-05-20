@@ -13,7 +13,7 @@ export default function LoginPage() {
         </div>
       )}
       {/* <div className="p-5"></div> */}
-      <div className="flex h-[20rem] w-[30vw] flex-col justify-center space-y-7 rounded-md border bg-muted/50 p-3 shadow">
+      <div className="flex h-[20rem] w-[90vw] flex-col justify-center space-y-7 rounded-md border bg-muted/50 p-3 shadow sm:w-[30vw]">
         <div className="flex w-full justify-center">
           <span className="text-2xl">{t.shared.login}</span>
         </div>

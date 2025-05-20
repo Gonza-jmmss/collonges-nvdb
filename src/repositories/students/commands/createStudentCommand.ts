@@ -4,6 +4,8 @@ import { PrismaClient } from "@prisma/client";
 import { StudentSchema } from "@/zodSchemas/studentsSchema";
 import { z } from "zod";
 
+import getStudentByIdQuery from "@/repositories/students/queries/getStudentByIdQuery";
+
 const prisma = new PrismaClient();
 
 type StudentParams = z.infer<typeof StudentSchema> & {
@@ -28,7 +30,9 @@ const createStudentCommand = async (params: StudentParams) => {
     },
   });
 
-  return command;
+  const student = getStudentByIdQuery(command.StudentId);
+
+  return student;
 };
 
 export default createStudentCommand;

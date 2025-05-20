@@ -54,6 +54,33 @@ export type StudentCourseGradesByStudentCourseViewModel = {
   }[];
 };
 
+export type StudentCourseGradesByStudentIdViewModel = {
+  StudentCourseId: number;
+  CourseId: number;
+  CourseName: string;
+  CourseCode: string | null;
+  StudentId: number;
+  StudentName: string | null;
+  Grade: string | null;
+  ScholarPeriodName: string | null;
+  ScholarYearName: string | null;
+  LevelName: string;
+  LevelCourses: {
+    Level: string;
+  }[];
+  StudentCourseGrades: {
+    StudentCourseGradeId: number;
+    Description: string;
+    ActivityDate: Date;
+    GradeCoefficientName: string;
+    GradeCoefficientPercentage: number;
+    Grade: string;
+    CreatedAt: Date;
+    UserId: number;
+    UserName: string;
+  }[];
+};
+
 export type StudentCourseGradesExtendedViewModel = {
   CourseId: number;
   StudentCourseGradeId: number;

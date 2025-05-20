@@ -21,7 +21,7 @@ export default function Breadcrumbs() {
   const breadcrumbElements = ["home"].concat(segments);
 
   return (
-    <div className="mt-3 flex w-full justify-between">
+    <div className="flex w-full items-center justify-between sm:mt-3">
       <Breadcrumb>
         <BreadcrumbList>
           {breadcrumbElements.map((segment: string, index: number) => (
