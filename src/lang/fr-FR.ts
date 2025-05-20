@@ -304,6 +304,7 @@ export default {
       regimeId: "Régime",
       isEnabled: "Est activé",
       yearPeriodId: "Période d'année",
+      creditsType: "type de crédits",
       addContact: "Ajouter un contact",
       contact: "Contact",
       personId: "Nom du contact",

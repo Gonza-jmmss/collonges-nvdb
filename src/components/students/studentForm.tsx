@@ -3,7 +3,13 @@
 import { useState, useRef } from "react";
 import createStudentCommand from "@/repositories/students/commands/createStudentPersonCommand";
 import updateStudentPersonCommand from "@/repositories/students/commands/updateStudentPersonCommand";
-import { SexEnum } from "@/enum/sexEnum";
+import { StudentPersonSchema } from "@/zodSchemas/studentsSchema";
+import { CountryViewModel } from "@/repositories/countries/countriesViewModel";
+import { CollegeViewModel } from "@/repositories/colleges/collegesViewModel";
+import { RegimeViewModel } from "@/repositories/regimes/regimesViewModel";
+import { ContactTypeViewModel } from "@/repositories/personContactTypes/peronContactTypesViewModel";
+import { NonStudentsViewModel } from "@/repositories/persons/persionsViewModel";
+import { yearPeriodsViewModel } from "@/repositories/yearPeriods/yearPeriodsViewModel";
 import { useForm } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
 import DateInput from "@/components/common/dateInput";
@@ -11,13 +17,8 @@ import Combobox from "@/components/common/combobox";
 import ToggleButton from "@/components/common/toggleButton";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
-import { CountryViewModel } from "@/repositories/countries/countriesViewModel";
-import { CollegeViewModel } from "@/repositories/colleges/collegesViewModel";
-import { RegimeViewModel } from "@/repositories/regimes/regimesViewModel";
-import { ContactTypeViewModel } from "@/repositories/personContactTypes/peronContactTypesViewModel";
-import { NonStudentsViewModel } from "@/repositories/persons/persionsViewModel";
-import { yearPeriodsViewModel } from "@/repositories/yearPeriods/yearPeriodsViewModel";
-import { StudentPersonSchema } from "@/zodSchemas/studentsSchema";
+import { SexEnum } from "@/enum/sexEnum";
+import { CreditsTypeEnum } from "@/enum/creditsTypeEnum";
 import enumToArray from "@/functions/enumToArray";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -117,6 +118,10 @@ export default function StudentForm({
         YearPeriodId:
           action !== "create"
             ? (studentData?.Student.YearPeriodId ?? null)
+            : null,
+        CreditsType:
+          action !== "create"
+            ? (studentData?.Student.CreditsType ?? null)
             : null,
       },
       ContactPerson:
@@ -449,7 +454,6 @@ export default function StudentForm({
                   field.handleChange(x && x.key);
                 }}
                 disabled={action === "view"}
-                showSearch
               />
               <div className="text-xs text-red-500">
                 {field.state.meta.errors
@@ -789,68 +793,92 @@ export default function StudentForm({
           )}
         />
       </div>
-      <div className="space-y-1">
-        <form.Field
-          name="Student.CollegeId"
-          children={(field) => (
-            <>
-              <span>{t.students.form.collegeId}</span>
-              <Combobox
-                options={colleges}
-                textAttribute={["Name", "Abbreviation"]}
-                valueAttribute="CollegeId"
-                placeholder={t.students.form.collegeId}
-                itemSelected={colleges.find(
-                  (x) => x.CollegeId === field.state.value,
-                )}
-                setItemSelected={(x: { CollegeId: number }) => {
-                  field.handleChange(x && x.CollegeId);
-                }}
-                disabled={action === "view"}
-                showSearch
-              />
-            </>
-          )}
-        />
-      </div>
-      <div className="space-y-1">
-        <form.Field
-          name="Student.RegimeId"
-          validators={{
-            onSubmitAsync: (value) => {
-              if (value === null || value === undefined) {
-                return t.students.validations.regimeValidation;
-              }
-              return z.number().min(0).safeParse(value.value).success
-                ? undefined
-                : t.students.validations.regimeValidation;
-            },
-          }}
-          children={(field) => (
-            <>
-              <span>{t.students.form.regimeId}</span>
-              <Combobox
-                options={regimes}
-                textAttribute="Name"
-                valueAttribute="RegimeId"
-                placeholder={t.students.form.regimeId}
-                itemSelected={regimes.find(
-                  (x) => x.RegimeId === field.state.value,
-                )}
-                setItemSelected={(x: { RegimeId: number }) => {
-                  field.handleChange(x && x.RegimeId);
-                }}
-                disabled={action === "view"}
-                showSearch
-              />
-              <div className="text-xs text-red-500">
-                {field.state.meta.errors
-                  ? field.state.meta.errors.join(", ")
-                  : null}
-              </div>
-            </>
-          )}
-        />
+      <div className="col-span-1 grid grid-cols-1 gap-5 md:col-span-2 md:grid-cols-2 lg:grid-cols-3">
+        <div className="space-y-1">
+          <form.Field
+            name="Student.CollegeId"
+            children={(field) => (
+              <>
+                <span>{t.students.form.collegeId}</span>
+                <Combobox
+                  options={colleges}
+                  textAttribute={["Name", "Abbreviation"]}
+                  valueAttribute="CollegeId"
+                  placeholder={t.students.form.collegeId}
+                  itemSelected={colleges.find(
+                    (x) => x.CollegeId === field.state.value,
+                  )}
+                  setItemSelected={(x: { CollegeId: number }) => {
+                    field.handleChange(x && x.CollegeId);
+                  }}
+                  disabled={action === "view"}
+                  showSearch
+                />
+              </>
+            )}
+          />
+        </div>
+        <div className="space-y-1">
+          <form.Field
+            name="Student.RegimeId"
+            validators={{
+              onSubmitAsync: (value) => {
+                if (value === null || value === undefined) {
+                  return t.students.validations.regimeValidation;
+                }
+                return z.number().min(0).safeParse(value.value).success
+                  ? undefined
+                  : t.students.validations.regimeValidation;
+              },
+            }}
+            children={(field) => (
+              <>
+                <span>{t.students.form.regimeId}</span>
+                <Combobox
+                  options={regimes}
+                  textAttribute="Name"
+                  valueAttribute="RegimeId"
+                  placeholder={t.students.form.regimeId}
+                  itemSelected={regimes.find(
+                    (x) => x.RegimeId === field.state.value,
+                  )}
+                  setItemSelected={(x: { RegimeId: number }) => {
+                    field.handleChange(x && x.RegimeId);
+                  }}
+                  disabled={action === "view"}
+                />
+                <div className="text-xs text-red-500">
+                  {field.state.meta.errors
+                    ? field.state.meta.errors.join(", ")
+                    : null}
+                </div>
+              </>
+            )}
+          />
+        </div>
+        <div className="space-y-1">
+          <form.Field
+            name="Student.CreditsType"
+            children={(field) => (
+              <>
+                <span>{t.students.form.creditsType}</span>
+                <Combobox
+                  options={enumToArray(CreditsTypeEnum)}
+                  textAttribute="value"
+                  valueAttribute="key"
+                  placeholder={t.students.form.creditsType}
+                  itemSelected={enumToArray(CreditsTypeEnum).find(
+                    (x) => x.key === field.state.value,
+                  )}
+                  setItemSelected={(x: { key: number }) => {
+                    field.handleChange(x && x.key);
+                  }}
+                  disabled={action === "view"}
+                />
+              </>
+            )}
+          />
+        </div>
       </div>
       <div className="space-y-1">
         <form.Field

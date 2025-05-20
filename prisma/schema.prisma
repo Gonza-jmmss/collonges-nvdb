@@ -247,6 +247,7 @@ model Students {
   CreatedAt       DateTime         @default(now())
   IsEnabled       Boolean
   YearPeriodId    Int
+  CreditsType     Int?
   Alumins         Alumins[]
   Matriculations  Matriculations[]
   StudentCourses  StudentCourses[]
