@@ -73,7 +73,7 @@ export default function AmericanTranscript({
               <span className="font-semibold">
                 {t.reports.ifleStudentsNotes.dpfEnglish.data.credits}
               </span>
-              <span>{"UNIVERSITARY"}</span>
+              <span>{studentNotesData.StudentCreditsType.toUpperCase()}</span>
             </div>
           </div>
         </div>
