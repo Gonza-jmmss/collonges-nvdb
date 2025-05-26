@@ -87,3 +87,73 @@ export type ModulesMapViewModel = {
     CreatedAt?: Date;
   };
 };
+
+export type RoleModuleElementsGroupedViewModel = {
+  RoleId: number;
+  RoleName: string;
+  ModuleElements: {
+    RoleModuleElementId: number | null;
+    ModuleElementName: string | null;
+    ModuleElementId: number | null;
+    Path: string;
+    Icon: string;
+    ModuleName: string | null;
+  }[];
+  Modules: {
+    RoleModuleElementId: number | null;
+    ModuleName: string | null;
+    ModuleId: number | null;
+    Path: string;
+    Icon: string;
+  }[];
+};
+
+export type RoleModuleElemensByRole = {
+  RoleModuleElementId: number | null;
+  ModuleElementName: string | null;
+  ModuleElementId: number | null;
+  Path: string;
+  Icon: string;
+  ModuleName: string | null;
+};
+
+export type RoleModulesByRole = {
+  RoleModuleElementId: number | null;
+  ModuleName: string | null;
+  ModuleId: number | null;
+  Path: string;
+  Icon: string;
+};
+
+// export type RoleModuleElementsGroupedViewModel = {
+//   RoleId: number;
+//   RoleName: string;
+//   RoleElements: {
+//     ModuleElements: {
+//       RoleModuleElementId: number | null;
+//       ModuleElementName: string | null;
+//       ModuleElementId: number | null;
+//       Path: string | null;
+//     }[];
+//     Modules: {
+//       RoleModuleElementId: number | null;
+//       ModuleName: string | null;
+//       ModuleId: number | null;
+//       Path: string | null;
+//     }[];
+//   }[];
+// };
+
+// export type RoleModuleElemensByRole = {
+//   RoleModuleElementId: number | null;
+//   ModuleElementName: string | null;
+//   ModuleElementId: number | null;
+//   Path: string | null;
+// };
+
+// export type RoleModulesByRole = {
+//   RoleModuleElementId: number | null;
+//   ModuleName: string | null;
+//   ModuleId: number | null;
+//   Path: string | null;
+// };
