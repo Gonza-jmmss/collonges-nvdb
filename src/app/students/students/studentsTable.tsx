@@ -117,7 +117,7 @@ export default function StudentsTable({
                 />
                 {row.row.original.IsEnabled === true && (
                   <Icon
-                    name="MdDelete"
+                    name="MdNotInterested"
                     className="cursor-pointer text-xl hover:text-primary"
                     onClick={() => {
                       setOpenModal(true);
