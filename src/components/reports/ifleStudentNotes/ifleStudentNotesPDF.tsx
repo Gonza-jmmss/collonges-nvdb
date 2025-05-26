@@ -255,6 +255,17 @@ export default function ifleStudentNotesPDF({
       doc.text(country, countryTextWithMargin, currentY);
       currentY += 7;
 
+      const fontSize: number =
+        studentNotesDataForPdf.length <= 16
+          ? 10
+          : studentNotesDataForPdf.length === 17
+            ? 9.5
+            : studentNotesDataForPdf.length === 18
+              ? 8.5
+              : studentNotesDataForPdf.length === 19
+                ? 7.5
+                : 6;
+
       //Table
       autoTable(doc, {
         body: tablePDF.body,
@@ -267,7 +278,7 @@ export default function ifleStudentNotesPDF({
           textColor: [0, 0, 0],
         },
         tableLineWidth: 0.2,
-        styles: { textColor: "#000000" },
+        styles: { textColor: "#000000", fontSize: fontSize },
         // theme: "striped",
         // headStyles: {
         //   fillColor: [255, 255, 255],
