@@ -43,15 +43,15 @@ const updateLevelWithCoursesCommand = async (params: LevelParams) => {
     });
 
   // update level
-  const updateLevelData = updateLevelCommand(params);
+  const updateLevelData = await updateLevelCommand(params);
 
   // delete createCourses
-  const levelCoursesCreated = prisma.levelCourses.createMany({
+  const levelCoursesCreated = await prisma.levelCourses.createMany({
     data: levelCoursesToCreate,
   });
 
   // delete LevelCourses
-  const levelCoursesDeleted = prisma.levelCourses.deleteMany({
+  const levelCoursesDeleted = await prisma.levelCourses.deleteMany({
     where: {
       LevelId: params.LevelId,
       CourseId: {
@@ -61,7 +61,7 @@ const updateLevelWithCoursesCommand = async (params: LevelParams) => {
   });
 
   // transaction for update data
-  const transaction = await prisma.$transaction([
+  const transaction = await prisma.$transaction(async () => [
     updateLevelData,
     levelCoursesCreated,
     levelCoursesDeleted,
