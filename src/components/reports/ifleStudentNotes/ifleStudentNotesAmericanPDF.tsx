@@ -283,13 +283,18 @@ export default function ifleStudentNotesAmericanPDF({
       doc.setFont("helvetica", "bold");
       //credits - texts
       const creditsText = t.reports.ifleStudentsNotes.dpfEnglish.data.credits;
-      const creditsValueText = "UNIVERSITARY";
+      const creditsValueText =
+        studentNotesData.StudentCreditsType.toUpperCase();
       //credits - creditsTexstWith
       const creditsTextWith =
         (doc.getStringUnitWidth(creditsText) * doc.getFontSize()) /
         doc.internal.scaleFactor;
       const creditsValueTextWith =
-        (doc.getStringUnitWidth(creditsValueText) * doc.getFontSize()) /
+        ((doc.getStringUnitWidth(creditsValueText) -
+          (studentNotesData.StudentCreditsType === "Non applicable"
+            ? 0.15
+            : 0)) *
+          doc.getFontSize()) /
         doc.internal.scaleFactor;
       const creditshRightMarginPosition =
         rightmargin - (creditsTextWith + creditsValueTextWith + 2);
@@ -305,6 +310,17 @@ export default function ifleStudentNotesAmericanPDF({
       doc.text(creditsValueText, creditsTextWithMargin, currentY);
       currentY += 7;
 
+      const fontSize: number =
+        studentNotesDataForPdf.length <= 15
+          ? 10
+          : studentNotesDataForPdf.length === 16
+            ? 9
+            : studentNotesDataForPdf.length === 17
+              ? 8
+              : studentNotesDataForPdf.length === 19
+                ? 7
+                : 6;
+
       //Table
       autoTable(doc, {
         body: tablePDF.body,
@@ -317,7 +333,8 @@ export default function ifleStudentNotesAmericanPDF({
           textColor: [0, 0, 0],
         },
         tableLineWidth: 0.2,
-        styles: { textColor: "#000000" },
+        // styles: { textColor: "#000000" },
+        styles: { textColor: "#000000", fontSize: fontSize },
         // theme: "striped",
         // headStyles: {
         //   fillColor: [255, 255, 255],

@@ -155,6 +155,7 @@ export default function StudentsTable({
           data={studentNotesData}
           className=""
           minimalMode
+          pageSizeParam={studentNotesData.length}
         />
       </div>
     </main>
