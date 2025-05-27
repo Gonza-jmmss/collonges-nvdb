@@ -63,6 +63,35 @@ export default function ifleStudentNotesPDF({
       let currentY = 14; // Start position for content
       const leftmargin = 14; // 16 tabla plain
       const rightmargin = 196; // 194 tabla plain
+      const fontSize: number =
+        studentNotesDataForPdf.length <= 16
+          ? 10
+          : studentNotesDataForPdf.length === 17
+            ? 9.5
+            : studentNotesDataForPdf.length === 18
+              ? 9
+              : studentNotesDataForPdf.length === 19
+                ? 8.5
+                : studentNotesDataForPdf.length === 20
+                  ? 8
+                  : studentNotesDataForPdf.length === 21
+                    ? 7.5
+                    : 7;
+      const spaceYAdjustment: number =
+        studentNotesDataForPdf.length <= 16
+          ? 0
+          : studentNotesDataForPdf.length === 17
+            ? 0.25
+            : studentNotesDataForPdf.length === 18
+              ? 0.5
+              : studentNotesDataForPdf.length === 19
+                ? 0.75
+                : studentNotesDataForPdf.length === 20
+                  ? 1
+                  : studentNotesDataForPdf.length === 21
+                    ? 1.25
+                    : 1.5;
+
       doc.setTextColor(0, 0, 0);
       doc.setFont("helvetica", "bold");
       const pageWidth = doc.internal.pageSize.getWidth();
@@ -73,7 +102,7 @@ export default function ifleStudentNotesPDF({
       // // Only for desing face ///////////////////
 
       //titleInstitute
-      doc.setFontSize(12);
+      doc.setFontSize(fontSize + 2);
       const titleInstituteText =
         t.reports.ifleStudentsNotes.dpfFrench.titleInstitute.toUpperCase();
       const titleWidth =
@@ -81,11 +110,11 @@ export default function ifleStudentNotesPDF({
         doc.internal.scaleFactor;
       const TitleInstituteX = (pageWidth - titleWidth) / 2;
       doc.text(titleInstituteText, TitleInstituteX, currentY);
-      currentY += 9;
+      currentY += 9 - spaceYAdjustment;
 
       //nomCampus
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(10);
+      doc.setFontSize(fontSize);
       const nomCampusText =
         t.reports.ifleStudentsNotes.dpfFrench.nomCampus.toUpperCase();
       const nomCampusWidth =
@@ -93,7 +122,7 @@ export default function ifleStudentNotesPDF({
         doc.internal.scaleFactor;
       const nomCampusX = (pageWidth - nomCampusWidth) / 2;
       doc.text(nomCampusText, nomCampusX, currentY);
-      currentY += 5;
+      currentY += 5 - spaceYAdjustment;
 
       //address1
       const address1Text =
@@ -103,7 +132,7 @@ export default function ifleStudentNotesPDF({
         doc.internal.scaleFactor;
       const address1X = (pageWidth - address1Width) / 2;
       doc.text(address1Text, address1X, currentY);
-      currentY += 5;
+      currentY += 5 - spaceYAdjustment;
 
       //address2
       const address2Text =
@@ -113,11 +142,11 @@ export default function ifleStudentNotesPDF({
         doc.internal.scaleFactor;
       const address2X = (pageWidth - address2Width) / 2;
       doc.text(address2Text, address2X, currentY);
-      currentY += 9;
+      currentY += 9 - spaceYAdjustment;
 
       //titleReport
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(12);
+      doc.setFontSize(fontSize + 2);
       const titleReportText =
         t.reports.ifleStudentsNotes.dpfFrench.titleReport.toUpperCase();
       const titleReportWidthMargin =
@@ -125,12 +154,12 @@ export default function ifleStudentNotesPDF({
         doc.internal.scaleFactor;
       const titleReportX = (pageWidth - titleReportWidthMargin) / 2;
       doc.text(titleReportText, titleReportX, currentY);
-      currentY += 11;
+      currentY += 11 - spaceYAdjustment;
 
       //Left Side
       //studentName
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
+      doc.setFontSize(fontSize);
       const studentNameText =
         t.reports.ifleStudentsNotes.dpfFrench.data.studentName;
       doc.text(studentNameText, leftmargin, currentY);
@@ -169,7 +198,7 @@ export default function ifleStudentNotesPDF({
       //dbaseId - dbaseIdValueText - doc.text
       doc.setFont("helvetica", "normal");
       doc.text(dbaseIdValueText, dbaseIdTextWithMargin, currentY);
-      currentY += 5;
+      currentY += 5 - spaceYAdjustment;
 
       //dbaseId
       // doc.setFont("helvetica", "bold");
@@ -183,7 +212,7 @@ export default function ifleStudentNotesPDF({
       // const dbaseIdValueText = studentNotesData.DBaseCode || "";
       // doc.setFont("helvetica", "normal");
       // doc.text(dbaseIdValueText, dbaseIdTextWithMargin, currentY);
-      // currentY += 5;
+      // currentY += 5 - spaceYAdjustment;
 
       //Left Side
       //birthdate
@@ -225,7 +254,7 @@ export default function ifleStudentNotesPDF({
       //issueDate - issueDateValueText - doc.text
       doc.setFont("helvetica", "normal");
       doc.text(issueDateValueText, issueDateTextWithMargin, currentY);
-      currentY += 5;
+      currentY += 5 - spaceYAdjustment;
 
       //place
       doc.setFont("helvetica", "bold");
@@ -239,7 +268,7 @@ export default function ifleStudentNotesPDF({
       const place = studentNotesData.BirthCity || "";
       doc.setFont("helvetica", "normal");
       doc.text(place, placeTextWithMargin, currentY);
-      currentY += 5;
+      currentY += 5 - spaceYAdjustment;
 
       //country
       doc.setFont("helvetica", "bold");
@@ -253,18 +282,7 @@ export default function ifleStudentNotesPDF({
       const country = studentNotesData.BirthCountryFr || "";
       doc.setFont("helvetica", "normal");
       doc.text(country, countryTextWithMargin, currentY);
-      currentY += 7;
-
-      const fontSize: number =
-        studentNotesDataForPdf.length <= 16
-          ? 10
-          : studentNotesDataForPdf.length === 17
-            ? 9.5
-            : studentNotesDataForPdf.length === 18
-              ? 8.5
-              : studentNotesDataForPdf.length === 19
-                ? 7.5
-                : 6;
+      currentY += 7 - spaceYAdjustment;
 
       //Table
       autoTable(doc, {
@@ -296,7 +314,7 @@ export default function ifleStudentNotesPDF({
 
       //titleWarning
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
+      doc.setFontSize(fontSize);
       const titleWarningText =
         t.reports.ifleStudentsNotes.dpfFrench.titleWarning.toUpperCase();
       const titleWarningWidth =
@@ -304,14 +322,14 @@ export default function ifleStudentNotesPDF({
         doc.internal.scaleFactor;
       const titleWarningX = (pageWidth - titleWarningWidth) / 2;
       doc.text(titleWarningText, titleWarningX, currentY);
-      currentY += 7;
+      currentY += 7 - spaceYAdjustment;
 
       doc.line(leftmargin, currentY, rightmargin, currentY);
-      currentY += 5;
+      currentY += 5 - spaceYAdjustment;
 
       //noteText
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
+      // doc.setFont("helvetica", "bold");
+      // doc.setFontSize(10);
       const titleText = t.reports.ifleStudentsNotes.dpfFrench.text.title;
       doc.text(titleText, leftmargin, currentY);
       const titleTextWithMargin =
@@ -326,7 +344,7 @@ export default function ifleStudentNotesPDF({
         titleTextWithMargin,
         currentY,
       );
-      currentY += 5;
+      currentY += 5 - spaceYAdjustment;
       //
       doc.setFont("helvetica", "bold");
       doc.text(
@@ -334,10 +352,10 @@ export default function ifleStudentNotesPDF({
         leftmargin,
         currentY,
       );
-      currentY += 3;
+      currentY += 3 - spaceYAdjustment;
 
       doc.line(leftmargin, currentY, rightmargin, currentY);
-      currentY += 15;
+      currentY += 15 - spaceYAdjustment;
 
       //secretariat
       doc.text(
@@ -350,7 +368,7 @@ export default function ifleStudentNotesPDF({
       doc.setFont("helvetica", "normal");
       doc.text(t.reports.ifleStudentsNotes.secretariatName, 160, currentY + 40);
       doc.setTextColor(0, 0, 0);
-      currentY += 10;
+      currentY += 10 - spaceYAdjustment;
 
       //date
       const dateText = t.reports.ifleStudentsNotes.dpfFrench.date;
