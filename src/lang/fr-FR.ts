@@ -732,7 +732,7 @@ export default {
   yearPeriods: {
     title: "Page des périodes d'année",
     yearPeriod: "Période d'année",
-    create: "Creer une période d'année",
+    create: "Créer une période d'année",
     columns: {
       name: "Période",
       periodType: "Type de période",
@@ -782,7 +782,7 @@ export default {
   contactTypes: {
     title: "Page des types de contacts",
     contactType: "Type de contact",
-    create: "Creer un type de contact",
+    create: "Créer un type de contact",
     columns: {
       name: "Type de contact",
     },
@@ -790,15 +790,15 @@ export default {
       name: "Type de contact",
     },
     notifications: {
-      createSuccess: "Type de contact d'année créées avec succès",
+      createSuccess: "Type de contact créées avec succès",
       createError:
         "Une erreur s'est produite pendant la création du type de contact",
       createFailure: "Échec de la création du type de contact",
-      updateSuccess: "Type de contact d'année modifiée avec succès",
+      updateSuccess: "Type de contact modifiée avec succès",
       updateError:
         "Une erreur s'est produite pendant la modification du type de contact",
       updateFailure: "Échec de la modification du type de contact",
-      deleteSuccess: "Type de contact d'année supprimée avec succès",
+      deleteSuccess: "Type de contact supprimée avec succès",
       deleteError:
         "Une erreur s'est produite pendant la suppression du type de contact",
       deleteFailure: "Échec de la suppression du type de contact",
@@ -811,6 +811,42 @@ export default {
       title: "Le type de contact a des contacts assignées",
       description:
         "Le type de contact avec des contacts assignés ne peuvent pas être supprimées",
+    },
+  },
+  colleges: {
+    title: "Page des universités",
+    college: "Université",
+    create: "Créer une université",
+    columns: {
+      name: "Université",
+      abbreviation: "Abréviation",
+    },
+    form: {
+      name: "Université",
+      abbreviation: "Abréviation",
+    },
+    notifications: {
+      createSuccess: "Université créées avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création de l'université",
+      createFailure: "Échec de la création de l'université",
+      updateSuccess: "Université modifiée avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification de l'université",
+      updateFailure: "Échec de la modification de l'université",
+      deleteSuccess: "Université supprimée avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression de l'université",
+      deleteFailure: "Échec de la suppression de l'université",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de supprimer l'université ?",
+      description: "L'université sera supprimée",
+    },
+    delteModalValidation: {
+      title: "L'université a des étudiants assignées",
+      description:
+        "Les universités avec des étudiants assignés ne peuvent pas être supprimées",
     },
   },
   studentProfile: {

@@ -98,6 +98,21 @@ export type StudentsMap = {
     Name: string;
   };
 };
+
+export type StudentsByCollegeMap = {
+  StudentId: number;
+  PersonId: number;
+  StudentTypeId: number;
+  IsACA: boolean;
+  DepartmentId: number | null;
+  CollegeId: number | null;
+  RegimeId: number | null;
+  AccommodationId: number | null;
+  IsEnabled: boolean;
+  YearPeriodId: number;
+  UpdatedAt: Date | null;
+  CreatedAt: Date;
+};
 // export type StudentsByYearPeriodIdMap = {
 //   StudentId: number;
 //   PersonId: number;
