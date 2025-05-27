@@ -131,7 +131,7 @@ export default function StudentsTable({
         ),
       },
     ],
-    [getPageIndexParam, getPageSizeParam],
+    [getPageIndexParam, getPageSizeParam, yearPeriodIdSelected],
   );
 
   const disableStudent = async (StudentId: number) => {
