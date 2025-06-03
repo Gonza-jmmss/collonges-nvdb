@@ -1,5 +1,7 @@
 import getAllModulesByRoleIdQuery from "@/repositories/roleModuleElements/queries/getAllModulesByRoleIdQuery";
+import getShortcutRoleModuleElementsByRoleQuery from "@/repositories/roleModuleElements/queries/getShortcutRoleModuleElementsByRoleQuery";
 import { ModulesViewModel } from "@/repositories/modules/modulesViewModel";
+import { ShortcutRoleModuleElementsViewModel } from "@/repositories/roleModuleElements/roleModuleElementsViewModel";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
@@ -22,10 +24,16 @@ export default async function Home() {
   const userRoleName = session?.user.userData.Roles.Name;
 
   let modules: ModulesViewModel[] = [];
+  let shortcuts: ShortcutRoleModuleElementsViewModel[] = [];
 
   if (session) {
     modules = await getAllModulesByRoleIdQuery(session.user.userData.RoleId);
+    shortcuts = await getShortcutRoleModuleElementsByRoleQuery({
+      RoleId: session.user.userData.RoleId,
+    });
   }
+
+  // const shortcuts = getShortcutRoleModuleElementsByRoleQuery()
 
   let student: StudentViewModel | null = null;
   let countries: CountryViewModel[] = [];
@@ -51,8 +59,11 @@ export default async function Home() {
             <div className="flex justify-center">
               <span className="text-4xl font-bold">{t.shared.welcome}</span>
             </div>
-            {/* <pre>{JSON.stringify(modules, null, 2)}</pre> */}
-            <div className={`mt-10 flex justify-center space-x-8`}>
+            {/* <div className={`mt-10 flex justify-center space-x-8`}> */}
+            <div
+              className={`-ml-8 mt-10 flex flex-wrap justify-center space-x-8 space-y-8`}
+            >
+              <div />
               {modules.slice(1).map((element, index) => (
                 <Button
                   key={index}
@@ -84,65 +95,32 @@ export default async function Home() {
               <div className="text-lg font-semibold">{t.shared.shortcut}</div>
               <div className="w-full border-b" />
             </div>
-            <div className={`mt-8 flex justify-center space-x-8`}>
-              {userRoleName === "Professeur" || userRoleName === "Directeur" ? (
-                <>
-                  <Button
-                    asChild
-                    className={`h-[4rem] w-[10rem]`}
-                    variant="outline"
-                  >
-                    <Link
-                      href={`/students/students`}
-                      className="flex space-x-2"
-                    >
-                      <Icon name="MdSchool" className="text-2xl" />
-                      <span className="text-base">{t.shortcuts.students}</span>
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    className={`h-[4rem] w-[10rem]`}
-                    variant="outline"
-                  >
-                    <Link
-                      href={`/courses/studentCourseGrades`}
-                      className="flex space-x-2"
-                    >
-                      <Icon name="MdRule" className="text-2xl" />
-                      <span className="text-base">{t.shortcuts.grades}</span>
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    className={`h-[4rem] w-[10rem]`}
-                    variant="outline"
-                  >
-                    <Link href={`/courses/courses`} className="flex space-x-2">
-                      <Icon name="MdClass" className="text-2xl" />
-                      <span className="text-base">{t.shortcuts.courses}</span>
-                    </Link>
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    asChild
-                    className={`h-[4rem] w-[10rem]`}
-                    variant="outline"
-                  >
-                    <Link
-                      href={`/reports/ifleStudentsNotes`}
-                      className="flex space-x-2"
-                    >
-                      <Icon name="MdDvr" className="text-2xl" />
-                      <span className="text-base">
-                        {t.shortcuts.transcripts}
-                      </span>
-                    </Link>
-                  </Button>
-                </>
-              )}
+            <div
+              className={`-ml-8 flex flex-wrap justify-center space-x-8 space-y-8`}
+            >
+              <div />
+              {shortcuts.map((element, index) => (
+                <Button
+                  key={index}
+                  asChild
+                  className={`h-[4rem] w-[12rem]`}
+                  variant="outline"
+                >
+                  <Link href={`${element.Path}`} className="flex space-x-2">
+                    {/* <Icon name="MdSchool" className="text-2xl" />
+                    <span className="text-base">{t.shortcuts.students}</span> */}
+                    <Icon
+                      name={
+                        isValidIconName(element.Icon)
+                          ? element.Icon
+                          : "MdOutlineNotInterested"
+                      }
+                      className="text-2xl"
+                    />
+                    <span className="text-base">{element.Name}</span>
+                  </Link>
+                </Button>
+              ))}
             </div>
           </div>
         </main>
