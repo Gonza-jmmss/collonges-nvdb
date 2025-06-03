@@ -10,9 +10,9 @@ import { ModuleElementsViewModel } from "@/repositories/moduleElements/moduleEle
 import { RolesViewModel } from "@/repositories/roles/rolesViewModel";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import Combobox from "@/components/common/combobox";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
@@ -43,30 +43,26 @@ export default function RoleModuleElementForm({
 
   const form = useForm<RoleModuleElementFormData>({
     defaultValues: {
-      RoleId:
-        action !== "create"
-          ? roleModuleElementData
-            ? roleModuleElementData.RoleId
-            : 0
-          : 0,
+      RoleId: action !== "create" ? (roleModuleElementData?.RoleId ?? 0) : 0,
       Modules:
         action !== "create"
           ? (roleModuleElementData?.Modules?.map((module) => ({
-              // RoleModuleElementId: module.RoleModuleElementId,
+              RoleModuleElementId: module.RoleModuleElementId,
               ModuleId: module.ModuleId,
             })) ?? null)
           : null,
       ModuleElements:
         action !== "create"
           ? (roleModuleElementData?.ModuleElements?.map((moduleElement) => ({
-              // RoleModuleElementId: moduleElement.RoleModuleElementId,
+              RoleModuleElementId: moduleElement.RoleModuleElementId,
               ModuleElementId: moduleElement.ModuleElementId,
+              IsShortcut: moduleElement.IsShortcut,
             })) ?? null)
           : null,
     },
     onSubmit: async ({ value }) => {
-      console.log("form", value);
-      // setIsPending(true)
+      // console.log("form", value);
+      setIsPending(true);
       action === "create" && createRoleModuleElement(value);
       action === "edit" && updateRoleModuleElement(value);
     },
@@ -245,6 +241,7 @@ export default function RoleModuleElementForm({
                           .includes(x.ModuleId)
                       )
                         field.pushValue({
+                          RoleModuleElementId: null,
                           ModuleId: x && x.ModuleId,
                         });
                     }}
@@ -254,7 +251,7 @@ export default function RoleModuleElementForm({
                   />
                 </div>
               </div>
-              <div className="space-y-3 rounded-md border bg-muted p-2">
+              <div className="space-y-3 rounded-md border bg-muted/50 p-2">
                 <div className="grid grid-cols-12">
                   <div className="col-span-11 text-sm font-semibold">
                     {t.roleModuleElements.columns.moduleName}
@@ -319,7 +316,9 @@ export default function RoleModuleElementForm({
                           .includes(x.ModuleElementId)
                       )
                         field.pushValue({
+                          RoleModuleElementId: null,
                           ModuleElementId: x && x.ModuleElementId,
+                          IsShortcut: false,
                         });
                     }}
                     disabled={action === "view"}
@@ -328,13 +327,16 @@ export default function RoleModuleElementForm({
                   />
                 </div>
               </div>
-              <div className="space-y-3 rounded-md border bg-muted p-2">
+              <div className="space-y-3 rounded-md border bg-muted/50 p-2">
                 <div className="grid grid-cols-12">
-                  <div className="col-span-5 text-sm font-semibold">
+                  <div className="col-span-4 text-sm font-semibold">
                     {t.roleModuleElements.columns.moduleElementName}
                   </div>
-                  <div className="col-span-6 text-sm font-semibold">
+                  <div className="col-span-5 text-sm font-semibold">
                     {t.roleModuleElements.columns.moduleName}
+                  </div>
+                  <div className="col-span-2 text-sm font-semibold">
+                    {t.roleModuleElements.form.isShortCut}
                   </div>
                 </div>
                 {field.state.value
@@ -344,7 +346,7 @@ export default function RoleModuleElementForm({
                       className="col-span-1 rounded-md border border-foreground/30 p-2 md:col-span-2"
                     >
                       <div className="grid grid-cols-12">
-                        <div className="col-span-5 text-sm">
+                        <div className="col-span-4 text-sm">
                           {
                             moduleElements.find(
                               (x) =>
@@ -353,7 +355,7 @@ export default function RoleModuleElementForm({
                             )?.Name
                           }
                         </div>
-                        <div className="col-span-6 text-sm">
+                        <div className="col-span-5 text-sm">
                           {` ${
                             moduleElements.find(
                               (x) =>
@@ -361,6 +363,20 @@ export default function RoleModuleElementForm({
                                 moduleElement.ModuleElementId,
                             )?.ModuleName
                           } `}
+                        </div>
+                        <div className="col-span-2 flex justify-center text-sm">
+                          <form.Field
+                            name={`ModuleElements[${index}].IsShortcut`}
+                            children={(field) => (
+                              <>
+                                <Switch
+                                  checked={field.state.value || false}
+                                  onCheckedChange={(e) => field.handleChange(e)}
+                                  disabled={action === "view"}
+                                />
+                              </>
+                            )}
+                          />
                         </div>
                         <Icon
                           name="MdClose"

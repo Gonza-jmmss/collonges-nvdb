@@ -338,6 +338,7 @@ model RoleModuleElements {
   UpdatedAt           DateTime?
   CreatedAt           DateTime        @default(now())
   ModuleId            Int?
+  IsShortcut          Boolean?
   ModuleElements      ModuleElements? @relation(fields: [ModuleElementId], references: [ModuleElementId], onDelete: NoAction, onUpdate: NoAction, map: "FK_RoleModuleElements_ModuleElements")
   Modules             Modules?        @relation(fields: [ModuleId], references: [ModuleId], onDelete: NoAction, onUpdate: NoAction, map: "FK_RoleModuleElements_Modules")
   Roles               Roles           @relation(fields: [RoleId], references: [RoleId], onUpdate: NoAction, map: "FK_RoleModuleElements_Roles")

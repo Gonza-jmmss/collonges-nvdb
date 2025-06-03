@@ -15,6 +15,7 @@ const createRoleModuleElementCommand = async (
     RoleId: number;
     ModuleElementId: number | null;
     ModuleId: number | null;
+    IsShortcut: boolean | null;
   }[] = [];
 
   if (params.Modules && params.Modules.length > 0) {
@@ -23,6 +24,7 @@ const createRoleModuleElementCommand = async (
         RoleId: params.RoleId,
         ModuleId: element.ModuleId,
         ModuleElementId: null,
+        IsShortcut: null,
       });
     });
   }
@@ -33,6 +35,7 @@ const createRoleModuleElementCommand = async (
         RoleId: params.RoleId,
         ModuleElementId: element.ModuleElementId,
         ModuleId: null,
+        IsShortcut: element.IsShortcut,
       });
     });
   }

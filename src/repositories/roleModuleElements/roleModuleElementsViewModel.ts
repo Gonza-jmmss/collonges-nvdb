@@ -20,6 +20,7 @@ export type RoleModuleElementViewModel = {
 
 export type RoleModuleElementsMapViewModel = {
   RoleModuleElementId: number;
+  IsShortcut: boolean | null;
   ModuleElements: {
     ModuleElementId: number;
     Name: string;
@@ -89,6 +90,7 @@ export type ModulesMapViewModel = {
 };
 
 export type RoleModuleElementsGroupedViewModel = {
+  // RoleModuleElementId: number | null;
   RoleId: number;
   RoleName: string;
   ModuleElements: {
@@ -98,6 +100,7 @@ export type RoleModuleElementsGroupedViewModel = {
     Path: string;
     Icon: string;
     ModuleName: string | null;
+    IsShortcut: boolean | null;
   }[];
   Modules: {
     RoleModuleElementId: number | null;
@@ -105,6 +108,7 @@ export type RoleModuleElementsGroupedViewModel = {
     ModuleId: number | null;
     Path: string;
     Icon: string;
+    IsShortcut: boolean | null;
   }[];
 };
 
@@ -115,6 +119,7 @@ export type RoleModuleElemensByRole = {
   Path: string;
   Icon: string;
   ModuleName: string | null;
+  IsShortcut: boolean | null;
 };
 
 export type RoleModulesByRole = {
@@ -123,37 +128,33 @@ export type RoleModulesByRole = {
   ModuleId: number | null;
   Path: string;
   Icon: string;
+  IsShortcut: boolean | null;
 };
 
-// export type RoleModuleElementsGroupedViewModel = {
-//   RoleId: number;
-//   RoleName: string;
-//   RoleElements: {
-//     ModuleElements: {
-//       RoleModuleElementId: number | null;
-//       ModuleElementName: string | null;
-//       ModuleElementId: number | null;
-//       Path: string | null;
-//     }[];
-//     Modules: {
-//       RoleModuleElementId: number | null;
-//       ModuleName: string | null;
-//       ModuleId: number | null;
-//       Path: string | null;
-//     }[];
-//   }[];
-// };
+export type getShortcutRoleModuleElementsByRoleQueryMap = {
+  RoleModuleElementId: number;
+  ModuleElementId: number | null;
+  ModuleId: number | null;
+  RoleId: number;
+  UpdatedAt?: Date | null;
+  CreatedAt?: Date;
+  ModuleElements: {
+    ModuleElementId: number;
+    Name: string;
+    Path: string;
+    Icon: string;
+    Description: string;
+    ModuleId: number | null;
+    Location: number | null;
+    UpdatedAt?: Date | null;
+    CreatedAt?: Date;
+  } | null;
+};
 
-// export type RoleModuleElemensByRole = {
-//   RoleModuleElementId: number | null;
-//   ModuleElementName: string | null;
-//   ModuleElementId: number | null;
-//   Path: string | null;
-// };
-
-// export type RoleModulesByRole = {
-//   RoleModuleElementId: number | null;
-//   ModuleName: string | null;
-//   ModuleId: number | null;
-//   Path: string | null;
-// };
+export type ShortcutRoleModuleElementsViewModel = {
+  RoleModuleElementId: number;
+  ModuleElementId: number | undefined;
+  Name: string | undefined;
+  Path: string | undefined;
+  Icon: string;
+};

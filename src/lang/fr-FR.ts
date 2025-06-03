@@ -240,12 +240,14 @@ export default {
       path: "Chemin web",
       roleName: "Rôle",
       icon: "Icône",
+      isShortcut: "Est raccourci",
     },
     form: {
       moduleElementId: "Éléments du module",
       moduleId: "Modules",
       roleId: "Rôle",
       chooseElementType: "Choisir le type d'élément",
+      isShortCut: "Est raccourci",
     },
     notifications: {
       createSuccess: "Privilèges de rôle créés avec succès",

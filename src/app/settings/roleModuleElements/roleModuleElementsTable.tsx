@@ -9,6 +9,7 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
+import { Switch } from "@/components/ui/switch";
 import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
 import DeleteModal from "@/components/common/deleteModal";
@@ -189,6 +190,21 @@ export default function RoleModuleElementsTable({
         id: "Path",
         header: () => <Header text={t.roleModuleElements.columns.path} />,
         filterFn: "equalsString",
+      },
+      {
+        accessorKey: "Path",
+        id: "Path",
+        header: () => <Header text={t.roleModuleElements.columns.path} />,
+        filterFn: "equalsString",
+      },
+      {
+        accessorKey: "IsShortcut",
+        id: "IsShortcut",
+        header: () => <Header text={t.roleModuleElements.columns.isShortcut} />,
+        filterFn: "equalsString",
+        cell: ({ row }) => (
+          <Switch checked={row.original.IsShortcut || false} />
+        ),
       },
     ],
     [],

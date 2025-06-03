@@ -61,13 +61,21 @@ const updateRoleModuleElementCommand = async (
     (moduleElement) => !paramsModuleElementsIds?.includes(moduleElement),
   );
 
+  // Filter the ModuleElementsIDs to update
+  const moduleElementsToUpdate = params.ModuleElements?.filter(
+    (moduleElement) =>
+      moduleElement.ModuleElementId !== null &&
+      studentModuleElementsIds?.includes(moduleElement.ModuleElementId),
+  );
+
   //////////////
-  // Create RoleModuleElements
+  // Get RoleModuleElements to create
   //////////////
   let roleModuleElementsToCreate: {
     RoleId: number;
     ModuleElementId: number | null;
     ModuleId: number | null;
+    IsShortcut: boolean | null;
   }[] = [];
 
   if (modulesToCreate && modulesToCreate.length > 0) {
@@ -76,6 +84,7 @@ const updateRoleModuleElementCommand = async (
         RoleId: params.RoleId,
         ModuleId: element,
         ModuleElementId: null,
+        IsShortcut: null,
       });
     });
   }
@@ -86,16 +95,15 @@ const updateRoleModuleElementCommand = async (
         RoleId: params.RoleId,
         ModuleElementId: element,
         ModuleId: null,
+        IsShortcut:
+          params.ModuleElements?.find((x) => x.ModuleElementId === element)
+            ?.IsShortcut || false,
       });
     });
   }
 
-  const createRoleModuleElements = await prisma.roleModuleElements.createMany({
-    data: roleModuleElementsToCreate,
-  });
-
   //////////////
-  // Delete RoleModuleElements
+  // Get elements to delete
   //////////////
   const roleModuleElementsToDelete =
     await getRoleModuleElementsByModulesAndModuleElmenstIdsQuery({
@@ -104,23 +112,69 @@ const updateRoleModuleElementCommand = async (
       ModuleElementIds: moduleElementsToDelete,
     });
 
-  const deleteRoleModuleElements = await prisma.roleModuleElements.deleteMany({
-    where: {
-      RoleModuleElementId: {
-        in: roleModuleElementsToDelete.map((x) => x.RoleModuleElementId),
-      },
-    },
+  //////////////
+  // Transaction for data integrity
+  //////////////
+  const transaction = await prisma.$transaction(async (tx) => {
+    // Execute creates
+    const creates =
+      roleModuleElementsToCreate.length > 0
+        ? await tx.roleModuleElements.createMany({
+            data: roleModuleElementsToCreate,
+          })
+        : { count: 0 };
+
+    // Execute deletes
+    const deletes =
+      roleModuleElementsToDelete.length > 0
+        ? await tx.roleModuleElements.deleteMany({
+            where: {
+              RoleModuleElementId: {
+                in: roleModuleElementsToDelete.map(
+                  (x) => x.RoleModuleElementId,
+                ),
+              },
+            },
+          })
+        : { count: 0 };
+
+    // Execute updates
+    const updatePromises =
+      moduleElementsToUpdate
+        ?.map((element) => {
+          if (element.RoleModuleElementId !== null) {
+            return tx.roleModuleElements.update({
+              where: { RoleModuleElementId: element.RoleModuleElementId },
+              data: {
+                RoleId: params.RoleId,
+                ModuleElementId: element.ModuleElementId,
+                ModuleId: null,
+                IsShortcut: element.IsShortcut,
+                UpdatedAt: new Date(),
+              },
+            });
+          }
+          return null;
+        })
+        .filter(Boolean) || [];
+
+    const updates =
+      updatePromises.length > 0 ? await Promise.all(updatePromises) : [];
+
+    return {
+      creates,
+      deletes,
+      updates,
+    };
   });
 
-  //////////////
-  // transaction for update data
-  //////////////
-  const transaction = await prisma.$transaction(async () => [
-    createRoleModuleElements,
-    deleteRoleModuleElements,
-  ]);
-
-  return transaction;
+  return {
+    success: true,
+    created: transaction.creates.count,
+    deleted: transaction.deletes.count,
+    updated: transaction.updates.length,
+    transaction: transaction,
+  };
 };
 
 export default updateRoleModuleElementCommand;

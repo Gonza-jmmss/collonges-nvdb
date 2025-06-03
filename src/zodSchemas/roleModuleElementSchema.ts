@@ -1,11 +1,14 @@
 import { z } from "zod";
 
 export const Modules = z.object({
+  RoleModuleElementId: z.number().nullable(),
   ModuleId: z.number().nullable(),
 });
 
 export const ModuleElements = z.object({
+  RoleModuleElementId: z.number().nullable(),
   ModuleElementId: z.number().nullable(),
+  IsShortcut: z.boolean().nullable(),
 });
 
 export const RoleModuleElementSchema = z.object({

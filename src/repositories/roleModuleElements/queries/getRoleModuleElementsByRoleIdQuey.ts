@@ -59,6 +59,7 @@ const getRoleModuleElementsByRoleIdQuey = cache(
           ModuleId: roleModuleElement.Modules.ModuleId,
           Path: roleModuleElement.Modules.Path || "",
           Icon: roleModuleElement.Modules.Icon,
+          IsShortcut: roleModuleElement.IsShortcut,
         };
         roleData.Modules.push(moduleEntry);
       }
@@ -75,6 +76,7 @@ const getRoleModuleElementsByRoleIdQuey = cache(
             allModules.find(
               (x) => x.ModuleId === roleModuleElement.ModuleElements?.ModuleId,
             )?.Name || "",
+          IsShortcut: roleModuleElement.IsShortcut,
         };
         roleData.ModuleElements.push(moduleElementEntry);
       }
