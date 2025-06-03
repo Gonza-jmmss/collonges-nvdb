@@ -84,6 +84,10 @@ export default {
       roleName: "Rôle",
       isEnabled: "Actif",
     },
+    toggle: {
+      student: "Étudiants",
+      others: "Autres",
+    },
     form: {
       userName: "Nom d'utilisateur",
       password: "Mot de passe",

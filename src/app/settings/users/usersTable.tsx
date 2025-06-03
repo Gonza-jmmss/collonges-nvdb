@@ -2,26 +2,42 @@
 
 import { useState, useMemo } from "react";
 import deleteUserCommand from "@/repositories/users/commands/deleteUserCommand";
+import { getAllUsersQueryViewModel } from "@/repositories/users/usersViewModel";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
-import Link from "next/link";
-import { getAllUsersQueryViewModel } from "@/repositories/users/usersViewModel";
+import ToggleButton from "@/components/common/toggleButton";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
+import { Button } from "@/components/ui/button";
 import DeleteModal from "@/components/common/deleteModal";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
+import { useUpdateQuery } from "@/hooks/useUpdateQuery";
+import { useRouter, useSearchParams } from "next/navigation";
 import frFR from "@/lang/fr-FR";
 
 export default function UsersTable({
   usersData,
+  isEnabledSelected,
+  isStudentSelected,
+  pageIndex,
+  pageSize,
+  urlParams,
 }: {
   usersData: getAllUsersQueryViewModel[];
+  isEnabledSelected: boolean;
+  isStudentSelected: boolean;
+  pageIndex: number;
+  pageSize: number;
+  urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const router = useRouter();
   const { toast } = useToast();
+  const updateQuery = useUpdateQuery();
+  const searchParams = useSearchParams();
+
+  const getPageIndexParam = searchParams.get("pageIndex");
+  const getPageSizeParam = searchParams.get("pageSize");
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedUSerToDelete, setSelectedUSerToDelete] = useState(0);
@@ -37,21 +53,18 @@ export default function UsersTable({
         accessorKey: "UserId",
         id: "UserId",
         header: () => <Header text={t.users.columns.userId} />,
-        // cell: (info) => info.getValue(),
         filterFn: "equalsString",
       },
       {
         accessorKey: "UserName",
         id: "UserName",
         header: () => <Header text={t.users.columns.userName} />,
-        // cell: (info) => info.getValue(),
         filterFn: "equalsString",
       },
       {
         accessorKey: "RoleName",
         id: "RoleName",
         header: () => <Header text={t.users.columns.roleName} />,
-        // cell: (info) => info.getValue(),
         filterFn: "equalsString",
       },
       {
@@ -72,52 +85,37 @@ export default function UsersTable({
             className="flex space-x-1"
             onClick={(event) => event.stopPropagation()}
           >
-            <Link
-              href={`/settings/users/${row.row.original.UserId}?action="password"`}
-              className="flex flex-col space-y-2 hover:text-primary"
-            >
-              <Icon
-                name={
-                  isValidIconName("MdPassword")
-                    ? "MdPassword"
-                    : "MdOutlineNotInterested"
-                }
-                className="cursor-pointer text-xl"
-              />
-            </Link>
-            <Link
-              href={`/settings/users/${row.row.original.UserId}?action="edit"`}
-              className="flex flex-col space-y-2 hover:text-primary"
-            >
-              <Icon
-                name={
-                  isValidIconName("MdEdit")
-                    ? "MdEdit"
-                    : "MdOutlineNotInterested"
-                }
-                className="cursor-pointer text-xl"
-              />
-            </Link>
-            <div
+            <Icon
+              name="MdPassword"
+              className="cursor-pointer text-xl hover:text-primary"
+              onClick={() =>
+                router.push(
+                  `/settings/users/${row.row.original.UserId}?action="password"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}&isStudent=${isStudentSelected}`,
+                )
+              }
+            />
+            <Icon
+              name="MdEdit"
+              className="cursor-pointer text-xl hover:text-primary"
+              onClick={() =>
+                router.push(
+                  `/settings/users/${row.row.original.UserId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}&isStudent=${isStudentSelected}`,
+                )
+              }
+            />
+            <Icon
+              name="MdDelete"
+              className="cursor-pointer text-xl hover:text-primary"
               onClick={() => {
                 setOpenModal(true);
                 setSelectedUSerToDelete(row.row.original.UserId);
               }}
-            >
-              <Icon
-                name={
-                  isValidIconName("MdDelete")
-                    ? "MdDelete"
-                    : "MdOutlineNotInterested"
-                }
-                className="cursor-pointer text-xl"
-              />
-            </div>
+            />
           </div>
         ),
       },
     ],
-    [],
+    [getPageIndexParam, getPageSizeParam, isEnabledSelected, isStudentSelected],
   );
 
   const deleteUser = async (UserId: number) => {
@@ -143,14 +141,66 @@ export default function UsersTable({
     }
   };
 
+  const handleUrlParameterChange = (key: string, value: string) => {
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.set(key, value);
+
+    // Update URL without replacing current parameters
+    const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+
+    window.history.pushState({}, "", newUrl);
+
+    // If you need to update some state as well
+    updateQuery(Object.fromEntries(currentParams));
+  };
+
   return (
-    <div className="">
+    <div>
+      <div className="flex items-center justify-end space-x-5">
+        <div className="w-[20rem]">
+          <ToggleButton
+            options={[
+              { key: true, value: t.users.toggle.student },
+              { key: false, value: t.users.toggle.others },
+            ]}
+            setItemSelected={(x: { key: boolean; value: string }) => {
+              handleUrlParameterChange("isStudent", `${x.key}`);
+            }}
+            itemSelected={isStudentSelected}
+          />
+        </div>
+        <div className="w-[20rem]">
+          <ToggleButton
+            options={[
+              { key: true, value: t.shared.enables },
+              { key: false, value: t.shared.disables },
+            ]}
+            setItemSelected={(x: { key: boolean; value: string }) => {
+              handleUrlParameterChange("isEnabled", `${x.key}`);
+            }}
+            itemSelected={isEnabledSelected}
+          />
+        </div>
+        <Button
+          variant="outlineColored"
+          onClick={() =>
+            router.push(
+              `/settings/users/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}&isStudent=${isStudentSelected}`,
+            )
+          }
+        >
+          <span>{t.users.create}</span>
+        </Button>
+      </div>
       <Table
         columns={columns}
         data={usersData}
-        className=""
+        pageIndexParam={pageIndex}
+        pageSizeParam={pageSize}
         onRowClick={(row) =>
-          router.push(`/settings/users/${row.UserId}?action="view"`)
+          router.push(
+            `/settings/users/${row.UserId}?action="view"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}&isStudent=${isStudentSelected}`,
+          )
         }
       />
       <DeleteModal
