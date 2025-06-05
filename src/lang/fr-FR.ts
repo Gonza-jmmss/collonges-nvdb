@@ -39,7 +39,7 @@ export default {
     welcome: "Bienvenue !",
     shortcut: "Raccourcis",
     logout: "Déconnexion",
-    login: "Se connecter",
+    login: "Connexion",
     create: "Créer",
     edit: "Modifier",
     delete: "Supprimer",
@@ -62,6 +62,7 @@ export default {
     },
   },
   login: {
+    title: "Connectez-vous",
     user: "Utilisateur",
     password: "Mot de passe",
   },
@@ -343,10 +344,29 @@ export default {
       deleteError:
         "Une erreur s'est produite pendant la désactivation de l'étudiant(e)",
       deleteFailure: "Échec de la désactivation de l'étudiant(e)",
+      studentUserCreateSuccess:
+        "L'utilisateur de l'étudiant(e) a été créé avec succès",
+      studentUserCreateError:
+        "Une erreur s'est produite pendant la création de l'utilisateur de l'étudiant(e)",
+      studentUserCreateFailure:
+        "Échec de la création de l'utilisateur de l'étudiant(e)",
     },
     deleteModal: {
       title: "Êtes-vous sûr de désactiver l'étudiant(e) ?",
       description: "L'étudiant(e) sera désactivé",
+    },
+    createStudentUSerModal: {
+      title: "Êtes-vous sûr de vouloir créer un utilisateur pour",
+      description:
+        "Cela créera un utilisateur afin que l'étudiant puisse voir ses notes",
+    },
+    studentUserCredentialsPDF: {
+      button: "Authentifications PDF",
+      columns: {
+        information: "Authentifications",
+        userName: "Nom de l'utilisateur",
+        password: "Mot de passe",
+      },
     },
   },
   courses: {

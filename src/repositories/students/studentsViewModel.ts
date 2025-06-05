@@ -15,6 +15,12 @@ export type StudentsViewModel = {
   IsEnabled: boolean;
   YearPeriodId: number;
   YearPeriodName: string;
+  HasUser: boolean;
+  FirstCredentials: {
+    UserName: string | null;
+    StudentId: number;
+    UserFirstName: string | null | undefined;
+  };
 };
 
 export type StudentViewModel = {
@@ -87,6 +93,7 @@ export type StudentsMap = {
   Persons?: {
     PersonId: number;
     AlternativeName: string | null;
+    FirstName: string | null;
     DBaseCode: string | null;
   } | null;
   StudentTypes?: {
@@ -97,6 +104,16 @@ export type StudentsMap = {
     YearPeriodId: number;
     Name: string;
   };
+  Users: {
+    UserId: number;
+    UserName: string;
+    Password: string;
+    UpdatedAt: Date | null;
+    CreatedAt: Date;
+    RoleId: number;
+    IsEnabled: boolean;
+    StudentId: number | null;
+  }[];
 };
 
 export type StudentsByCollegeMap = {
@@ -113,30 +130,9 @@ export type StudentsByCollegeMap = {
   UpdatedAt: Date | null;
   CreatedAt: Date;
 };
-// export type StudentsByYearPeriodIdMap = {
-//   StudentId: number;
-//   PersonId: number;
-//   StudentTypeId: number;
-//   IsACA: boolean;
-//   DepartmentId: number | null;
-//   CollegeId: number | null;
-//   RegimeId: number | null;
-//   AccommodationId: number | null;
-//   IsEnabled: boolean;
-//   YearPeriodId: number;
-//   UpdatedAt: Date | null;
-//   CreatedAt: Date;
-//   Persons?: {
-//     PersonId: number;
-//     AlternativeName: string | null;
-//     DBaseCode: string | null;
-//   } | null;
-//   StudentTypes?: {
-//     StudentTypeId: number;
-//     Name: string | null;
-//   } | null;
-//   YearPeriods: {
-//     YearPeriodId: number;
-//     Name: string;
-//   };
-// };
+
+export type FirstCredentialsViewModel = {
+  UserName: string | null;
+  StudentId: number;
+  UserFirstName: string | null | undefined;
+};
