@@ -115,9 +115,9 @@ export default async function Home() {
                           ? element.Icon
                           : "MdOutlineNotInterested"
                       }
-                      className="text-2xl"
+                      className="text-xl"
                     />
-                    <span className="text-base">{element.Name}</span>
+                    <span className="text-sm">{element.Name}</span>
                   </Link>
                 </Button>
               ))}
