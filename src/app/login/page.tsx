@@ -1,5 +1,7 @@
 import LoginForm from "@/components/login";
 import frFR from "@/lang/fr-FR";
+import Image from "next/image";
+import { logoIFLE } from "@/lib/imagesBase64";
 
 export default function LoginPage() {
   const t = frFR;
@@ -12,10 +14,12 @@ export default function LoginPage() {
             String(process.env.NEXT_PUBLIC_ENV).slice(1)}
         </div>
       )}
-      {/* <div className="p-5"></div> */}
-      <div className="flex h-[20rem] w-[90vw] flex-col justify-center space-y-7 rounded-md border bg-muted/50 p-3 shadow sm:w-[30vw]">
+      <div className="flex h-[90vh] w-[90vw] flex-col justify-center space-y-5 rounded-md border bg-muted/50 p-5 shadow sm:w-[60vw] lg:w-[30vw]">
+        <div className="-mt-8 flex w-full justify-center">
+          <Image src={logoIFLE} width={150} height={150} alt="logoIFLE" />
+        </div>
         <div className="flex w-full justify-center">
-          <span className="text-2xl">{t.shared.login}</span>
+          <span className="text-2xl font-semibold">{t.login.title}</span>
         </div>
         <LoginForm />
       </div>
