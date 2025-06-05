@@ -59,7 +59,7 @@ export default function LoginForm() {
       }}
       className="flex flex-col space-y-5"
     >
-      <div className="flex items-center">
+      <div className="flex items-center sm:px-5">
         <form.Field
           name="UserName"
           children={(field) => (
@@ -85,7 +85,7 @@ export default function LoginForm() {
           )}
         />
       </div>
-      <div className="space-y-1">
+      <div className="space-y-1 sm:px-5">
         <div className="flex items-center">
           <form.Field
             name="Password"
