@@ -1,5 +1,5 @@
 # Use Node.js 18 as the base image
-FROM node:18-bullseye as builder
+FROM node:18-bullseye AS builder
 
 # Install bun
 RUN apt-get update && apt-get install -y curl \
@@ -22,7 +22,7 @@ COPY . .
 RUN /root/.bun/bin/bun run build
 
 # Production image
-FROM node:18-bullseye-slim as runner
+FROM node:18-bullseye-slim AS runner
 
 WORKDIR /app
 
@@ -58,31 +58,31 @@ USER nextjs
 EXPOSE 3000
 
 # Set production environment variables
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 # PROD
-ENV NODE_ENV production
-ENV NEXTAUTH_URL "http://srvifle:3128"
-ENV NEXT_PUBLIC_NEXTAUTH_URL "http://srvifle:3128"
-ENV NEXTAUTH_URL_INTERNAL "http://localhost:3000"
-ENV COOKIE_DOMAIN "srvifle"
-ENV NEXT_PUBLIC_URL: "http://srvifle:3128"
+# ENV NODE_ENV=production
+# ENV NEXTAUTH_URL="http://srvifle:3128"
+# ENV NEXT_PUBLIC_NEXTAUTH_URL="http://srvifle:3128"
+# ENV NEXTAUTH_URL_INTERNAL="http://localhost:3000"
+# ENV COOKIE_DOMAIN="srvifle"
+# ENV NEXT_PUBLIC_URL="http://srvifle:3128"
 
 # SERVER TEST
-# ENV NODE_ENV test
-# ENV NEXTAUTH_URL "http://srvifle:3129"
-# ENV NEXT_PUBLIC_NEXTAUTH_URL "http://srvifle:3129"
-# ENV NEXTAUTH_URL_INTERNAL "http://localhost:3000"
-# ENV COOKIE_DOMAIN "srvifle"
-# ENV NEXT_PUBLIC_URL: "http://srvifle:3129"
+ENV NODE_ENV=test
+ENV NEXTAUTH_URL="http://srvifle:3129"
+ENV NEXT_PUBLIC_NEXTAUTH_URL="http://srvifle:3129"
+ENV NEXTAUTH_URL_INTERNAL="http://localhost:3000"
+ENV COOKIE_DOMAIN="srvifle"
+ENV NEXT_PUBLIC_URL="http://srvifle:3129"
 
 # DEV
-# ENV NEXTAUTH_URL "http://localhost:3128"
-# ENV NEXT_PUBLIC_NEXTAUTH_URL "http://localhost:3128"
-# ENV NEXTAUTH_URL_INTERNAL "http://localhost:3000"
-# ENV COOKIE_DOMAIN "localhost"
-# ENV NEXT_PUBLIC_URL: "http://localhost:3128"
+# ENV NEXTAUTH_URL="http://localhost:3128"
+# ENV NEXT_PUBLIC_NEXTAUTH_URL="http://localhost:3128"
+# ENV NEXTAUTH_URL_INTERNAL="http://localhost:3000"
+# ENV COOKIE_DOMAIN="localhost"
+# ENV NEXT_PUBLIC_URL="http://localhost:3128"
 
 # Start the application
 CMD ["node", "server.js"]
