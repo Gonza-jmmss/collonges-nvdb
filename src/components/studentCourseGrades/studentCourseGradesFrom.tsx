@@ -105,6 +105,7 @@ export default function StudentCourseGradesForm({
         .some((grade) => grade !== "NaN" && grade !== "") === true;
 
     if (allStudentCoursesHasGrades) {
+      setIsPending(true);
       action === "create" && createStudentCourseGrades(formData);
       action === "edit" && updateStudentCourseGrades(formData);
     } else {
@@ -420,7 +421,7 @@ export default function StudentCourseGradesForm({
               },
             }}
             children={(field) => (
-              <div className="flex flex-col space-y-5 rounded-md border bg-muted p-2">
+              <div className="flex flex-col space-y-5 rounded-md border bg-muted/50 p-2">
                 <div className="flex items-center justify-between">
                   <span className="col-span-2 text-lg font-semibold">
                     {t.studentCourseGrades.form.students}

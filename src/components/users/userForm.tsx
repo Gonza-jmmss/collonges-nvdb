@@ -63,6 +63,8 @@ export default function UserForm({
         action !== "create" ? (userData ? userData.IsEnabled : true) : true,
     },
     onSubmit: async ({ value }) => {
+      // console.log("formData", value);
+      setIsPending(true);
       action === "create" && createUser(value);
       action === "edit" && updateUser(value);
       action === "password" && updateUserPassword(value);

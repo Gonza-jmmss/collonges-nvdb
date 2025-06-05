@@ -43,6 +43,7 @@ export default function CollegeForm({
     },
     onSubmit: async ({ value }) => {
       //   console.log("formData", value);
+      setIsPending(true);
       action === "create" && createCollege(value);
       action === "edit" && updateCollege(value);
     },

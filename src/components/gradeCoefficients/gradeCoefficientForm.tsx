@@ -59,6 +59,7 @@ export default function GradeCoefficientForm({
     },
     onSubmit: async ({ value }) => {
       // console.log("formData", value);
+      setIsPending(true);
       action === "create" && createGradeCoefficient(value);
       action === "edit" && updateGradeCoefficient(value);
     },

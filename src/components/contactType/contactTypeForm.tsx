@@ -42,6 +42,7 @@ export default function ContactTypeForm({
     },
     onSubmit: async ({ value }) => {
       //   console.log("formData", value);
+      setIsPending(true);
       action === "create" && createContactType(value);
       action === "edit" && updateContactType(value);
     },

@@ -42,6 +42,8 @@ export default function RoleForm({
         action !== "create" ? (roleData ? roleData.IsEnabled : true) : true,
     },
     onSubmit: async ({ value }) => {
+      // console.log("formData", value);
+      setIsPending(true);
       action === "create" && createRole(value);
       action === "edit" && updateRole(value);
     },
