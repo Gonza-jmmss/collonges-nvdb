@@ -2,7 +2,7 @@ import { writeFile } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 
-const UPLOAD_DIR = "C:\\Users\\gjmms\\Documents\\Collonges\\Images";
+const UPLOAD_DIR = process.env.IMAGES_LOCATION || "";
 
 export async function POST(request: NextRequest) {
   try {

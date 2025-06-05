@@ -3,7 +3,7 @@ import { readFile } from "fs/promises";
 import path from "path";
 import mime from "mime-types";
 
-const UPLOAD_DIR = "C:\\Users\\gjmms\\Documents\\Collonges\\Images";
+const UPLOAD_DIR = process.env.IMAGES_LOCATION || "";
 
 export async function GET(
   request: NextRequest,
