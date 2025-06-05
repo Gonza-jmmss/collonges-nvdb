@@ -10,7 +10,7 @@ export default async function StudentsPage() {
     <main className="mt-6 flex w-full justify-center">
       <ChangePassword
         userId={session && session.user.userData.UserId}
-        isStudentProfile
+        isModal
       />
     </main>
   );

@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import frFR from "@/lang/fr-FR";
 import { Session } from "next-auth";
 
+import ChangePassword from "@/components/studentProfile/changePassword";
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -37,6 +39,12 @@ export default function Sidebar({
   const segments = useSelectedLayoutSegments();
 
   const [isMouseOver, setIsMouseOver] = useState(false);
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const closeModal = () => {
+    setOpenModal(false);
+  };
 
   return (
     <>
@@ -242,10 +250,15 @@ export default function Sidebar({
                         String(process.env.NEXT_PUBLIC_ENV).slice(1)}
                     </div>
                   )}
-                  <div className="flex w-[85%] justify-start space-x-3 px-4">
+                  <Button
+                    variant={"ghost"}
+                    className="flex w-[85%] cursor-pointer items-center justify-start space-x-3 px-4"
+                    // onClick={() => router.push(`/changePassword`)}
+                    onClick={() => setOpenModal(true)}
+                  >
                     <Icon name={"MdPersonOutline"} className="text-xl" />
                     <span>{session?.user.name}</span>
-                  </div>
+                  </Button>
                   <Button
                     variant={"ghost"}
                     className="flex w-[85%] justify-start space-x-3"
@@ -327,6 +340,13 @@ export default function Sidebar({
         </DropdownMenu>
         <div className={`w-full px-4`}>{children}</div>
       </div>
+      {session !== null && (
+        <ChangePassword
+          openModal={openModal}
+          closeModal={closeModal}
+          userId={session.user.userData.UserId}
+        />
+      )}
     </>
   );
 }

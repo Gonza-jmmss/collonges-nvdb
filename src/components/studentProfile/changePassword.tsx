@@ -23,12 +23,12 @@ export default function ChangePassword({
   openModal,
   closeModal,
   userId,
-  isStudentProfile,
+  isModal,
 }: {
   openModal?: boolean;
   closeModal?: () => void;
   userId: number | null;
-  isStudentProfile?: boolean;
+  isModal?: boolean;
 }) {
   const t = frFR;
   const { toast } = useToast();
@@ -65,7 +65,7 @@ export default function ChangePassword({
       });
 
       router.refresh();
-      isStudentProfile ? closeModal && closeModal() : router.push(`/`);
+      isModal ? closeModal && closeModal() : router.push(`/`);
     } catch (error) {
       toast({
         variant: "destructive",
@@ -79,11 +79,8 @@ export default function ChangePassword({
 
   return (
     <>
-      {!isStudentProfile ? (
-        <Modal
-          openModal={openModal || false}
-          closeModal={() => closeModal || setIsPending(false)}
-        >
+      {!isModal && closeModal ? (
+        <Modal openModal={openModal || false} closeModal={closeModal}>
           <div className="text-xl font-semibold">
             {t.studentProfile.changePassword.title}
           </div>
