@@ -10,6 +10,7 @@ type getAllUsersQueryParams = {
 
 const getAllUsersQuery = async (params: getAllUsersQueryParams) => {
   const query = await prisma.users.findMany({
+    orderBy: { CreatedAt: "desc" },
     where: {
       IsEnabled: params.IsEnabled,
       Roles: { Name: params.IsStudent ? "Étudiant" : { not: "Étudiant" } },

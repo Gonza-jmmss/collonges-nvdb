@@ -18,7 +18,6 @@ const getUserByUserIdQuery = async (userId: number) => {
     IsEnabled: query.IsEnabled,
   };
 
-  console.log("getUserByUserIdQuery", res);
   return res;
 };
 
