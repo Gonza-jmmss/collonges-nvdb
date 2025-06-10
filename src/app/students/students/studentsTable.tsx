@@ -297,8 +297,8 @@ export default function StudentsTable({
       >
         <div>
           <div className="flex w-full flex-col items-center space-y-1">
-            <div className="text-lg font-semibold">{`${t.students.createStudentUSerModal.title} ${selectedStudentToCreateUser?.StudentName} ?`}</div>
-            <div>{`${t.students.createStudentUSerModal.description}`}</div>
+            <div className="text-lg font-semibold">{`${t.students.createStudentUserModal.title} ${selectedStudentToCreateUser?.StudentName} ?`}</div>
+            <div>{`${t.students.createStudentUserModal.description}`}</div>
             {/* <div>{`${t.students.student} : ${selectedStudentToCreateUser?.StudentName}`}</div> */}
           </div>
           <div className="mt-5 flex w-full justify-center space-x-5">

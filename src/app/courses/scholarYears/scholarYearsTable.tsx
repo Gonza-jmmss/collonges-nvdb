@@ -250,8 +250,8 @@ export default function ScholarYearsTable({
         closeModal={() => setOpenDeleteModalValidation(false)}
       >
         <div className="flex w-full flex-col items-center space-y-1">
-          <div className="mt-2 text-lg font-semibold">{`${t.scholarYears.delteModalValidation.title}`}</div>
-          <div>{`${t.scholarYears.delteModalValidation.description}`}</div>
+          <div className="mt-2 text-lg font-semibold">{`${t.scholarYears.deleteModalValidation.title}`}</div>
+          <div>{`${t.scholarYears.deleteModalValidation.description}`}</div>
         </div>
         <div className="mt-5 flex w-full justify-center space-x-5">
           <Button

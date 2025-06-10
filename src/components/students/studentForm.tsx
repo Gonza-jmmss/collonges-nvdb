@@ -400,11 +400,11 @@ export default function StudentForm({
           // validators={{
           //   onSubmitAsync: (value) => {
           //     if (value === null || value === undefined) {
-          //       return t.students.validations.bithDateValidation;
+          //       return t.students.validations.birthDateValidation;
           //     }
           //     return z.date().safeParse(value.value).success
           //       ? undefined
-          //       : t.students.validations.bithDateValidation;
+          //       : t.students.validations.birthDateValidation;
           //   },
           // }}
           children={(field) => (

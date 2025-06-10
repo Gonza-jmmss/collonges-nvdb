@@ -312,8 +312,8 @@ export default function LevelsTable({
         closeModal={() => setOpenDeleteModalValidation(false)}
       >
         <div className="flex w-full flex-col items-center space-y-1">
-          <div className="mt-2 text-lg font-semibold">{`${t.levels.delteModalValidation.title}`}</div>
-          <div>{`${t.levels.delteModalValidation.description}`}</div>
+          <div className="mt-2 text-lg font-semibold">{`${t.levels.deleteModalValidation.title}`}</div>
+          <div>{`${t.levels.deleteModalValidation.description}`}</div>
         </div>
         <div className="mt-5 flex w-full justify-center space-x-5">
           <Button

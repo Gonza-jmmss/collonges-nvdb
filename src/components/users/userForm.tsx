@@ -274,11 +274,11 @@ export default function UserForm({
               }}
               children={(field) => (
                 <>
-                  <span>{t.users.form.repeatePassword}</span>
+                  <span>{t.users.form.repeatPassword}</span>
                   <Input
                     id="RepeatPassword"
                     name="RepeatPassword"
-                    placeholder={`${t.users.form.repeatePassword}`}
+                    placeholder={`${t.users.form.repeatPassword}`}
                     type="password"
                     className="w-full"
                     value={field.state.value}

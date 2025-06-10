@@ -535,8 +535,8 @@ export default function StudentCourses({
 //               false && (
 //               <>
 //                 <div className="flex w-full flex-col items-center space-y-1">
-//                   <div className="mt-2 text-lg font-semibold">{`${t.studentCourseGrades.delteModalValidation.title}`}</div>
-//                   <div>{`${t.studentCourseGrades.delteModalValidation.description}`}</div>
+//                   <div className="mt-2 text-lg font-semibold">{`${t.studentCourseGrades.deleteModalValidation.title}`}</div>
+//                   <div>{`${t.studentCourseGrades.deleteModalValidation.description}`}</div>
 //                 </div>
 //                 <div className="mt-5 flex w-full justify-center space-x-5">
 //                   <Button

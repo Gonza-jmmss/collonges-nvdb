@@ -10,7 +10,7 @@ export default {
     roles: "Rôles",
     modules: "Modules",
     moduleElements: "Éléments du module",
-    roleModuleElements: "Privilèges de rôle",
+    roleModuleElements: "Permissions de rôle",
     courses: "Cours",
     studentCourses: "Cours des étudiants",
     scholarPeriods: "Périodes scolaires",
@@ -24,7 +24,7 @@ export default {
     changePassword: "Modifier le mot de passe",
   },
   shortcuts: {
-    transcripts: "Transcripts",
+    transcripts: "Relevés de notes",
     grades: "Notes",
     courses: "Cours",
     students: "Étudiants",
@@ -47,13 +47,13 @@ export default {
     view: "Visualiser",
     actions: "Actions",
     page: "Page",
-    female: "Femelle",
-    male: "Mâle",
+    female: "Féminin",
+    male: "Masculin",
     enables: "Actifs",
     disables: "Inactifs",
     dateInput: {
       day: "JJ",
-      moth: "MM",
+      month: "MM",
       year: "AAAA",
     },
     noValues: "Aucune valeur trouvée.",
@@ -71,8 +71,8 @@ export default {
     columns: "Colonnes",
     page: "Page",
     of: "de",
-    goToPage: "| Aller à la page: ",
-    totalRows: "Entrées  ",
+    goToPage: "| Aller à la page : ",
+    totalRows: "Résultats ",
   },
   users: {
     title: "Utilisateurs",
@@ -92,12 +92,12 @@ export default {
     form: {
       userName: "Nom d'utilisateur",
       password: "Mot de passe",
-      repeatePassword: "Répéter le mot de passe",
+      repeatPassword: "Répéter le mot de passe",
       role: "Rôle",
       isEnabled: "Utilisateur actif",
     },
     validations: {
-      passwordValidation: "Le mot de passe doit contenir au moins 8 lettres",
+      passwordValidation: "Le mot de passe doit contenir au moins 8 caractères",
       repeatPasswordValidation: "Les mots de passe ne correspondent pas",
     },
     notifications: {
@@ -119,14 +119,14 @@ export default {
       updatePasswordFailure: "Échec de la modification du mot de passe",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de désactiver l'utilisateur ?",
+      title: "Êtes-vous sûr de vouloir désactiver l'utilisateur ?",
       description: "L'utilisateur sera désactivé",
     },
   },
   roles: {
     title: "Rôles",
     role: "Rôle",
-    pageTitle: "Page des Rôles",
+    pageTitle: "Page des rôles",
     create: "Créer un rôle",
     columns: {
       roleId: "ID",
@@ -149,7 +149,7 @@ export default {
       deleteFailure: "Échec de la désactivation du rôle",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de désactiver le rôle ?",
+      title: "Êtes-vous sûr de vouloir désactiver le rôle ?",
       description: "Le rôle sera désactivé",
     },
   },
@@ -187,7 +187,7 @@ export default {
       iconValidation: "L'icône n'existe pas",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de supprimer le module ?",
+      title: "Êtes-vous sûr de vouloir supprimer le module ?",
       description: "Le module sera définitivement supprimé",
     },
   },
@@ -206,7 +206,7 @@ export default {
     },
     form: {
       moduleElementId: "ID",
-      name: "Éléments du module",
+      name: "Nom de l'élément",
       path: "Chemin web",
       icon: "Icône",
       description: "Description",
@@ -230,14 +230,14 @@ export default {
       iconValidation: "L'icône n'existe pas",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de supprimer l'élément ?",
+      title: "Êtes-vous sûr de vouloir supprimer l'élément ?",
       description: "L'élément sera définitivement supprimé",
     },
   },
   roleModuleElements: {
-    title: "Privilèges de rôle",
-    roleModuleElement: "Privilège de rôle",
-    create: "Ajouter des privilèges de rôle",
+    title: "Permissions de rôle",
+    roleModuleElement: "Permission de rôle",
+    create: "Ajouter des permissions de rôle",
     columns: {
       roleModuleElementId: "ID",
       moduleElementName: "Élément du module",
@@ -255,25 +255,25 @@ export default {
       isShortCut: "Est raccourci",
     },
     notifications: {
-      createSuccess: "Privilèges de rôle créés avec succès",
+      createSuccess: "Permissions de rôle créées avec succès",
       createError:
-        "Une erreur s'est produite lors de la création des privilèges de rôle",
-      createFailure: "Échec de la création des privilèges de rôle",
-      updateSuccess: "Privilèges de rôle modifiés avec succès",
+        "Une erreur s'est produite lors de la création des permissions de rôle",
+      createFailure: "Échec de la création des permissions de rôle",
+      updateSuccess: "Permissions de rôle modifiées avec succès",
       updateError:
-        "Une erreur s'est produite lors de la modification des privilèges de rôle",
-      updateFailure: "Échec de la modification des privilèges de rôle",
-      deleteSuccess: "Privilèges de rôle supprimés avec succès",
+        "Une erreur s'est produite lors de la modification des permissions de rôle",
+      updateFailure: "Échec de la modification des permissions de rôle",
+      deleteSuccess: "Permissions de rôle supprimées avec succès",
       deleteError:
-        "Une erreur s'est produite lors de la suppression des privilèges de rôle",
-      deleteFailure: "Échec de la suppression des privilèges de rôle",
+        "Une erreur s'est produite lors de la suppression des permissions de rôle",
+      deleteFailure: "Échec de la suppression des permissions de rôle",
     },
     validations: {
       roleValidation: "Le rôle est obligatoire",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de vouloir supprimer ces privilèges ?",
-      description: "Les privilèges de rôle seront définitivement supprimés",
+      title: "Êtes-vous sûr de vouloir supprimer ces permissions ?",
+      description: "Les permissions de rôle seront définitivement supprimées",
     },
   },
   students: {
@@ -310,20 +310,20 @@ export default {
       isACA: "Est ACA",
       collegeId: "Université",
       regimeId: "Régime",
-      isEnabled: "Est activé",
+      isEnabled: "Actif",
       yearPeriodId: "Période d'année",
-      creditsType: "type de crédits",
+      creditsType: "Type de crédits",
       addContact: "Ajouter un contact",
       contact: "Contact",
       personId: "Nom du contact",
       loadContactData: "Charger les informations",
       selectContact: "Sélectionner un contact",
-      addPersonCountry: "Ajouter nationalité",
+      addPersonCountry: "Ajouter une nationalité",
       personCountry: "Nationalités",
     },
     validations: {
       sexValidation: "Le champ sexe est obligatoire",
-      bithDateValidation: "La date de naissance est obligatoire",
+      birthDateValidation: "La date de naissance est obligatoire",
       contactTypeValidation: "Le type de contact est obligatoire",
       countryValidation: "Le pays de naissance est obligatoire",
       nationalityValidation: "Le pays de nationalité est obligatoire",
@@ -352,19 +352,19 @@ export default {
         "Échec de la création de l'utilisateur de l'étudiant(e)",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de désactiver l'étudiant(e) ?",
+      title: "Êtes-vous sûr de vouloir désactiver l'étudiant(e) ?",
       description: "L'étudiant(e) sera désactivé",
     },
-    createStudentUSerModal: {
+    createStudentUserModal: {
       title: "Êtes-vous sûr de vouloir créer un utilisateur pour",
       description:
         "Cela créera un utilisateur afin que l'étudiant puisse voir ses notes",
     },
     studentUserCredentialsPDF: {
-      button: "Authentifications PDF",
+      button: "Identifiants PDF",
       columns: {
-        information: "Authentifications",
-        userName: "Nom de l'utilisateur",
+        information: "Identifiants",
+        userName: "Nom d'utilisateur",
         password: "Mot de passe",
       },
     },
@@ -379,7 +379,7 @@ export default {
       courseCode: "Code cours",
       periodNumber: "Trimestre",
       creditAmount: "Crédits",
-      isEnabled: "Est activé",
+      isEnabled: "Actif",
     },
     form: {
       name: "Nom français",
@@ -389,7 +389,7 @@ export default {
       coursePeriodId: "Type de période",
       periodNumber: "N° Trimestre",
       courseTypeId: "Type de cours",
-      isEnabled: "Est activé",
+      isEnabled: "Actif",
     },
     notifications: {
       createSuccess: "Cours créé avec succès",
@@ -404,19 +404,19 @@ export default {
       deleteFailure: "Échec de la désactivation du cours",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de désactiver le cours ?",
+      title: "Êtes-vous sûr de vouloir désactiver le cours ?",
       description: "Le cours sera désactivé",
     },
   },
   studentCourses: {
     title: "Page des cours des étudiants",
-    studentCourse: "Cours des étudiant(e)",
+    studentCourse: "Cours de l'étudiant(e)",
     create: "Ajouter des cours",
     columns: {
       studentId: "ID",
-      coursesAsigned: "Cours assignés",
+      coursesAsigned: "Cours attribués",
       alternativeName: "Étudiant(e)",
-      isEnabled: "Est activé",
+      isEnabled: "Actif",
       note: "Note",
       scholarPeriodId: "Période",
       courseId: "Cours ID",
@@ -426,7 +426,7 @@ export default {
     form: {
       studentId: "Étudiant(e)",
       studentCourses: "Cours",
-      addCourse: "Ajouter cours",
+      addCourse: "Ajouter un cours",
       scholarLevels: "Niveaux scolaires",
       courses: "Cours",
       coursePeriod: "Trimestre",
@@ -434,16 +434,16 @@ export default {
       scholarYearId: "Année scolaire",
     },
     validations: {
-      studentValidation: "Le étudiant est obligatoire",
+      studentValidation: "L'étudiant est obligatoire",
       scholarPeriodValidation: "La période scolaire est obligatoire",
-      coursesValidation: "Les courses sont obligatoires",
+      coursesValidation: "Les cours sont obligatoires",
     },
     notifications: {
-      createSuccess: "Cours ajoutés de l'étudiant(e) avec succès",
+      createSuccess: "Cours ajoutés pour l'étudiant(e) avec succès",
       createError:
-        "Une erreur s'est produite pendant l'ajout du cours de l'étudiant(e)",
+        "Une erreur s'est produite pendant l'ajout des cours de l'étudiant(e)",
       createFailure: "Échec de l'ajout du cours de l'étudiant(e)",
-      updateSuccess: "Cours modifiés de l'étudiant(e) avec succès",
+      updateSuccess: "Cours modifiés pour l'étudiant(e) avec succès",
       updateError:
         "Une erreur s'est produite pendant la modification du cours de l'étudiant(e)",
       updateFailure: "Échec de la modification du cours de l'étudiant(e)",
@@ -472,7 +472,7 @@ export default {
       number: "Trimestre",
       fromDate: "À partir de",
       toDate: "Jusqu'à",
-      isActive: "Est activé",
+      isActive: "Actif",
       scholarYearName: "Année",
     },
     form: {
@@ -480,7 +480,7 @@ export default {
       number: "Trimestre",
       fromDate: "À partir de",
       toDate: "Jusqu'à",
-      isActive: "Est activé",
+      isActive: "Actif",
       scholarYearId: "Année",
     },
     notifications: {
@@ -502,15 +502,15 @@ export default {
       disableFailure: "Échec de la désactivation de la période scolaire",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de supprimer la période scolaire ?",
+      title: "Êtes-vous sûr de vouloir supprimer la période scolaire ?",
       description: "La période scolaire sera supprimée",
-      disableTitle: "Êtes-vous sûr de désactiver la période scolaire ?",
+      disableTitle: "Êtes-vous sûr de vouloir désactiver la période scolaire ?",
       disableDescription: "La période scolaire sera désactivée",
     },
-    delteModalValidation: {
-      title: "La période scolaire a des cours assignées",
+    deleteModalValidation: {
+      title: "La période scolaire a des cours assignés",
       description:
-        "Les périodes scolaires avec des cours assignés ne peuvent pas être supprimées",
+        "Les périodes scolaires avec des cours attribués ne peuvent pas être supprimées",
     },
   },
   scholarYears: {
@@ -524,36 +524,36 @@ export default {
       name: "Année scolaire",
       fromDate: "À partir de",
       toDate: "Jusqu'à",
-      isActive: "Est activé",
+      isActive: "Actif",
     },
     form: {
       name: "Année scolaire",
       fromDate: "À partir de",
       toDate: "Jusqu'à",
-      isActive: "Est activé",
+      isActive: "Actif",
     },
     notifications: {
       createSuccess: "Année scolaire créée avec succès",
       createError:
-        "Une erreur s'est produite pendant la création du année scolaire",
-      createFailure: "Échec de la création du année scolaire",
+        "Une erreur s'est produite pendant la création de l'année scolaire",
+      createFailure: "Échec de la création de l'année scolaire",
       updateSuccess: "Année scolaire modifiée avec succès",
       updateError:
         "Une erreur s'est produite pendant la modification de l'année scolaire",
       updateFailure: "Échec de la modification de l'année scolaire",
       deleteSuccess: "Année scolaire supprimée avec succès",
       deleteError:
-        "Une erreur s'est produite pendant la désactivation de l'année scolaire",
-      deleteFailure: "Échec de la désactivation de l'année scolaire",
+        "Une erreur s'est produite pendant la suppression de l'année scolaire",
+      deleteFailure: "Échec de la suppression de l'année scolaire",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de supprimer l'année scolaire ?",
+      title: "Êtes-vous sûr de vouloir supprimer l'année scolaire ?",
       description: "L'année scolaire sera supprimée",
-      disableTitle: "Êtes-vous sûr de désactiver l'année scolaire ?",
+      disableTitle: "Êtes-vous sûr de vouloir désactiver l'année scolaire ?",
       disableDescription: "L'année scolaire sera désactivée",
     },
-    delteModalValidation: {
-      title: "L'année scolaire a des périodes assignées",
+    deleteModalValidation: {
+      title: "L'année scolaire a des périodes assignés",
       description:
         "Les années scolaires avec des périodes assignés ne peuvent pas être supprimées",
     },
@@ -563,9 +563,9 @@ export default {
     levels: "Niveaux scolaires",
     create: "Créer un niveau scolaire",
     columns: {
-      coursesAsigned: "Cours assignés",
+      coursesAsigned: "Cours attribués",
       name: "Niveau scolaire",
-      isEnabled: "Est activé",
+      isEnabled: "Actif",
     },
     expanded: {
       courseName: "Cours",
@@ -573,14 +573,14 @@ export default {
     },
     form: {
       name: "Niveau scolaire",
-      isEnabled: "Est activé",
+      isEnabled: "Actif",
       levelCourses: "Cours",
-      addCourse: "Ajouter cours",
+      addCourse: "Ajouter un cours",
       coursePeriod: "Trimestre",
       scholarPeriodId: "Période",
     },
     validations: {
-      coursesValidation: "Les courses sont obligatoires",
+      coursesValidation: "Les cours sont obligatoires",
     },
     notifications: {
       createSuccess: "Niveau scolaire créé avec succès",
@@ -601,24 +601,24 @@ export default {
       disableFailure: "Échec de la désactivation du niveau scolaire",
     },
     deleteModal: {
-      deleteTitle: "Êtes-vous sûr de supprimer le niveau scolaire ?",
+      deleteTitle: "Êtes-vous sûr de vouloir supprimer le niveau scolaire ?",
       deleteDescription: "Le niveau scolaire sera supprimé",
-      disableTitle: "Êtes-vous sûr de désactiver le niveau scolaire ?",
+      disableTitle: "Êtes-vous sûr de vouloir désactiver le niveau scolaire ?",
       disableDescription: "Le niveau scolaire sera désactivé",
     },
-    delteModalValidation: {
-      title: "Le niveau scolaire a des cours assignés",
+    deleteModalValidation: {
+      title: "Le niveau scolaire a des cours attribués",
       description:
-        "Les niveau scolaires avec des cours assignés ne peuvent pas être supprimés",
+        "Les niveaux scolaires avec des cours attribués ne peuvent pas être supprimés",
     },
   },
   teacherCourses: {
     title: "Page des cours de professeur(e)",
     teacherCourses: "Cours de professeur(e)",
     columns: {
-      coursesAsigned: "Cours assignés",
+      coursesAsigned: "Cours attribués",
       userName: "Professeur(e)",
-      isEnabled: "Est activé",
+      isEnabled: "Actif",
     },
     expanded: {
       name: "Cours",
@@ -627,7 +627,7 @@ export default {
     },
     form: {
       teacherCourses: "Cours",
-      addCourse: "Ajouter cours",
+      addCourse: "Ajouter un cours",
       coursePeriod: "Trimestre",
       level: "Niveau scolaire",
       scholarPeriodId: "Période",
@@ -636,7 +636,7 @@ export default {
       updateSuccess: "Cours de professeur(e) modifié avec succès",
       updateError:
         "Une erreur s'est produite pendant la modification des cours de professeur(e)",
-      updateFailure: "Échec de la modification dus cours de professeur(e)",
+      updateFailure: "Échec de la modification des cours de professeur(e)",
     },
   },
   gradeCoefficients: {
@@ -647,12 +647,12 @@ export default {
     columns: {
       name: "Coefficients de note",
       coefficient: "Pourcentage",
-      isEnabled: "Est activé",
+      isEnabled: "Actif",
     },
     form: {
       name: "Coefficients de note",
       coefficient: "Pourcentage",
-      isEnabled: "Est activé",
+      isEnabled: "Actif",
     },
     notifications: {
       createSuccess: "Coefficient de note créé avec succès",
@@ -673,14 +673,16 @@ export default {
       disableFailure: "Échec de la désactivation du coefficient de note",
     },
     deleteModal: {
-      deleteTitle: "Êtes-vous sûr de supprimer le coefficient de note ?",
+      deleteTitle:
+        "Êtes-vous sûr de vouloir supprimer le coefficient de note ?",
       deleteDescription: "Le coefficient de note sera supprimé",
-      disableTitle: "Êtes-vous sûr de désactiver le coefficient de note ?",
+      disableTitle:
+        "Êtes-vous sûr de vouloir désactiver le coefficient de note ?",
       disableDescription: "Le coefficient de note sera désactivé",
     },
   },
   studentCourseGrades: {
-    title: "Page des Notes",
+    title: "Page des notes",
     studentCourseGrades: "Notes",
     create: "Ajouter des notes",
     level: "Niveaux scolaires",
@@ -690,13 +692,13 @@ export default {
     },
     columnsByStudent: {
       courseName: "Cours",
-      courseCode: "Cours code",
+      courseCode: "Code du cours",
       studentName: "Étudiant(e)",
-      grade: "Moyen",
+      grade: "Moyenne",
       levelName: "Niveau",
     },
     expandedByStudent: {
-      description: "Acticité",
+      description: "Activité",
       gradeCoefficientName: "Type",
       grade: "Note",
       activityDate: "Date",
@@ -711,11 +713,11 @@ export default {
     },
     expandedByActivity: {
       studentName: "Étudiant(e)",
-      averageGrade: "Moyen de l'étudiant(e)",
+      averageGrade: "Moyenne de l'étudiant(e)",
       grade: "Note de l'activité",
     },
     form: {
-      course: "Course",
+      course: "Cours",
       level: "Niveau scolaire",
       gradeCoefficientId: "Type d'activité",
       description: "Description",
@@ -724,27 +726,28 @@ export default {
       clearGrades: "Effacer notes",
     },
     notifications: {
-      createSuccess: "Notes créés avec succès",
-      createError: "Une erreur s'est produite pendant la création du notes",
-      createFailure: "Échec de la création du notes",
-      updateSuccess: "Notes modifiés avec succès",
-      updateError: "Une erreur s'est produite pendant la modification du notes",
-      updateFailure: "Échec de la modification du notes",
-      deleteSuccess: "Notes désactivés avec succès",
-      deleteError: "Une erreur s'est produite pendant la suppression du Notes",
-      deleteFailure: "Échec de la suppression du Notes",
+      createSuccess: "Notes créées avec succès",
+      createError: "Une erreur s'est produite pendant la création des notes",
+      createFailure: "Échec de la création des notes",
+      updateSuccess: "Notes modifiées avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification des notes",
+      updateFailure: "Échec de la modification des notes",
+      deleteSuccess: "Notes supprimées avec succès",
+      deleteError: "Une erreur s'est produite pendant la suppression des notes",
+      deleteFailure: "Échec de la suppression des notes",
     },
     validations: {
-      gradeCoefficientValidation: "Le Coefficients de note est obligatoire",
+      gradeCoefficientValidation: "Le coefficient de note est obligatoire",
       coursesValidation: "Les cours sont obligatoires",
     },
-    delteModalValidation: {
-      title: "L'activité a des notes assignées",
+    deleteModalValidation: {
+      title: "L'activité a des notes assignés",
       description:
         "Pour supprimer l'activité, vous devez d'abord effacer toutes les notes, puis revenir et supprimer l'activité",
     },
     deleteModal: {
-      deleteTitle: "Êtes-vous sûr de supprimer les notes ?",
+      deleteTitle: "Êtes-vous sûr de vouloir supprimer les notes ?",
       deleteDescription: "L'activité sera supprimé",
     },
     confirmtionModal: {
@@ -763,20 +766,20 @@ export default {
       name: "Période",
       periodType: "Type de période",
       scholarYearName: "Année",
-      isEnabled: "Est activé",
+      isEnabled: "Actif",
     },
     form: {
       name: "Période",
       periodType: "Type de période",
       scholarYearId: "Année",
-      isEnabled: "Est activé",
+      isEnabled: "Actif",
     },
     validations: {
       periodTypeValidation: "Le type de période est obligatoire",
       scholarYearValidation: "L'année est obligatoire",
     },
     notifications: {
-      createSuccess: "Période d'année créées avec succès",
+      createSuccess: "Période d'année créée avec succès",
       createError:
         "Une erreur s'est produite pendant la création de la période d'année",
       createFailure: "Échec de la création de la période d'année",
@@ -794,12 +797,12 @@ export default {
       disableFailure: "Échec de la désactivation de la période d'année",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de supprimer la période d'année ?",
+      title: "Êtes-vous sûr de vouloir supprimer la période d'année ?",
       description: "La période d'année sera supprimée",
-      disableTitle: "Êtes-vous sûr de désactiver la période d'année ?",
+      disableTitle: "Êtes-vous sûr de vouloir désactiver la période d'année ?",
       disableDescription: "La période d'année sera désactivée",
     },
-    delteModalValidation: {
+    deleteModalValidation: {
       title: "La période d'année a des étudiants assignées",
       description:
         "Les périodes d'année avec des étudiants assignés ne peuvent pas être supprimées",
@@ -816,27 +819,27 @@ export default {
       name: "Type de contact",
     },
     notifications: {
-      createSuccess: "Type de contact créées avec succès",
+      createSuccess: "Type de contact créé avec succès",
       createError:
         "Une erreur s'est produite pendant la création du type de contact",
       createFailure: "Échec de la création du type de contact",
-      updateSuccess: "Type de contact modifiée avec succès",
+      updateSuccess: "Type de contact modifié avec succès",
       updateError:
         "Une erreur s'est produite pendant la modification du type de contact",
       updateFailure: "Échec de la modification du type de contact",
-      deleteSuccess: "Type de contact supprimée avec succès",
+      deleteSuccess: "Type de contact supprimé avec succès",
       deleteError:
         "Une erreur s'est produite pendant la suppression du type de contact",
       deleteFailure: "Échec de la suppression du type de contact",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de supprimer le type de contact ?",
-      description: "Le type de contact sera supprimée",
+      title: "Êtes-vous sûr de vouloir supprimer le type de contact ?",
+      description: "Le type de contact sera supprimé",
     },
-    delteModalValidation: {
-      title: "Le type de contact a des contacts assignées",
+    deleteModalValidation: {
+      title: "Le type de contact a des contacts assignés",
       description:
-        "Le type de contact avec des contacts assignés ne peuvent pas être supprimées",
+        "Le type de contact avec des contacts assignés ne peuvent pas être supprimés",
     },
   },
   colleges: {
@@ -852,7 +855,7 @@ export default {
       abbreviation: "Abréviation",
     },
     notifications: {
-      createSuccess: "Université créées avec succès",
+      createSuccess: "Université créée avec succès",
       createError:
         "Une erreur s'est produite pendant la création de l'université",
       createFailure: "Échec de la création de l'université",
@@ -866,29 +869,29 @@ export default {
       deleteFailure: "Échec de la suppression de l'université",
     },
     deleteModal: {
-      title: "Êtes-vous sûr de supprimer l'université ?",
+      title: "Êtes-vous sûr de vouloir supprimer l'université ?",
       description: "L'université sera supprimée",
     },
-    delteModalValidation: {
-      title: "L'université a des étudiants assignées",
+    deleteModalValidation: {
+      title: "L'université a des étudiants assignés",
       description:
         "Les universités avec des étudiants assignés ne peuvent pas être supprimées",
     },
   },
   studentProfile: {
-    studentInfo: "Informations sur les étudiant(e)",
+    studentInfo: "Informations sur l'étudiant(e)",
     columns: {
       courseName: "Cours",
-      courseCode: "Cours code",
+      courseCode: "Code du cours",
       code: "Code",
-      grade: "Moyen",
+      grade: "Moyenne",
       levelName: "Niveau",
       scholarPeriodName: "Trimestre",
       scholarYearName: "Année",
     },
     expanded: {
-      description: "Acticité",
-      activities: "Acticités",
+      description: "Activité",
+      activities: "Activités",
       gradeCoefficientName: "Type",
       grade: "Note",
       activityDate: "Date",
@@ -897,7 +900,7 @@ export default {
     },
     changePassword: {
       title: "Modifier le mot de passe",
-      nonUserError: "L'utilisateur n'est pas trouvé",
+      nonUserError: "L'utilisateur n'a pas été trouvé",
     },
   },
   reports: {

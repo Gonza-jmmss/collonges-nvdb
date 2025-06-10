@@ -175,8 +175,8 @@ export default function ContactTypesTable({
         closeModal={() => setOpenDeleteModalValidation(false)}
       >
         <div className="flex w-full flex-col items-center space-y-1">
-          <div className="mt-2 text-lg font-semibold">{`${t.contactTypes.delteModalValidation.title}`}</div>
-          <div>{`${t.contactTypes.delteModalValidation.description}`}</div>
+          <div className="mt-2 text-lg font-semibold">{`${t.contactTypes.deleteModalValidation.title}`}</div>
+          <div>{`${t.contactTypes.deleteModalValidation.description}`}</div>
         </div>
         <div className="mt-5 flex w-full justify-center space-x-5">
           <Button
