@@ -25,8 +25,12 @@ const createStudentPersonCommand = async (params: StudentParams) => {
 
   try {
     const result = await prisma.$transaction(async (tx) => {
+      const personData = {
+        ...params.Person,
+        transactionClient: tx, // Pass the transaction client
+      };
       // Create the main person
-      const createPerson = await createPersonCommand(params.Person);
+      const createPerson = await createPersonCommand(personData);
 
       // Create the contacts (Mother, Father, etc)
       if (params.ContactPerson !== null) {
@@ -77,10 +81,10 @@ const createStudentPersonCommand = async (params: StudentParams) => {
       if (studentRole !== undefined) {
         const studentUser = {
           UserName: `${params.Person.FirstName?.split(" ")[0]}.${params.Person.LastName?.split(" ")[0]}`,
-          Password: `${params.Person.FirstName?.split(" ")[0]}.${createStudent.Student.StudentId}`,
+          Password: `${params.Person.FirstName?.split(" ")[0]}.${createStudent.StudentId}`,
           RoleId: studentRole.RoleId,
           IsEnabled: true,
-          StudentId: createStudent.Student.StudentId,
+          StudentId: createStudent.StudentId,
           transactionClient: tx, // Pass the transaction client
         };
         await createUserCommand(studentUser);
