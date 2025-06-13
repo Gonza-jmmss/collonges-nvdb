@@ -56,9 +56,12 @@ const getAllStudentsQuery = async (params: getAllStudentsQueryParamsType) => {
     DBaseCode: student.Persons?.DBaseCode,
     YearPeriodId: student.YearPeriodId,
     YearPeriodName: student.YearPeriods.Name,
-    HasUser: student.Users.length > 0,
+    HasUser: student.Users ? student.Users.length > 0 : false,
     FirstCredentials: {
-      UserName: (student.Users[0] && student.Users[0].UserName) || null,
+      UserName:
+        student.Users && student.Users.length > 0
+          ? student.Users[0] && student.Users[0].UserName
+          : null,
       StudentId: student.StudentId,
       UserFirstName: student.Persons?.FirstName,
     },
