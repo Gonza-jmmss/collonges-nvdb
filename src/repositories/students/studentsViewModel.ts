@@ -88,12 +88,13 @@ export type StudentsMap = {
   AccommodationId: number | null;
   IsEnabled: boolean;
   YearPeriodId: number;
+  CreditsType?: number | null;
   UpdatedAt: Date | null;
   CreatedAt: Date;
   Persons?: {
     PersonId: number;
-    AlternativeName: string | null;
     FirstName: string | null;
+    AlternativeName: string | null;
     DBaseCode: string | null;
   } | null;
   StudentTypes?: {
@@ -104,7 +105,7 @@ export type StudentsMap = {
     YearPeriodId: number;
     Name: string;
   };
-  Users: {
+  Users?: {
     UserId: number;
     UserName: string;
     Password: string;
