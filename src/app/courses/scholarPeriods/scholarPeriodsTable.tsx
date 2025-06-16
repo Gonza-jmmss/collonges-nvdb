@@ -52,15 +52,15 @@ export default function ScholarPeriodsTable({
 
   const columns = useMemo<ColumnDef<ScholarPeriodsViewModel, any>[]>(
     () => [
-      {
-        accessorKey: "ScholarPeriodId",
-        id: "ScholarPeriodId",
-        header: () => (
-          <Header text={t.scholarPeriods.columns.scholarPeriodId} />
-        ),
-        filterFn: "equalsString",
-        size: 20,
-      },
+      // {
+      //   accessorKey: "ScholarPeriodId",
+      //   id: "ScholarPeriodId",
+      //   header: () => (
+      //     <Header text={t.scholarPeriods.columns.scholarPeriodId} />
+      //   ),
+      //   filterFn: "equalsString",
+      //   size: 20,
+      // },
       {
         accessorKey: "Name",
         id: "Name",
