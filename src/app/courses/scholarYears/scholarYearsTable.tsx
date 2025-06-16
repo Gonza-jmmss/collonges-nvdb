@@ -45,13 +45,13 @@ export default function ScholarYearsTable({
 
   const columns = useMemo<ColumnDef<ScholarYearsViewModel, any>[]>(
     () => [
-      {
-        accessorKey: "ScholarYearId",
-        id: "ScholarYearId",
-        header: () => <Header text={t.scholarYears.columns.scholarYearId} />,
-        filterFn: "equalsString",
-        size: 20,
-      },
+      // {
+      //   accessorKey: "ScholarYearId",
+      //   id: "ScholarYearId",
+      //   header: () => <Header text={t.scholarYears.columns.scholarYearId} />,
+      //   filterFn: "equalsString",
+      //   size: 20,
+      // },
       {
         accessorKey: "Name",
         id: "Name",
