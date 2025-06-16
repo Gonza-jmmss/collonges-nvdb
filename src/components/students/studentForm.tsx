@@ -3,7 +3,13 @@
 import { useState, useRef } from "react";
 import createStudentCommand from "@/repositories/students/commands/createStudentPersonCommand";
 import updateStudentPersonCommand from "@/repositories/students/commands/updateStudentPersonCommand";
-import { SexEnum } from "@/enum/sexEnum";
+import { StudentPersonSchema } from "@/zodSchemas/studentsSchema";
+import { CountryViewModel } from "@/repositories/countries/countriesViewModel";
+import { CollegeViewModel } from "@/repositories/colleges/collegesViewModel";
+import { RegimeViewModel } from "@/repositories/regimes/regimesViewModel";
+import { ContactTypeViewModel } from "@/repositories/personContactTypes/peronContactTypesViewModel";
+import { NonStudentsViewModel } from "@/repositories/persons/persionsViewModel";
+import { yearPeriodsViewModel } from "@/repositories/yearPeriods/yearPeriodsViewModel";
 import { useForm } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
 import DateInput from "@/components/common/dateInput";
@@ -11,13 +17,8 @@ import Combobox from "@/components/common/combobox";
 import ToggleButton from "@/components/common/toggleButton";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
-import { CountryViewModel } from "@/repositories/countries/countriesViewModel";
-import { CollegeViewModel } from "@/repositories/colleges/collegesViewModel";
-import { RegimeViewModel } from "@/repositories/regimes/regimesViewModel";
-import { ContactTypeViewModel } from "@/repositories/personContactTypes/peronContactTypesViewModel";
-import { NonStudentsViewModel } from "@/repositories/persons/persionsViewModel";
-import { yearPeriodsViewModel } from "@/repositories/yearPeriods/yearPeriodsViewModel";
-import { StudentPersonSchema } from "@/zodSchemas/studentsSchema";
+import { SexEnum } from "@/enum/sexEnum";
+import { CreditsTypeEnum } from "@/enum/creditsTypeEnum";
 import enumToArray from "@/functions/enumToArray";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -118,6 +119,10 @@ export default function StudentForm({
           action !== "create"
             ? (studentData?.Student.YearPeriodId ?? null)
             : null,
+        CreditsType:
+          action !== "create"
+            ? (studentData?.Student.CreditsType ?? null)
+            : null,
       },
       ContactPerson:
         action !== "create"
@@ -141,7 +146,15 @@ export default function StudentForm({
               ImageNameTemp: null,
             })) ?? null)
           : null,
+      PersonCountry:
+        action !== "create"
+          ? (studentData?.PersonCountry?.map((contact) => ({
+              // PersonId: contact.PersonId,
+              CountryId: contact.CountryId,
+            })) ?? null)
+          : null,
     },
+
     onSubmit: async ({ value }) => {
       const fileInput = document.querySelector(
         'input[type="file"]',
@@ -384,16 +397,16 @@ export default function StudentForm({
       <div className="space-y-1">
         <form.Field
           name="Person.BirthDate"
-          validators={{
-            onSubmitAsync: (value) => {
-              if (value === null || value === undefined) {
-                return t.students.validations.bithDateValidation;
-              }
-              return z.date().safeParse(value.value).success
-                ? undefined
-                : t.students.validations.bithDateValidation;
-            },
-          }}
+          // validators={{
+          //   onSubmitAsync: (value) => {
+          //     if (value === null || value === undefined) {
+          //       return t.students.validations.birthDateValidation;
+          //     }
+          //     return z.date().safeParse(value.value).success
+          //       ? undefined
+          //       : t.students.validations.birthDateValidation;
+          //   },
+          // }}
           children={(field) => (
             <>
               <span>{t.students.form.birthDate}</span>
@@ -404,11 +417,11 @@ export default function StudentForm({
                 }}
                 disabled={action === "view"}
               />
-              <div className="text-xs text-red-500">
+              {/* <div className="text-xs text-red-500">
                 {field.state.meta.errors
                   ? field.state.meta.errors.join(", ")
                   : null}
-              </div>
+              </div> */}
             </>
           )}
         />
@@ -441,7 +454,6 @@ export default function StudentForm({
                   field.handleChange(x && x.key);
                 }}
                 disabled={action === "view"}
-                showSearch
               />
               <div className="text-xs text-red-500">
                 {field.state.meta.errors
@@ -507,7 +519,7 @@ export default function StudentForm({
                 value={field.state.value || ""}
                 onChange={(e) => field.handleChange(e.target.value)}
                 disabled={action === "view"}
-                required
+                // required
               />
             </>
           )}
@@ -536,22 +548,22 @@ export default function StudentForm({
         <div className="space-y-1">
           <form.Field
             name="Person.BirthCountryId"
-            validators={{
-              onSubmitAsync: (value) => {
-                if (value === null || value === undefined) {
-                  return t.students.validations.countryValidation;
-                }
-                return z.number().min(0).safeParse(value.value).success
-                  ? undefined
-                  : t.students.validations.countryValidation;
-              },
-            }}
+            // validators={{
+            //   onSubmitAsync: (value) => {
+            //     if (value === null || value === undefined) {
+            //       return t.students.validations.countryValidation;
+            //     }
+            //     return z.number().min(0).safeParse(value.value).success
+            //       ? undefined
+            //       : t.students.validations.countryValidation;
+            //   },
+            // }}
             children={(field) => (
               <>
                 <span>{t.students.form.birthCountryId}</span>
                 <Combobox
                   options={countries}
-                  textAttribute="Name"
+                  textAttribute={["Name", "ISO3"]}
                   valueAttribute="CountryId"
                   placeholder={t.students.form.birthCountryId}
                   itemSelected={countries.find(
@@ -563,11 +575,11 @@ export default function StudentForm({
                   disabled={action === "view"}
                   showSearch
                 />
-                <div className="text-xs text-red-500">
+                {/* <div className="text-xs text-red-500">
                   {field.state.meta.errors
                     ? field.state.meta.errors.join(", ")
                     : null}
-                </div>
+                </div> */}
               </>
             )}
           />
@@ -586,7 +598,7 @@ export default function StudentForm({
                   value={field.state.value || ""}
                   onChange={(e) => field.handleChange(e.target.value)}
                   disabled={action === "view"}
-                  required
+                  // required
                 />
               </>
             )}
@@ -606,12 +618,114 @@ export default function StudentForm({
                   value={field.state.value || ""}
                   onChange={(e) => field.handleChange(e.target.value)}
                   disabled={action === "view"}
-                  required
+                  // required
                 />
               </>
             )}
           />
         </div>
+      </div>
+      {/*               */}
+      {/* PersonCountry */}
+      {/*               */}
+      <div className="col-span-1 md:col-span-2">
+        <form.Field
+          name="PersonCountry"
+          mode="array"
+          children={(field) => (
+            <>
+              {action !== "view" && (
+                // <div className="col-span-1 flex space-x-5 md:col-span-2">
+                <Button
+                  type="button"
+                  variant={"outlineColored"}
+                  onClick={() =>
+                    field.pushValue({
+                      // PersonId: null,
+                      CountryId: null,
+                    })
+                  }
+                >
+                  {t.students.form.addPersonCountry}
+                </Button>
+              )}
+              {field.state.value && field.state.value.length > 0 && (
+                <>
+                  <div className="mt-3 flex w-full flex-col space-y-3 rounded-md border p-3 sm:flex-row sm:space-x-3 sm:space-y-0">
+                    <span className="mt-1 text-xl font-semibold">
+                      {t.students.form.personCountry}
+                    </span>
+                    <div className="w-full space-y-3">
+                      {field.state.value?.map((personCountry, index) => (
+                        <div
+                          key={index}
+                          className="col-span-1 flex items-center justify-between space-x-3"
+                        >
+                          <div className="w-full space-y-1">
+                            <form.Field
+                              name={`PersonCountry[${index}].CountryId`}
+                              validators={{
+                                onSubmitAsync: (value) => {
+                                  if (value === null || value === undefined) {
+                                    return t.students.validations
+                                      .nationalityValidation;
+                                  }
+                                  return z
+                                    .number()
+                                    .min(0)
+                                    .safeParse(value.value).success
+                                    ? undefined
+                                    : t.students.validations
+                                        .nationalityValidation;
+                                },
+                              }}
+                              children={(field) => (
+                                <>
+                                  <div>
+                                    <Combobox
+                                      options={countries}
+                                      textAttribute={["Name", "ISO3"]}
+                                      valueAttribute="CountryId"
+                                      placeholder={t.students.form.countryId}
+                                      itemSelected={countries.find(
+                                        (x) =>
+                                          x.CountryId === field.state.value,
+                                      )}
+                                      setItemSelected={(x: {
+                                        CountryId: number;
+                                      }) => {
+                                        field.handleChange(x && x.CountryId);
+                                      }}
+                                      disabled={action === "view"}
+                                      showSearch
+                                    />
+                                    <div className="text-xs text-red-500">
+                                      {field.state.meta.errors
+                                        ? field.state.meta.errors.join(", ")
+                                        : null}
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                            />
+                          </div>
+                          <Button
+                            type="button"
+                            variant={"ghost"}
+                            size={"icon"}
+                            onClick={() => field.removeValue(index)}
+                          >
+                            <Icon name="MdClose" className="text-xl" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
+          )}
+        />
       </div>
       {/*         */}
       {/* Student */}
@@ -679,94 +793,7 @@ export default function StudentForm({
           )}
         />
       </div>
-      <div className="space-y-1">
-        <form.Field
-          name="Student.CollegeId"
-          children={(field) => (
-            <>
-              <span>{t.students.form.collegeId}</span>
-              <Combobox
-                options={colleges}
-                textAttribute="Name"
-                valueAttribute="CollegeId"
-                placeholder={t.students.form.collegeId}
-                itemSelected={colleges.find(
-                  (x) => x.CollegeId === field.state.value,
-                )}
-                setItemSelected={(x: { CollegeId: number }) => {
-                  field.handleChange(x && x.CollegeId);
-                }}
-                disabled={action === "view"}
-                showSearch
-              />
-            </>
-          )}
-        />
-      </div>
-      <div className="space-y-1">
-        <form.Field
-          name="Student.RegimeId"
-          validators={{
-            onSubmitAsync: (value) => {
-              if (value === null || value === undefined) {
-                return t.students.validations.regimeValidation;
-              }
-              return z.number().min(0).safeParse(value.value).success
-                ? undefined
-                : t.students.validations.regimeValidation;
-            },
-          }}
-          children={(field) => (
-            <>
-              <span>{t.students.form.regimeId}</span>
-              <Combobox
-                options={regimes}
-                textAttribute="Name"
-                valueAttribute="RegimeId"
-                placeholder={t.students.form.regimeId}
-                itemSelected={regimes.find(
-                  (x) => x.RegimeId === field.state.value,
-                )}
-                setItemSelected={(x: { RegimeId: number }) => {
-                  field.handleChange(x && x.RegimeId);
-                }}
-                disabled={action === "view"}
-                showSearch
-              />
-              <div className="text-xs text-red-500">
-                {field.state.meta.errors
-                  ? field.state.meta.errors.join(", ")
-                  : null}
-              </div>
-            </>
-          )}
-        />
-      </div>
-      {/* <div className="col-span-1 grid grid-cols-1 gap-5 md:col-span-2 md:grid-cols-2 lg:grid-cols-3">
-        <div className="space-y-1">
-          <form.Field
-            name="Student.StudentTypeId"
-            children={(field) => (
-              <>
-                <span>{t.students.form.studentTypeId}</span>
-                <Combobox
-                  options={studentType}
-                  textAttribute="Name"
-                  valueAttribute="StudentTypeId"
-                  placeholder={t.students.form.birthCountryId}
-                  itemSelected={studentType.find(
-                    (x) => x.StudentTypeId === field.state.value,
-                  )}
-                  setItemSelected={(x: { StudentTypeId: number }) => {
-                    field.handleChange(x && x.StudentTypeId);
-                  }}
-                  disabled={true}
-                  showSearch
-                />
-              </>
-            )}
-          />
-        </div>
+      <div className="col-span-1 grid grid-cols-1 gap-5 md:col-span-2 md:grid-cols-2 lg:grid-cols-3">
         <div className="space-y-1">
           <form.Field
             name="Student.CollegeId"
@@ -775,7 +802,7 @@ export default function StudentForm({
                 <span>{t.students.form.collegeId}</span>
                 <Combobox
                   options={colleges}
-                  textAttribute="Name"
+                  textAttribute={["Name", "Abbreviation"]}
                   valueAttribute="CollegeId"
                   placeholder={t.students.form.collegeId}
                   itemSelected={colleges.find(
@@ -819,7 +846,6 @@ export default function StudentForm({
                     field.handleChange(x && x.RegimeId);
                   }}
                   disabled={action === "view"}
-                  showSearch
                 />
                 <div className="text-xs text-red-500">
                   {field.state.meta.errors
@@ -830,7 +856,30 @@ export default function StudentForm({
             )}
           />
         </div>
-      </div> */}
+        <div className="space-y-1">
+          <form.Field
+            name="Student.CreditsType"
+            children={(field) => (
+              <>
+                <span>{t.students.form.creditsType}</span>
+                <Combobox
+                  options={enumToArray(CreditsTypeEnum)}
+                  textAttribute="value"
+                  valueAttribute="key"
+                  placeholder={t.students.form.creditsType}
+                  itemSelected={enumToArray(CreditsTypeEnum).find(
+                    (x) => x.key === field.state.value,
+                  )}
+                  setItemSelected={(x: { key: number }) => {
+                    field.handleChange(x && x.key);
+                  }}
+                  disabled={action === "view"}
+                />
+              </>
+            )}
+          />
+        </div>
+      </div>
       <div className="space-y-1">
         <form.Field
           name="Student.IsACA"
@@ -839,9 +888,8 @@ export default function StudentForm({
               <span>{t.students.form.isACA}</span>
               <ToggleButton
                 options={[
-                  { key: true, value: t.shared.no },
-
-                  { key: false, value: t.shared.yes },
+                  { key: false, value: t.shared.no },
+                  { key: true, value: t.shared.yes },
                 ]}
                 setItemSelected={(x: { key: boolean; value: string }) => {
                   field.handleChange(x && x.key);
@@ -862,7 +910,6 @@ export default function StudentForm({
               <ToggleButton
                 options={[
                   { key: false, value: t.shared.no },
-
                   { key: true, value: t.shared.yes },
                 ]}
                 setItemSelected={(x: { key: boolean; value: string }) => {
@@ -1068,7 +1115,7 @@ export default function StudentForm({
                                   field.handleChange(e.target.value)
                                 }
                                 disabled={action === "view"}
-                                required
+                                // required
                               />
                             </>
                           )}
@@ -1090,7 +1137,7 @@ export default function StudentForm({
                                   field.handleChange(e.target.value)
                                 }
                                 disabled={action === "view"}
-                                required
+                                // required
                               />
                             </>
                           )}
@@ -1121,18 +1168,18 @@ export default function StudentForm({
                         <div className="space-y-1">
                           <form.Field
                             name={`ContactPerson[${index}].CountryId`}
-                            validators={{
-                              onSubmitAsync: (value) => {
-                                if (value === null || value === undefined) {
-                                  return t.students.validations
-                                    .countryValidation;
-                                }
-                                return z.number().min(0).safeParse(value.value)
-                                  .success
-                                  ? undefined
-                                  : t.students.validations.countryValidation;
-                              },
-                            }}
+                            // validators={{
+                            //   onSubmitAsync: (value) => {
+                            //     if (value === null || value === undefined) {
+                            //       return t.students.validations
+                            //         .countryValidation;
+                            //     }
+                            //     return z.number().min(0).safeParse(value.value)
+                            //       .success
+                            //       ? undefined
+                            //       : t.students.validations.countryValidation;
+                            //   },
+                            // }}
                             children={(field) => (
                               <>
                                 <span>{t.students.form.countryId}</span>
@@ -1152,11 +1199,11 @@ export default function StudentForm({
                                   disabled={action === "view"}
                                   showSearch
                                 />
-                                <div className="text-xs text-red-500">
+                                {/* <div className="text-xs text-red-500">
                                   {field.state.meta.errors
                                     ? field.state.meta.errors.join(", ")
                                     : null}
-                                </div>
+                                </div> */}
                               </>
                             )}
                           />
@@ -1177,7 +1224,7 @@ export default function StudentForm({
                                     field.handleChange(e.target.value)
                                   }
                                   disabled={action === "view"}
-                                  required
+                                  // required
                                 />
                               </>
                             )}
@@ -1199,7 +1246,7 @@ export default function StudentForm({
                                     field.handleChange(e.target.value)
                                   }
                                   disabled={action === "view"}
-                                  required
+                                  // required
                                 />
                               </>
                             )}

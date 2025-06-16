@@ -235,7 +235,7 @@ export default function ScholarPeriodsTable({
             )
           }
         >
-          <span>{t.students.create}</span>
+          <span>{t.scholarPeriods.create}</span>
         </Button>
       </div>
       <Table
@@ -277,8 +277,8 @@ export default function ScholarPeriodsTable({
         closeModal={() => setOpenDeleteModalValidation(false)}
       >
         <div className="flex w-full flex-col items-center space-y-1">
-          <div className="mt-2 text-lg font-semibold">{`${t.scholarPeriods.delteModalValidation.title}`}</div>
-          <div>{`${t.scholarPeriods.delteModalValidation.description}`}</div>
+          <div className="mt-2 text-lg font-semibold">{`${t.scholarPeriods.deleteModalValidation.title}`}</div>
+          <div>{`${t.scholarPeriods.deleteModalValidation.description}`}</div>
         </div>
         <div className="mt-5 flex w-full justify-center space-x-5">
           <Button

@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import StudentUserCreadentialsPDF from "@/components/students/studentUserCredentialsPDF";
 import disableStudentCommand from "@/repositories/students/commands/disableStudentCommand";
+import createStudentUserCommand from "@/repositories/users/commands/createStudentUserCommand";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
@@ -9,6 +11,7 @@ import ToggleButton from "@/components/common/toggleButton";
 import DeleteModal from "@/components/common/deleteModal";
 import Combobox from "@/components/common/combobox";
 import Icon from "@/components/common/icon";
+import Modal from "@/components/common/modal";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
@@ -47,6 +50,10 @@ export default function StudentsTable({
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedStudentToDelete, setSelectedStudentToDelete] = useState(0);
+  const [opentCreateStudentUserModal, setOpentCreateStudentUserModal] =
+    useState(false);
+  const [selectedStudentToCreateUser, setSelectedStudentToCreateUser] =
+    useState<StudentsViewModel | null>(null);
 
   const [showEnabledFilter, setShowEnabledFilter] = useState(
     urlParams?.isEnabled === "false" ? false : true || true,
@@ -55,6 +62,11 @@ export default function StudentsTable({
   const closeModal = () => {
     setOpenModal(false);
     setSelectedStudentToDelete(0);
+  };
+
+  const closeCreateStudentUserModal = () => {
+    setOpentCreateStudentUserModal(false);
+    setSelectedStudentToCreateUser(null);
   };
 
   const columns = useMemo<ColumnDef<StudentsViewModel, any>[]>(
@@ -99,7 +111,7 @@ export default function StudentsTable({
         id: "actions",
         header: () => <Header text={t.shared.actions} />,
         size: 50,
-        cell: (row) => (
+        cell: ({ row }) => (
           <div
             className="flex space-x-1"
             onClick={(event) => event.stopPropagation()}
@@ -111,17 +123,27 @@ export default function StudentsTable({
                   className="cursor-pointer text-xl hover:text-primary"
                   onClick={() =>
                     router.push(
-                      `/students/students/${row.row.original.StudentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}&yearPeriodId=${yearPeriodIdSelected}`,
+                      `/students/students/${row.original.StudentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}&yearPeriodId=${yearPeriodIdSelected}`,
                     )
                   }
                 />
-                {row.row.original.IsEnabled === true && (
+                {row.original.IsEnabled === true && (
                   <Icon
-                    name="MdDelete"
+                    name="MdNotInterested"
                     className="cursor-pointer text-xl hover:text-primary"
                     onClick={() => {
                       setOpenModal(true);
-                      setSelectedStudentToDelete(row.row.original.StudentId);
+                      setSelectedStudentToDelete(row.original.StudentId);
+                    }}
+                  />
+                )}
+                {!row.original.HasUser && (
+                  <Icon
+                    name="MdPersonAdd"
+                    className="cursor-pointer text-xl hover:text-primary"
+                    onClick={() => {
+                      setOpentCreateStudentUserModal(true);
+                      setSelectedStudentToCreateUser(row.original);
                     }}
                   />
                 )}
@@ -131,7 +153,7 @@ export default function StudentsTable({
         ),
       },
     ],
-    [getPageIndexParam, getPageSizeParam],
+    [getPageIndexParam, getPageSizeParam, yearPeriodIdSelected],
   );
 
   const disableStudent = async (StudentId: number) => {
@@ -152,6 +174,33 @@ export default function StudentsTable({
       toast({
         variant: "destructive",
         title: `${t.students.notifications.deleteError}`,
+        description: `${error}`,
+      });
+    }
+  };
+
+  const createStudentUser = async (StudentId: number) => {
+    try {
+      if (StudentId === 0) {
+        throw new Error(`${t.students.notifications.studentUserCreateFailure}`);
+      }
+
+      const UserStudentToCreate = { StudentId: StudentId };
+      const response = await createStudentUserCommand(UserStudentToCreate);
+
+      if (!response) {
+        throw new Error(`${t.students.notifications.studentUserCreateFailure}`);
+      }
+      toast({
+        title: `${t.students.notifications.studentUserCreateSuccess}`,
+        description: `${t.students.student} : ${response.Person.FirstName} ${response.Person.LastName}`,
+      });
+      router.refresh();
+      closeCreateStudentUserModal();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: `${t.students.notifications.studentUserCreateError}`,
         description: `${error}`,
       });
     }
@@ -229,6 +278,11 @@ export default function StudentsTable({
           )
         }
       />
+      {userRoleName !== "Professeur" && (
+        <div className="mt-3 flex justify-end">
+          <StudentUserCreadentialsPDF studentsData={studentsData} />
+        </div>
+      )}
       <DeleteModal
         openModal={openModal}
         closeModal={closeModal}
@@ -237,6 +291,38 @@ export default function StudentsTable({
         deletefunction={() => disableStudent(selectedStudentToDelete)}
         disable
       />
+      <Modal
+        openModal={opentCreateStudentUserModal}
+        closeModal={closeCreateStudentUserModal}
+      >
+        <div>
+          <div className="flex w-full flex-col items-center space-y-1">
+            <div className="text-lg font-semibold">{`${t.students.createStudentUserModal.title} ${selectedStudentToCreateUser?.StudentName} ?`}</div>
+            <div>{`${t.students.createStudentUserModal.description}`}</div>
+            {/* <div>{`${t.students.student} : ${selectedStudentToCreateUser?.StudentName}`}</div> */}
+          </div>
+          <div className="mt-5 flex w-full justify-center space-x-5">
+            <Button
+              type="button"
+              variant={"secondary"}
+              className="w-[30%]"
+              onClick={closeCreateStudentUserModal}
+            >
+              {t.shared.cancel}
+            </Button>
+            <Button
+              type="button"
+              variant={"default"}
+              className="w-[30%]"
+              onClick={() =>
+                createStudentUser(selectedStudentToCreateUser?.StudentId || 0)
+              }
+            >
+              {t.shared.create}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

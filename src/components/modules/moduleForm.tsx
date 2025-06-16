@@ -46,6 +46,8 @@ export default function ModuleForm({
         action !== "create" ? (moduleData ? moduleData.Location : null) : null,
     },
     onSubmit: async ({ value }) => {
+      // console.log("formData", value);
+      setIsPending(true);
       action === "create" && createModule(value);
       action === "edit" && updateModule(value);
     },

@@ -20,6 +20,11 @@ export const ContactPerson = z.object({
   ImageNameTemp: z.string().nullable(),
 });
 
+export const PersonCountries = z.object({
+  // PersonId: z.number().nullable(),
+  CountryId: z.number().nullable(),
+});
+
 export const StudentPersonSchema = z.object({
   Person: z.object({
     PersonId: z.number().nullable(),
@@ -46,8 +51,10 @@ export const StudentPersonSchema = z.object({
     RegimeId: z.number().nullable(),
     IsEnabled: z.boolean(),
     YearPeriodId: z.number().nullable(),
+    CreditsType: z.number().nullable(),
   }),
   ContactPerson: z.array(ContactPerson).nullable(),
+  PersonCountry: z.array(PersonCountries).nullable(),
 });
 
 export const StudentSchema = z.object({
@@ -61,4 +68,5 @@ export const StudentSchema = z.object({
   AccommodationId: z.number().nullable(),
   IsEnabled: z.boolean(),
   YearPeriodId: z.number().nullable(),
+  CreditsType: z.number().nullable(),
 });

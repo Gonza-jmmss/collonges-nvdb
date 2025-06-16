@@ -30,9 +30,6 @@ const getStudentCourseGradeByActivityQuery = async (
       },
     },
     orderBy: [
-      {
-        CreatedAt: "desc",
-      },
       { StudentCourses: { Students: { Persons: { AlternativeName: "asc" } } } },
     ],
     include: {
@@ -94,12 +91,15 @@ const getStudentCourseGradeByActivityQuery = async (
         groupMap[description] = {
           CourseId: studentCourseGrade.StudentCourses.CourseId,
           Description: studentCourseGrade.Description,
+          ActivityDate: studentCourseGrade.ActivityDate,
           CreatedAt: studentCourseGrade.CreatedAt,
           UserId: studentCourseGrade.UserId,
           UserName: studentCourseGrade.Users.UserName,
           Coefficient: Number(studentCourseGrade.GradeCoefficients.Coefficient),
           GradeCoefficientId: studentCourseGrade.GradeCoefficientId,
           GradeCoefficientName: studentCourseGrade.GradeCoefficients.Name,
+          GradeCoefficientPercentage:
+            Number(studentCourseGrade.GradeCoefficients.Coefficient) * 100,
           LevelName:
             studentCourseGrade.StudentCourses.Courses.LevelCourses.length === 1
               ? studentCourseGrade.StudentCourses.Courses.LevelCourses[0].Levels

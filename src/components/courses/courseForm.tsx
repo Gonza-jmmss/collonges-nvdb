@@ -61,6 +61,7 @@ export default function CourseForm({
     },
     onSubmit: async ({ value }) => {
       // console.log("formData", value);
+      setIsPending(true);
       action === "create" && createCourse(value);
       action === "edit" && updateCourse(value);
     },

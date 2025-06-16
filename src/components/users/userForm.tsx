@@ -29,17 +29,28 @@ type UserFormData = z.infer<typeof UserSchema>;
 
 export default function UserForm({
   userData,
-  action,
   roles,
+  pageIndexParam,
+  pageSizeParam,
+  action,
+  urlParams,
 }: {
   userData: UserViewModel | null;
-  action: string;
   roles: RoleViewModel[];
+  pageIndexParam: number;
+  pageSizeParam: number;
+  action: string | undefined;
+  urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const { toast } = useToast();
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
+
+  const isEnabledParam =
+    urlParams?.isEnabled === undefined ? true : urlParams.isEnabled === "true";
+  const isStudentParam =
+    urlParams?.isStudent === undefined ? false : urlParams.isStudent === "true";
 
   const form = useForm<UserFormData>({
     defaultValues: {
@@ -52,6 +63,8 @@ export default function UserForm({
         action !== "create" ? (userData ? userData.IsEnabled : true) : true,
     },
     onSubmit: async ({ value }) => {
+      // console.log("formData", value);
+      setIsPending(true);
       action === "create" && createUser(value);
       action === "edit" && updateUser(value);
       action === "password" && updateUserPassword(value);
@@ -70,7 +83,9 @@ export default function UserForm({
         description: `${t.users.user} : ${response.UserName}`,
       });
 
-      router.push("/settings/users");
+      router.push(
+        `/settings/users?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}&isStudent=${isStudentParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -95,7 +110,9 @@ export default function UserForm({
         description: `${t.users.user} : ${response.UserName}`,
       });
 
-      router.push("/settings/users");
+      router.push(
+        `/settings/users?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}&isStudent=${isStudentParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -120,7 +137,9 @@ export default function UserForm({
         description: `${t.users.user} : ${response.UserName}`,
       });
 
-      router.push("/settings/users");
+      router.push(
+        `/settings/users?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}&isStudent=${isStudentParam}`,
+      );
       router.refresh();
     } catch (error) {
       toast({
@@ -255,11 +274,11 @@ export default function UserForm({
               }}
               children={(field) => (
                 <>
-                  <span>{t.users.form.repeatePassword}</span>
+                  <span>{t.users.form.repeatPassword}</span>
                   <Input
                     id="RepeatPassword"
                     name="RepeatPassword"
-                    placeholder={`${t.users.form.repeatePassword}`}
+                    placeholder={`${t.users.form.repeatPassword}`}
                     type="password"
                     className="w-full"
                     value={field.state.value}
@@ -281,7 +300,11 @@ export default function UserForm({
             type="button"
             variant={"secondary"}
             className="w-[40%]"
-            onClick={() => router.back()}
+            onClick={() =>
+              router.push(
+                `/settings/users?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}&isStudent=${isStudentParam}`,
+              )
+            }
           >
             {t.shared.cancel}
           </Button>
@@ -299,7 +322,11 @@ export default function UserForm({
           <Button
             variant={"secondary"}
             className="w-[40%]"
-            onClick={() => router.back()}
+            onClick={() =>
+              router.push(
+                `/settings/users?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}&isStudent=${isStudentParam}`,
+              )
+            }
           >
             {t.shared.cancel}
           </Button>

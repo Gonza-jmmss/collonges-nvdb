@@ -20,6 +20,7 @@ const createStudentCourseGradesCommand = async (
     GradeCoefficientId: number;
     UserId: number;
     Description: string;
+    ActivityDate: Date;
     StudentCourseId: number;
     Grade: string;
     StudenCourseGradeId: number;
@@ -46,6 +47,7 @@ const createStudentCourseGradesCommand = async (
             GradeCoefficientId: params.GradeCoefficientId || 0,
             UserId: params.UserId || 0,
             Description: params.Description || "",
+            ActivityDate: params.ActivityDate,
           };
 
           // Use the transaction client (tx) instead of prisma

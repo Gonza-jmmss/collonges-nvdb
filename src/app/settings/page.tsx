@@ -30,7 +30,10 @@ export default async function Settings() {
           <span className="text-4xl font-bold">{t.breadcrumbs.settings}</span>
         </div>
         {/* <pre>{JSON.stringify(moduleElements, null, 2)}</pre> */}
-        <div className={`mt-10 flex justify-center space-x-8`}>
+        <div
+          className={`-ml-8 mt-10 flex flex-wrap justify-center space-x-8 space-y-8`}
+        >
+          <div />
           {moduleElements
             .filter((x) => x.ModuleElementId !== 0)
             .map((element, index) => (

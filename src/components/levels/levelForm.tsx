@@ -64,7 +64,8 @@ export default function LevelForm({
           : null,
     },
     onSubmit: async ({ value }) => {
-      console.log("formData", value);
+      // console.log("formData", value);
+      setIsPending(true);
       action === "create" && createLevel(value);
       action === "edit" && updateLevel(value);
     },
@@ -238,7 +239,7 @@ export default function LevelForm({
                   />
                 </div>
               </div>
-              <div className="space-y-3 rounded-md border bg-muted p-2">
+              <div className="space-y-3 rounded-md border bg-muted/50 p-2">
                 <div className="grid grid-cols-12">
                   <div className="col-span-7 text-sm font-semibold">
                     {t.levels.expanded.courseName}

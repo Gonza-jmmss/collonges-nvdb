@@ -19,7 +19,7 @@ import { PeriodEnum } from "@/enum/periodEnum";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
+import { date, z } from "zod";
 import frFR from "@/lang/fr-FR";
 
 type StudentCourseGradeFormData = z.infer<typeof StudentCourseGradeSchema>;
@@ -75,6 +75,10 @@ export default function StudentCourseGradesForm({
           : tearcherId,
       Description:
         action !== "create" ? (studentCourseGradeData?.Description ?? "") : "",
+      ActivityDate:
+        action !== "create"
+          ? (studentCourseGradeData?.ActivityDate ?? new Date())
+          : new Date(),
       StudentCourses:
         action !== "create"
           ? (studentCourseGradeData?.StudentCourses?.map((studentCourse) => ({
@@ -101,6 +105,7 @@ export default function StudentCourseGradesForm({
         .some((grade) => grade !== "NaN" && grade !== "") === true;
 
     if (allStudentCoursesHasGrades) {
+      setIsPending(true);
       action === "create" && createStudentCourseGrades(formData);
       action === "edit" && updateStudentCourseGrades(formData);
     } else {
@@ -250,6 +255,41 @@ export default function StudentCourseGradesForm({
     setConfirmedStudentCourseGradeData(null);
   };
 
+  useEffect(() => {
+    const formStudentCoursesIds = form
+      .getFieldValue("StudentCourses")
+      ?.map((x) => x.StudentCourseId);
+    const allStudentCoursesIds = studentByCouse.map((x) => x.StudentCourseId);
+
+    // First, make sure formStudentCoursesIds is not null or undefined
+    const existingIds = formStudentCoursesIds || [];
+
+    // Find the missing IDs (ones in allStudentCoursesIds but not in formStudentCoursesIds)
+    const missingIds = allStudentCoursesIds.filter(
+      (id) => !existingIds.includes(id),
+    );
+
+    // Create new StudentCourse objects for the missing IDs
+    // Each new object will have StudentCourseId and Grade: null
+    const newStudentCourses = missingIds.map((id) => ({
+      StudentCourseGradeId: null,
+      StudentCourseId: id,
+      Grade: "NaN",
+    }));
+
+    // Get the current StudentCourses array from the form (or initialize with empty array)
+    const currentStudentCourses = form.getFieldValue("StudentCourses") || [];
+
+    // Combine current StudentCourses with new ones
+    const updatedStudentCourses = [
+      ...currentStudentCourses,
+      ...newStudentCourses,
+    ];
+
+    // Update the form with the combined array
+    form.setFieldValue("StudentCourses", updatedStudentCourses);
+  }, [studentByCouse, form]);
+
   return (
     <>
       <form
@@ -381,7 +421,7 @@ export default function StudentCourseGradesForm({
               },
             }}
             children={(field) => (
-              <div className="flex flex-col space-y-5 rounded-md border bg-muted p-2">
+              <div className="flex flex-col space-y-5 rounded-md border bg-muted/50 p-2">
                 <div className="flex items-center justify-between">
                   <span className="col-span-2 text-lg font-semibold">
                     {t.studentCourseGrades.form.students}

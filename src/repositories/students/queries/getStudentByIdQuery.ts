@@ -61,6 +61,16 @@ const getStudentByIdQuery = async (studentId: number): Promise<StudentData> => {
     },
   });
 
+  const personCountriesQuery = await prisma.personCountries.findMany({
+    where: {
+      PersonId: studentQuery.PersonId,
+    },
+    select: {
+      PersonId: true,
+      CountryId: true,
+    },
+  });
+
   const result: StudentData = {
     Person: {
       PersonId: studentQuery.Persons.PersonId,
@@ -87,8 +97,10 @@ const getStudentByIdQuery = async (studentId: number): Promise<StudentData> => {
       RegimeId: studentQuery.RegimeId,
       IsEnabled: studentQuery.IsEnabled,
       YearPeriodId: studentQuery.YearPeriodId,
+      CreditsType: studentQuery.CreditsType,
     },
     ContactPerson: [],
+    PersonCountry: personCountriesQuery,
   };
 
   contactsQuery.forEach((contact) => {

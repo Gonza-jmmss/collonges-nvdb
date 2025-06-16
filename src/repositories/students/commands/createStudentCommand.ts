@@ -6,10 +6,15 @@ import { z } from "zod";
 
 const prisma = new PrismaClient();
 
-type StudentParams = z.infer<typeof StudentSchema>;
+type StudentParams = z.infer<typeof StudentSchema> & {
+  transactionClient?: any;
+};
 
 const createStudentCommand = async (params: StudentParams) => {
-  const command = await prisma.students.create({
+  // Use the transaction client if provided, otherwise use the default prisma client
+  const client = params.transactionClient || prisma;
+
+  const command = await client.students.create({
     data: {
       PersonId: params.PersonId,
       StudentTypeId: params.StudentTypeId,
@@ -20,6 +25,7 @@ const createStudentCommand = async (params: StudentParams) => {
       AccommodationId: params?.AccommodationId,
       IsEnabled: params.IsEnabled,
       YearPeriodId: params.YearPeriodId || 0,
+      CreditsType: params.CreditsType,
     },
   });
 

@@ -4,7 +4,9 @@ import { RolesViewModel } from "../rolesViewModel";
 const prisma = new PrismaClient();
 
 const getAllRolesQuery = async () => {
-  const query = await prisma.roles.findMany({});
+  const query = await prisma.roles.findMany({
+    orderBy: { IsEnabled: "desc" },
+  });
 
   const res = query.map((roles: RolesViewModel) => ({
     RoleId: roles.RoleId,

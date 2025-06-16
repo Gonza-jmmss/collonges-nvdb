@@ -135,8 +135,6 @@ export default async function StudentCourseGradesPage({
       />
       {/* <pre>{JSON.stringify(studentCourseGradesByActivity, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(studentCourseGradesByStudentCourse, null, 2)}</pre> */}
-      {/* <pre>{JSON.stringify(pageIndex, null, 2)}</pre>
-      <pre>{JSON.stringify(pageSize, null, 2)}</pre> */}
     </main>
   );
 }

@@ -33,14 +33,14 @@ export default async function Page({
   const courseIdParam = parseInt(searchParams.courseId as string);
 
   const descriptionParam = searchParams.description as string;
-  const createdAtParam = new Date(searchParams.createdAt as string);
+  const activityDateParam = new Date(searchParams.activityDate as string);
   const tabParam = searchParams.tab as string;
 
   if (params.id !== "create") {
     studentCourseGrade = await getStudentCourseGradesByCourseIdQuery({
       CourseId: courseIdParam,
       Description: descriptionParam,
-      CreatedAt: createdAtParam,
+      ActivityDate: activityDateParam,
     });
   } else {
     studentCourseGrade = null;
@@ -58,6 +58,7 @@ export default async function Page({
 
   const studentByCouse = await getStudentsByCourseIdQuery({
     CourseId: courseIdParam,
+    PeriodNumber: periodNumberParam,
   });
 
   const gradeCoefficients = await getAllGradeCoefficientsQuery({
@@ -98,8 +99,7 @@ export default async function Page({
           />
         </div>
         {/* <pre>{JSON.stringify(studentCourseGrade, null, 2)}</pre> */}
-        {/* <pre>{JSON.stringify(pageIndexParam, null, 2)}</pre>
-        <pre>{JSON.stringify(pageSizeParam, null, 2)}</pre> */}
+        {/* <pre>{JSON.stringify(studentByCouse, null, 2)}</pre> */}
       </div>
     </main>
   );

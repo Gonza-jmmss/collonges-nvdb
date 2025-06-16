@@ -16,7 +16,7 @@ const updateGradeOfSudentCourseCommand = async (
   // Use the transaction client if provided, otherwise use the default prisma client
   const client = params.transactionClient || prisma;
 
-  // get the notes oranized by coefficient
+  // get the notes organized by coefficient
   const studentCourseGrades =
     await getStudentCourseGradesByStudentCourseIdQuery({
       StudentCourseId: params.StudentCourseId,
@@ -62,62 +62,53 @@ type coefficientItemType = {
 const calculateWeightedAverage = (
   studentCourseGrades: gradeCoefficientsType,
 ) => {
-  // Average calculation using array methods
-  const coefficientsArray = studentCourseGrades.map(
-    (coeficiente: coefficientItemType) => {
-      // Filter out NaN grades
-      const validGrades = coeficiente.StudentCourseGrades.filter(
-        (grade) => !isNaN(grade.Grade),
-      );
+  // Group grades by coefficient name to handle multiple coefficients with the same name
+  const coefficientGroups = new Map<
+    string,
+    Array<{
+      coefficient: number;
+      grades: number[];
+    }>
+  >();
 
-      // Calculate average grade for this coefficient using only valid grades
-      const gradeSum = validGrades.reduce(
-        (sum, grade) => sum + Number(grade.Grade),
-        0,
-      );
+  // First, organize all grades by their coefficient name
+  studentCourseGrades.forEach((coefficientItem: coefficientItemType) => {
+    // Only include enabled coefficients (assuming IsEnabled is considered)
+    const validGrades = coefficientItem.StudentCourseGrades.map((grade) =>
+      Number(grade.Grade),
+    ).filter((grade) => !isNaN(grade));
 
-      return {
-        average: validGrades.length > 0 ? gradeSum / validGrades.length : 0,
-        coefficient: coeficiente.Coefficient,
-      };
-    },
-  );
+    // Only process this coefficient if there are valid grades for it
+    if (validGrades.length > 0) {
+      const groupName = coefficientItem.CoefficientName;
 
-  // Filter out any coefficient items that might have NaN as average
-  const validCoefficients = coefficientsArray.filter(
-    (item) => !isNaN(item.average) && item.average !== null,
-  );
+      if (!coefficientGroups.has(groupName)) {
+        coefficientGroups.set(groupName, []);
+      }
 
-  // Calculate final weighted average using only valid coefficients
-  const totalWeightedSum = validCoefficients.reduce(
-    (sum, item) => sum + item.average * item.coefficient,
-    0,
-  );
+      coefficientGroups.get(groupName)!.push({
+        coefficient: coefficientItem.Coefficient,
+        grades: validGrades,
+      });
+    }
+  });
 
-  const totalWeight = validCoefficients.reduce(
-    (sum, item) => sum + item.coefficient,
-    0,
-  );
+  // Calculate weighted sum and total weight across all coefficient groups
+  let totalWeightedSum = 0;
+  let totalWeight = 0;
 
-  // Return weighted average, or 0 if there are no valid coefficients
+  for (const [groupName, coefficientItems] of coefficientGroups.entries()) {
+    for (const item of coefficientItems) {
+      // Calculate average grade for this specific coefficient
+      const averageGrade =
+        item.grades.reduce((sum, grade) => sum + grade, 0) / item.grades.length;
+
+      // Add to weighted sum and total weight
+      totalWeightedSum += averageGrade * item.coefficient;
+      totalWeight += item.coefficient;
+    }
+  }
+
+  // Return weighted average, or 0 if there are no valid grades
   return totalWeight > 0 ? totalWeightedSum / totalWeight : 0;
 };
-
-//Average calculation
-// let coefficientsArray: { average: number; coefficient: number }[] = [];
-// studentCourseGrades.forEach((coeficiente) => {
-//   let coefficientAverage = 0;
-//   coeficiente.StudentCourseGrades.forEach((studentCourseGrade) => {
-//     coefficientAverage = +coefficientAverage + +studentCourseGrade.Grade;
-//   });
-//   coefficientsArray.push({
-//     average: coefficientAverage / coeficiente.StudentCourseGrades.length,
-//     coefficient: coeficiente.Coefficient,
-//   });
-// });
-
-// console.log("coefficientsArray", coefficientsArray);
-// let average = 0;
-// coefficientsArray.forEach((coefficient) => {
-//   average = average + coefficient.average * coefficient.coefficient;
-// });

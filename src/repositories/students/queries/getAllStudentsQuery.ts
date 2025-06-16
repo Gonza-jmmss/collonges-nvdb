@@ -29,6 +29,7 @@ const getAllStudentsQuery = async (params: getAllStudentsQueryParamsType) => {
         select: {
           PersonId: true,
           AlternativeName: true,
+          FirstName: true,
           DBaseCode: true,
         },
       },
@@ -44,6 +45,7 @@ const getAllStudentsQuery = async (params: getAllStudentsQueryParamsType) => {
           Name: true,
         },
       },
+      Users: true,
     },
   });
 
@@ -54,6 +56,15 @@ const getAllStudentsQuery = async (params: getAllStudentsQueryParamsType) => {
     DBaseCode: student.Persons?.DBaseCode,
     YearPeriodId: student.YearPeriodId,
     YearPeriodName: student.YearPeriods.Name,
+    HasUser: student.Users ? student.Users.length > 0 : false,
+    FirstCredentials: {
+      UserName:
+        student.Users && student.Users.length > 0
+          ? student.Users[0] && student.Users[0].UserName
+          : null,
+      StudentId: student.StudentId,
+      UserFirstName: student.Persons?.FirstName,
+    },
   }));
 
   return res;

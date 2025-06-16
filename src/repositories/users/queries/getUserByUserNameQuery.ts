@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 const getUserByUserNameQuery = async (userName: string) => {
   return await prisma.users.findFirstOrThrow({
-    where: { UserName: userName },
+    where: { UserName: userName, IsEnabled: true },
     include: {
       Roles: true,
     },

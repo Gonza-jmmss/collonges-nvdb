@@ -247,6 +247,7 @@ model Students {
   CreatedAt       DateTime         @default(now())
   IsEnabled       Boolean
   YearPeriodId    Int
+  CreditsType     Int?
   Alumins         Alumins[]
   Matriculations  Matriculations[]
   StudentCourses  StudentCourses[]
@@ -256,6 +257,7 @@ model Students {
   Regimes         Regimes?         @relation(fields: [RegimeId], references: [RegimeId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Students_Regimes")
   StudentTypes    StudentTypes     @relation(fields: [StudentTypeId], references: [StudentTypeId], onUpdate: NoAction, map: "FK_Students_StudentTypes")
   YearPeriods     YearPeriods      @relation(fields: [YearPeriodId], references: [YearPeriodId], onUpdate: NoAction, map: "FK_Students_YearPeriods")
+  Users           Users[]
 
   @@schema("Students")
 }
@@ -304,9 +306,11 @@ model Users {
   CreatedAt           DateTime              @default(now())
   RoleId              Int
   IsEnabled           Boolean
+  StudentId           Int?
   StudentCourseGrades StudentCourseGrades[]
   TeacherCourses      TeacherCourses[]
   Roles               Roles                 @relation(fields: [RoleId], references: [RoleId], onUpdate: NoAction, map: "FK_Users_Roles")
+  Students            Students?             @relation(fields: [StudentId], references: [StudentId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Users_Students")
 
   @@schema("Users")
 }
@@ -334,6 +338,7 @@ model RoleModuleElements {
   UpdatedAt           DateTime?
   CreatedAt           DateTime        @default(now())
   ModuleId            Int?
+  IsShortcut          Boolean?
   ModuleElements      ModuleElements? @relation(fields: [ModuleElementId], references: [ModuleElementId], onDelete: NoAction, onUpdate: NoAction, map: "FK_RoleModuleElements_ModuleElements")
   Modules             Modules?        @relation(fields: [ModuleId], references: [ModuleId], onDelete: NoAction, onUpdate: NoAction, map: "FK_RoleModuleElements_Modules")
   Roles               Roles           @relation(fields: [RoleId], references: [RoleId], onUpdate: NoAction, map: "FK_RoleModuleElements_Roles")
@@ -434,6 +439,7 @@ model StudentCourseGrades {
   UpdatedAt           DateTime?
   CreatedAt           DateTime          @default(now())
   Description         String            @db.NVarChar(255)
+  ActivityDate        DateTime
   GradeCoefficients   GradeCoefficients @relation(fields: [GradeCoefficientId], references: [GradeCoefficientId], onUpdate: NoAction, map: "FK_StudentCourseGrades_GradeCoefficients")
   StudentCourses      StudentCourses    @relation(fields: [StudentCourseId], references: [StudentCourseId], onUpdate: NoAction, map: "FK_StudentCourseGrades_StudentCourses")
   Users               Users             @relation(fields: [UserId], references: [UserId], onUpdate: NoAction, map: "FK_StudentCourseGrades_Users")

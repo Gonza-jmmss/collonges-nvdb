@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { StudentCourseMapViewModel } from "@/repositories/reports/viewModels/StudentNotesViewModel";
 import translateGrade from "@/functions/translateGrade";
+import { CreditsTypeEnum } from "@/enum/creditsTypeEnum";
 
 const prisma = new PrismaClient();
 
@@ -18,6 +19,7 @@ const getQuarterNotesByStudentId = async (studentId: number) => {
       },
       Colleges: true,
       StudentCourses: {
+        orderBy: { ScholarPeriodId: "asc" },
         where: {
           Note: { not: null },
         },
@@ -59,6 +61,7 @@ const getQuarterNotesByStudentId = async (studentId: number) => {
     BirthCountryEn: query?.Persons.Countries?.NameEnglish,
     BirthCity: query?.Persons.BirthCity,
     CollegeAbbreviation: query?.Colleges?.Abbreviation,
+    StudentCreditsType: CreditsTypeEnum[query?.CreditsType || 0],
     CourseNotes: query?.StudentCourses.map(
       (studentCourse: StudentCourseMapViewModel) => ({
         CourseCode: studentCourse.Courses.CourseCode,

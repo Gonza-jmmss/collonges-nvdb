@@ -280,8 +280,8 @@ export default function YearPeriodsTable({
         closeModal={() => setOpenDeleteModalValidation(false)}
       >
         <div className="flex w-full flex-col items-center space-y-1">
-          <div className="mt-2 text-lg font-semibold">{`${t.yearPeriods.delteModalValidation.title}`}</div>
-          <div>{`${t.yearPeriods.delteModalValidation.description}`}</div>
+          <div className="mt-2 text-lg font-semibold">{`${t.yearPeriods.deleteModalValidation.title}`}</div>
+          <div>{`${t.yearPeriods.deleteModalValidation.description}`}</div>
         </div>
         <div className="mt-5 flex w-full justify-center space-x-5">
           <Button

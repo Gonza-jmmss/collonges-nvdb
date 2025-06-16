@@ -58,6 +58,7 @@ export default function ScholarPeriodForm({
     },
     onSubmit: async ({ value }) => {
       // console.log("formData", value);
+      setIsPending(true);
       action === "create" && createScholarPeriod(value);
       action === "edit" && updateScholarPeriod(value);
     },

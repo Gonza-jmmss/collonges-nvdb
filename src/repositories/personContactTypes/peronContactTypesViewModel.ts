@@ -1,6 +1,7 @@
 export type ContactTypeViewModel = {
   ContactTypeId: number;
   Name: string;
+  IsDeletable?: boolean;
 };
 
 export type ContactTypesViewModel = {
@@ -8,4 +9,11 @@ export type ContactTypesViewModel = {
   Name: string;
   UpdatedAt: Date | null;
   CreatedAt: Date;
+  Contacts: {
+    ContactId: number;
+    PersonId: number;
+    ContactTypeId: number;
+    UpdatedAt: Date | null;
+    CreatedAt: Date;
+  }[];
 };

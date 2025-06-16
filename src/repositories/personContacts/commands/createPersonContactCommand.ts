@@ -6,10 +6,15 @@ import { z } from "zod";
 
 const prisma = new PrismaClient();
 
-type PersonContactParams = z.infer<typeof PersonContatcSchema>;
+type PersonContactParams = z.infer<typeof PersonContatcSchema> & {
+  transactionClient?: any;
+};
 
 const createPersonContactCommand = async (params: PersonContactParams) => {
-  const command = await prisma.contacts.create({
+  // Use the transaction client if provided, otherwise use the default prisma client
+  const client = params.transactionClient || prisma;
+
+  const command = await client.contacts.create({
     data: {
       ContactId: params.ContactId,
       PersonId: params.PersonId,

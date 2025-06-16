@@ -1,19 +1,27 @@
 "use server";
 
+import getAllRoleModuleElementsByRoleIdQuery from "../queries/getAllRoleModuleElementsByRoleIdQuery";
+
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 type DeleteRoleModuleElementParams = {
-  RoleModuleElementId: number;
+  RoleId: number;
 };
 
 const deleteRoleModuleElementCommand = async (
   params: DeleteRoleModuleElementParams,
 ) => {
-  return await prisma.roleModuleElements.delete({
+  const roleModuleElements = await getAllRoleModuleElementsByRoleIdQuery(
+    params.RoleId,
+  );
+
+  return await prisma.roleModuleElements.deleteMany({
     where: {
-      RoleModuleElementId: params.RoleModuleElementId,
+      RoleModuleElementId: {
+        in: roleModuleElements.map((x) => x.RoleModuleElementId),
+      },
     },
   });
 };

@@ -19,6 +19,7 @@ export type QuarterNotesResultViewModel = {
   BirthCountryEn: string | null | undefined;
   CollegeAbbreviation: string | null | undefined;
   BirthCity: string | null;
+  StudentCreditsType: string;
   CourseNotes: {
     CourseCode: string | null;
     Quarter: number | null;

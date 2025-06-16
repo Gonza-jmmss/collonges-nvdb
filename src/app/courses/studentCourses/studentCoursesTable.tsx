@@ -235,7 +235,7 @@ export default function StudentCoursesTable({
             options={scholarYears}
             textAttribute="Name"
             valueAttribute="ScholarYearId"
-            placeholder={t.courses.form.periodNumber}
+            placeholder={t.studentCourses.form.scholarYearId}
             itemSelected={scholarYears.find(
               (x) => x.ScholarYearId === scholarYearSelected,
             )}
@@ -251,7 +251,7 @@ export default function StudentCoursesTable({
             options={scholarPeriods}
             textAttribute="Name"
             valueAttribute="ScholarPeriodId"
-            placeholder={t.courses.form.periodNumber}
+            placeholder={t.studentCourses.form.scholarPeriodId}
             itemSelected={scholarPeriods.find(
               (x) => x.ScholarPeriodId === scholarPeriodSelected,
             )}
@@ -272,7 +272,7 @@ export default function StudentCoursesTable({
             )
           }
         >
-          <span>{t.courses.create}</span>
+          <span>{t.studentCourses.create}</span>
         </Button>
       </div>
       <Table

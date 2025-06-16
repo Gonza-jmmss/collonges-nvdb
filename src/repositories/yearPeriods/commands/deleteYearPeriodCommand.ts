@@ -1,7 +1,7 @@
 "use server";
 
 import { PrismaClient } from "@prisma/client";
-import getStudentsByYearPeriodId from "@/repositories/students/queries/getStudentsByYearPeriodIdQuery";
+import getStudentsByYearPeriodIdQuery from "@/repositories/students/queries/getStudentsByYearPeriodIdQuery";
 
 const prisma = new PrismaClient();
 
@@ -10,7 +10,7 @@ type DeleteYearPeriodParams = {
 };
 
 const deleteYearPeriodCommand = async (params: DeleteYearPeriodParams) => {
-  const scholarPeriodsByYearId = await getStudentsByYearPeriodId({
+  const scholarPeriodsByYearId = await getStudentsByYearPeriodIdQuery({
     YearPeriodId: params.YearPeriodId,
   });
 

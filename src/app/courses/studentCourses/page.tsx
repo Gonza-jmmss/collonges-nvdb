@@ -40,6 +40,9 @@ export default async function StudentsCoursesPage({
   const studentCourses = await getAllStudentCoursesQuery({
     ScholarYearId: scholarYearIdParam,
     ScholarPeriodId: scholarPeriodIdParam,
+    PeriodNumber: scholarPeriods.find(
+      (x) => x.ScholarPeriodId === scholarPeriodIdParam,
+    )?.Number,
   });
 
   const scholarPeriodsTous = [

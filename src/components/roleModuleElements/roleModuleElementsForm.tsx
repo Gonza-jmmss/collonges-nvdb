@@ -3,24 +3,21 @@
 import { useEffect, useState } from "react";
 import createRoleModuleElementCommand from "@/repositories/roleModuleElements/commands/createRoleModuleElementCommand";
 import updateRoleModuleElementCommand from "@/repositories/roleModuleElements/commands/updateRoleModuleElementCommand";
-import { RoleModuleElementViewModel } from "@/repositories/roleModuleElements/roleModuleElementsViewModel";
+import { RoleModuleElementSchema } from "@/zodSchemas/roleModuleElementSchema";
+import { RoleModuleElementsGroupedViewModel } from "@/repositories/roleModuleElements/roleModuleElementsViewModel";
 import { ModulesViewModel } from "@/repositories/modules/modulesViewModel";
 import { ModuleElementsViewModel } from "@/repositories/moduleElements/moduleElementsViewModel";
 import { RolesViewModel } from "@/repositories/roles/rolesViewModel";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import Combobox from "@/components/common/combobox";
+import Icon from "@/components/common/icon";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import frFR from "@/lang/fr-FR";
 
-const RoleModuleElementSchema = z.object({
-  RoleModuleElementId: z.number(),
-  ModuleElementId: z.number().nullable(),
-  ModuleId: z.number().nullable(),
-  RoleId: z.number(),
-});
 type RoleModuleElementFormData = z.infer<typeof RoleModuleElementSchema>;
 
 export default function RoleModuleElementForm({
@@ -28,12 +25,14 @@ export default function RoleModuleElementForm({
   modules,
   moduleElements,
   roles,
+  rolesWithoutModuleElements,
   action,
 }: {
-  roleModuleElementData: RoleModuleElementViewModel | null;
+  roleModuleElementData: RoleModuleElementsGroupedViewModel | null;
   modules: ModulesViewModel[];
   moduleElements: ModuleElementsViewModel[];
   roles: RolesViewModel[];
+  rolesWithoutModuleElements: RolesViewModel[];
   action: string;
 }) {
   const t = frFR;
@@ -44,33 +43,26 @@ export default function RoleModuleElementForm({
 
   const form = useForm<RoleModuleElementFormData>({
     defaultValues: {
-      RoleModuleElementId:
+      RoleId: action !== "create" ? (roleModuleElementData?.RoleId ?? 0) : 0,
+      Modules:
         action !== "create"
-          ? roleModuleElementData
-            ? roleModuleElementData.RoleModuleElementId
-            : 0
-          : 0,
-      ModuleElementId:
-        action !== "create"
-          ? roleModuleElementData
-            ? roleModuleElementData.ModuleElementId
-            : null
+          ? (roleModuleElementData?.Modules?.map((module) => ({
+              RoleModuleElementId: module.RoleModuleElementId,
+              ModuleId: module.ModuleId,
+            })) ?? null)
           : null,
-      ModuleId:
+      ModuleElements:
         action !== "create"
-          ? roleModuleElementData
-            ? roleModuleElementData.ModuleId
-            : null
+          ? (roleModuleElementData?.ModuleElements?.map((moduleElement) => ({
+              RoleModuleElementId: moduleElement.RoleModuleElementId,
+              ModuleElementId: moduleElement.ModuleElementId,
+              IsShortcut: moduleElement.IsShortcut,
+            })) ?? null)
           : null,
-      RoleId:
-        action !== "create"
-          ? roleModuleElementData
-            ? roleModuleElementData.RoleId
-            : 0
-          : 0,
     },
     onSubmit: async ({ value }) => {
       // console.log("form", value);
+      setIsPending(true);
       action === "create" && createRoleModuleElement(value);
       action === "edit" && updateRoleModuleElement(value);
     },
@@ -87,7 +79,7 @@ export default function RoleModuleElementForm({
       }
       toast({
         title: `${t.roleModuleElements.notifications.createSuccess}`,
-        description: `${t.roleModuleElements.title} : ${response.ModuleId !== null ? response.ModuleId : ""}${response.ModuleElementId !== null ? response.ModuleElementId : ""}-${response.RoleId}`,
+        description: `${t.roleModuleElements.title} : ${roles.find((x) => x.RoleId === formData.RoleId)?.Name}`,
       });
 
       router.push("/settings/roleModuleElements");
@@ -114,7 +106,8 @@ export default function RoleModuleElementForm({
       }
       toast({
         title: `${t.roleModuleElements.notifications.updateSuccess}`,
-        description: `${t.roleModuleElements.title} : ${response.ModuleId !== null ? response.ModuleId : ""}${response.ModuleElementId !== null ? response.ModuleElementId : ""}-${response.RoleId}`,
+        // description: `${t.roleModuleElements.title} : ${response.ModuleId !== null ? response.ModuleId : ""}${response.ModuleElementId !== null ? response.ModuleElementId : ""}-${response.RoleId}`,
+        description: `${t.roleModuleElements.title} : ${roles.find((x) => x.RoleId === formData.RoleId)?.Name}`,
       });
 
       router.push("/settings/roleModuleElements");
@@ -130,22 +123,22 @@ export default function RoleModuleElementForm({
     }
   };
 
-  const elementType = [
-    { Name: t.moduleElements.title, Value: 1 },
-    { Name: t.modules.title, Value: 2 },
-  ];
-  const [elementTypeSelected, setElementTypeSelected] = useState({
-    Name: "",
-    Value: 0,
-  });
+  // const elementType = [
+  //   { Name: t.moduleElements.title, Value: 1 },
+  //   { Name: t.modules.title, Value: 2 },
+  // ];
+  // const [elementTypeSelected, setElementTypeSelected] = useState({
+  //   Name: "",
+  //   Value: 0,
+  // });
 
-  useEffect(() => {
-    if (elementTypeSelected.Value === 1) {
-      form.setFieldValue("ModuleId", null);
-    } else if (elementTypeSelected.Value === 2) {
-      form.setFieldValue("ModuleElementId", null);
-    }
-  }, [elementTypeSelected]);
+  // useEffect(() => {
+  //   if (elementTypeSelected.Value === 1) {
+  //     form.setFieldValue("ModuleId", null);
+  //   } else if (elementTypeSelected.Value === 2) {
+  //     form.setFieldValue("ModuleElementId", null);
+  //   }
+  // }, [elementTypeSelected]);
 
   return (
     <form
@@ -156,58 +149,7 @@ export default function RoleModuleElementForm({
       }}
       className="flex flex-col space-y-5"
     >
-      <div className="space-y-1">
-        <span>{t.roleModuleElements.form.chooseElementType}</span>
-        <Combobox
-          options={elementType}
-          textAttribute="Name"
-          valueAttribute="Value"
-          placeholder={t.roleModuleElements.form.chooseElementType}
-          itemSelected={elementType.find(
-            (x) => x.Value === elementTypeSelected.Value,
-          )}
-          setItemSelected={(x: { Name: string; Value: number }) => {
-            setElementTypeSelected(x);
-          }}
-          disabled={action === "view"}
-          showSearch
-          notClearable
-        />
-      </div>
-      <div className="space-y-1">
-        <form.Field
-          name="ModuleElementId"
-          children={(field) => (
-            <>
-              <span
-                className={`${elementTypeSelected.Name !== t.moduleElements.title ? "text-neutral-500" : ""}`}
-              >
-                {t.roleModuleElements.form.moduleElementId}
-              </span>
-              <Combobox
-                options={moduleElements}
-                textAttribute="Name"
-                valueAttribute="ModuleElementId"
-                placeholder={t.roleModuleElements.form.moduleElementId}
-                itemSelected={moduleElements.find(
-                  (x) => x.ModuleElementId === field.state.value,
-                )}
-                setItemSelected={(x: {
-                  ModuleElementId: number;
-                  Name: string;
-                }) => {
-                  field.handleChange(x && x.ModuleElementId);
-                }}
-                disabled={
-                  action === "view" ||
-                  elementTypeSelected.Name !== t.moduleElements.title
-                }
-                showSearch
-              />
-            </>
-          )}
-        />
-      </div>
+      {/* 
       <div className="space-y-1">
         <form.Field
           name="ModuleId"
@@ -238,15 +180,25 @@ export default function RoleModuleElementForm({
             </>
           )}
         />
-      </div>
+      </div> */}
       <div className="space-y-1">
         <form.Field
           name="RoleId"
+          validators={{
+            onSubmitAsync: (value) => {
+              if (value === null || value === undefined) {
+                return t.roleModuleElements.validations.roleValidation;
+              }
+              return z.number().min(1).safeParse(value.value).success
+                ? undefined
+                : t.roleModuleElements.validations.roleValidation;
+            },
+          }}
           children={(field) => (
             <>
               <span>{t.roleModuleElements.form.roleId}</span>
               <Combobox
-                options={roles}
+                options={rolesWithoutModuleElements}
                 textAttribute="Name"
                 valueAttribute="RoleId"
                 placeholder={t.roleModuleElements.form.roleId}
@@ -254,10 +206,189 @@ export default function RoleModuleElementForm({
                 setItemSelected={(x: { RoleId: number; Name: string }) => {
                   field.handleChange(x && x.RoleId);
                 }}
-                disabled={action === "view"}
+                disabled={action !== "create"}
                 showSearch
               />
+              <div className="text-xs text-red-500">
+                {field.state.meta.errors
+                  ? field.state.meta.errors.join(", ")
+                  : null}
+              </div>
             </>
+          )}
+        />
+      </div>
+      <div className="space-y-1">
+        <form.Field
+          name="Modules"
+          mode="array"
+          children={(field) => (
+            <div className="flex flex-col space-y-5">
+              <div className="grid grid-cols-6">
+                <span className="col-span-6">
+                  {t.roleModuleElements.form.moduleId}
+                </span>
+                <div className="col-span-6 mt-2">
+                  <Combobox
+                    options={modules}
+                    textAttribute={"Name"}
+                    valueAttribute="ModuleId"
+                    placeholder={t.roleModuleElements.form.moduleId}
+                    setItemSelected={(x: { ModuleId: number }) => {
+                      if (
+                        !field.state.value
+                          ?.map((v) => v.ModuleId)
+                          .includes(x.ModuleId)
+                      )
+                        field.pushValue({
+                          RoleModuleElementId: null,
+                          ModuleId: x && x.ModuleId,
+                        });
+                    }}
+                    disabled={action === "view"}
+                    showSearch
+                    notClearable
+                  />
+                </div>
+              </div>
+              <div className="space-y-3 rounded-md border bg-muted/50 p-2">
+                <div className="grid grid-cols-12">
+                  <div className="col-span-11 text-sm font-semibold">
+                    {t.roleModuleElements.columns.moduleName}
+                  </div>
+                  {/* <div className="col-span-6 text-sm font-semibold">
+                    {t.roleModuleElements.columns.path}
+                  </div> */}
+                </div>
+                {field.state.value
+                  ?.map((module, index) => (
+                    <div
+                      key={index}
+                      className="col-span-1 rounded-md border border-foreground/30 p-2 md:col-span-2"
+                    >
+                      <div className="grid grid-cols-12">
+                        <div className="col-span-11 text-sm">
+                          {
+                            modules.find((x) => x.ModuleId === module.ModuleId)
+                              ?.Name
+                          }
+                        </div>
+                        {/* <div className="col-span-6 text-sm">
+                          {` ${
+                            modules.find((x) => x.ModuleId === module.ModuleId)
+                              ?.Path
+                          } `}
+                        </div> */}
+                        <Icon
+                          name="MdClose"
+                          className="col-span-1 cursor-pointer place-self-center text-xl hover:text-primary"
+                          onClick={() => field.removeValue(index)}
+                        />
+                      </div>
+                    </div>
+                  ))
+                  .reverse()}
+              </div>
+            </div>
+          )}
+        />
+      </div>
+      <div className="space-y-1">
+        <form.Field
+          name="ModuleElements"
+          mode="array"
+          children={(field) => (
+            <div className="flex flex-col space-y-5">
+              <div className="grid grid-cols-6">
+                <span className="col-span-6">
+                  {t.roleModuleElements.form.moduleElementId}
+                </span>
+                <div className="col-span-6 mt-2">
+                  <Combobox
+                    options={moduleElements}
+                    textAttribute={["ModuleName", "Name"]}
+                    valueAttribute="ModuleElementId"
+                    placeholder={t.roleModuleElements.form.moduleElementId}
+                    setItemSelected={(x: { ModuleElementId: number }) => {
+                      if (
+                        !field.state.value
+                          ?.map((v) => v.ModuleElementId)
+                          .includes(x.ModuleElementId)
+                      )
+                        field.pushValue({
+                          RoleModuleElementId: null,
+                          ModuleElementId: x && x.ModuleElementId,
+                          IsShortcut: false,
+                        });
+                    }}
+                    disabled={action === "view"}
+                    showSearch
+                    notClearable
+                  />
+                </div>
+              </div>
+              <div className="space-y-3 rounded-md border bg-muted/50 p-2">
+                <div className="grid grid-cols-12">
+                  <div className="col-span-4 text-sm font-semibold">
+                    {t.roleModuleElements.columns.moduleElementName}
+                  </div>
+                  <div className="col-span-5 text-sm font-semibold">
+                    {t.roleModuleElements.columns.moduleName}
+                  </div>
+                  <div className="col-span-2 text-sm font-semibold">
+                    {t.roleModuleElements.form.isShortCut}
+                  </div>
+                </div>
+                {field.state.value
+                  ?.map((moduleElement, index) => (
+                    <div
+                      key={index}
+                      className="col-span-1 rounded-md border border-foreground/30 p-2 md:col-span-2"
+                    >
+                      <div className="grid grid-cols-12">
+                        <div className="col-span-4 text-sm">
+                          {
+                            moduleElements.find(
+                              (x) =>
+                                x.ModuleElementId ===
+                                moduleElement.ModuleElementId,
+                            )?.Name
+                          }
+                        </div>
+                        <div className="col-span-5 text-sm">
+                          {` ${
+                            moduleElements.find(
+                              (x) =>
+                                x.ModuleElementId ===
+                                moduleElement.ModuleElementId,
+                            )?.ModuleName
+                          } `}
+                        </div>
+                        <div className="col-span-2 flex justify-center text-sm">
+                          <form.Field
+                            name={`ModuleElements[${index}].IsShortcut`}
+                            children={(field) => (
+                              <>
+                                <Switch
+                                  checked={field.state.value || false}
+                                  onCheckedChange={(e) => field.handleChange(e)}
+                                  disabled={action === "view"}
+                                />
+                              </>
+                            )}
+                          />
+                        </div>
+                        <Icon
+                          name="MdClose"
+                          className="col-span-1 cursor-pointer place-self-center text-xl hover:text-primary"
+                          onClick={() => field.removeValue(index)}
+                        />
+                      </div>
+                    </div>
+                  ))
+                  .reverse()}
+              </div>
+            </div>
           )}
         />
       </div>

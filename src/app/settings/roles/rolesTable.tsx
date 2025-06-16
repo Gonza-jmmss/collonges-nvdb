@@ -5,10 +5,8 @@ import deleteRoleCommand from "@/repositories/roles/commands/deleteRoleCommand";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
-import Link from "next/link";
 import { RolesViewModel } from "@/repositories/roles/rolesViewModel";
 import Icon from "@/components/common/icon";
-import isValidIconName from "@/functions/isValidIconName";
 import DeleteModal from "@/components/common/deleteModal";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -63,34 +61,28 @@ export default function RolesTable({
             className="flex space-x-1"
             onClick={(event) => event.stopPropagation()}
           >
-            <Link
-              href={`/settings/roles/${row.row.original.RoleId}?action="edit"`}
-              className="flex flex-col space-y-2 hover:text-primary"
-            >
-              <Icon
-                name={
-                  isValidIconName("MdEdit")
-                    ? "MdEdit"
-                    : "MdOutlineNotInterested"
-                }
-                className="cursor-pointer text-xl"
-              />
-            </Link>
-            <div
-              onClick={() => {
-                setOpenModal(true);
-                setSelectedRoleToDelete(row.row.original.RoleId);
-              }}
-            >
-              <Icon
-                name={
-                  isValidIconName("MdDelete")
-                    ? "MdDelete"
-                    : "MdOutlineNotInterested"
-                }
-                className="cursor-pointer text-xl"
-              />
-            </div>
+            <Icon
+              name={"MdEdit"}
+              className="cursor-pointer text-xl hover:text-primary"
+              onClick={() =>
+                router.push(
+                  `/settings/roles/${row.row.original.RoleId}?action="edit"`,
+                )
+              }
+            />
+            {row.row.original.IsEnabled && (
+              <div
+                onClick={() => {
+                  setOpenModal(true);
+                  setSelectedRoleToDelete(row.row.original.RoleId);
+                }}
+              >
+                <Icon
+                  name={"MdNotInterested"}
+                  className="cursor-pointer text-xl"
+                />
+              </div>
+            )}
           </div>
         ),
       },

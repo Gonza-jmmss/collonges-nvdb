@@ -62,6 +62,13 @@ export const authConfig = {
               console.error("User not found", username);
               return null;
             }
+
+            // Check if user's role is enabled
+            if (!user.Roles.IsEnabled) {
+              console.error("User role is disabled", username);
+              return null;
+            }
+
             // Validate if password matches
             const passwordsMatch = await bcrypt.compare(
               password,

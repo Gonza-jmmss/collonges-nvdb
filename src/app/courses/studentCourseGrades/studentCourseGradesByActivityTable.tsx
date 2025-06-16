@@ -121,14 +121,17 @@ export default function StudentCoruseGradesByActivityTable({
             text={t.studentCourseGrades.columnsByActivity.gradeCoefficientName}
           />
         ),
+        cell: (row) => (
+          <span>{`${row.row.original.GradeCoefficientName}, ${row.row.original.GradeCoefficientPercentage}%`}</span>
+        ),
         filterFn: "equalsString",
-        size: 80,
+        // size: 80,
       },
       {
-        accessorKey: "CreatedAt",
-        id: "CreatedAt",
+        accessorKey: "ActivityDate",
+        id: "ActivityDate",
         header: () => (
-          <Header text={t.studentCourseGrades.columnsByActivity.createdAt} />
+          <Header text={t.studentCourseGrades.columnsByActivity.activityDate} />
         ),
         filterFn: "equalsString",
         cell: (row) =>
@@ -168,7 +171,7 @@ export default function StudentCoruseGradesByActivityTable({
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() => {
                 router.push(
-                  `/courses/studentCourseGrades/edit?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&levelId=${levelIdSelected}&courseId=${row.row.original.CourseId}&description=${row.row.original.Description}&createdAt=${encodeURIComponent(row.row.original.CreatedAt.toUTCString())}&tab=${tabValue}`,
+                  `/courses/studentCourseGrades/edit?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&levelId=${levelIdSelected}&courseId=${row.row.original.CourseId}&description=${row.row.original.Description}&activityDate=${encodeURIComponent(row.row.original.ActivityDate.toUTCString())}&tab=${tabValue}`,
                 );
               }}
             />
@@ -363,8 +366,8 @@ export default function StudentCoruseGradesByActivityTable({
               false && (
               <>
                 <div className="flex w-full flex-col items-center space-y-1">
-                  <div className="mt-2 text-lg font-semibold">{`${t.studentCourseGrades.delteModalValidation.title}`}</div>
-                  <div>{`${t.studentCourseGrades.delteModalValidation.description}`}</div>
+                  <div className="mt-2 text-lg font-semibold">{`${t.studentCourseGrades.deleteModalValidation.title}`}</div>
+                  <div>{`${t.studentCourseGrades.deleteModalValidation.description}`}</div>
                 </div>
                 <div className="mt-5 flex w-full justify-center space-x-5">
                   <Button

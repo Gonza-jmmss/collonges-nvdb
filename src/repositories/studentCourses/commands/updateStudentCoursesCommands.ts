@@ -69,17 +69,19 @@ const updateStudentCourseCommand = async (params: StudentCorseParams) => {
     });
 
   // create studentCourses
-  const createCourses = prisma.studentCourses.createMany({
+  const createCourses = await prisma.studentCourses.createMany({
     data: studentCourseToCreate,
   });
 
   // delete StudentCourseGrades
-  const deleteStudentCourseGrades = prisma.studentCourseGrades.deleteMany({
-    where: { StudenCourseGradeId: { in: studentCourseGradesIdsToDelete } },
-  });
+  const deleteStudentCourseGrades = await prisma.studentCourseGrades.deleteMany(
+    {
+      where: { StudenCourseGradeId: { in: studentCourseGradesIdsToDelete } },
+    },
+  );
 
   // delete Courses with no grades
-  const deleteCourses = prisma.studentCourses.deleteMany({
+  const deleteCourses = await prisma.studentCourses.deleteMany({
     where: {
       StudentId: params.StudentId,
       CourseId: {
@@ -89,7 +91,7 @@ const updateStudentCourseCommand = async (params: StudentCorseParams) => {
   });
 
   // transaction for update data
-  const transaction = await prisma.$transaction([
+  const transaction = await prisma.$transaction(async () => [
     createCourses,
     deleteStudentCourseGrades,
     deleteCourses,

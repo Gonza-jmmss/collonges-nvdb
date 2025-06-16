@@ -43,6 +43,7 @@ export default function ScholarYearForm({
     },
     onSubmit: async ({ value }) => {
       //   console.log("formData", value);
+      setIsPending(true);
       action === "create" && createScholarYear(value);
       action === "edit" && updateScholarYear(value);
     },

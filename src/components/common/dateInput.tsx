@@ -223,7 +223,7 @@ export default function DateInput({
           max={12}
           min={1}
           maxLength={2}
-          placeholder={`${t.shared.dateInput.moth}`}
+          placeholder={`${t.shared.dateInput.month}`}
           className="w-full"
           value={dateValues.Month ?? ""}
           onChange={handleChange}
