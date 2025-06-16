@@ -53,20 +53,13 @@ export default function CoursesTable({
 
   const columns = useMemo<ColumnDef<CoursesViewModel, any>[]>(
     () => [
-      {
-        accessorKey: "CourseId",
-        id: "CourseId",
-        header: () => <Header text={t.courses.columns.courseId} />,
-        filterFn: "equalsString",
-        size: 10,
-      },
-      {
-        accessorKey: "Name",
-        id: "Name",
-        header: () => <Header text={t.courses.columns.name} />,
-        filterFn: "equalsString",
-        size: 200,
-      },
+      // {
+      //   accessorKey: "CourseId",
+      //   id: "CourseId",
+      //   header: () => <Header text={t.courses.columns.courseId} />,
+      //   filterFn: "equalsString",
+      //   size: 10,
+      // },
       {
         accessorKey: "CourseCode",
         id: "CourseCode",
@@ -75,6 +68,13 @@ export default function CoursesTable({
           x.getValue().includes("/") ? x.getValue().slice(0, -2) : x.getValue(),
         filterFn: "equalsString",
         size: 30,
+      },
+      {
+        accessorKey: "Name",
+        id: "Name",
+        header: () => <Header text={t.courses.columns.name} />,
+        filterFn: "equalsString",
+        size: 200,
       },
       {
         accessorKey: "PeriodNumber",
