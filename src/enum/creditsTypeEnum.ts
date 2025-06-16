@@ -1,5 +1,6 @@
 export enum CreditsTypeEnum {
   "Non applicable",
-  "Universitaire",
-  "Secondaire",
+  "Universitary",
+  "Secondary",
+  "Universitary and Secondary",
 }
