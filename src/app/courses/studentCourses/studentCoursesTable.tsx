@@ -12,6 +12,7 @@ import {
   StudentCoursesViewModel,
   StudentCoursesExtendedViewModel,
 } from "@/repositories/studentCourses/studentCoursesViewModel";
+import { LevelsTableViewModel } from "@/repositories/levels/levelsViewModel";
 import { ScholarYearsViewModel } from "@/repositories/scholarYears/scholarYearsViewModel";
 import { ScholarPeriodsViewModel } from "@/repositories/scholarPeriods/scholarPeriodsViewModel";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -23,6 +24,9 @@ export default function StudentCoursesTable({
   scholarYears,
   scholarPeriodSelected,
   scholarPeriods,
+  scholarLevelSelected,
+  scholarLevels,
+  userRoleName,
   pageIndex,
   pageSize,
   urlParams,
@@ -32,6 +36,9 @@ export default function StudentCoursesTable({
   scholarYears: ScholarYearsViewModel[];
   scholarPeriodSelected: number;
   scholarPeriods: ScholarPeriodsViewModel[];
+  scholarLevelSelected: number | null;
+  scholarLevels: LevelsTableViewModel[];
+  userRoleName: string | undefined;
   pageIndex: number;
   pageSize: number;
   urlParams: { [key: string]: string | string[] | undefined };
@@ -154,16 +161,20 @@ export default function StudentCoursesTable({
             className="flex space-x-1"
             onClick={(event) => event.stopPropagation()}
           >
-            {row.row.original.IsEnabled && scholarPeriodSelected !== 0 && (
-              <Icon
-                name="MdEdit"
-                className="cursor-pointer text-xl hover:text-primary"
-                onClick={() =>
-                  router.push(
-                    `/courses/studentCourses/${row.row.original.StudentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&scholarYearId=${scholarYearSelected}`,
-                  )
-                }
-              />
+            {userRoleName !== "Professeur" && (
+              <>
+                {row.row.original.IsEnabled && scholarPeriodSelected !== 0 && (
+                  <Icon
+                    name="MdEdit"
+                    className="cursor-pointer text-xl hover:text-primary"
+                    onClick={() =>
+                      router.push(
+                        `/courses/studentCourses/${row.row.original.StudentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&scholarYearId=${scholarYearSelected}&scholarLevelId=${scholarLevelSelected}`,
+                      )
+                    }
+                  />
+                )}
+              </>
             )}
           </div>
         ),
@@ -172,6 +183,7 @@ export default function StudentCoursesTable({
     [
       scholarPeriodSelected,
       scholarYearSelected,
+      scholarLevelSelected,
       getPageIndexParam,
       getPageSizeParam,
     ],
@@ -230,12 +242,29 @@ export default function StudentCoursesTable({
   return (
     <div>
       <div className="flex items-center justify-end space-x-5">
+        <div className="w-[10rem]">
+          <Combobox
+            options={scholarLevels}
+            textAttribute="Name"
+            valueAttribute="LevelId"
+            placeholder={t.studentCourses.filters.scholarLevelId}
+            itemSelected={scholarLevels.find(
+              (x) => x.LevelId === scholarLevelSelected,
+            )}
+            setItemSelected={(x: LevelsTableViewModel) => {
+              handleUrlParameterChange(
+                "scholarLevelId",
+                `${x ? x.LevelId : null}`,
+              );
+            }}
+          />
+        </div>
         <div className="w-[15rem]">
           <Combobox
             options={scholarYears}
             textAttribute="Name"
             valueAttribute="ScholarYearId"
-            placeholder={t.studentCourses.form.scholarYearId}
+            placeholder={t.studentCourses.filters.scholarYearId}
             itemSelected={scholarYears.find(
               (x) => x.ScholarYearId === scholarYearSelected,
             )}
@@ -251,7 +280,7 @@ export default function StudentCoursesTable({
             options={scholarPeriods}
             textAttribute="Name"
             valueAttribute="ScholarPeriodId"
-            placeholder={t.studentCourses.form.scholarPeriodId}
+            placeholder={t.studentCourses.filters.scholarPeriodId}
             itemSelected={scholarPeriods.find(
               (x) => x.ScholarPeriodId === scholarPeriodSelected,
             )}
@@ -264,16 +293,18 @@ export default function StudentCoursesTable({
             notClearable
           />
         </div>
-        <Button
-          variant="outlineColored"
-          onClick={() =>
-            router.push(
-              `/courses/studentCourses/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}${scholarPeriodSelected ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&scholarYearId=${scholarYearSelected}`,
-            )
-          }
-        >
-          <span>{t.studentCourses.create}</span>
-        </Button>
+        {userRoleName !== "Professeur" && (
+          <Button
+            variant="outlineColored"
+            onClick={() =>
+              router.push(
+                `/courses/studentCourses/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}${scholarPeriodSelected ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&scholarYearId=${scholarYearSelected}&scholarLevelId=${scholarLevelSelected}`,
+              )
+            }
+          >
+            <span>{t.studentCourses.create}</span>
+          </Button>
+        )}
       </div>
       <Table
         columns={columns}

@@ -1,15 +1,15 @@
 import { PrismaClient } from "@prisma/client";
-import { StudentCourseGroupedByStudentMap } from "../studentCoursesViewModel";
+import { StudentCoursesByStudentIdMap } from "../studentCoursesViewModel";
 
 const prisma = new PrismaClient();
 
-type getStudentCoursesByStudentIdQueryParamsType = {
+type getStudentCoursesByStudentIdQueryParams = {
   StudentId: number;
   ScholarPeriodId: number;
 };
 
 const getStudentCoursesByStudentIdQuery = async (
-  params: getStudentCoursesByStudentIdQueryParamsType,
+  params: getStudentCoursesByStudentIdQueryParams,
 ) => {
   const query = await prisma.students.findFirstOrThrow({
     orderBy: [{ IsEnabled: "desc" }, { Persons: { AlternativeName: "asc" } }],
@@ -54,7 +54,7 @@ const getStudentCoursesByStudentIdQuery = async (
     StudentId: query.StudentId,
     AlternativeName: query.Persons.AlternativeName,
     StudentCourses: query.StudentCourses.map(
-      (studentCourse: StudentCourseGroupedByStudentMap) => ({
+      (studentCourse: StudentCoursesByStudentIdMap) => ({
         StudentCourseId: studentCourse.StudentCourseId,
         Note: studentCourse.Note,
         ScholarPeriodId: studentCourse.ScholarPeriodId,

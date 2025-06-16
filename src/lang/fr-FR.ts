@@ -423,11 +423,16 @@ export default {
       name: "Cours",
       courseCode: "Code cours",
     },
+    filters: {
+      scholarYearId: "Année scolaire",
+      scholarPeriodId: "Période",
+      scholarLevelId: "Niveau scolaire",
+    },
     form: {
       studentId: "Étudiant(e)",
       studentCourses: "Cours",
       addCourse: "Ajouter un cours",
-      scholarLevels: "Niveaux scolaires",
+      scholarLevels: "Niveau scolaire",
       courses: "Cours",
       coursePeriod: "Trimestre",
       scholarPeriodId: "Période",
@@ -685,7 +690,7 @@ export default {
     title: "Page des notes",
     studentCourseGrades: "Notes",
     create: "Ajouter des notes",
-    level: "Niveaux scolaires",
+    level: "Niveau scolaire",
     tabs: {
       orderedByActivity: "Trié par activité",
       orderedByStudent: "Trié par étudiant",

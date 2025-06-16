@@ -38,10 +38,69 @@ export type StudentCoursesGroupedByStudentMap = {
   Persons: {
     AlternativeName: string | null;
   };
-  StudentCourses: StudentCourseGroupedByStudentMap[];
+  StudentCourses: AllStudentCoursesMap[];
 };
 
-export type StudentCourseGroupedByStudentMap = {
+export type AllStudentCoursesMap = {
+  StudentCourseId: number;
+  StudentId: number;
+  CourseId: number;
+  Note: string | null;
+  ScholarPeriodId: number;
+  UpdatedAt: Date | null;
+  CreatedAt: Date;
+  Courses: {
+    CourseId: number;
+    Name: string;
+    EnglishName: string;
+    CourseCode: string | null;
+    CreditAmount: number;
+    CoursePeriodId: number;
+    PeriodNumber: number | null;
+    CourseTypeId: number;
+    IsEnabled: boolean | null;
+    UpdatedAt: Date | null;
+    CreatedAt: Date;
+    LevelCourses: {
+      LevelCourseId: number;
+      LevelId: number;
+      CourseId: number;
+      UpdatedAt: Date | null;
+      CreatedAt: Date;
+      Levels: {
+        LevelId: number;
+        Name: string;
+        IsEnabled: boolean;
+        UpdatedAt: Date | null;
+        CreatedAt: Date;
+      };
+    }[];
+  };
+  ScholarPeriods: {
+    Name: string;
+  };
+};
+
+export type StudentCoursesGroupedByStudentIdMap = {
+  StudentId: number;
+  PersonId: number;
+  StudentTypeId: number;
+  IsACA: boolean;
+  DepartmentId: number | null;
+  CollegeId: number | null;
+  RegimeId: number | null;
+  AccommodationId: number | null;
+  UpdatedAt: Date | null;
+  CreatedAt: Date;
+  IsEnabled: boolean;
+  YearPeriodId: number;
+  Persons: {
+    AlternativeName: string | null;
+  };
+  StudentCourses: StudentCoursesByStudentIdMap[];
+};
+
+export type StudentCoursesByStudentIdMap = {
   StudentCourseId: number;
   StudentId: number;
   CourseId: number;

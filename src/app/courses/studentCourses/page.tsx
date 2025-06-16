@@ -2,9 +2,11 @@ import StudentCoursesTable from "./studentCoursesTable";
 import getAllStudentCoursesQuery from "@/repositories/studentCourses/queries/getAllStudentCoursesQuery";
 import getLastsScholarYearsWithPeriodsQuery from "@/repositories/scholarYears/queries/getLastsScholarYearsWithPeriodsQuery";
 import getAllScholarPeriodsByScholarYearIdQuery from "@/repositories/scholarPeriods/queries/getAllScholetPeroidsByScholarYearIdQuery";
+import getAllLevelsQuery from "@/repositories/levels/queries/getAllLevelsQuery";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { auth } from "@/utils/auth";
 import frFR from "@/lang/fr-FR";
 
 export default async function StudentsCoursesPage({
@@ -13,6 +15,9 @@ export default async function StudentsCoursesPage({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
+  const session = await auth();
+
+  const userRoleName = session?.user.userData.Roles.Name;
 
   const pageIndex = searchParams?.pageIndex
     ? parseInt(searchParams.pageIndex as string)
@@ -37,12 +42,20 @@ export default async function StudentsCoursesPage({
       ? parseInt(searchParams.scholarPeriodId as string)
       : scholarPeriods[0].ScholarPeriodId;
 
+  const scholarLevels = await getAllLevelsQuery({ IsEnabled: true });
+
+  const scholarLevelIdParam =
+    searchParams.scholarLevelId && searchParams.scholarLevelId !== "null"
+      ? parseInt(searchParams.scholarLevelId as string)
+      : null;
+
   const studentCourses = await getAllStudentCoursesQuery({
     ScholarYearId: scholarYearIdParam,
     ScholarPeriodId: scholarPeriodIdParam,
     PeriodNumber: scholarPeriods.find(
       (x) => x.ScholarPeriodId === scholarPeriodIdParam,
     )?.Number,
+    scholarLevelId: scholarLevelIdParam,
   });
 
   const scholarPeriodsTous = [
@@ -74,6 +87,9 @@ export default async function StudentsCoursesPage({
         scholarYears={scholarYears}
         scholarPeriodSelected={scholarPeriodIdParam}
         scholarPeriods={scholarPeriodsTous}
+        scholarLevelSelected={scholarLevelIdParam}
+        scholarLevels={scholarLevels}
+        userRoleName={userRoleName}
         pageIndex={pageIndex}
         pageSize={pageSize}
         urlParams={searchParams}

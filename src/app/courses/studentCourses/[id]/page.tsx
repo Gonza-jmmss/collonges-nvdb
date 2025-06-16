@@ -31,6 +31,7 @@ export default async function StudentCoursesPage({
     : PeriodEnum["Cours d'été"];
 
   const scholarYearIdParam = parseInt(searchParams.scholarYearId as string);
+  const scholarLevelParam = parseInt(searchParams.scholarLevelId as string);
 
   const courses = await getAllCoursesQuery({
     IsEnabled: true,
@@ -79,7 +80,7 @@ export default async function StudentCoursesPage({
     <div className="relative mt-5 flex justify-center">
       <Button asChild className={`absolute -left-16 top-3`} variant="ghost">
         <Link
-          href={`/courses/studentCourses?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&scholarPeriodId=${scholarPeriodIdParam}&scholarYearId=${scholarYearIdParam}`}
+          href={`/courses/studentCourses?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&scholarPeriodId=${scholarPeriodIdParam}&scholarYearId=${scholarYearIdParam}&scholarLevelId=${scholarLevelParam}`}
         >
           <Icon name={"MdArrowBack"} className="text-xl" />
         </Link>

@@ -69,6 +69,10 @@ export default function StudentCourseForm({
     urlParams?.scholarYearId !== null
       ? parseInt(urlParams?.scholarYearId as string)
       : null;
+  const scholarLevelParam =
+    urlParams?.scholarLevelId !== null
+      ? parseInt(urlParams?.scholarLevelId as string)
+      : null;
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedStudentCourseToDelete, setSelectedStudentCourseToDelete] =
@@ -120,7 +124,7 @@ export default function StudentCourseForm({
       });
 
       router.push(
-        `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}&scholarYearId=${scholarYearIdParam}&pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
+        `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}&scholarYearId=${scholarYearIdParam}&scholarLevelId=${scholarLevelParam}&pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
       );
       router.refresh();
     } catch (error) {
@@ -147,7 +151,7 @@ export default function StudentCourseForm({
       });
 
       router.push(
-        `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}&scholarYearId=${scholarYearIdParam}&pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
+        `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}&scholarYearId=${scholarYearIdParam}&scholarLevelId=${scholarLevelParam}&pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
       );
       router.refresh();
     } catch (error) {
@@ -514,7 +518,7 @@ export default function StudentCourseForm({
               className="w-[30%]"
               onClick={() =>
                 router.push(
-                  `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}&scholarYearId=${scholarYearIdParam}&pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
+                  `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}&scholarYearId=${scholarYearIdParam}&scholarLevelId=${scholarLevelParam}&pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
                 )
               }
             >
@@ -534,7 +538,11 @@ export default function StudentCourseForm({
             <Button
               variant={"secondary"}
               className="w-[30%]"
-              onClick={() => router.back()}
+              onClick={() =>
+                router.push(
+                  `/courses/studentCourses?scholarPeriodId=${scholarPeriodIdParam}&scholarYearId=${scholarYearIdParam}&scholarLevelId=${scholarLevelParam}&pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}`,
+                )
+              }
             >
               {t.shared.cancel}
             </Button>
