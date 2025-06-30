@@ -98,8 +98,8 @@ export default async function Page({
             urlParams={searchParams}
           />
         </div>
-        {/* <pre>{JSON.stringify(studentCourseGrade, null, 2)}</pre> */}
-        {/* <pre>{JSON.stringify(studentByCouse, null, 2)}</pre> */}
+        {/* <pre>{JSON.stringify(studentCourseGrade, null, 2)}</pre>
+        <pre>{JSON.stringify(studentByCouse, null, 2)}</pre> */}
       </div>
     </main>
   );

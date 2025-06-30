@@ -224,9 +224,10 @@ export default function StudentCoruseGradesByStudentTable({
               name="MdEdit"
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() => {
-                router.push(
-                  `/courses/studentCourseGrades/edit?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&levelId=${levelIdSelected}&courseId=${row.row.original.CourseId}&description=${row.row.original.Description}&activityDate=${encodeURIComponent(row.row.original.ActivityDate.toUTCString())}&tab=${tabValue}`,
-                );
+                row.row.original.Description !== null &&
+                  router.push(
+                    `/courses/studentCourseGrades/edit?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&levelId=${levelIdSelected}&courseId=${row.row.original.CourseId}&description=${encodeURIComponent(row.row.original.Description)}&activityDate=${encodeURIComponent(row.row.original.ActivityDate.toUTCString())}&tab=${tabValue}`,
+                  );
               }}
             />
             <Icon
@@ -334,7 +335,8 @@ export default function StudentCoruseGradesByStudentTable({
               }}
             />
           </div>
-          <div className="w-[28.9rem]">
+          {/* <div className="w-[28.9rem]"> */}
+          <div className="min-w-[24rem] max-w-[30rem] flex-1">
             <Combobox
               options={courses}
               textAttribute={["CourseCode", "Name"]}
