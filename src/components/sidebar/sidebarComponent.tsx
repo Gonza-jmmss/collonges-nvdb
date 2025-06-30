@@ -51,7 +51,7 @@ export default function Sidebar({
       {/* Desktop */}
       <div className="hidden sm:relative sm:flex">
         <aside
-          className={`h-full min-h-[95vh] border-r ${isMouseOver ? "w-48" : "w-16"} fixed z-40 bg-background duration-300`}
+          className={`h-full min-h-[95vh] border-r ${isMouseOver ? "w-48" : "w-16"} fixed z-40 overflow-y-auto overflow-x-hidden bg-background duration-300`}
           onMouseEnter={() => setIsMouseOver(true)}
           onMouseLeave={() => setIsMouseOver(false)}
         >
