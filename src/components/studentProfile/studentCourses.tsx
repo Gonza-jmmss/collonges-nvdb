@@ -69,7 +69,7 @@ export default function StudentCourses({
         header: () => <Header text={t.studentProfile.columns.grade} />,
         filterFn: "equalsString",
         cell: (row) => (
-          <span>{row.getValue() === "NaN" ? "-" : row.getValue()}</span>
+          <span>{`${row.getValue() === "NaN" || row.getValue() === null ? "-" : row.getValue()} ${row.row.original.AmericanGrade === "NaN" || row.row.original.AmericanGrade === null ? "" : `(${row.row.original.AmericanGrade})`}`}</span>
         ),
         size: 20,
       },
@@ -78,6 +78,15 @@ export default function StudentCourses({
         id: "LevelName",
         header: () => <Header text={t.studentProfile.columns.levelName} />,
         filterFn: "equalsString",
+        cell: ({ row }) => (
+          <span>{`${
+            row.original.LevelName !== ""
+              ? row.original.LevelName
+              : row.original.LevelCourses.map((x) => x.Level)
+                  .toLocaleString()
+                  .replace(",", " | ")
+          }`}</span>
+        ),
       },
       {
         accessorKey: "ScholarPeriodName",
@@ -127,7 +136,7 @@ export default function StudentCourses({
         id: "Grade",
         header: () => <Header text={t.studentProfile.expanded.grade} />,
         cell: (row) => (
-          <span>{row.getValue() === "NaN" ? "-" : row.getValue()}</span>
+          <span>{`${row.getValue() === "NaN" || row.getValue() === null ? "-" : row.getValue()} ${row.row.original.AmericanGrade === "NaN" || row.row.original.AmericanGrade === null ? "" : `(${row.row.original.AmericanGrade})`}`}</span>
         ),
         filterFn: "equalsString",
         size: 40,
@@ -195,7 +204,7 @@ export default function StudentCourses({
                   <div>
                     <span className="text-xs font-semibold">{`${t.studentProfile.columns.grade.toUpperCase()}: `}</span>
                     <span className="text-xs font-semibold text-primary">
-                      {row.original.Grade === "NaN" ? "-" : row.original.Grade}
+                      {`${row.original.Grade === "NaN" || row.original.Grade === null ? "-" : row.original.Grade} ${row.original.AmericanGrade !== "NaN" || row.original.AmericanGrade === null ? "" : `(${row.original.AmericanGrade})`}`}
                     </span>
                   </div>
                 </div>
@@ -232,7 +241,7 @@ export default function StudentCourses({
               <div>
                 <span className="text-xs font-semibold">{`${t.studentProfile.expanded.grade.toUpperCase()}: `}</span>
                 <span className="text-xs font-semibold text-primary">
-                  {row.original.Grade === "NaN" ? "-" : row.original.Grade}
+                  {`${row.original.Grade === "NaN" || row.original.Grade === null ? "-" : row.original.Grade} ${row.original.AmericanGrade === "NaN" || row.original.AmericanGrade === null ? "" : `(${row.original.AmericanGrade})`}`}
                 </span>
               </div>
             </div>

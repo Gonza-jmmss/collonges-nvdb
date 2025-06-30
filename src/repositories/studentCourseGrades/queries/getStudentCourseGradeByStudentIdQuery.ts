@@ -4,6 +4,7 @@ import {
   LevelCoursesMap,
   StudentCourseGradesByStudentCourseMap,
 } from "../studentCourseGradesViewModel";
+import translateGrade from "@/functions/translateGrade";
 
 const prisma = new PrismaClient();
 
@@ -61,6 +62,7 @@ const getStudentCourseGradeByStudentIdQuery = async (
     StudentId: studentCourse.Students.StudentId,
     StudentName: studentCourse.Students.Persons.AlternativeName,
     Grade: studentCourse.Note,
+    AmericanGrade: studentCourse.Note && translateGrade(studentCourse.Note),
     ScholarPeriodName: studentCourse.ScholarPeriods.Name,
     ScholarYearName: studentCourse.ScholarPeriods.ScholarYears.Name,
     LevelName:
@@ -82,6 +84,8 @@ const getStudentCourseGradeByStudentIdQuery = async (
         GradeCoefficientPercentage:
           Number(studentCourseGrade.GradeCoefficients.Coefficient) * 100,
         Grade: studentCourseGrade.Grade,
+        AmericanGrade:
+          studentCourseGrade.Grade && translateGrade(studentCourseGrade.Grade),
         CreatedAt: studentCourseGrade.CreatedAt,
         UserId: studentCourseGrade.UserId,
         UserName: studentCourseGrade.Users.UserName,

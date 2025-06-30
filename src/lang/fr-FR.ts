@@ -36,7 +36,7 @@ export default {
     yes: "Oui",
     no: "Non",
     exportPDF: "Exporter en PDF",
-    welcome: "Bienvenue !",
+    welcome: "Bienvenue à ClassIFLE !",
     shortcut: "Raccourcis",
     logout: "Déconnexion",
     login: "Connexion",
@@ -320,6 +320,7 @@ export default {
       selectContact: "Sélectionner un contact",
       addPersonCountry: "Ajouter une nationalité",
       personCountry: "Nationalités",
+      noCollegText: "Sans université",
     },
     validations: {
       sexValidation: "Le champ sexe est obligatoire",
@@ -364,6 +365,8 @@ export default {
       button: "Identifiants PDF",
       columns: {
         information: "Identifiants",
+        url: "URL",
+        urlValue: "http://srvifle:3128",
         userName: "Nom d'utilisateur",
         password: "Mot de passe",
       },

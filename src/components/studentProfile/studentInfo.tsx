@@ -38,7 +38,7 @@ export default function StudentInfo({
           </Button>
         </div>
         <div
-          className="relative mt-3 grid cursor-pointer grid-cols-1 gap-1 rounded-md border bg-muted/70 p-3 md:grid-cols-2 xl:grid-cols-3"
+          className={`relative mt-3 grid cursor-pointer grid-cols-1 gap-1 rounded-md border bg-muted/70 p-3 md:grid-cols-2 xl:grid-cols-3`}
           onClick={() => setDisplay(!display)}
         >
           <Icon
@@ -67,17 +67,6 @@ export default function StudentInfo({
                   {formatDate(student?.Person.BirthDate || new Date())}
                 </span>
               </div>
-            </>
-          ) : (
-            <>
-              <div className="text-lg font-semibold md:col-span-3">
-                {t.studentProfile.studentInfo}
-              </div>
-            </>
-          )}
-
-          {display && (
-            <>
               <div className="flex items-center space-x-3">
                 <span className="text-lg font-semibold">
                   {t.students.form.isACA}:
@@ -101,6 +90,27 @@ export default function StudentInfo({
 
               <div className="flex items-center space-x-3">
                 <span className="text-lg font-semibold">
+                  {t.students.form.yearPeriodId}:
+                </span>
+                <span>{student?.Student.YearPeriodName}</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <span className="text-lg font-semibold">
+                  {t.students.form.regimeId}:
+                </span>
+                <span>{student?.Student.RegimeName}</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <span className="text-lg font-semibold">
+                  {t.students.form.collegeId}:
+                </span>
+                <span>
+                  {student?.Student.CollegeName || t.students.form.noCollegText}
+                </span>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <span className="text-lg font-semibold">
                   {t.students.form.birthCountryId}:
                 </span>
                 <span>
@@ -111,36 +121,23 @@ export default function StudentInfo({
                   }
                 </span>
               </div>
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3 md:col-span-1 xl:col-span-2">
                 <span className="text-lg font-semibold">
                   {t.students.form.birthCity}:
                 </span>
                 <span>{student?.Person.BirthCity}</span>
               </div>
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3 md:col-span-2 xl:col-span-3">
                 <span className="text-lg font-semibold">
                   {t.students.form.address1}:
                 </span>
                 <span>{student?.Person.Address1}</span>
               </div>
-
-              <div className="flex items-center space-x-3">
-                <span className="text-lg font-semibold">
-                  {t.students.form.yearPeriodId}:
-                </span>
-                <span>{student?.Student.YearPeriodName}</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <span className="text-lg font-semibold">
-                  {t.students.form.collegeId}:
-                </span>
-                <span>{student?.Student.CollegeName}</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <span className="text-lg font-semibold">
-                  {t.students.form.regimeId}:
-                </span>
-                <span>{student?.Student.RegimeName}</span>
+            </>
+          ) : (
+            <>
+              <div className="text-lg font-semibold md:col-span-3">
+                {t.studentProfile.studentInfo}
               </div>
             </>
           )}
@@ -152,15 +149,14 @@ export default function StudentInfo({
         />
       </div>
       {/* Mobile */}
-      <div
-        className="block transition-all duration-300 ease-in-out sm:hidden"
-        onClick={() => setDisplay(!display)}
-      >
+      <div className="block sm:hidden" onClick={() => setDisplay(!display)}>
         <div className="text-lg font-semibold">{`${student?.Person.FirstName} ${student?.Person.LastName}`}</div>
-        <div className="relative mt-3 grid grid-cols-1 gap-2 rounded-md border bg-muted/70 p-3">
+        <div
+          className={`relative mt-3 grid grid-cols-1 gap-2 rounded-md border bg-muted/70 p-3`}
+        >
           <Icon
             name={`${display ? "MdKeyboardArrowUp" : "MdKeyboardArrowDown"}`}
-            className="absolute right-3 top-3 cursor-pointer text-3xl"
+            className="absolute right-3 top-3 cursor-pointer text-3xl duration-300"
           />
           {display ? (
             <>
@@ -176,17 +172,6 @@ export default function StudentInfo({
                 </span>
                 <span className="text-sm">{student?.Person.LastName}</span>
               </div>
-            </>
-          ) : (
-            <>
-              <div className="font-semibold md:col-span-3">
-                {t.studentProfile.studentInfo}
-              </div>
-            </>
-          )}
-
-          {display && (
-            <>
               <div className="flex items-center space-x-2">
                 <span className="font-semibold">
                   {t.students.form.birthDate}:
@@ -204,31 +189,6 @@ export default function StudentInfo({
                   {t.students.form.telephone}:
                 </span>
                 <span className="text-sm">{student?.Person.Telephone}</span>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <span className="font-semibold">
-                  {t.students.form.birthCountryId}:
-                </span>
-                <span className="text-sm">
-                  {
-                    countries.find(
-                      (x) => x.CountryId === student?.Person.BirthCountryId,
-                    )?.Name
-                  }
-                </span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="font-semibold">
-                  {t.students.form.birthCity}:
-                </span>
-                <span className="text-sm">{student?.Person.BirthCity}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="font-semibold">
-                  {t.students.form.address1}:
-                </span>
-                <span className="text-sm">{student?.Person.Address1}</span>
               </div>
 
               <div className="flex items-center space-x-2">
@@ -262,10 +222,42 @@ export default function StudentInfo({
                   {student?.Student.IsACA === true ? t.shared.yes : t.shared.no}
                 </span>
               </div>
+
+              <div className="flex items-center space-x-2">
+                <span className="font-semibold">
+                  {t.students.form.birthCountryId}:
+                </span>
+                <span className="text-sm">
+                  {
+                    countries.find(
+                      (x) => x.CountryId === student?.Person.BirthCountryId,
+                    )?.Name
+                  }
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="font-semibold">
+                  {t.students.form.birthCity}:
+                </span>
+                <span className="text-sm">{student?.Person.BirthCity}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="font-semibold">
+                  {t.students.form.address1}:
+                </span>
+                <span className="text-sm">{student?.Person.Address1}</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="font-semibold md:col-span-3">
+                {t.studentProfile.studentInfo}
+              </div>
             </>
           )}
         </div>
       </div>
+      {/* </div> */}
     </>
   );
 }

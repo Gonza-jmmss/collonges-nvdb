@@ -62,6 +62,7 @@ export type StudentCourseGradesByStudentIdViewModel = {
   StudentId: number;
   StudentName: string | null;
   Grade: string | null;
+  AmericanGrade: string | null;
   ScholarPeriodName: string | null;
   ScholarYearName: string | null;
   LevelName: string;
@@ -89,6 +90,7 @@ export type StudentCourseGradesExtendedViewModel = {
   GradeCoefficientName: string;
   GradeCoefficientPercentage: number;
   Grade: string;
+  AmericanGrade: string | null;
   CreatedAt: Date;
   UserId: number;
   UserName: string;
