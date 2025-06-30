@@ -23,7 +23,16 @@ export default function StudentUserCreadentialsPDF({
       value: "UserName",
       name: t.students.studentUserCredentialsPDF.columns.information,
       cell: (row: any) =>
-        `${t.students.studentUserCredentialsPDF.columns.userName}:  ${row.UserName}\n${t.students.studentUserCredentialsPDF.columns.password}:  ${row.UserFirstName.split(" ")[0]}.${row.StudentId}`,
+        `${t.students.studentUserCredentialsPDF.columns.url}:  ${t.students.studentUserCredentialsPDF.columns.urlValue}\n${t.students.studentUserCredentialsPDF.columns.userName}:  ${row.UserName}\n${t.students.studentUserCredentialsPDF.columns.password}:  ${row.UserFirstName.split(" ")[0]}.${row.StudentId}`,
+    },
+    {
+      value: "UserFirstName",
+      name: t.students.studentUserCredentialsPDF.columns.information,
+      cell: (row: any) => {
+        return row.UserName2
+          ? `${t.students.studentUserCredentialsPDF.columns.url}:  ${t.students.studentUserCredentialsPDF.columns.urlValue}\n${t.students.studentUserCredentialsPDF.columns.userName}:  ${row.UserName2}\n${t.students.studentUserCredentialsPDF.columns.password}:  ${row.UserFirstName2.split(" ")[0]}.${row.StudentId2}`
+          : "";
+      },
     },
   ];
 
@@ -33,9 +42,38 @@ export default function StudentUserCreadentialsPDF({
       .filter((x) => x.UserName !== null),
   ];
 
+  const transformDataForTwoColumns = (data: FirstCredentialsViewModel[]) => {
+    const transformedData = [];
+
+    for (let i = 0; i < data.length; i += 2) {
+      const firstStudent = data[i];
+      const secondStudent = data[i + 1];
+
+      const row: any = {
+        UserName: firstStudent.UserName,
+        UserFirstName: firstStudent.UserFirstName,
+        StudentId: firstStudent.StudentId,
+      };
+
+      // Add second student data if exists
+      if (secondStudent) {
+        row.UserName2 = secondStudent.UserName;
+        row.UserFirstName2 = secondStudent.UserFirstName;
+        row.StudentId2 = secondStudent.StudentId;
+      }
+
+      transformedData.push(row);
+    }
+
+    return transformedData;
+  };
+
   const exportToPDF = () => {
     try {
-      const tablePDF = formatTablePDF(columnsToExport, studentNotesDataForPdf);
+      const transformedData = transformDataForTwoColumns(
+        studentNotesDataForPdf,
+      );
+      const tablePDF = formatTablePDF(columnsToExport, transformedData);
       const doc = new jsPDF("p", "mm", "a4");
       let currentY = 14; // Start position for content
 
@@ -54,7 +92,7 @@ export default function StudentUserCreadentialsPDF({
           textColor: [0, 0, 0],
         },
         tableLineWidth: 0.2,
-        styles: { textColor: "#000000", fontSize: 10, cellPadding: 3 },
+        styles: { textColor: "#000000", fontSize: 10, cellPadding: 10 },
         columnStyles: {
           Quarter: { halign: "center" },
           CreditAmount: { halign: "center" },
