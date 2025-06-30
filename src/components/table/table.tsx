@@ -495,7 +495,7 @@ export default function TableComponent<T>({
             </Button>
             <div>
               <span>{`${t.table.totalRows} `}</span>
-              <span className="font-semibold">{`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} - ${table.getState().pagination.pageIndex + 1 === table.getPageCount() ? table.getRowCount() + 1 : table.getState().pagination.pageIndex * table.getState().pagination.pageSize + table.getState().pagination.pageSize} de ${table.getRowCount() + 1}`}</span>
+              <span className="font-semibold">{`${table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} - ${table.getState().pagination.pageIndex + 1 === table.getPageCount() ? table.getRowCount() : table.getState().pagination.pageIndex * table.getState().pagination.pageSize + table.getState().pagination.pageSize} de ${table.getRowCount()}`}</span>
             </div>
             {/* <span className="flex items-center gap-1">
               <div>{t.table.page}</div>
