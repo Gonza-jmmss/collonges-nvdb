@@ -36,7 +36,11 @@ export default function ifleStudentNotesPDF({
     {
       value: "CourseCode",
       name: t.reports.ifleStudentsNotes.dpfFrench.columns.courseCode,
-      cell: (row: any) => formatDBCode(row.CourseCode).slice(0, -2),
+      cell: (row: StudentNotesViewModel) =>
+        row.CourseCode?.includes("/")
+          ? formatDBCode(row.CourseCode || "").slice(0, -2)
+          : row.CourseCode,
+      // formatDBCode(row.CourseCode).slice(0, -2),
     },
     {
       value: "CourseName",
@@ -297,13 +301,6 @@ export default function ifleStudentNotesPDF({
         },
         tableLineWidth: 0.2,
         styles: { textColor: "#000000", fontSize: fontSize },
-        // theme: "striped",
-        // headStyles: {
-        //   fillColor: [255, 255, 255],
-        //   textColor: [0, 0, 0],
-        // },
-        // tableLineWidth: 0.2,
-        // styles: { textColor: "#000000" },
         columnStyles: {
           Quarter: { halign: "center" },
           CreditAmount: { halign: "center" },

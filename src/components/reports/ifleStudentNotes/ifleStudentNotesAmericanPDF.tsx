@@ -39,7 +39,10 @@ export default function ifleStudentNotesAmericanPDF({
       value: "CourseCode",
       name: t.reports.ifleStudentsNotes.dpfEnglish.columns.courseCode,
       cell: (row: StudentNotesViewModel) =>
-        formatDBCode(row.CourseCode || "").slice(0, -2),
+        row.CourseCode?.includes("/")
+          ? formatDBCode(row.CourseCode || "").slice(0, -2)
+          : row.CourseCode,
+      // formatDBCode(row.CourseCode || "").slice(0, -2),
     },
     {
       value: "CoursEnglishName",
@@ -362,6 +365,12 @@ export default function ifleStudentNotesAmericanPDF({
         // tableLineWidth: 0.2,
         // styles: { textColor: "#000000" },
         columnStyles: {
+          ScholarYear: {
+            cellWidth: 25,
+          },
+          CourseCode: {
+            cellWidth: 25,
+          },
           CreditAmount: {
             halign: "center",
             cellWidth: 14,

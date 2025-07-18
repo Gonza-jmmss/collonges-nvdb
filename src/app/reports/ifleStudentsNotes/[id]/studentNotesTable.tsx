@@ -47,7 +47,10 @@ export default function StudentsTable({
             text={t.reports.ifleStudentsNotes.dpfFrench.columns.courseCode}
           />
         ),
-        cell: (x) => formatDBCode(x.getValue()).slice(0, -2),
+        cell: (x) =>
+          x.row.original.CourseCode?.includes("/")
+            ? formatDBCode(x.getValue()).slice(0, -2)
+            : x.getValue(),
         filterFn: "equalsString",
       },
       {
@@ -108,7 +111,10 @@ export default function StudentsTable({
             text={t.reports.ifleStudentsNotes.dpfEnglish.columns.courseCode}
           />
         ),
-        cell: (x) => formatDBCode(x.getValue()).slice(0, -2),
+        cell: (x) =>
+          x.row.original.CourseCode?.includes("/")
+            ? formatDBCode(x.getValue()).slice(0, -2)
+            : x.getValue(),
         filterFn: "equalsString",
       },
       {
