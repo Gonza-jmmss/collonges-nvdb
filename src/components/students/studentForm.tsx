@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import createStudentCommand from "@/repositories/students/commands/createStudentPersonCommand";
 import updateStudentPersonCommand from "@/repositories/students/commands/updateStudentPersonCommand";
 import { StudentPersonSchema } from "@/zodSchemas/studentsSchema";
@@ -62,11 +62,15 @@ export default function StudentForm({
   const yearPeriodIdParam = parseInt(urlParams?.yearPeriodId as string);
 
   const [isPending, setIsPending] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
-
-  const imageInputRef = useRef<HTMLInputElement | null>(null);
 
   const studentType = [{ StudentTypeId: 1, Name: "IFLE" }];
+
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [originalImageName, setOriginalImageName] = useState<string | null>(
+    action !== "create" ? (studentData?.Person.ImageName ?? null) : null,
+  );
 
   const form = useForm<StudentFormData>({
     defaultValues: {
@@ -156,33 +160,82 @@ export default function StudentForm({
     },
 
     onSubmit: async ({ value }) => {
-      const fileInput = document.querySelector(
-        'input[type="file"]',
-      ) as HTMLInputElement;
-      const file = fileInput?.files?.[0];
-
-      if (file) {
-        const formData = new FormData();
-        formData.append("file", file);
-
-        const uploadResponse = await fetch("/api/images/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!uploadResponse.ok) {
-          throw new Error("Image upload failed");
-        }
-
-        const { fileName } = await uploadResponse.json();
-        value.Person.ImageNameTemp = fileName;
-      }
-
       setIsPending(true);
-      action === "create" && createStudent(value);
-      action === "edit" && updateStudent(value);
+
+      try {
+        // Handle image upload/deletion logic here
+        await handleImageOperations(value);
+
+        // Then proceed with student creation/update
+        if (action === "create") {
+          await createStudent(value);
+        } else if (action === "edit") {
+          await updateStudent(value);
+        }
+      } catch (error) {
+        console.error("Form submission error:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: `${error}`,
+        });
+        setIsPending(false);
+      }
     },
   });
+
+  const handleImageOperations = async (formData: StudentFormData) => {
+    const hasNewImage = selectedFile !== null;
+    const hasOriginalImage = originalImageName !== null;
+
+    // Only process image operations if there's actually a new image selected
+    if (!hasNewImage) {
+      console.log("No new image selected, keeping existing image");
+      return; // No new image selected, keep existing image
+    }
+
+    try {
+      // Upload new image
+      console.log("Uploading new image");
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", selectedFile);
+
+      const uploadResponse = await fetch("/api/images/upload", {
+        method: "POST",
+        body: uploadFormData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error("Image upload failed");
+      }
+
+      const { fileName } = await uploadResponse.json();
+      formData.Person.ImageNameTemp = fileName;
+
+      // Delete old image only if we successfully uploaded a new one AND there was an original image
+      if (hasOriginalImage && originalImageName) {
+        console.log("Deleting old image:", originalImageName);
+        const deleteFormData = new FormData();
+        deleteFormData.append("image", originalImageName);
+
+        const deleteResponse = await fetch("/api/images/delete", {
+          method: "POST",
+          body: deleteFormData,
+        });
+
+        if (!deleteResponse.ok) {
+          console.warn("Failed to delete old image:", originalImageName);
+          // Don't throw error here, as the main operation should still proceed
+        }
+      }
+
+      // Update originalImageName to the new image name for future operations
+      setOriginalImageName(fileName);
+    } catch (error) {
+      console.error("Image operations error:", error);
+      throw error;
+    }
+  };
 
   const createStudent = async (formData: StudentFormData) => {
     try {
@@ -195,7 +248,6 @@ export default function StudentForm({
       toast({
         title: `${t.students.notifications.createSuccess}`,
         description: `${t.students.student} : ${response.person.AlternativeName}`,
-        // description: `${t.students.student} : ${response}`,
       });
 
       router.push(
@@ -208,6 +260,7 @@ export default function StudentForm({
         title: `${t.students.notifications.createError}`,
         description: `${error}`,
       });
+      throw error;
     } finally {
       setIsPending(false);
     }
@@ -224,23 +277,7 @@ export default function StudentForm({
       toast({
         title: `${t.students.notifications.updateSuccess}`,
         description: `${t.students.student} : ${response.person?.AlternativeName}`,
-        // description: `${t.students.student} : student`,
       });
-
-      // Delete old photo
-      if (studentData?.Person.ImageName !== null) {
-        const imageData = new FormData();
-        imageData.append("image", studentData?.Person.ImageName || "");
-
-        const deleteResponse = await fetch("/api/images/delete", {
-          method: "POST",
-          body: imageData,
-        });
-
-        if (!deleteResponse.ok) {
-          throw new Error("Image elimination failed");
-        }
-      }
 
       router.push(
         `/students/students?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}&yearPeriodId=${yearPeriodIdParam}`,
@@ -252,31 +289,77 @@ export default function StudentForm({
         title: `${t.students.notifications.updateError}`,
         description: `${error}`,
       });
+      throw error;
     } finally {
       setIsPending(false);
+    }
+  };
+
+  const handleImageRemoval = async () => {
+    if (originalImageName) {
+      try {
+        const deleteFormData = new FormData();
+        deleteFormData.append("image", originalImageName);
+
+        const deleteResponse = await fetch("/api/images/delete", {
+          method: "POST",
+          body: deleteFormData,
+        });
+
+        if (!deleteResponse.ok) {
+          console.warn("Failed to delete image:", originalImageName);
+        }
+
+        // Clear all image-related state
+        setOriginalImageName(null);
+        setSelectedFile(null);
+        setPreview(null);
+
+        // Update form field
+        form.setFieldValue("Person.ImageName", null);
+      } catch (error) {
+        console.error("Image removal error:", error);
+      }
     }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
+    // Clean up previous preview URL to prevent memory leaks
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+
     if (file) {
-      setPreview(URL.createObjectURL(file)); // Generate preview URL
+      setSelectedFile(file);
+      setPreview(URL.createObjectURL(file));
+    } else {
+      setSelectedFile(null);
+      setPreview(null);
     }
   };
 
-  // const updateImage = async (image: string) => {
-  //   console.log("image", image);
-  //   const formData = new FormData();
-  //   formData.append("image", image);
+  // Add cleanup effect for preview URL
+  useEffect(() => {
+    return () => {
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
 
-  //   const uploadResponse = await fetch("/api/images/delete", {
-  //     method: "POST",
-  //     body: formData,
-  //   });
+  const getImageSrc = (fieldValue: string | null) => {
+    if (preview) {
+      return preview; // Show preview for newly selected file
+    }
 
-  //   console.log("uploadResponse", uploadResponse);
-  // };
+    if (fieldValue) {
+      return `/api/images/${fieldValue}`; // Show existing image
+    }
+
+    return "/404image.png"; // Show default image
+  };
 
   return (
     <form
@@ -299,19 +382,19 @@ export default function StudentForm({
                       ref={imageInputRef}
                       id="ImageName"
                       name="ImageName"
-                      type={"file"}
+                      type="file"
                       accept="image/jpg, image/jpeg, image/png"
                       className="hidden"
-                      // value={field.state.value || ""}
                       onChange={(e) => {
-                        field.handleChange(e.target.value);
                         handleFileChange(e);
+                        // Don't update the field value with the file path
+                        // The actual image handling will be done on form submission
                       }}
                       disabled={action === "view"}
                     />
                     <Button
                       type="button"
-                      variant={"ghost"}
+                      variant="ghost"
                       className="flex space-x-2"
                       onClick={() => imageInputRef.current?.click()}
                     >
@@ -321,14 +404,8 @@ export default function StudentForm({
                   </div>
                 )}
                 <Image
-                  src={`${
-                    field.state.value
-                      ? field.state.value?.includes("fakepath")
-                        ? preview
-                        : `/api/images/${field.state.value}`
-                      : "/404image.png"
-                  }`}
-                  alt={"ImageName"}
+                  src={getImageSrc(field.state.value)}
+                  alt="ImageName"
                   width={800}
                   height={800}
                   style={{
@@ -341,14 +418,13 @@ export default function StudentForm({
                     borderColor: "rgb(212 212 212)",
                   }}
                 />
-                {/* <Button
-                  type="button"
-                  variant={"ghost"}
-                  className="flex space-x-2"
-                  onClick={() => updateImage(field.state.value || "")}
-                >
-                  Update
-                </Button> */}
+                {action !== "view" && (
+                  <Icon
+                    name="MdClose"
+                    className="text-2xl hover:cursor-pointer hover:text-primary"
+                    onClick={() => handleImageRemoval()}
+                  />
+                )}
               </div>
             </>
           )}
