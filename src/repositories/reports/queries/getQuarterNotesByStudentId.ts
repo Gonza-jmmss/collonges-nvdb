@@ -20,9 +20,9 @@ const getQuarterNotesByStudentId = async (studentId: number) => {
       Colleges: true,
       StudentCourses: {
         orderBy: { ScholarPeriodId: "asc" },
-        where: {
-          Note: { not: null },
-        },
+        // where: {
+        //   Note: { not: null },
+        // },
         include: {
           Courses: {
             select: {
@@ -70,11 +70,11 @@ const getQuarterNotesByStudentId = async (studentId: number) => {
         CoursEnglishName: studentCourse.Courses.EnglishName,
         ScholarYear: studentCourse.ScholarPeriods.ScholarYears.Name,
         CreditAmount: studentCourse.Courses.CreditAmount,
-        Note: studentCourse.Note,
+        Note: studentCourse.Note !== null ? studentCourse.Note : "-",
         AmericanNote:
-          studentCourse.Note != null
+          studentCourse.Note !== null
             ? translateGrade(studentCourse.Note)
-            : null,
+            : "-",
       }),
     ),
   };

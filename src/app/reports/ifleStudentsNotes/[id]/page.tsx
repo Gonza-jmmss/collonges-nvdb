@@ -1,6 +1,8 @@
 import getQuarterNotesByStudentId from "@/repositories/reports/queries/getQuarterNotesByStudentId";
 import IFLEStudentNotesPDF from "@/components/reports/ifleStudentNotes/ifleStudentNotesPDF";
 import IFLEStudentNotesAmericanPDF from "@/components/reports/ifleStudentNotes/ifleStudentNotesAmericanPDF";
+import IFLEInscriptionAttestationFRPDF from "@/components/reports/ifleStudentNotes/ifleInscriptionAttestationFRPDF";
+import IFLEInscriptionAttestationENPDF from "@/components/reports/ifleStudentNotes/ifleInscriptionAttestationENPDF";
 import { TabsComponent } from "@/components/common/tabs";
 import FrenchTranscript from "@/components/reports/ifleStudentNotes/frenchTranscript";
 import AmericanTranscript from "@/components/reports/ifleStudentNotes/americanTranscript";
@@ -61,9 +63,12 @@ export default async function ifleStudentsNotesPage({
             <span className="text-xl font-semibold">{`${t.reports.ifleStudentsNotes.titlePage} : `}</span>
             <span className="text-xl">{`${studentNotes.StudentLastName}, ${studentNotes.StudentFirstName}`}</span>
           </div>
-          <div className="flex space-x-3">
+          <div className="-mt-3 flex flex-wrap items-center space-x-3 space-y-3">
+            <div />
             <IFLEStudentNotesPDF studentNotesData={studentNotes} />
             <IFLEStudentNotesAmericanPDF studentNotesData={studentNotes} />
+            <IFLEInscriptionAttestationFRPDF studentNotesData={studentNotes} />
+            <IFLEInscriptionAttestationENPDF studentNotesData={studentNotes} />
           </div>
         </div>
         <TabsComponent
@@ -71,7 +76,7 @@ export default async function ifleStudentsNotesPage({
           className="mt-5 w-full"
           tabListClassName="w-[30rem]"
         />
-        {/* <pre>{JSON.stringify(studentNotes.CourseNotes, null, 2)}</pre> */}
+        {/* <pre>{JSON.stringify(studentNotes, null, 2)}</pre> */}
       </div>
     </main>
   );
