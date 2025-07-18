@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
 import ToggleButton from "@/components/common/toggleButton";
 import { UserViewModel } from "@/repositories/users/usersViewModel";
-import { RoleViewModel } from "@/repositories/roles/rolesViewModel";
+import { RolesViewModel } from "@/repositories/roles/rolesViewModel";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
@@ -36,7 +36,7 @@ export default function UserForm({
   urlParams,
 }: {
   userData: UserViewModel | null;
-  roles: RoleViewModel[];
+  roles: RolesViewModel[];
   pageIndexParam: number;
   pageSizeParam: number;
   action: string | undefined;

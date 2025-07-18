@@ -36,7 +36,7 @@ export default async function UserPage({
     user = null;
   }
 
-  const roles = await getAllRolesQuery();
+  const roles = await getAllRolesQuery({ IsEnabled: true });
 
   const pagetitle = `${`${t.shared[action as keyof typeof t.shared]} ${t.users.user} 
     ${action != "create" ? `: ${user ? user.UserName : ""}` : ""}`}`;

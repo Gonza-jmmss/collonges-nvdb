@@ -12,7 +12,7 @@ type createStudentUserCommandParams = {
 const createStudentUserCommand = async (
   params: createStudentUserCommandParams,
 ) => {
-  const roles = await getAllRolesQuery();
+  const roles = await getAllRolesQuery({ IsEnabled: true });
   const studentRole = roles.find((x) => x.Name === "Étudiant");
 
   if (studentRole === undefined) {

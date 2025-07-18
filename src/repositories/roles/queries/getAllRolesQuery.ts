@@ -1,17 +1,25 @@
 import { PrismaClient } from "@prisma/client";
-import { RolesViewModel } from "../rolesViewModel";
+import { RolesMap } from "../rolesViewModel";
 
 const prisma = new PrismaClient();
 
-const getAllRolesQuery = async () => {
+type getAllRolesQueryParams = {
+  IsEnabled: boolean;
+};
+
+const getAllRolesQuery = async (params: getAllRolesQueryParams) => {
   const query = await prisma.roles.findMany({
-    orderBy: { IsEnabled: "desc" },
+    where: { IsEnabled: params.IsEnabled },
+    include: {
+      Users: true,
+    },
   });
 
-  const res = query.map((roles: RolesViewModel) => ({
+  const res = query.map((roles: RolesMap) => ({
     RoleId: roles.RoleId,
     Name: roles.Name,
     IsEnabled: roles.IsEnabled,
+    isDeletable: roles.Users.length === 0,
   }));
 
   return res;

@@ -3,46 +3,45 @@
 import { useState } from "react";
 import createRoleCommand from "@/repositories/roles/commands/createRoleCommand";
 import updateRoleCommand from "@/repositories/roles/commands/updateRoleCommand";
+import { RoleSchema } from "@/zodSchemas/roleSchema";
 import { useForm } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ToggleButton from "@/components/common/toggleButton";
-import { RoleViewModel } from "@/repositories/roles/rolesViewModel";
+import { RolesViewModel } from "@/repositories/roles/rolesViewModel";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import frFR from "@/lang/fr-FR";
-
-const RoleSchema = z.object({
-  RoleId: z.number(),
-  Name: z.string(),
-  IsEnabled: z.boolean(),
-});
 
 type RoleFormData = z.infer<typeof RoleSchema>;
 
 export default function RoleForm({
   roleData,
   action,
+  urlParams,
 }: {
-  roleData: RoleViewModel | null;
-  action: string;
+  roleData: RolesViewModel | null;
+  action: string | undefined;
+  urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const { toast } = useToast();
   const router = useRouter();
 
+  const isEnabledParam =
+    urlParams?.isEnabled === undefined ? true : urlParams.isEnabled === "true";
+
   const [isPending, setIsPending] = useState(false);
 
   const form = useForm<RoleFormData>({
     defaultValues: {
-      RoleId: action !== "create" ? (roleData ? roleData.RoleId : 0) : 0,
-      Name: action !== "create" ? (roleData ? roleData.Name : "") : "",
-      IsEnabled:
-        action !== "create" ? (roleData ? roleData.IsEnabled : true) : true,
+      RoleId: action !== "create" ? (roleData?.RoleId ?? 0) : 0,
+      Name: action !== "create" ? (roleData?.Name ?? "") : "",
+      IsEnabled: action !== "create" ? (roleData?.IsEnabled ?? true) : true,
     },
     onSubmit: async ({ value }) => {
-      // console.log("formData", value);
+      // console.log("form", value);
       setIsPending(true);
       action === "create" && createRole(value);
       action === "edit" && updateRole(value);
@@ -61,7 +60,7 @@ export default function RoleForm({
         description: `${t.roles.title} : ${response.Name}`,
       });
 
-      router.push("/settings/roles");
+      router.push(`/settings/roles?isEnabled=${isEnabledParam}`);
       router.refresh();
     } catch (error) {
       toast({
@@ -86,7 +85,7 @@ export default function RoleForm({
         description: `${t.roles.title} : ${response.Name}`,
       });
 
-      router.push("/settings/roles");
+      router.push(`/settings/roles?isEnabled=${isEnabledParam}`);
       router.refresh();
     } catch (error) {
       toast({
@@ -143,7 +142,6 @@ export default function RoleForm({
                   field.handleChange(x && x.key);
                 }}
                 itemSelected={field.state.value}
-                disabled={action === "view"}
               />
             </>
           )}
@@ -155,7 +153,9 @@ export default function RoleForm({
             type="button"
             variant={"secondary"}
             className="w-[30%]"
-            onClick={() => router.back()}
+            onClick={() =>
+              router.push(`/settings/roles?isEnabled=${isEnabledParam}`)
+            }
           >
             {t.shared.cancel}
           </Button>
@@ -173,7 +173,9 @@ export default function RoleForm({
           <Button
             variant={"secondary"}
             className="w-[30%]"
-            onClick={() => router.back()}
+            onClick={() =>
+              router.push(`/settings/roles?isEnabled=${isEnabledParam}`)
+            }
           >
             {t.shared.cancel}
           </Button>

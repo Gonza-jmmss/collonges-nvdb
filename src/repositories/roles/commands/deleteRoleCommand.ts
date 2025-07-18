@@ -9,13 +9,8 @@ type DeleteRoleParams = {
 };
 
 const deleteRoleCommand = async (params: DeleteRoleParams) => {
-  return await prisma.roles.update({
-    where: {
-      RoleId: params.RoleId,
-    },
-    data: {
-      IsEnabled: false,
-    },
+  return await prisma.roles.delete({
+    where: { RoleId: params.RoleId },
   });
 };
 

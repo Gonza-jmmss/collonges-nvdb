@@ -29,7 +29,7 @@ export default async function RoleModuleElementPage({
 
   const modules = await getAllModulesQuery();
   const moduleElements = await getAllModuleElementsQuery();
-  const roles = await getAllRolesQuery();
+  const roles = await getAllRolesQuery({ IsEnabled: true });
   const rolesWithoutModuleElements = await getRolesWithoutRoleElementsQuery();
 
   const pagetitle = `${`${t.shared[action as keyof typeof t.shared]} ${t.roleModuleElements.roleModuleElement} 

@@ -1,16 +1,14 @@
 "use server";
 
 import { PrismaClient } from "@prisma/client";
+import { RoleSchema } from "@/zodSchemas/roleSchema";
+import { z } from "zod";
 
 const prisma = new PrismaClient();
 
-type UpdateRoleParams = {
-  RoleId: number;
-  Name: string;
-  IsEnabled: boolean;
-};
+type updateRoleCommandParams = z.infer<typeof RoleSchema>;
 
-const updateRoleCommand = async (params: UpdateRoleParams) => {
+const updateRoleCommand = async (params: updateRoleCommandParams) => {
   return await prisma.roles.update({
     where: {
       RoleId: params.RoleId,

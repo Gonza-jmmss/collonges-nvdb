@@ -14,7 +14,7 @@ import { z } from "zod";
 type StudentParams = z.infer<typeof StudentPersonSchema>;
 
 const createStudentPersonCommand = async (params: StudentParams) => {
-  const roles = await getAllRolesQuery();
+  const roles = await getAllRolesQuery({ IsEnabled: true });
   const studentRole = roles.find((x) => x.Name === "Étudiant");
 
   if (studentRole === undefined) {
