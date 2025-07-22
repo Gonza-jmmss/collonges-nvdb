@@ -2,6 +2,7 @@ export type LevelsViewModel = {
   LevelId: number;
   Name: string;
   IsEnabled: boolean;
+  PeriodNumber: number;
   LevelCourses: {
     LevelCourseId: number;
     CourseId: number;
@@ -14,6 +15,8 @@ export type LevelsTableViewModel = {
   LevelId: number;
   Name: string;
   IsEnabled: boolean;
+  PeriodNumber: number;
+  PeriodName: string;
   LevelCourses: {
     LevelCourseId: number;
     CourseId: number;
@@ -39,6 +42,7 @@ export type LevelsMap = {
   LevelId: number;
   Name: string;
   IsEnabled: boolean;
+  PeriodNumber: number;
   UpdatedAt: Date | null;
   CreatedAt: Date;
   LevelCourses: LevelCoursesMap[];

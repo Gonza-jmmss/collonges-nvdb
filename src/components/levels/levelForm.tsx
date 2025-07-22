@@ -46,8 +46,7 @@ export default function LevelForm({
 
   const [isPending, setIsPending] = useState(false);
 
-  const periodNumberParam =
-    parseInt(urlParams?.periodNumber as string) || PeriodEnum["Cours d'été"];
+  const periodNumberParam = parseInt(urlParams?.periodNumber as string);
   const isEnabledParam =
     urlParams?.isEnabled === undefined ? true : urlParams.isEnabled === "true";
 
@@ -56,6 +55,10 @@ export default function LevelForm({
       LevelId: action !== "create" ? (levelData?.LevelId ?? 0) : 0,
       Name: action !== "create" ? (levelData?.Name ?? "") : "",
       IsEnabled: action !== "create" ? (levelData?.IsEnabled ?? true) : true,
+      PeriodNumber:
+        action !== "create"
+          ? (levelData?.PeriodNumber ?? periodNumberParam)
+          : periodNumberParam,
       LevelCourses:
         action !== "create"
           ? (levelData?.LevelCourses?.map((levelCourse) => ({
@@ -189,6 +192,45 @@ export default function LevelForm({
           )}
         />
       </div>
+      <div className="col-span-1 space-y-1">
+        <form.Field
+          name="PeriodNumber"
+          validators={{
+            onSubmitAsync: (value) => {
+              if (value === null || value === undefined) {
+                return t.levels.validations.periodNumberValidation;
+              }
+              return z.number().min(0).safeParse(value.value).success
+                ? undefined
+                : t.levels.validations.periodNumberValidation;
+            },
+          }}
+          children={(field) => (
+            <>
+              <span>{t.levels.form.periodNumber}</span>
+              <Combobox
+                options={enumToArray(PeriodEnum).slice(1)}
+                textAttribute="value"
+                valueAttribute="key"
+                placeholder={t.levels.form.periodNumber}
+                itemSelected={enumToArray(PeriodEnum).find(
+                  (x) => x.key === field.state.value,
+                )}
+                setItemSelected={(x: { key: number }) => {
+                  field.handleChange(x && x.key);
+                  handleUrlParameterChange("periodNumber", `${x.key}`);
+                }}
+                notClearable
+              />
+              <div className="text-xs text-red-500">
+                {field.state.meta.errors
+                  ? field.state.meta.errors.join(", ")
+                  : null}
+              </div>
+            </>
+          )}
+        />
+      </div>
       <div className="col-span-2 space-y-1">
         <form.Field
           name="LevelCourses"
@@ -197,23 +239,6 @@ export default function LevelForm({
             <div className="flex flex-col space-y-5">
               <div className="grid grid-cols-6">
                 <span className="col-span-6">{t.levels.form.addCourse}</span>
-                <span className="col-span-2 mt-3 md:col-span-1">
-                  {t.levels.form.coursePeriod}
-                </span>
-                <div className="col-span-4 mt-2 md:col-span-5">
-                  <Combobox
-                    options={enumToArray(PeriodEnum)}
-                    textAttribute="value"
-                    valueAttribute="key"
-                    placeholder={t.courses.form.periodNumber}
-                    itemSelected={enumToArray(PeriodEnum).find(
-                      (x) => x.key === periodNumberParam,
-                    )}
-                    setItemSelected={(x: { key: number }) => {
-                      handleUrlParameterChange("periodNumber", `${x.key}`);
-                    }}
-                  />
-                </div>
                 <span className="col-span-2 mt-3 md:col-span-1">
                   {t.levels.form.levelCourses}
                 </span>

@@ -14,6 +14,7 @@ const updateLevelCommand = (params: LevelParams) => {
     data: {
       Name: params.Name,
       IsEnabled: params.IsEnabled,
+      PeriodNumber: params.PeriodNumber,
     },
   });
 

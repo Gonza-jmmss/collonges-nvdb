@@ -26,6 +26,7 @@ const getLevelByIdQuery = async (levelId: number) => {
     LevelId: query.LevelId,
     Name: query.Name,
     IsEnabled: query.IsEnabled,
+    PeriodNumber: query.PeriodNumber,
     LevelCourses: query.LevelCourses.map((levelCourse: LevelCoursesMap) => ({
       LevelCourseId: levelCourse.LevelCourseId,
       CourseId: levelCourse.CourseId,

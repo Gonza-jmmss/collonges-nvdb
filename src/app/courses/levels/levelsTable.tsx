@@ -11,6 +11,9 @@ import DeleteModal from "@/components/common/deleteModal";
 import { Button } from "@/components/ui/button";
 import ToggleButton from "@/components/common/toggleButton";
 import Icon from "@/components/common/icon";
+import Combobox from "@/components/common/combobox";
+import enumToArray from "@/functions/enumToArray";
+import { PeriodEnum } from "@/enum/periodEnum";
 import { useToast } from "@/hooks/use-toast";
 import {
   LevelsTableViewModel,
@@ -23,12 +26,14 @@ import frFR from "@/lang/fr-FR";
 export default function LevelsTable({
   levels,
   isEnabledSelected,
+  periodNumberSelected,
   pageIndex,
   pageSize,
   urlParams,
 }: {
   levels: LevelsTableViewModel[];
   isEnabledSelected: boolean;
+  periodNumberSelected: number;
   pageIndex: number;
   pageSize: number;
   urlParams?: { [key: string]: string | string[] | undefined };
@@ -105,6 +110,12 @@ export default function LevelsTable({
         filterFn: "equalsString",
       },
       {
+        accessorKey: "PeriodName",
+        id: "PeriodName",
+        header: () => <Header text={t.levels.columns.periodName} />,
+        filterFn: "equalsString",
+      },
+      {
         accessorKey: "IsEnabled",
         id: "IsEnabled",
         cell: (x) => (x.getValue() == 1 ? t.shared.yes : t.shared.no),
@@ -126,7 +137,7 @@ export default function LevelsTable({
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() =>
                 router.push(
-                  `/courses/levels/${row.row.original?.LevelId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}`,
+                  `/courses/levels/${row.row.original?.LevelId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}&periodNumber=${periodNumberSelected}`,
                 )
               }
             />
@@ -161,7 +172,12 @@ export default function LevelsTable({
         ),
       },
     ],
-    [getPageIndexParam, getPageSizeParam, isEnabledSelected],
+    [
+      getPageIndexParam,
+      getPageSizeParam,
+      isEnabledSelected,
+      periodNumberSelected,
+    ],
   );
 
   const columnsExtended = useMemo<
@@ -247,6 +263,20 @@ export default function LevelsTable({
   return (
     <div>
       <div className="flex items-center justify-end space-x-5">
+        <div className="w-[15rem]">
+          <Combobox
+            options={enumToArray(PeriodEnum).slice(1)}
+            textAttribute="value"
+            valueAttribute="key"
+            placeholder={t.levels.form.periodNumber}
+            itemSelected={enumToArray(PeriodEnum).find(
+              (x) => x.key === periodNumberSelected,
+            )}
+            setItemSelected={(x: { key: number }) => {
+              handleUrlParameterChange("periodNumber", `${x.key}`);
+            }}
+          />
+        </div>
         <div className="w-[25rem]">
           <ToggleButton
             options={[
@@ -264,7 +294,7 @@ export default function LevelsTable({
           variant="outlineColored"
           onClick={() =>
             router.push(
-              `/courses/levels/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}`,
+              `/courses/levels/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&isEnabled=${isEnabledSelected}&periodNumber=${periodNumberSelected}`,
             )
           }
         >

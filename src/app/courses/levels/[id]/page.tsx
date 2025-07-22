@@ -1,5 +1,6 @@
 import getLevelByIdQuery from "@/repositories/levels/queries/getLevelByIdQuery";
 import getAllCoursesQuery from "@/repositories/courses/queries/getAllCoursesQuery";
+import getCurrentScholarPeriodQuery from "@/repositories/scholarPeriods/queries/getCurrentScholarPeriod";
 import LevelForm from "@/components/levels/levelForm";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
@@ -36,13 +37,15 @@ export default async function Page({
   const pagetitle = `${`${t.shared[action as keyof typeof t.shared]} ${t.levels.levels} 
     ${action != "create" ? `: ${level ? level.Name : ""}` : ""}`}`;
 
-  const periodNumber = searchParams?.periodNumber
+  const currentScholarPeriod = await getCurrentScholarPeriodQuery();
+
+  const periodNumberParam = searchParams?.periodNumber
     ? parseInt(searchParams.periodNumber as string)
-    : PeriodEnum["Cours d'été"];
+    : currentScholarPeriod.Number;
 
   const courses = await getAllCoursesQuery({
     IsEnabled: true,
-    PeriodNumber: periodNumber,
+    PeriodNumber: periodNumberParam,
   });
   const allCourses = await getAllCoursesQuery({
     IsEnabled: true,

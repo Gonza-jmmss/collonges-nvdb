@@ -1,5 +1,6 @@
 import LevelsTable from "./levelsTable";
 import getAllLevelsQuery from "@/repositories/levels/queries/getAllLevelsQuery";
+import getCurrentScholarPeriodQuery from "@/repositories/scholarPeriods/queries/getCurrentScholarPeriod";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -24,7 +25,16 @@ export default async function LevelsPage({
       ? true
       : searchParams.isEnabled === "true";
 
-  const levels = await getAllLevelsQuery({ IsEnabled: isEnabledParam });
+  const currentScholarPeriod = await getCurrentScholarPeriodQuery();
+
+  const periodNumberParam = searchParams?.periodNumber
+    ? parseInt(searchParams.periodNumber as string)
+    : currentScholarPeriod.Number;
+
+  const levels = await getAllLevelsQuery({
+    IsEnabled: isEnabledParam,
+    PeriodNumber: periodNumberParam,
+  });
 
   return (
     <main className="relative mt-3 w-[80vw]">
@@ -39,6 +49,7 @@ export default async function LevelsPage({
       <LevelsTable
         levels={levels}
         isEnabledSelected={isEnabledParam}
+        periodNumberSelected={periodNumberParam}
         pageIndex={pageIndex}
         pageSize={pageSize}
         urlParams={searchParams}

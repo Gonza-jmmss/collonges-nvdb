@@ -585,6 +585,7 @@ export default {
       coursesAsigned: "Cours attribués",
       name: "Niveau scolaire",
       isEnabled: "Actif",
+      periodName: "Trimestre",
     },
     expanded: {
       courseName: "Cours",
@@ -595,11 +596,12 @@ export default {
       isEnabled: "Actif",
       levelCourses: "Cours",
       addCourse: "Ajouter un cours",
-      coursePeriod: "Trimestre",
       scholarPeriodId: "Période",
+      periodNumber: "Trimestre",
     },
     validations: {
       coursesValidation: "Les cours sont obligatoires",
+      periodNumberValidation: "Le trimestre est obligatoire",
     },
     notifications: {
       createSuccess: "Niveau scolaire créé avec succès",
