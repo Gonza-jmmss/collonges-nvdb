@@ -3,6 +3,7 @@ import getAllStudentCoursesQuery from "@/repositories/studentCourses/queries/get
 import getLastsScholarYearsWithPeriodsQuery from "@/repositories/scholarYears/queries/getLastsScholarYearsWithPeriodsQuery";
 import getAllScholarPeriodsByScholarYearIdQuery from "@/repositories/scholarPeriods/queries/getAllScholetPeroidsByScholarYearIdQuery";
 import getAllLevelsQuery from "@/repositories/levels/queries/getAllLevelsQuery";
+import getCurrentScholarPeriodQuery from "@/repositories/scholarPeriods/queries/getCurrentScholarPeriod";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -42,7 +43,14 @@ export default async function StudentsCoursesPage({
       ? parseInt(searchParams.scholarPeriodId as string)
       : scholarPeriods[0].ScholarPeriodId;
 
-  const scholarLevels = await getAllLevelsQuery({ IsEnabled: true });
+  const currentScholarPeriod = await getCurrentScholarPeriodQuery();
+
+  const scholarLevels = await getAllLevelsQuery({
+    IsEnabled: true,
+    PeriodNumber:
+      scholarPeriods.find((x) => x.ScholarPeriodId === scholarPeriodIdParam)
+        ?.Number || currentScholarPeriod.Number,
+  });
 
   const scholarLevelIdParam =
     searchParams.scholarLevelId && searchParams.scholarLevelId !== "null"
@@ -58,18 +66,18 @@ export default async function StudentsCoursesPage({
     scholarLevelId: scholarLevelIdParam,
   });
 
-  const scholarPeriodsTous = [
-    ...scholarPeriods,
-    {
-      ScholarPeriodId: 0,
-      Name: "Tous",
-      Number: 0,
-      FromDate: null,
-      ToDate: null,
-      IsActive: false,
-      ScholarYearId: 0,
-    },
-  ];
+  // const scholarPeriodsTous = [
+  //   ...scholarPeriods,
+  //   {
+  //     ScholarPeriodId: 0,
+  //     Name: "Tous",
+  //     Number: 0,
+  //     FromDate: null,
+  //     ToDate: null,
+  //     IsActive: false,
+  //     ScholarYearId: 0,
+  //   },
+  // ];
 
   return (
     <main className="relative mt-3 w-[80vw]">
@@ -86,7 +94,7 @@ export default async function StudentsCoursesPage({
         scholarYearSelected={scholarYearIdParam}
         scholarYears={scholarYears}
         scholarPeriodSelected={scholarPeriodIdParam}
-        scholarPeriods={scholarPeriodsTous}
+        scholarPeriods={scholarPeriods}
         scholarLevelSelected={scholarLevelIdParam}
         scholarLevels={scholarLevels}
         userRoleName={userRoleName}

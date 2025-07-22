@@ -18,8 +18,6 @@ import Combobox from "@/components/common/combobox";
 import ToggleButton from "@/components/common/toggleButton";
 import Modal from "@/components/common/modal";
 import Icon from "@/components/common/icon";
-import enumToArray from "@/functions/enumToArray";
-import { PeriodEnum } from "@/enum/periodEnum";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -62,7 +60,6 @@ export default function StudentCourseForm({
 
   const [isLevelCourses, setIsLevelCourses] = useState(true);
 
-  const periodNumberParam = parseInt(urlParams?.periodNumber as string);
   const scholarPeriodIdParam =
     parseInt(urlParams?.scholarPeriodId as string) || 0;
   const scholarYearIdParam =
@@ -369,32 +366,13 @@ export default function StudentCourseForm({
                   </>
                 ) : (
                   <>
-                    <span className="col-span-2 mt-5 md:col-span-1">
-                      {t.studentCourses.form.coursePeriod}
-                    </span>
-                    <div className="col-span-4 mt-4 md:col-span-5">
-                      <Combobox
-                        options={enumToArray(PeriodEnum)}
-                        textAttribute="value"
-                        valueAttribute="key"
-                        placeholder={t.courses.form.periodNumber}
-                        itemSelected={enumToArray(PeriodEnum).find(
-                          (x) => x.key === periodNumberParam,
-                        )}
-                        setItemSelected={(x: { key: number }) => {
-                          // setPeriodSelected(x && x.key);
-                          handleUrlParameterChange("periodNumber", `${x.key}`);
-                        }}
-                        notClearable
-                      />
-                    </div>
-                    <span className="col-span-2 mt-3 md:col-span-1">
+                    <span className="col-span-2 mt-3">
                       {t.studentCourses.form.studentCourses}
                     </span>
-                    <div className="col-span-4 mt-2 md:col-span-5">
+                    <div className="col-span-4 mt-2">
                       <Combobox
                         options={courses}
-                        textAttribute={["Name", "CourseCode"]}
+                        textAttribute={["CourseCode", "Name"]}
                         valueAttribute="CourseId"
                         placeholder={t.studentCourses.form.studentCourses}
                         setItemSelected={(x: { CourseId: number }) => {

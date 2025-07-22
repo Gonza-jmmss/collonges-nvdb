@@ -87,54 +87,6 @@ export default function StudentCoursesTable({
         cell: ({ row }) => <span>{row.original.StudentCourses.length}</span>,
         size: 20,
       },
-      // {
-      //   accessorKey: "StudentId",
-      //   id: "StudentId",
-      //   header: () => <Header text={t.studentCourses.columns.studentId} />,
-      //   filterFn: "equalsString",
-      //   // cell: ({ row, getValue }) => (
-      //   //   <div
-      //   //     style={{
-      //   //       paddingLeft: `${row.depth * 2}rem`,
-      //   //     }}
-      //   //   >
-      //   //     <div className="flex items-center space-x-2">
-      //   //       {row.getCanExpand() ? (
-      //   //         <div onClick={row.getToggleExpandedHandler()}>
-      //   //           {row.getIsExpanded() ? (
-      //   //             <Icon
-      //   //               name={
-      //   //                 isValidIconName("MdArrowDownward")
-      //   //                   ? "MdArrowDownward"
-      //   //                   : "MdOutlineNotInterested"
-      //   //               }
-      //   //               onClick={() => handleRowClick(null)}
-      //   //             />
-      //   //           ) : (
-      //   //             <Icon
-      //   //               name={
-      //   //                 isValidIconName("MdArrowForward")
-      //   //                   ? "MdArrowForward"
-      //   //                   : "MdOutlineNotInterested"
-      //   //               }
-      //   //               onClick={() => handleRowClick(row.original)}
-      //   //             />
-      //   //           )}
-      //   //         </div>
-      //   //       ) : (
-      //   //         <Icon
-      //   //   name={
-      //   //     isValidIconName("MdHorizontalRule")
-      //   //       ? "MdHorizontalRule"
-      //   //       : "MdOutlineNotInterested"
-      //   //   }
-      //   // />
-      //   //       )}
-      //   //       <div>{getValue<boolean>()}</div>
-      //   //     </div>
-      //   //   </div>
-      //   // ),
-      // },
       {
         accessorKey: "AlternativeName",
         id: "AlternativeName",

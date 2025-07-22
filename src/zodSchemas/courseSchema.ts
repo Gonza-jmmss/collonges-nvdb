@@ -7,7 +7,7 @@ export const CourseSchema = z.object({
   CourseCode: z.string().nullable(),
   CreditAmount: z.number().nullable(),
   CoursePeriodId: z.number(),
-  PeriodNumber: z.number().nullable(),
+  PeriodNumber: z.number().int().min(1).max(4).nullable(),
   CourseTypeId: z.number(),
   IsEnabled: z.boolean(),
 });

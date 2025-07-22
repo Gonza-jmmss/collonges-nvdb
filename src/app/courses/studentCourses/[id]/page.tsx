@@ -4,11 +4,11 @@ import getAllCoursesQuery from "@/repositories/courses/queries/getAllCoursesQuer
 import getLastsScholarPeriodsQuery from "@/repositories/scholarPeriods/queries/getLastsScholarPeriodsQuery";
 import getLastsScholarYearsWithPeriodsQuery from "@/repositories/scholarYears/queries/getLastsScholarYearsWithPeriodsQuery";
 import getAllLevelsQuery from "@/repositories/levels/queries/getAllLevelsQuery";
+import getCurrentScholarPeriodQuery from "@/repositories/scholarPeriods/queries/getCurrentScholarPeriod";
 import StudentCourseForm from "@/components/studentCourses/studentCoursesForm";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
-import { PeriodEnum } from "@/enum/periodEnum";
 import frFR from "@/lang/fr-FR";
 
 export default async function StudentCoursesPage({
@@ -26,17 +26,11 @@ export default async function StudentCoursesPage({
   const pageIndexParam = parseInt(searchParams.pageIndex as string);
   const pageSizeParam = parseInt(searchParams.pageSize as string);
 
-  const periodNumberParam = searchParams?.periodNumber
-    ? parseInt(searchParams.periodNumber as string)
-    : PeriodEnum["Cours d'été"];
+  const currentScholarPeriod = await getCurrentScholarPeriodQuery();
 
   const scholarYearIdParam = parseInt(searchParams.scholarYearId as string);
   const scholarLevelParam = parseInt(searchParams.scholarLevelId as string);
 
-  const courses = await getAllCoursesQuery({
-    IsEnabled: true,
-    PeriodNumber: periodNumberParam,
-  });
   const allCourses = await getAllCoursesQuery({
     IsEnabled: true,
     PeriodNumber: 0,
@@ -46,8 +40,6 @@ export default async function StudentCoursesPage({
     ScholarYearId: scholarYearIdParam,
   });
   const scholarYears = await getLastsScholarYearsWithPeriodsQuery();
-
-  const scholarLevels = await getAllLevelsQuery({ IsEnabled: true });
 
   const scholarPeriodIdParam = searchParams.scholarPeriodId
     ? parseInt(searchParams.scholarPeriodId as string)
@@ -63,6 +55,20 @@ export default async function StudentCoursesPage({
   // const studentsWithNoCourses = await getStudentsWithNoCoursesQuery({
   //   ScholarPeriodId: scholarPeriodIdParam,
   // });
+
+  const courses = await getAllCoursesQuery({
+    IsEnabled: true,
+    PeriodNumber:
+      scholarPeriods.find((x) => x.ScholarPeriodId === scholarPeriodIdParam)
+        ?.Number || currentScholarPeriod.Number,
+  });
+
+  const scholarLevels = await getAllLevelsQuery({
+    IsEnabled: true,
+    PeriodNumber:
+      scholarPeriods.find((x) => x.ScholarPeriodId === scholarPeriodIdParam)
+        ?.Number || currentScholarPeriod.Number,
+  });
 
   if (params.id != "create") {
     studentCourses = await getStudentCoursesByStudentIdQuery({
