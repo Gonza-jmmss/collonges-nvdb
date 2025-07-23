@@ -56,7 +56,7 @@ export default async function Page({
     <main className="relative mt-5 flex justify-center">
       <Button asChild className={`absolute -left-16 top-3`} variant="ghost">
         <Link
-          href={`/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`}
+          href={`/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}&periodNumber=${periodNumberParam}`}
         >
           <Icon name={"MdArrowBack"} className="text-xl" />
         </Link>

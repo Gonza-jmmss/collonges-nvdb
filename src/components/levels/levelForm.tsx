@@ -87,7 +87,7 @@ export default function LevelForm({
       });
 
       router.push(
-        `/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+        `/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}&periodNumber=${periodNumberParam}`,
       );
       router.refresh();
     } catch (error) {
@@ -114,7 +114,7 @@ export default function LevelForm({
       });
 
       router.push(
-        `/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+        `/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}&periodNumber=${periodNumberParam}`,
       );
       router.refresh();
     } catch (error) {
@@ -316,7 +316,7 @@ export default function LevelForm({
               className="w-[30%]"
               onClick={() =>
                 router.push(
-                  `/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+                  `/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}&periodNumber=${periodNumberParam}`,
                 )
               }
             >
@@ -338,7 +338,7 @@ export default function LevelForm({
               className="w-[30%]"
               onClick={() =>
                 router.push(
-                  `/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}`,
+                  `/courses/levels?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&isEnabled=${isEnabledParam}&periodNumber=${periodNumberParam}`,
                 )
               }
             >

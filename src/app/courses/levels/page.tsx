@@ -3,6 +3,7 @@ import getAllLevelsQuery from "@/repositories/levels/queries/getAllLevelsQuery";
 import getCurrentScholarPeriodQuery from "@/repositories/scholarPeriods/queries/getCurrentScholarPeriod";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
+import { PeriodEnum } from "@/enum/periodEnum";
 import Link from "next/link";
 import frFR from "@/lang/fr-FR";
 
@@ -44,7 +45,7 @@ export default async function LevelsPage({
         </Link>
       </Button>
       <div className="flex justify-between space-x-3">
-        <span className="text-xl font-semibold">{t.levels.title}</span>
+        <span className="text-xl font-semibold">{`${t.levels.title} - ${PeriodEnum[periodNumberParam]}`}</span>
       </div>
       <LevelsTable
         levels={levels}
