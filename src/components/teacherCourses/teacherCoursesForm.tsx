@@ -42,14 +42,14 @@ export default function TeacherCoursesForm({
 
   const [isPending, setIsPending] = useState(false);
 
-  const periodNumberParam =
-    parseInt(urlParams?.periodNumber as string) || PeriodEnum["Cours d'été"];
+  const periodNumberParam = parseInt(urlParams?.periodNumber as string);
   const levelIdParam =
     urlParams?.levelId !== null ? parseInt(urlParams?.levelId as string) : null;
 
   const form = useForm<TeacherCourseFormData>({
     defaultValues: {
       UserId: action !== "create" ? (teacherCoursesData?.UserId ?? 0) : 0,
+      PeriodNumber: periodNumberParam,
       TeacherCourses:
         action !== "create"
           ? (teacherCoursesData?.TeacherCourses?.map((teacherCourses) => ({
@@ -76,7 +76,7 @@ export default function TeacherCoursesForm({
         description: `${t.teacherCourses.title} : ${formData?.UserId}`,
       });
 
-      router.push("/courses/teacherCourses");
+      router.push(`/courses/teacherCourses?periodNumber=${periodNumberParam}`);
       router.refresh();
     } catch (error) {
       toast({
@@ -121,7 +121,7 @@ export default function TeacherCoursesForm({
                 <span className="col-span-6">
                   {t.teacherCourses.form.addCourse}
                 </span>
-                <span className="col-span-2 mt-3 md:col-span-1">
+                {/* <span className="col-span-2 mt-3 md:col-span-1">
                   {t.teacherCourses.form.coursePeriod}
                 </span>
                 <div className="col-span-4 mt-2 md:col-span-5">
@@ -137,7 +137,7 @@ export default function TeacherCoursesForm({
                       handleUrlParameterChange("periodNumber", `${x.key}`);
                     }}
                   />
-                </div>
+                </div> */}
                 <span className="col-span-2 mt-3 md:col-span-1">
                   {t.teacherCourses.form.level}
                 </span>
@@ -234,7 +234,11 @@ export default function TeacherCoursesForm({
               type="button"
               variant={"secondary"}
               className="w-[30%]"
-              onClick={() => router.push("/courses/teacherCourses")}
+              onClick={() =>
+                router.push(
+                  `/courses/teacherCourses?periodNumber=${periodNumberParam}`,
+                )
+              }
             >
               {t.shared.cancel}
             </Button>
@@ -252,7 +256,11 @@ export default function TeacherCoursesForm({
             <Button
               variant={"secondary"}
               className="w-[30%]"
-              onClick={() => router.back()}
+              onClick={() =>
+                router.push(
+                  `/courses/teacherCourses?periodNumber=${periodNumberParam}`,
+                )
+              }
             >
               {t.shared.cancel}
             </Button>

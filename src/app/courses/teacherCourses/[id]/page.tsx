@@ -2,6 +2,8 @@ import getAllCoursesQuery from "@/repositories/courses/queries/getAllCoursesQuer
 import TeacherCoursesForm from "@/components/teacherCourses/teacherCoursesForm";
 import getTeacherCoursesByIdQuery from "@/repositories/teacherCourses/queries/getTeacherCoursesByIdQuery";
 import getCurrentLevelsQuery from "@/repositories/levels/queries/getCurrentLevelsQuery";
+import getAllLevelsQuery from "@/repositories/levels/queries/getAllLevelsQuery";
+import getCurrentScholarPeriodQuery from "@/repositories/scholarPeriods/queries/getCurrentScholarPeriod";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -20,25 +22,17 @@ export default async function Page({
   const action =
     searchParams?.action && (searchParams.action as string).replace(/"/g, "");
 
-  if (params.id != "create") {
-    teacherCourses = await getTeacherCoursesByIdQuery({
-      UserId: Number(params.id),
-    });
-  } else {
-    teacherCourses = null;
-  }
+  const currentScholarPeriod = await getCurrentScholarPeriodQuery();
 
-  const pagetitle = `${`${t.shared[action as keyof typeof t.shared]} ${t.teacherCourses.teacherCourses} 
-    ${action != "create" ? `: ${teacherCourses ? teacherCourses.UserName : ""}` : ""}`}`;
-
-  const periodNumber = searchParams?.periodNumber
+  const periodNumberParam = searchParams?.periodNumber
     ? parseInt(searchParams.periodNumber as string)
-    : PeriodEnum["Cours d'été"];
+    : currentScholarPeriod.Number;
+
   const levelId = parseInt(searchParams.levelId as string) || null;
 
   const courses = await getAllCoursesQuery({
     IsEnabled: true,
-    PeriodNumber: periodNumber,
+    PeriodNumber: periodNumberParam,
     LevelId: levelId,
   });
   const allCourses = await getAllCoursesQuery({
@@ -46,12 +40,30 @@ export default async function Page({
     PeriodNumber: 0,
   });
 
-  const levels = await getCurrentLevelsQuery();
+  // const levels = await getCurrentLevelsQuery();
+  const levels = await getAllLevelsQuery({
+    IsEnabled: true,
+    PeriodNumber: periodNumberParam,
+  });
+
+  if (params.id != "create") {
+    teacherCourses = await getTeacherCoursesByIdQuery({
+      UserId: Number(params.id),
+      PeriodNumber: periodNumberParam,
+    });
+  } else {
+    teacherCourses = null;
+  }
+
+  const pagetitle = `${`${t.shared[action as keyof typeof t.shared]} ${t.teacherCourses.teacherCourses} 
+    ${action != "create" ? `: ${teacherCourses ? teacherCourses.UserName : ""}` : ""} - ${PeriodEnum[periodNumberParam]}`}`;
 
   return (
     <main className="relative mt-5 flex justify-center">
       <Button asChild className={`absolute -left-16 top-3`} variant="ghost">
-        <Link href={`/courses/teacherCourses`}>
+        <Link
+          href={`/courses/teacherCourses?periodNumber=${periodNumberParam}`}
+        >
           <Icon name={"MdArrowBack"} className="text-xl" />
         </Link>
       </Button>

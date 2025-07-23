@@ -5,15 +5,19 @@ const prisma = new PrismaClient();
 
 type getTeacherCoursesByIdQueryParamsType = {
   UserId: number;
+  PeriodNumber: number;
 };
 
 const getTeacherCoursesByIdQuery = async (
   params: getTeacherCoursesByIdQueryParamsType,
 ) => {
   const query = await prisma.users.findFirstOrThrow({
-    where: { UserId: params.UserId },
+    where: {
+      UserId: params.UserId,
+    },
     include: {
       TeacherCourses: {
+        where: { PeriodNumber: params.PeriodNumber },
         include: { Courses: true },
       },
     },

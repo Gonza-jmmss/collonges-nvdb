@@ -44,6 +44,7 @@ export type TeacherCoursesMap = {
     TeacherCourseId: number;
     UserId: number;
     CourseId: number;
+    PeriodNumber: number;
     UpdatedAt?: Date | null;
     CreatedAt: Date;
     Courses: {
@@ -66,6 +67,7 @@ export type CoursesMap = {
   TeacherCourseId: number;
   UserId: number;
   CourseId: number;
+  PeriodNumber: number;
   UpdatedAt?: Date | null;
   CreatedAt: Date;
   Courses: {

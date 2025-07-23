@@ -1,17 +1,24 @@
-import { cache } from "react";
 import { PrismaClient } from "@prisma/client";
 import { TeacherCoursesMap, CoursesMap } from "../teacherCoursesViewModel";
 
 const prisma = new PrismaClient();
 
-const getAllTeacherCoursesQuery = cache(async () => {
+type getAllTeacherCoursesQueryParamas = {
+  PeriodNumber: number;
+};
+
+const getAllTeacherCoursesQuery = async (
+  params: getAllTeacherCoursesQueryParamas,
+) => {
   const query = await prisma.users.findMany({
     where: {
       Roles: { Name: { in: ["Professeur", "Directeur"] }, IsEnabled: true },
       IsEnabled: true,
+      // TeacherCourses: { some: { PeriodNumber: params.PeriodNumber } },
     },
     include: {
       TeacherCourses: {
+        where: { PeriodNumber: params.PeriodNumber },
         include: { Courses: true },
       },
     },
@@ -27,10 +34,11 @@ const getAllTeacherCoursesQuery = cache(async () => {
       EnglishName: course.Courses.EnglishName,
       CourseCode: course.Courses.CourseCode,
       CreditAmount: course.Courses.CreditAmount,
+      PeriodNumber: course.PeriodNumber,
     })),
   }));
 
   return res;
-});
+};
 
 export default getAllTeacherCoursesQuery;

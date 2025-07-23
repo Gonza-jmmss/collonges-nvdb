@@ -9,16 +9,26 @@ import {
   TeacherCoursesViewModel,
   TeacherCoursesExtendedViewModel,
 } from "@/repositories/teacherCourses/teacherCoursesViewModel";
-import { useRouter } from "next/navigation";
+import Combobox from "@/components/common/combobox";
+import enumToArray from "@/functions/enumToArray";
+import { PeriodEnum } from "@/enum/periodEnum";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import frFR from "@/lang/fr-FR";
 
 export default function TeacherCoursesTable({
   teacherCourses,
+  periodNumberSelected,
+  urlParams,
 }: {
   teacherCourses: TeacherCoursesViewModel[];
+  periodNumberSelected: number;
+  urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
   const router = useRouter();
+  const updateQuery = useUpdateQuery();
+  const searchParams = useSearchParams();
 
   const columns = useMemo<ColumnDef<TeacherCoursesViewModel, any>[]>(
     () => [
@@ -84,7 +94,7 @@ export default function TeacherCoursesTable({
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() =>
                 router.push(
-                  `/courses/teacherCourses/${row.row.original?.UserId}?action="edit"`,
+                  `/courses/teacherCourses/${row.row.original?.UserId}?action="edit"&periodNumber=${periodNumberSelected}`,
                 )
               }
             />
@@ -92,7 +102,7 @@ export default function TeacherCoursesTable({
         ),
       },
     ],
-    [],
+    [periodNumberSelected],
   );
 
   const columnsExtended = useMemo<
@@ -110,6 +120,8 @@ export default function TeacherCoursesTable({
         id: "CourseCode",
         header: () => <Header text={t.teacherCourses.expanded.courseCode} />,
         filterFn: "equalsString",
+        cell: (x) =>
+          x.getValue().includes("/") ? x.getValue().slice(0, -2) : x.getValue(),
         size: 30,
       },
       {
@@ -123,20 +135,51 @@ export default function TeacherCoursesTable({
     [],
   );
 
+  const handleUrlParameterChange = (key: string, value: string) => {
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.set(key, value);
+
+    // Update URL without replacing current parameters
+    const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+
+    window.history.pushState({}, "", newUrl);
+
+    // If you need to update some state as well
+    updateQuery(Object.fromEntries(currentParams));
+  };
+
   return (
-    <Table
-      columns={columns}
-      data={teacherCourses}
-      className=""
-      expandable
-      expandedContent={(row) => (
-        <Table
-          columns={columnsExtended}
-          data={row.TeacherCourses}
-          minimalMode
-          noBorders
-        />
-      )}
-    />
+    <div>
+      <div className="flex items-center justify-end space-x-5">
+        <div className="w-[15rem]">
+          <Combobox
+            options={enumToArray(PeriodEnum).slice(1)}
+            textAttribute="value"
+            valueAttribute="key"
+            placeholder={t.levels.form.periodNumber}
+            itemSelected={enumToArray(PeriodEnum).find(
+              (x) => x.key === periodNumberSelected,
+            )}
+            setItemSelected={(x: { key: number }) => {
+              handleUrlParameterChange("periodNumber", `${x.key}`);
+            }}
+          />
+        </div>
+      </div>
+      <Table
+        columns={columns}
+        data={teacherCourses}
+        className=""
+        expandable
+        expandedContent={(row) => (
+          <Table
+            columns={columnsExtended}
+            data={row.TeacherCourses}
+            minimalMode
+            noBorders
+          />
+        )}
+      />
+    </div>
   );
 }
