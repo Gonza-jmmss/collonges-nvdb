@@ -3,13 +3,13 @@ import StudentCoruseGradesByActivityTable from "./studentCourseGradesByActivityT
 import getStudentCourseGrandesByStudentCourseQuery from "@/repositories/studentCourseGrades/queries/getStudentCourseGradesByStudentCourseQuery";
 import getStudentCourseGradeByActivityQuery from "@/repositories/studentCourseGrades/queries/getStudentCourseGradeByActivityQuery";
 import getCoursesByTeacherQuery from "@/repositories/courses/queries/getCoursesByTeacherQuery";
-import getCurrentLevelsQuery from "@/repositories/levels/queries/getCurrentLevelsQuery";
+import getAllLevelsQuery from "@/repositories/levels/queries/getAllLevelsQuery";
+import getCurrentScholarPeriodQuery from "@/repositories/scholarPeriods/queries/getCurrentScholarPeriod";
 import { TabsComponent } from "@/components/common/tabs";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { auth } from "@/utils/auth";
-import { PeriodEnum } from "@/enum/periodEnum";
 import frFR from "@/lang/fr-FR";
 
 export default async function StudentCourseGradesPage({
@@ -31,9 +31,11 @@ export default async function StudentCourseGradesPage({
       : 10
     : 10;
 
+  const currentScholarPeriod = await getCurrentScholarPeriodQuery();
+
   const periodNumberSelected = searchParams?.periodNumber
     ? parseInt(searchParams.periodNumber as string)
-    : PeriodEnum["Cours d'été"];
+    : currentScholarPeriod.Number;
 
   const levelIdSelected = searchParams?.levelId
     ? searchParams.levelId !== "null"
@@ -68,7 +70,11 @@ export default async function StudentCourseGradesPage({
       PeriodNumber: periodNumberSelected,
     });
 
-  const levels = await getCurrentLevelsQuery();
+  // const levels = await getCurrentLevelsQuery();
+  const levels = await getAllLevelsQuery({
+    IsEnabled: true,
+    PeriodNumber: periodNumberSelected,
+  });
 
   const tabs = [
     {
