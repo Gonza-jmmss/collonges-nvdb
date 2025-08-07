@@ -22,6 +22,7 @@ export default {
     yearPeriods: "Périodes d'année",
     contactTypes: "Types de contacts",
     changePassword: "Modifier le mot de passe",
+    studentCourseAttendances: "Assiduité",
   },
   shortcuts: {
     transcripts: "Relevés de notes",
@@ -51,10 +52,12 @@ export default {
     male: "Masculin",
     enables: "Actifs",
     disables: "Inactifs",
+    other: "Autre",
     dateInput: {
       day: "JJ",
       month: "MM",
       year: "AAAA",
+      dateInput: "Date",
     },
     noValues: "Aucune valeur trouvée.",
     changePassword: {
@@ -73,6 +76,7 @@ export default {
     of: "de",
     goToPage: "| Aller à la page : ",
     totalRows: "Résultats ",
+    searchAllColumns: "Rechercher toutes les colonnes...",
   },
   users: {
     title: "Utilisateurs",
@@ -897,6 +901,70 @@ export default {
       title: "L'université a des étudiants assignés",
       description:
         "Les universités avec des étudiants assignés ne peuvent pas être supprimées",
+    },
+  },
+  studentCourseAttendances: {
+    title: "Page d'assiduité",
+    studentCourseAttendance: "Assiduité",
+    create: "Créer une Assiduité",
+    tabs: {
+      orderedByDay: "Trié par jour",
+      orderedByStudent: "Trié par étudiant",
+    },
+    columnsByDay: {
+      levelName: "Nuveau",
+    },
+    columnsByDayExtended: {
+      courseCode: "Code du cours",
+      courseName: "Cours",
+      teacher: "Professeur(e)",
+      attendancePeriod: "Période",
+    },
+    columnsByStudent: {
+      studentName: "Étudiant",
+    },
+    columnsByStudentExtended: {
+      courseCode: "Code du cours",
+      courseName: "Cours",
+      attendanceScore: "Absence",
+    },
+    form: {
+      course: "Cours",
+      periodNumber: "Trimestre",
+      level: "Niveau scolaire",
+      attendanceDate: "Date",
+      students: "Étudiants",
+      attendancePeriod: "Période",
+    },
+    validations: {
+      attendanceDateValidation: "La date est obligatoire",
+      studentCourseAttendancesValidation:
+        "Il est obligatoire d'avoir des étudiants",
+      attendanceValueValidation: "L'assiduité est obligatoire",
+      attendancePeriodValidation: "La période est obligatiore",
+    },
+    notifications: {
+      createSuccess: "Assiduité créée avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création de l'assiduité",
+      createFailure: "Échec de la création de l'assiduité",
+      updateSuccess: "Assiduité modifiée avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification de l'assiduité",
+      updateFailure: "Échec de la modification de l'Assiduité",
+      deleteSuccess: "Assiduité supprimée avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression de l'assiduité",
+      deleteFailure: "Échec de la suppression de l'assiduité",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de vouloir supprimer l'assiduité ?",
+      description: "L'assiduité sera supprimée",
+    },
+    deleteModalValidation: {
+      title: "L'assiduité a des étudiants assignés",
+      description:
+        "Les assiduités avec des étudiants assignés ne peuvent pas être supprimées",
     },
   },
   studentProfile: {
