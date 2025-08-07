@@ -17,6 +17,7 @@ const getAllStudentCoursesByScholarPeriodIdQuery = async (
       CourseId: studentCourse.CourseId,
       Note: studentCourse.Note,
       ScholarPeriodId: studentCourse.ScholarPeriodId,
+      AttendanceScore: studentCourse.AttendanceScore,
     }),
   );
 

@@ -220,17 +220,19 @@ model ScholarYears {
 }
 
 model StudentCourses {
-  StudentCourseId     Int                   @id(map: "PK__StudentC__79F228C2995AE57D") @default(autoincrement())
-  StudentId           Int
-  CourseId            Int
-  Note                String?               @db.NVarChar(5)
-  ScholarPeriodId     Int
-  UpdatedAt           DateTime?
-  CreatedAt           DateTime              @default(now())
-  StudentCourseGrades StudentCourseGrades[]
-  Courses             Courses               @relation(fields: [CourseId], references: [CourseId], onUpdate: NoAction, map: "FK_StudentCourses_Courses")
-  ScholarPeriods      ScholarPeriods        @relation(fields: [ScholarPeriodId], references: [ScholarPeriodId], onUpdate: NoAction, map: "FK_StudentCourses_ScholarPeriods")
-  Students            Students              @relation(fields: [StudentId], references: [StudentId], onUpdate: NoAction, map: "FK_StudentCourses_Students")
+  StudentCourseId          Int                        @id(map: "PK__StudentC__79F228C2995AE57D") @default(autoincrement())
+  StudentId                Int
+  CourseId                 Int
+  Note                     String?                    @db.NVarChar(5)
+  ScholarPeriodId          Int
+  UpdatedAt                DateTime?
+  CreatedAt                DateTime                   @default(now())
+  AttendanceScore          Int?
+  StudentCourseAttendances StudentCourseAttendances[]
+  StudentCourseGrades      StudentCourseGrades[]
+  Courses                  Courses                    @relation(fields: [CourseId], references: [CourseId], onUpdate: NoAction, map: "FK_StudentCourses_Courses")
+  ScholarPeriods           ScholarPeriods             @relation(fields: [ScholarPeriodId], references: [ScholarPeriodId], onUpdate: NoAction, map: "FK_StudentCourses_ScholarPeriods")
+  Students                 Students                   @relation(fields: [StudentId], references: [StudentId], onUpdate: NoAction, map: "FK_StudentCourses_Students")
 
   @@schema("Courses")
 }
@@ -274,7 +276,7 @@ model StudentTypes {
 }
 
 model Modules {
-  ModuleId           Int                  @id(map: "PK__Modules__2B7477A715535232") @default(autoincrement())
+  ModuleId           Int                  @id(map: "PK__Modules__2B7477A76709836D") @default(autoincrement())
   Name               String               @db.NVarChar(50)
   Path               String               @db.NVarChar(50)
   Icon               String               @db.NVarChar(50)
@@ -288,7 +290,7 @@ model Modules {
 }
 
 model Roles {
-  RoleId             Int                  @id(map: "PK__Roles__8AFACE1ADB80B0B2") @default(autoincrement())
+  RoleId             Int                  @id(map: "PK__Roles__8AFACE1AF45BAD62") @default(autoincrement())
   Name               String               @db.NVarChar(50)
   UpdatedAt          DateTime?
   CreatedAt          DateTime             @default(now())
@@ -300,24 +302,25 @@ model Roles {
 }
 
 model Users {
-  UserId              Int                   @id(map: "PK__Users__1788CC4C872C57F4") @default(autoincrement())
-  UserName            String                @db.NVarChar(50)
-  Password            String                @db.NVarChar(100)
-  UpdatedAt           DateTime?
-  CreatedAt           DateTime              @default(now())
-  RoleId              Int
-  IsEnabled           Boolean
-  StudentId           Int?
-  StudentCourseGrades StudentCourseGrades[]
-  TeacherCourses      TeacherCourses[]
-  Roles               Roles                 @relation(fields: [RoleId], references: [RoleId], onUpdate: NoAction, map: "FK_Users_Roles")
-  Students            Students?             @relation(fields: [StudentId], references: [StudentId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Users_Students")
+  UserId                   Int                        @id(map: "PK__Users__1788CC4C034B6B0D") @default(autoincrement())
+  UserName                 String                     @db.NVarChar(50)
+  Password                 String                     @db.NVarChar(100)
+  UpdatedAt                DateTime?
+  CreatedAt                DateTime                   @default(now())
+  RoleId                   Int
+  IsEnabled                Boolean
+  StudentId                Int?
+  StudentCourseAttendances StudentCourseAttendances[]
+  StudentCourseGrades      StudentCourseGrades[]
+  TeacherCourses           TeacherCourses[]
+  Roles                    Roles                      @relation(fields: [RoleId], references: [RoleId], onUpdate: NoAction, map: "FK_Users_Roles")
+  Students                 Students?                  @relation(fields: [StudentId], references: [StudentId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Users_Students")
 
   @@schema("Users")
 }
 
 model ModuleElements {
-  ModuleElementId    Int                  @id(map: "PK__SidebarE__0C9AC0DB84FFA65A") @default(autoincrement())
+  ModuleElementId    Int                  @id(map: "PK__ModuleEl__207254F0BC2C1939") @default(autoincrement())
   Name               String               @db.NVarChar(50)
   Path               String               @db.NVarChar(50)
   Icon               String               @db.NVarChar(50)
@@ -333,7 +336,7 @@ model ModuleElements {
 }
 
 model RoleModuleElements {
-  RoleModuleElementId Int             @id(map: "PK__RoleSide__53AF951C8D685ACB") @default(autoincrement())
+  RoleModuleElementId Int             @id(map: "PK__RoleModu__9D8939BF7E956C1C") @default(autoincrement())
   ModuleElementId     Int?
   RoleId              Int
   UpdatedAt           DateTime?
@@ -385,7 +388,7 @@ model ScholarPeriods {
 }
 
 model LevelCourses {
-  LevelCourseId Int       @id(map: "PK__LevelCou__4289BA75D061A78C") @default(autoincrement())
+  LevelCourseId Int       @id(map: "PK__LevelCou__4289BA758C4676F1") @default(autoincrement())
   LevelId       Int
   CourseId      Int
   UpdatedAt     DateTime?
@@ -397,7 +400,7 @@ model LevelCourses {
 }
 
 model Levels {
-  LevelId      Int            @id(map: "PK__Levels__09F03C26D263CB7B") @default(autoincrement())
+  LevelId      Int            @id(map: "PK__Levels__09F03C2673F6B0D0") @default(autoincrement())
   Name         String         @db.NVarChar(255)
   IsEnabled    Boolean
   UpdatedAt    DateTime?
@@ -409,7 +412,7 @@ model Levels {
 }
 
 model TeacherCourses {
-  TeacherCourseId Int       @id(map: "PK__TeacherC__73CDCFBB55E27CC9") @default(autoincrement())
+  TeacherCourseId Int       @id(map: "PK__TeacherC__73CDCFBB675DAD4E") @default(autoincrement())
   UserId          Int
   CourseId        Int
   UpdatedAt       DateTime?
@@ -422,7 +425,7 @@ model TeacherCourses {
 }
 
 model GradeCoefficients {
-  GradeCoefficientId  Int                   @id(map: "PK__GradeCoe__6A179275586DAB81") @default(autoincrement())
+  GradeCoefficientId  Int                   @id(map: "PK__GradeCoe__6A1792751C3D7D75") @default(autoincrement())
   Name                String                @db.NVarChar(255)
   Coefficient         Decimal               @db.Decimal(18, 2)
   UpdatedAt           DateTime?
@@ -434,7 +437,7 @@ model GradeCoefficients {
 }
 
 model StudentCourseGrades {
-  StudenCourseGradeId Int               @id(map: "PK__StudenCo__0F81FBD69694BE52") @default(autoincrement())
+  StudenCourseGradeId Int               @id(map: "PK__StudentC__0F81FBD64F770F57") @default(autoincrement())
   StudentCourseId     Int
   Grade               String            @db.NVarChar(10)
   GradeCoefficientId  Int
@@ -451,7 +454,7 @@ model StudentCourseGrades {
 }
 
 model YearPeriods {
-  YearPeriodId  Int          @id(map: "PK__YearPeri__90EDD303BCF85254") @default(autoincrement())
+  YearPeriodId  Int          @id(map: "PK__YearPeri__90EDD303B2E5145E") @default(autoincrement())
   Name          String       @db.NVarChar(50)
   PeriodType    Int
   ScholarYearId Int
@@ -462,4 +465,19 @@ model YearPeriods {
   ScholarYears  ScholarYears @relation(fields: [ScholarYearId], references: [ScholarYearId], onUpdate: NoAction, map: "FK_YearPeriods_ScholarYears")
 
   @@schema("Students")
+}
+
+model StudentCourseAttendances {
+  StudentCourseAttendanceId Int            @id(map: "PK__StudentC__2BCAF105057361CD") @default(autoincrement())
+  StudentCourseId           Int
+  UserId                    Int
+  AttendanceDate            DateTime
+  UpdatedAt                 DateTime?
+  CreatedAt                 DateTime       @default(now(), map: "StudentCourseAttendace_CreatedAt_df")
+  AttendanceValue           Int
+  AttendancePeriod          Int
+  StudentCourses            StudentCourses @relation(fields: [StudentCourseId], references: [StudentCourseId], onUpdate: NoAction, map: "FK_StudentCourseAttendace_StudentCourses")
+  Users                     Users          @relation(fields: [UserId], references: [UserId], onUpdate: NoAction, map: "FK_StudentCourseAttendace_Users")
+
+  @@schema("Courses")
 }

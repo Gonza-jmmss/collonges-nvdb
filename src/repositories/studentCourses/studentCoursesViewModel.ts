@@ -10,6 +10,7 @@ export type StudentCoursesViewModel = {
     CourseId: number;
     Name: string;
     CourseCode: string | null;
+    AttendanceScore: number | null;
   }[];
 };
 
@@ -20,6 +21,7 @@ export type StudentCoursesExtendedViewModel = {
   CourseId: number;
   Name: string;
   CourseCode: string | null;
+  AttendanceScore: number | null;
 };
 
 export type StudentCoursesGroupedByStudentMap = {
@@ -47,6 +49,7 @@ export type AllStudentCoursesMap = {
   CourseId: number;
   Note: string | null;
   ScholarPeriodId: number;
+  AttendanceScore: number | null;
   UpdatedAt: Date | null;
   CreatedAt: Date;
   Courses: {
@@ -106,6 +109,7 @@ export type StudentCoursesByStudentIdMap = {
   CourseId: number;
   Note: string | null;
   ScholarPeriodId: number;
+  AttendanceScore: number | null;
   UpdatedAt: Date | null;
   CreatedAt: Date;
   Courses: {
@@ -153,6 +157,7 @@ export type StudentCoursesByStudentIdViewModel = {
     CourseId: number;
     Name: string;
     CourseCode: string | null;
+    AttendanceScore: number | null;
   }[];
 } | null;
 
@@ -164,6 +169,7 @@ export type StudentCoursesByScholarPeriodIdMap = {
   UpdatedAt: Date | null;
   CreatedAt: Date;
   StudentCourseId: number;
+  AttendanceScore: number | null;
 };
 
 export type StudentsByCourseIdMap = {
@@ -172,6 +178,7 @@ export type StudentsByCourseIdMap = {
   CourseId: number;
   Note: string | null;
   ScholarPeriodId: number;
+  AttendanceScore: number | null;
   UpdatedAt: Date | null;
   CreatedAt: Date;
   Students: {
@@ -200,4 +207,5 @@ export type StudentsByCourseIdViewModel = {
   Note: string | null;
   ScholarPeriodId: number;
   StudentName: string | null;
+  AttendanceScore: number | null;
 };

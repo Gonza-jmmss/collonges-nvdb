@@ -56,6 +56,7 @@ const updateStudentCourseCommand = async (params: StudentCorseParams) => {
     CourseId: number;
     Note: null;
     ScholarPeriodId: number;
+    AttendanceScore: null;
   }[] = [];
 
   if (coursesToCreate !== null)
@@ -65,6 +66,7 @@ const updateStudentCourseCommand = async (params: StudentCorseParams) => {
         CourseId: element,
         Note: null,
         ScholarPeriodId: params.ScholarPeriodId,
+        AttendanceScore: null,
       });
     });
 

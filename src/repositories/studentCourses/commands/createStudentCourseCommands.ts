@@ -14,6 +14,7 @@ const createStudentCourseCommand = async (params: StudentCorseParams) => {
     CourseId: number;
     Note: null;
     ScholarPeriodId: number;
+    AttendanceScore: null;
   }[] = [];
 
   if (params.StudentCourses && params.StudentCourses.length > 0) {
@@ -23,6 +24,7 @@ const createStudentCourseCommand = async (params: StudentCorseParams) => {
         CourseId: element.CourseId,
         Note: null,
         ScholarPeriodId: params.ScholarPeriodId,
+        AttendanceScore: null,
       });
     });
   }

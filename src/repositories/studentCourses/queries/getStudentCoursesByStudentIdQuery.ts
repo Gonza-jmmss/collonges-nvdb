@@ -62,6 +62,7 @@ const getStudentCoursesByStudentIdQuery = async (
         CourseId: studentCourse.Courses.CourseId,
         Name: studentCourse.Courses.Name,
         CourseCode: studentCourse.Courses.CourseCode,
+        AttendanceScore: studentCourse.AttendanceScore,
       }),
     ),
   };

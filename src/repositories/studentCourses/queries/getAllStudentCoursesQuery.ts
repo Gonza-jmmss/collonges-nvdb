@@ -109,6 +109,7 @@ const getAllStudentCoursesQuery = async (
           studentCourse.Courses.LevelCourses.length > 0
             ? studentCourse.Courses.LevelCourses[0].Levels.Name
             : null,
+        AttendanceScore: studentCourse.AttendanceScore,
       }),
     ),
   }));

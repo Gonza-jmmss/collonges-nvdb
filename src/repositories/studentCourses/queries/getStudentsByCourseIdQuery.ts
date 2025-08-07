@@ -54,6 +54,7 @@ const getStudentsByCourseIdQuery = async (
     Note: studentCourse.Note,
     ScholarPeriodId: studentCourse.ScholarPeriodId,
     StudentName: studentCourse.Students.Persons.AlternativeName,
+    AttendanceScore: studentCourse.AttendanceScore,
   }));
 
   return res;
