@@ -293,7 +293,7 @@ export default function TableComponent<T>({
               <DebouncedInput
                 value={globalFilter ?? ""}
                 onChange={(value) => setGlobalFilter(String(value))}
-                placeholder="Search all columns..."
+                placeholder={t.table.searchAllColumns}
                 className="w-[30vw]"
               />
             </div>
