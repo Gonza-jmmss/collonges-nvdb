@@ -143,6 +143,7 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isOnLogin = nextUrl.pathname === "/login";
+      const userRoleName = auth?.user.userData.Roles.Name;
 
       // Redirect to login if not logged in and not already on the login page
       if (!isLoggedIn && !isOnLogin) {
@@ -151,7 +152,9 @@ export const authConfig = {
 
       // Redirect to home if logged in and on login page
       if (isLoggedIn && isOnLogin) {
-        return Response.redirect(new URL("/", nextUrl.origin));
+        return userRoleName === "Étudiant"
+          ? Response.redirect(new URL("/studentHome", nextUrl.origin))
+          : Response.redirect(new URL("/", nextUrl.origin));
       }
 
       if (isLoggedIn && auth.user) {
@@ -179,7 +182,9 @@ export const authConfig = {
 
           if (!hasPermission) {
             console.log("Access denied for path:", path);
-            return Response.redirect(new URL("/", nextUrl.origin));
+            return userRoleName === "Étudiant"
+              ? Response.redirect(new URL("/studentHome", nextUrl.origin))
+              : Response.redirect(new URL("/", nextUrl.origin));
           }
 
           console.log("Access granted for path:", path);

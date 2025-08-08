@@ -37,3 +37,12 @@ export type ModuleElementsMapViewModel = {
     CreatedAt?: Date;
   } | null;
 };
+
+export type ModuleElementsByModelIdViewModel = {
+  ModuleElementId: number;
+  Name: string;
+  Path: string;
+  Icon: string;
+  Description: string;
+  Location: number | null;
+};

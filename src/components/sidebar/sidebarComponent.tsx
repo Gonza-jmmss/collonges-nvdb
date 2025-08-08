@@ -3,6 +3,7 @@
 import { useState, Fragment } from "react";
 import { ModulesViewModel } from "@/repositories/modules/modulesViewModel";
 import { ShortcutRoleModuleElementsViewModel } from "@/repositories/roleModuleElements/roleModuleElementsViewModel";
+import { ModuleElementsByModelIdViewModel } from "@/repositories/moduleElements/moduleElementsViewModel";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
@@ -26,11 +27,13 @@ import {
 export default function Sidebar({
   children,
   modules,
+  studentModuleElements,
   session,
   shortcuts,
 }: {
   children: React.ReactNode;
   modules: ModulesViewModel[];
+  studentModuleElements: ModuleElementsByModelIdViewModel[];
   session: Session | null;
   shortcuts: ShortcutRoleModuleElementsViewModel[];
 }) {
@@ -46,6 +49,8 @@ export default function Sidebar({
     setOpenModal(false);
   };
 
+  const userRoleName = session?.user.userData.Roles.Name;
+
   return (
     <>
       {/* Desktop */}
@@ -57,187 +62,295 @@ export default function Sidebar({
         >
           <div className="flex h-full flex-col justify-between">
             <div className={`mt-1 flex flex-col items-center space-y-2 py-2`}>
-              {modules.map((element, index) => (
-                <Fragment key={index}>
-                  {element.ModuleId !== 0 && (
+              {userRoleName === "Étudiant" ? (
+                <>
+                  <Button
+                    asChild
+                    className={`flex w-[85%] justify-start space-x-2`}
+                    variant="ghost"
+                  >
+                    {isMouseOver ? (
+                      <div
+                        className={`flex cursor-pointer space-x-2 ${segments.length === 1 ? "text-primary" : ""}`}
+                        onClick={() => router.push(`/studentHome`)}
+                      >
+                        <Icon name={"MdHome"} className="text-xl" />
+                        <span>{t.breadcrumbs.home}</span>
+                      </div>
+                    ) : (
+                      <Icon
+                        name={"MdHome"}
+                        className={`text-xl ${segments.length === 1 ? "text-primary" : ""}`}
+                      />
+                    )}
+                  </Button>
+                  {studentModuleElements.map((element, index) => (
                     <Fragment key={index}>
-                      {(element.Path.slice(1) === ""
-                        ? "home"
-                        : element.Path.slice(1)) ===
-                      (segments.length === 0
-                        ? "home"
-                        : segments[0].toLowerCase()) ? (
-                        <Button
-                          key={index}
-                          className="flex w-[85%] cursor-default justify-start"
-                          variant="ghost"
-                        >
-                          {isMouseOver ? (
-                            <div
-                              className="flex cursor-pointer space-x-2 text-primary"
-                              onClick={() => router.push(`${element.Path}`)}
+                      {element.ModuleElementId !== 0 && (
+                        <Fragment key={index}>
+                          {segments.length === 2 &&
+                          element.Path.slice(1).split("/")[1] ===
+                            segments[1].toLowerCase() ? (
+                            <Button
+                              key={index}
+                              className="flex w-[85%] cursor-default justify-start"
+                              variant="ghost"
                             >
-                              <Icon
-                                name={
-                                  isValidIconName(element.Icon)
-                                    ? element.Icon
-                                    : "MdOutlineNotInterested"
-                                }
-                                className="text-xl"
-                              />
-                              <span>{element.Name}</span>
-                            </div>
+                              {isMouseOver ? (
+                                <div
+                                  className="flex cursor-pointer space-x-2 text-primary"
+                                  onClick={() => router.push(`${element.Path}`)}
+                                >
+                                  <Icon
+                                    name={
+                                      isValidIconName(element.Icon)
+                                        ? element.Icon
+                                        : "MdOutlineNotInterested"
+                                    }
+                                    className="text-xl"
+                                  />
+                                  <span>{element.Name}</span>
+                                </div>
+                              ) : (
+                                <Icon
+                                  name={
+                                    isValidIconName(element.Icon)
+                                      ? element.Icon
+                                      : "MdOutlineNotInterested"
+                                  }
+                                  className="text-xl text-primary"
+                                />
+                              )}
+                            </Button>
                           ) : (
-                            <Icon
-                              name={
-                                isValidIconName(element.Icon)
-                                  ? element.Icon
-                                  : "MdOutlineNotInterested"
-                              }
-                              className="text-xl text-primary"
-                            />
-                          )}
-                        </Button>
-                      ) : (
-                        <Button
-                          key={index}
-                          asChild
-                          className={`flex w-[85%] justify-start space-x-2`}
-                          variant="ghost"
-                        >
-                          {isMouseOver ? (
-                            <div
-                              className="cursor-pointer"
-                              onClick={() => router.push(`${element.Path}`)}
+                            <Button
+                              key={index}
+                              asChild
+                              className={`flex w-[85%] justify-start space-x-2`}
+                              variant="ghost"
                             >
-                              <Icon
-                                name={
-                                  isValidIconName(element.Icon)
-                                    ? element.Icon
-                                    : "MdOutlineNotInterested"
-                                }
-                                className="text-xl"
-                              />{" "}
-                              <span>{element.Name}</span>
-                            </div>
-                          ) : (
-                            <div
-                              className="cursor-pointer"
-                              // onClick={() => router.push(`${element.Path}`)}
-                            >
-                              <Icon
-                                name={
-                                  isValidIconName(element.Icon)
-                                    ? element.Icon
-                                    : "MdOutlineNotInterested"
-                                }
-                                className="text-xl"
-                              />
-                            </div>
+                              {isMouseOver ? (
+                                <div
+                                  className="cursor-pointer"
+                                  onClick={() => router.push(`${element.Path}`)}
+                                >
+                                  <Icon
+                                    name={
+                                      isValidIconName(element.Icon)
+                                        ? element.Icon
+                                        : "MdOutlineNotInterested"
+                                    }
+                                    className="text-xl"
+                                  />{" "}
+                                  <span>{element.Name}</span>
+                                </div>
+                              ) : (
+                                <div
+                                  className="cursor-pointer"
+                                  // onClick={() => router.push(`${element.Path}`)}
+                                >
+                                  <Icon
+                                    name={
+                                      isValidIconName(element.Icon)
+                                        ? element.Icon
+                                        : "MdOutlineNotInterested"
+                                    }
+                                    className="text-xl"
+                                  />
+                                </div>
+                              )}
+                            </Button>
                           )}
-                        </Button>
+                        </Fragment>
                       )}
                     </Fragment>
-                  )}
-                </Fragment>
-              ))}
-              <div className="flex w-full items-center space-x-2 px-2">
-                {isMouseOver ? (
-                  <>
-                    <div className="w-full border-b" />
-                    <div className="text-sm font-semibold text-foreground/50">
-                      {t.shared.shortcut}
-                    </div>
-                    <div className="w-full border-b" />
-                  </>
-                ) : (
-                  <div className="w-full border-b" />
-                  // <>
-                  //   <div className="w-full border-b" />
-                  //   <Icon name={"MdOutlineShortcut"} className="text-sm" />
-                  //   <div className="w-full border-b" />
-                  // </>
-                )}
-              </div>
-              <div className="flex w-full flex-col items-center space-y-1 py-1">
-                {shortcuts.map((element, index) => (
-                  <Fragment key={index}>
-                    {segments.length >= 2 &&
-                    element.Path?.split("/")[2].toLowerCase() ===
-                      segments[1].toLowerCase() ? (
-                      <Button
-                        key={index}
-                        className="flex w-[90%] cursor-default justify-start"
-                        variant="ghost"
-                      >
-                        {isMouseOver ? (
-                          <div
-                            className="flex cursor-pointer items-center space-x-2 text-primary"
-                            onClick={() => router.push(`${element.Path}`)}
-                          >
-                            <Icon
-                              name={
-                                isValidIconName(element.Icon)
-                                  ? element.Icon
-                                  : "MdOutlineNotInterested"
-                              }
-                              className="text-lg"
-                            />
-                            <span className="text-xs">{element.Name}</span>
-                          </div>
-                        ) : (
-                          <Icon
-                            name={
-                              isValidIconName(element.Icon)
-                                ? element.Icon
-                                : "MdOutlineNotInterested"
-                            }
-                            className="text-xl text-primary"
-                          />
-                        )}
-                      </Button>
+                  ))}
+                </>
+              ) : (
+                <>
+                  {modules.map((element, index) => (
+                    <Fragment key={index}>
+                      {element.ModuleId !== 0 && (
+                        <Fragment key={index}>
+                          {(element.Path.slice(1) === ""
+                            ? "home"
+                            : element.Path.slice(1)) ===
+                          (segments.length === 0
+                            ? "home"
+                            : segments[0].toLowerCase()) ? (
+                            <Button
+                              key={index}
+                              className="flex w-[85%] cursor-default justify-start"
+                              variant="ghost"
+                            >
+                              {isMouseOver ? (
+                                <div
+                                  className="flex cursor-pointer space-x-2 text-primary"
+                                  onClick={() => router.push(`${element.Path}`)}
+                                >
+                                  <Icon
+                                    name={
+                                      isValidIconName(element.Icon)
+                                        ? element.Icon
+                                        : "MdOutlineNotInterested"
+                                    }
+                                    className="text-xl"
+                                  />
+                                  <span>{element.Name}</span>
+                                </div>
+                              ) : (
+                                <Icon
+                                  name={
+                                    isValidIconName(element.Icon)
+                                      ? element.Icon
+                                      : "MdOutlineNotInterested"
+                                  }
+                                  className="text-xl text-primary"
+                                />
+                              )}
+                            </Button>
+                          ) : (
+                            <Button
+                              key={index}
+                              asChild
+                              className={`flex w-[85%] justify-start space-x-2`}
+                              variant="ghost"
+                            >
+                              {isMouseOver ? (
+                                <div
+                                  className="cursor-pointer"
+                                  onClick={() => router.push(`${element.Path}`)}
+                                >
+                                  <Icon
+                                    name={
+                                      isValidIconName(element.Icon)
+                                        ? element.Icon
+                                        : "MdOutlineNotInterested"
+                                    }
+                                    className="text-xl"
+                                  />{" "}
+                                  <span>{element.Name}</span>
+                                </div>
+                              ) : (
+                                <div
+                                  className="cursor-pointer"
+                                  // onClick={() => router.push(`${element.Path}`)}
+                                >
+                                  <Icon
+                                    name={
+                                      isValidIconName(element.Icon)
+                                        ? element.Icon
+                                        : "MdOutlineNotInterested"
+                                    }
+                                    className="text-xl"
+                                  />
+                                </div>
+                              )}
+                            </Button>
+                          )}
+                        </Fragment>
+                      )}
+                    </Fragment>
+                  ))}
+                  <div className="flex w-full items-center space-x-2 px-2">
+                    {isMouseOver ? (
+                      <>
+                        <div className="w-full border-b" />
+                        <div className="text-sm font-semibold text-foreground/50">
+                          {t.shared.shortcut}
+                        </div>
+                        <div className="w-full border-b" />
+                      </>
                     ) : (
-                      <Button
-                        key={index}
-                        asChild
-                        className={`flex w-[90%] justify-start space-x-2`}
-                        variant="ghost"
-                      >
-                        {isMouseOver ? (
-                          <div
-                            className="flex cursor-pointer items-center"
-                            onClick={() => router.push(`${element.Path}`)}
-                          >
-                            <Icon
-                              name={
-                                isValidIconName(element.Icon)
-                                  ? element.Icon
-                                  : "MdOutlineNotInterested"
-                              }
-                              className="text-lg"
-                            />
-                            <span className="text-xs">{element.Name}</span>
-                          </div>
-                        ) : (
-                          <div
-                            className="cursor-pointer"
-                            // onClick={() => router.push(`${element.Path}`)}
-                          >
-                            <Icon
-                              name={
-                                isValidIconName(element.Icon)
-                                  ? element.Icon
-                                  : "MdOutlineNotInterested"
-                              }
-                              className="text-xl"
-                            />
-                          </div>
-                        )}
-                      </Button>
+                      <div className="w-full border-b" />
+                      // <>
+                      //   <div className="w-full border-b" />
+                      //   <Icon name={"MdOutlineShortcut"} className="text-sm" />
+                      //   <div className="w-full border-b" />
+                      // </>
                     )}
-                  </Fragment>
-                ))}
-              </div>
+                  </div>
+                  <div className="flex w-full flex-col items-center space-y-1 py-1">
+                    {shortcuts.map((element, index) => (
+                      <Fragment key={index}>
+                        {segments.length >= 2 &&
+                        element.Path?.split("/")[2].toLowerCase() ===
+                          segments[1].toLowerCase() ? (
+                          <Button
+                            key={index}
+                            className="flex w-[90%] cursor-default justify-start"
+                            variant="ghost"
+                          >
+                            {isMouseOver ? (
+                              <div
+                                className="flex cursor-pointer items-center space-x-2 text-primary"
+                                onClick={() => router.push(`${element.Path}`)}
+                              >
+                                <Icon
+                                  name={
+                                    isValidIconName(element.Icon)
+                                      ? element.Icon
+                                      : "MdOutlineNotInterested"
+                                  }
+                                  className="text-lg"
+                                />
+                                <span className="text-xs">{element.Name}</span>
+                              </div>
+                            ) : (
+                              <Icon
+                                name={
+                                  isValidIconName(element.Icon)
+                                    ? element.Icon
+                                    : "MdOutlineNotInterested"
+                                }
+                                className="text-xl text-primary"
+                              />
+                            )}
+                          </Button>
+                        ) : (
+                          <Button
+                            key={index}
+                            asChild
+                            className={`flex w-[90%] justify-start space-x-2`}
+                            variant="ghost"
+                          >
+                            {isMouseOver ? (
+                              <div
+                                className="flex cursor-pointer items-center"
+                                onClick={() => router.push(`${element.Path}`)}
+                              >
+                                <Icon
+                                  name={
+                                    isValidIconName(element.Icon)
+                                      ? element.Icon
+                                      : "MdOutlineNotInterested"
+                                  }
+                                  className="text-lg"
+                                />
+                                <span className="text-xs">{element.Name}</span>
+                              </div>
+                            ) : (
+                              <div
+                                className="cursor-pointer"
+                                // onClick={() => router.push(`${element.Path}`)}
+                              >
+                                <Icon
+                                  name={
+                                    isValidIconName(element.Icon)
+                                      ? element.Icon
+                                      : "MdOutlineNotInterested"
+                                  }
+                                  className="text-xl"
+                                />
+                              </div>
+                            )}
+                          </Button>
+                        )}
+                      </Fragment>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
             <div className="flex flex-col items-center space-y-3 py-3">
               {isMouseOver ? (
@@ -302,12 +415,31 @@ export default function Sidebar({
               <DropdownMenuItem>
                 <div
                   className="flex space-x-3"
-                  onClick={() => router.push(`/`)}
+                  onClick={() => router.push(`/studentHome`)}
                 >
                   <Icon name={"MdSchool"} className="text-xl" />
                   <span>{t.breadcrumbs.home}</span>
                 </div>
               </DropdownMenuItem>
+              {studentModuleElements.map((element, index) => (
+                <DropdownMenuItem key={index}>
+                  <div
+                    className="flex space-x-3"
+                    onClick={() => router.push(`${element.Path}`)}
+                  >
+                    <Icon
+                      name={
+                        isValidIconName(element.Icon)
+                          ? element.Icon
+                          : "MdOutlineNotInterested"
+                      }
+                      className="text-xl"
+                    />
+                    <span>{element.Name}</span>
+                  </div>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <div
                   className="flex space-x-3"
