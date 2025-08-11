@@ -7,7 +7,7 @@ import Link from "next/link";
 import frFR from "@/lang/fr-FR";
 import { auth } from "@/utils/auth";
 
-export default async function Home() {
+export default async function StudentGradesPage() {
   const t = frFR;
   const session = await auth();
 
