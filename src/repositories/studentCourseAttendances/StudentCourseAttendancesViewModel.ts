@@ -181,3 +181,82 @@ export type StudentCourseAttendancesByAttendancePeriodViewModel = {
   AttendanceValue: number;
   AttendancePeriod: number | null;
 };
+
+export type StudentCourseAttendancesByCourseAndStudentId = {
+  StudentCourseAttendanceId: number;
+  StudentCourseId: number;
+  UserId: number;
+  UserName: string;
+  AttendanceDate: Date;
+  AttendanceValue: number;
+  AttendancePeriod: number | null;
+};
+
+export type StudentCourseAttendancesByCourseAndStudentIdViewModel = {
+  CourseId: number;
+  CourseName: string;
+  CourseCode: string | null;
+  AttendanceScore: number | null;
+  Attendances: StudentCourseAttendancesByCourseAndStudentId[];
+};
+
+export type StudentCourseAttendancesByDayAndStudentIdViewModel = {
+  CourseId: number;
+  CourseName: string;
+  CourseCode: string | null;
+  StudentCourseAttendanceId: number;
+  StudentCourseId: number;
+  UserId: number;
+  UserName: string;
+  AttendanceDate: Date;
+  AttendanceValue: number;
+  AttendancePeriod: number | null;
+};
+
+export type StudentCourseAttendancesByDayAndStudentIdMap = {
+  StudentCourseAttendanceId: number;
+  StudentCourseId: number;
+  UserId: number;
+  AttendanceDate: Date;
+  AttendanceValue: number;
+  AttendancePeriod: number;
+  UpdatedAt: Date | null;
+  CreatedAt: Date;
+  Users: {
+    UserId: number;
+    UserName: string;
+  };
+  StudentCourses: {
+    StudentCourseId: number;
+    StudentId: number;
+    CourseId: number;
+    Note: string | null;
+    ScholarPeriodId: number;
+    UpdatedAt: Date | null;
+    CreatedAt: Date;
+    AttendanceScore: number | null;
+    Courses: {
+      Name: string;
+      CourseId: number;
+      CourseCode: string | null;
+    };
+    Students: {
+      StudentId: number;
+      PersonId: number;
+      StudentTypeId: number;
+      IsACA: boolean;
+      DepartmentId: number | null;
+      CollegeId: number | null;
+      RegimeId: number | null;
+      AccommodationId: number | null;
+      UpdatedAt: Date | null;
+      CreatedAt: Date;
+      IsEnabled: boolean;
+      YearPeriodId: number;
+      CreditsType: number | null;
+      Persons: {
+        AlternativeName: string | null;
+      };
+    };
+  };
+};

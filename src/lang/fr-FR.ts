@@ -23,6 +23,9 @@ export default {
     contactTypes: "Types de contacts",
     changePassword: "Modifier le mot de passe",
     studentCourseAttendances: "Assiduité",
+    studentHome: "Accueil",
+    grades: "Notes",
+    attendances: "Assiduité",
   },
   shortcuts: {
     transcripts: "Relevés de notes",
@@ -990,6 +993,32 @@ export default {
     changePassword: {
       title: "Modifier le mot de passe",
       nonUserError: "L'utilisateur n'a pas été trouvé",
+    },
+  },
+  studentAttendances: {
+    title: "Page d'assiduité",
+    tabs: {
+      orderedByDay: "Trié par jour",
+      orderedByCourse: "Trié par cours",
+    },
+    columnsByCourse: {
+      courseCode: "Code",
+      courseName: "Cours",
+      attendanceScore: "Absence",
+    },
+    columnsByCourseExtended: {
+      attendanceDate: "Date",
+      attendancePeriod: "Période",
+      userName: "Professeur(e)",
+      attendanceValue: "Assiduité",
+    },
+    columnsByDay: {
+      courseCode: "Code",
+      courseName: "Cours",
+      attendanceDate: "Date",
+      attendancePeriod: "Période",
+      userName: "Professeur(e)",
+      attendanceValue: "Assiduité",
     },
   },
   reports: {
