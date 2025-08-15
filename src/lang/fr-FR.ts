@@ -26,6 +26,7 @@ export default {
     studentHome: "Accueil",
     grades: "Notes",
     attendances: "Assiduité",
+    courseTextbooks: "Cahier de texte",
   },
   shortcuts: {
     transcripts: "Relevés de notes",
@@ -968,6 +969,69 @@ export default {
       title: "L'assiduité a des étudiants assignés",
       description:
         "Les assiduités avec des étudiants assignés ne peuvent pas être supprimées",
+    },
+  },
+  courseTextbooks: {
+    title: "Cahier de texte",
+    courseTextbook: "Cahier de texte",
+    create: "Créer une cahier de texte",
+    columns: {
+      courseCode: "Code",
+      courseName: "Cours",
+      userName: "Professeur(e)",
+      contentDate: "Date",
+      levelName: "Niveaux",
+    },
+    notifications: {
+      createSuccess: "Cahier de texte créé avec succès",
+      createError:
+        "Une erreur s'est produite pendant la création du cahier de texte",
+      createFailure: "Échec de la création de le cahier de texte",
+      updateSuccess: "Cahier de texte modifié avec succès",
+      updateError:
+        "Une erreur s'est produite pendant la modification de le cahier de texte",
+      updateFailure: "Échec de la modification du cahier de texte",
+      deleteSuccess: "Cahier de texte supprimée avec succès",
+      deleteError:
+        "Une erreur s'est produite pendant la suppression du cahier de texte",
+      deleteFailure: "Échec de la suppression du cahier de texte",
+    },
+    deleteModal: {
+      title: "Êtes-vous sûr de vouloir supprimer le cahier de texte ?",
+      description: "Le cahier de texte sera supprimée",
+    },
+  },
+  courseContents: {
+    textEditor: {
+      placeholder: "Rédiger le contenu du cours...",
+    },
+    form: {
+      course: "Cours",
+      level: "Niveau scolaire",
+      contentDate: "Date",
+      content: "Contenu de cours",
+    },
+    validations: {
+      courseValidation: "Le cours est obligatoire",
+      contentDateValidation: "La date est obligatoire",
+      contentFormatValidation: "Format de contenu invalide",
+      contentValidation: "Le contenu de cours est obligatoire",
+    },
+  },
+  courseHomeworks: {
+    textEditor: {
+      placeholder: "Rédiger le devoir...",
+    },
+    form: {
+      addHomework: "Ajouter un devoir",
+      homework: "Devoir",
+      homeworkDueDate: "Date d'échéance",
+      description: "description",
+    },
+    validations: {
+      homeworkDateValidation: "La date est obligatoire",
+      descriptionFormatValidation: "Format de la description invalide",
+      descriptionValidation: "La description du devoir est obligatoire",
     },
   },
   studentProfile: {
