@@ -85,22 +85,24 @@ model Countries {
 }
 
 model Courses {
-  CourseId       Int              @id(map: "PK__Courses__DA537785C1FC6AFA") @default(autoincrement())
-  Name           String           @db.NVarChar(50)
-  EnglishName    String           @db.NVarChar(50)
-  CourseCode     String?          @db.NVarChar(50)
-  CreditAmount   Int
-  CoursePeriodId Int
-  PeriodNumber   Int?
-  CourseTypeId   Int
-  IsEnabled      Boolean?
-  UpdatedAt      DateTime?
-  CreatedAt      DateTime         @default(now())
-  CoursePeriods  CoursePeriods    @relation(fields: [CoursePeriodId], references: [CoursePeriodId], onUpdate: NoAction, map: "FK_Courses_CoursePeriods")
-  CourseTypes    CourseTypes      @relation(fields: [CourseTypeId], references: [CourseTypeId], onUpdate: NoAction, map: "FK_Courses_CourseTypes")
-  LevelCourses   LevelCourses[]
-  StudentCourses StudentCourses[]
-  TeacherCourses TeacherCourses[]
+  CourseId        Int               @id(map: "PK__Courses__DA537785C1FC6AFA") @default(autoincrement())
+  Name            String            @db.NVarChar(50)
+  EnglishName     String            @db.NVarChar(50)
+  CourseCode      String?           @db.NVarChar(50)
+  CreditAmount    Int
+  CoursePeriodId  Int
+  PeriodNumber    Int?
+  CourseTypeId    Int
+  IsEnabled       Boolean?
+  UpdatedAt       DateTime?
+  CreatedAt       DateTime          @default(now())
+  CourseContents  CourseContents[]
+  CourseHomeworks CourseHomeworks[]
+  CoursePeriods   CoursePeriods     @relation(fields: [CoursePeriodId], references: [CoursePeriodId], onUpdate: NoAction, map: "FK_Courses_CoursePeriods")
+  CourseTypes     CourseTypes       @relation(fields: [CourseTypeId], references: [CourseTypeId], onUpdate: NoAction, map: "FK_Courses_CourseTypes")
+  LevelCourses    LevelCourses[]
+  StudentCourses  StudentCourses[]
+  TeacherCourses  TeacherCourses[]
 
   @@schema("Courses")
 }
@@ -310,6 +312,8 @@ model Users {
   RoleId                   Int
   IsEnabled                Boolean
   StudentId                Int?
+  CourseContents           CourseContents[]
+  CourseHomeworks          CourseHomeworks[]
   StudentCourseAttendances StudentCourseAttendances[]
   StudentCourseGrades      StudentCourseGrades[]
   TeacherCourses           TeacherCourses[]
@@ -478,6 +482,37 @@ model StudentCourseAttendances {
   AttendancePeriod          Int
   StudentCourses            StudentCourses @relation(fields: [StudentCourseId], references: [StudentCourseId], onUpdate: NoAction, map: "FK_StudentCourseAttendace_StudentCourses")
   Users                     Users          @relation(fields: [UserId], references: [UserId], onUpdate: NoAction, map: "FK_StudentCourseAttendace_Users")
+
+  @@schema("Courses")
+}
+
+model CourseContents {
+  CourseContentId Int       @id(map: "PK__CourseCo__91F86B30394E17D0") @default(autoincrement())
+  CourseId        Int
+  UserId          Int
+  ContentDate     DateTime
+  Content         String    @db.NVarChar(Max)
+  UpdatedAt       DateTime?
+  CreatedAt       DateTime  @default(now())
+  ReferenceDate   DateTime
+  Courses         Courses   @relation(fields: [CourseId], references: [CourseId], onUpdate: NoAction, map: "FK_CourseContents_Courses")
+  Users           Users     @relation(fields: [UserId], references: [UserId], onUpdate: NoAction, map: "FK_CourseContents_Users")
+
+  @@schema("Courses")
+}
+
+model CourseHomeworks {
+  CourseHomeworkId Int       @id(map: "PK__CourseHo__5DE46CE2C966E9CB") @default(autoincrement())
+  CourseId         Int
+  UserId           Int
+  HomeworkDate     DateTime
+  HomeworkDueDate  DateTime
+  Description      String    @db.NVarChar(Max)
+  UpdatedAt        DateTime?
+  CreatedAt        DateTime  @default(now())
+  ReferenceDate    DateTime
+  Courses          Courses   @relation(fields: [CourseId], references: [CourseId], onUpdate: NoAction, map: "FK_CourseHomeworks_Courses")
+  Users            Users     @relation(fields: [UserId], references: [UserId], onUpdate: NoAction, map: "FK_CourseHomeworks_Users")
 
   @@schema("Courses")
 }
