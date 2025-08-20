@@ -141,7 +141,7 @@ export default function CourseTextbookForm({
       });
 
       router.push(
-        `/courses/courseTextbooks?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&textbookDate=${textBookDateParam.toUTCString()}`,
+        `/courses/courseTextbooks?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&textbookDate=${textBookDateParam.toUTCString()}&referenceDate`,
       );
       router.refresh();
     } catch (error) {
@@ -309,6 +309,7 @@ export default function CourseTextbookForm({
               <>
                 <span>{t.courseContents.form.content}</span>
                 <TextEditor
+                  key={`editor-${form.getFieldValue("ReferenceDate")}`}
                   data={parseEditorData(field.state.value)}
                   onChange={(newData: OutputData) => {
                     field.handleChange(stringifyEditorData(newData));
@@ -326,6 +327,7 @@ export default function CourseTextbookForm({
             )}
           />
         </div>
+        {/* <pre>{JSON.stringify(form.getFieldValue("Content"))}</pre> */}
         <div className="col-span-1 space-y-1 md:col-span-2">
           <form.Field
             name="Homeworks"

@@ -57,6 +57,9 @@ const updateCourseTextbookCoommand = async (params: courseContentParams) => {
 
   // transaction
   try {
+    const ajustedContentDate = new Date(params.ContentDate);
+    ajustedContentDate.setHours(ajustedContentDate.getHours() + 2);
+
     return await prisma.$transaction(async (tx) => {
       // update courseContenu
       await tx.courseContents.update({
@@ -64,7 +67,7 @@ const updateCourseTextbookCoommand = async (params: courseContentParams) => {
         data: {
           CourseId: params.CourseId,
           UserId: params.UserId,
-          ContentDate: params.ContentDate,
+          ContentDate: ajustedContentDate,
           Content: params.Content,
         },
       });
@@ -74,12 +77,18 @@ const updateCourseTextbookCoommand = async (params: courseContentParams) => {
         // Use Promise.all with map instead of forEach
         await Promise.all(
           courseHomeworksToCreate.map(async (element) => {
+            const ajustedHomeworkDate = new Date(element.HomeworkDate);
+            ajustedHomeworkDate.setHours(ajustedHomeworkDate.getHours() + 2);
+
+            const ajustedHomeworkDueDate = new Date(element.HomeworkDueDate);
+            ajustedHomeworkDate.setHours(ajustedHomeworkDate.getHours() + 2);
+
             return await tx.courseHomeworks.create({
               data: {
                 CourseId: element.CourseId,
                 UserId: element.UserId,
-                HomeworkDate: element.HomeworkDate,
-                HomeworkDueDate: element.HomeworkDueDate,
+                HomeworkDate: ajustedHomeworkDate,
+                HomeworkDueDate: ajustedHomeworkDueDate,
                 Description: element.Description,
                 ReferenceDate: element.ReferenceDate,
               },

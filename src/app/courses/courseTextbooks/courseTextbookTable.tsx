@@ -74,15 +74,15 @@ export default function CourseTextbookTable({
         header: () => <Header text={t.courseTextbooks.columns.userName} />,
         filterFn: "equalsString",
       },
-      {
-        accessorKey: "ReferenceDate",
-        id: "ReferenceDate",
-        header: () => <Header text={t.courseTextbooks.columns.contentDate} />,
-        filterFn: "equalsString",
-        cell: ({ row }) => (
-          <span>{formatDateTime(row.original.ReferenceDate)}</span>
-        ),
-      },
+      // {
+      //   accessorKey: "ReferenceDate",
+      //   id: "ReferenceDate",
+      //   header: () => <Header text={t.courseTextbooks.columns.contentDate} />,
+      //   filterFn: "equalsString",
+      //   cell: ({ row }) => (
+      //     <span>{formatDateTime(row.original.ContentDate)}</span>
+      //   ),
+      // },
       {
         accessorKey: "LevelName",
         id: "LevelName",
@@ -104,7 +104,7 @@ export default function CourseTextbookTable({
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() =>
                 router.push(
-                  `/courses/courseTextbooks/${row.original.CourseContentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.original.CourseId}&textbookDate=${textbookDateSelected.toUTCString()}&referenceDate=${row.original.ReferenceDate.toUTCString()}`,
+                  `/courses/courseTextbooks/${row.original.CourseContentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.original.CourseId}&textbookDate=${row.original.ContentDate.toUTCString()}&referenceDate=${row.original.ReferenceDate.toUTCString()}`,
                 )
               }
             />

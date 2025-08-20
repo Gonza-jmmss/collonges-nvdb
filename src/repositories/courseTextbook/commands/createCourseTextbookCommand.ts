@@ -10,11 +10,14 @@ type courseContentParams = z.infer<typeof CourseContentSchema>;
 
 const createCourseTextbookCommand = async (params: courseContentParams) => {
   try {
+    const ajustedContentDate = new Date(params.ContentDate);
+    ajustedContentDate.setHours(ajustedContentDate.getHours() + 2);
+
     return prisma.$transaction(async (tx) => {
       const courseContentToCreate = {
         CourseId: params.CourseId,
         UserId: params.UserId,
-        ContentDate: params.ContentDate,
+        ContentDate: ajustedContentDate,
         Content: params.Content,
         ReferenceDate: params.ReferenceDate,
       };
@@ -34,11 +37,19 @@ const createCourseTextbookCommand = async (params: courseContentParams) => {
 
       if (params.Homeworks && params.Homeworks.length > 0) {
         params.Homeworks.forEach((element) => {
+          const ajustedHomeworkDate = new Date(element.HomeworkDate);
+          ajustedHomeworkDate.setHours(ajustedHomeworkDate.getHours() + 2);
+
+          const ajustedHomeworkDueDate = new Date(element.HomeworkDueDate);
+          ajustedHomeworkDueDate.setHours(
+            ajustedHomeworkDueDate.getHours() + 2,
+          );
+
           courseHomeworkToCreate.push({
             CourseId: element.CourseId,
             UserId: element.UserId,
-            HomeworkDate: element.HomeworkDate,
-            HomeworkDueDate: element.HomeworkDueDate,
+            HomeworkDate: ajustedHomeworkDate,
+            HomeworkDueDate: ajustedHomeworkDueDate,
             Description: element.Description,
             ReferenceDate: element.ReferenceDate,
           });
