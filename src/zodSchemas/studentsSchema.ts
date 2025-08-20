@@ -18,6 +18,7 @@ export const ContactPerson = z.object({
   DBaseCode: z.string().nullable(),
   ImageName: z.string().nullable(),
   ImageNameTemp: z.string().nullable(),
+  DateTemp: z.date().nullable(),
 });
 
 export const PersonCountries = z.object({
@@ -42,6 +43,7 @@ export const StudentPersonSchema = z.object({
     DBaseCode: z.string().nullable(),
     ImageName: z.string().nullable(),
     ImageNameTemp: z.string().nullable(),
+    DateTemp: z.date().nullable(),
   }),
   Student: z.object({
     StudentId: z.number().nullable(),

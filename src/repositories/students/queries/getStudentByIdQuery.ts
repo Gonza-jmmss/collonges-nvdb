@@ -88,6 +88,7 @@ const getStudentByIdQuery = async (studentId: number): Promise<StudentData> => {
       DBaseCode: studentQuery.Persons.DBaseCode,
       ImageName: studentQuery.Persons.ImageName,
       ImageNameTemp: null,
+      DateTemp: null,
     },
     Student: {
       StudentId: studentQuery.StudentId,
@@ -122,6 +123,7 @@ const getStudentByIdQuery = async (studentId: number): Promise<StudentData> => {
       ImageName: null,
       ImageNameTemp: null,
       LoadType: null,
+      DateTemp: null,
     };
     result.ContactPerson?.push(contactData);
   });

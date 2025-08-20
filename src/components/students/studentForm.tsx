@@ -105,6 +105,7 @@ export default function StudentForm({
         ImageName:
           action !== "create" ? (studentData?.Person.ImageName ?? null) : null,
         ImageNameTemp: null,
+        DateTemp: null,
       },
       Student: {
         StudentId:
@@ -148,6 +149,7 @@ export default function StudentForm({
               DBaseCode: null,
               ImageName: null,
               ImageNameTemp: null,
+              DateTemp: new Date(),
             })) ?? null)
           : null,
       PersonCountry:
@@ -1030,6 +1032,7 @@ export default function StudentForm({
                       DBaseCode: null,
                       ImageName: null,
                       ImageNameTemp: null,
+                      DateTemp: new Date(),
                     })
                   }
                 >
@@ -1039,21 +1042,25 @@ export default function StudentForm({
             )}
             {field.state.value?.map((contact, index) => (
               <div
-                key={index}
+                key={`${index}${contact.DateTemp}`}
                 className="col-span-1 rounded-md border p-3 md:col-span-2"
               >
                 <div className="flex justify-between space-x-3">
                   <span className="text-xl font-semibold">
                     {t.students.form.contact}
                   </span>
-                  <Button
-                    type="button"
-                    variant={"ghost"}
-                    size={"icon"}
-                    onClick={() => field.removeValue(index)}
-                  >
-                    <Icon name="MdClose" className="text-xl" />
-                  </Button>
+                  {action !== "view" && (
+                    <>
+                      <Button
+                        type="button"
+                        variant={"ghost"}
+                        size={"icon"}
+                        onClick={() => field.removeValue(index)}
+                      >
+                        <Icon name="MdClose" className="text-xl" />
+                      </Button>
+                    </>
+                  )}
                 </div>
                 {contact.PersonId === null && contact.LoadType === null && (
                   <div className="mt-3 flex w-full flex-col space-y-5 sm:flex-row sm:space-x-5 sm:space-y-0">
