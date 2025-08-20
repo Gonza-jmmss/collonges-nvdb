@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import createStudentCourseGradesCommand from "@/repositories/studentCourseGrades/commands/createStudentCourseGradesCommand";
 import updateStudentCourseGradesCommand from "@/repositories/studentCourseGrades/commands/updateStudentCourseGradesCommand";
 import { StudentCourseGradesByCourseIdViewModel } from "@/repositories/studentCourseGrades/studentCourseGradesViewModel";
@@ -18,6 +18,7 @@ import enumToArray from "@/functions/enumToArray";
 import { PeriodEnum } from "@/enum/periodEnum";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { useToast } from "@/hooks/use-toast";
+import { useDebouncedAction } from "@/hooks/useDebouncedAction";
 import { useRouter } from "next/navigation";
 import { date, z } from "zod";
 import frFR from "@/lang/fr-FR";
@@ -51,6 +52,11 @@ export default function StudentCourseGradesForm({
   const { toast } = useToast();
   const router = useRouter();
   const updateQuery = useUpdateQuery();
+
+  const { register, trigger } = useDebouncedAction<HTMLInputElement>((el) => {
+    el?.blur();
+    console.log("Auto-save triggered for grade:", el?.value);
+  }, 500);
 
   const [isPending, setIsPending] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -290,6 +296,27 @@ export default function StudentCourseGradesForm({
     form.setFieldValue("StudentCourses", updatedStudentCourses);
   }, [studentByCouse, form]);
 
+  // Sort alphabetically by student name
+  const sorted = [...(form.getFieldValue("StudentCourses") ?? [])].sort(
+    (a, b) => {
+      const nameA =
+        studentByCouse.find((x) => x.StudentCourseId === a.StudentCourseId)
+          ?.StudentName ?? "";
+      const nameB =
+        studentByCouse.find((x) => x.StudentCourseId === b.StudentCourseId)
+          ?.StudentName ?? "";
+      return nameA.localeCompare(nameB);
+    },
+  );
+
+  // Split into columns
+  const colCount = 2;
+  const columns: (typeof sorted)[] = Array.from({ length: colCount }, () => []);
+  const chunkSize = Math.ceil(sorted.length / colCount);
+  for (let i = 0; i < colCount; i++) {
+    columns[i] = sorted.slice(i * chunkSize, (i + 1) * chunkSize);
+  }
+
   return (
     <>
       <form
@@ -436,66 +463,80 @@ export default function StudentCourseGradesForm({
                   </Button>
                 </div>
                 <div className="grid grid-cols-2 gap-5">
-                  {field.state.value?.map((studentCourse, index) => (
-                    <div
-                      key={index}
-                      className="col-span-2 rounded-md border border-foreground/30 p-2 xl:col-span-1"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="text-sm font-semibold">
-                          {
-                            studentByCouse.find(
-                              (x) =>
-                                x.StudentCourseId ===
-                                studentCourse.StudentCourseId,
-                            )?.StudentName
-                          }
-                        </div>
-                        <div className="flex items-center space-x-2 text-sm">
-                          <form.Field
-                            name={`StudentCourses[${index}].Grade`}
-                            children={(field) => (
-                              <>
-                                <span>{t.studentCourseGrades.form.grade}</span>
-                                <Input
-                                  id="Grade"
-                                  name="Grade"
-                                  type="number"
-                                  placeholder={``}
-                                  className="w-20 bg-background/30 text-center"
-                                  value={
-                                    field.state.value?.toLocaleString() || ""
-                                  }
-                                  onChange={(e) => {
-                                    let value = e.target.value;
-
-                                    // Check if the input has a decimal point
-                                    if (value.includes(".")) {
-                                      const parts = value.split(".");
-
-                                      // Limit to 2 decimal places by truncating any additional digits
-                                      if (parts[1].length > 2) {
-                                        value = `${parts[0]}.${parts[1].substring(0, 2)}`;
+                  {columns.map((col, colIdx) => (
+                    <div key={colIdx} className="flex flex-col space-y-5">
+                      {col.map((studentCourse, indexInCol) => (
+                        <div
+                          key={studentCourse.StudentCourseId}
+                          className="rounded-md border border-foreground/30 p-2"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="text-sm font-semibold">
+                              {
+                                studentByCouse.find(
+                                  (x) =>
+                                    x.StudentCourseId ===
+                                    studentCourse.StudentCourseId,
+                                )?.StudentName
+                              }
+                            </div>
+                            <div className="flex items-center space-x-2 text-sm">
+                              <form.Field
+                                name={`StudentCourses[${colIdx * Math.ceil(sorted.length / columns.length) + indexInCol}].Grade`}
+                                children={(field) => (
+                                  <>
+                                    <span>
+                                      {t.studentCourseGrades.form.grade}
+                                    </span>
+                                    <Input
+                                      ref={
+                                        register(
+                                          colIdx *
+                                            Math.ceil(
+                                              sorted.length / columns.length,
+                                            ) +
+                                            indexInCol,
+                                        ) ?? 0
                                       }
-                                    }
+                                      type="number"
+                                      className="w-20 bg-background/30 text-center"
+                                      value={
+                                        field.state.value?.toLocaleString() ||
+                                        ""
+                                      }
+                                      onChange={(e) => {
+                                        let value = e.target.value;
 
-                                    // Convert to number for comparison
-                                    const numValue = parseFloat(value);
+                                        if (value.includes(".")) {
+                                          const parts = value.split(".");
+                                          if (parts[1].length > 2) {
+                                            value = `${parts[0]}.${parts[1].substring(0, 2)}`;
+                                          }
+                                        }
 
-                                    // If value is greater than 20, cap it at 20
-                                    if (!isNaN(numValue) && numValue > 20) {
-                                      value = "20";
-                                    }
+                                        const numValue = parseFloat(value);
+                                        if (!isNaN(numValue) && numValue > 20) {
+                                          value = "20";
+                                        }
 
-                                    field.handleChange(value);
-                                  }}
-                                  disabled={action === "view"}
-                                />
-                              </>
-                            )}
-                          />
+                                        field.handleChange(value);
+                                        trigger(
+                                          colIdx *
+                                            Math.ceil(
+                                              sorted.length / columns.length,
+                                            ) +
+                                            indexInCol,
+                                        );
+                                      }}
+                                      disabled={action === "view"}
+                                    />
+                                  </>
+                                )}
+                              />
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      ))}
                     </div>
                   ))}
                 </div>
