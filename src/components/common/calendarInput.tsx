@@ -12,15 +12,23 @@ import {
 } from "@/components/ui/popover";
 import frFR from "@/lang/fr-FR";
 
-function formatDate(date: Date | undefined) {
+function formatDate(date: Date | undefined, short: boolean) {
   if (!date) {
     return "";
   }
-  return date.toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
+  let value;
+  short
+    ? (value = date.toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+      }))
+    : (value = date.toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      }));
+  return value;
 }
 
 function isValidDate(date: Date | undefined) {
@@ -35,11 +43,13 @@ export default function CalendarInput({
   setDateValue,
   disabled,
   variant,
+  short,
   //   noMaxYearValidation,
 }: {
   dateValue: Date | undefined;
   setDateValue: (date: Date) => void;
   variant?: string;
+  short?: boolean;
   disabled?: boolean;
   //   noMaxYearValidation?: boolean;
 }) {
@@ -50,7 +60,7 @@ export default function CalendarInput({
 
   // Sync input value with dateValue prop
   React.useEffect(() => {
-    setInputValue(formatDate(dateValue));
+    setInputValue(formatDate(dateValue, short ? short : false));
   }, [dateValue]);
 
   // Calendar month should follow the selected date or default to current month
@@ -70,7 +80,7 @@ export default function CalendarInput({
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
       setDateValue(selectedDate);
-      setInputValue(formatDate(selectedDate));
+      setInputValue(formatDate(selectedDate, short ? short : false));
     }
     setOpen(false);
   };
