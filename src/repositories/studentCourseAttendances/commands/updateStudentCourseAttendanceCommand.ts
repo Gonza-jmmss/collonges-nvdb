@@ -18,7 +18,8 @@ type StudentCourseAttendancesMap = z.infer<typeof StudentCourseAttendance>;
 const updateStudentCourseAttendanceCommand = async (
   params: updateStudentCourseAttendanceCommandParams,
 ) => {
-  console.log("updateStudentCourseAttendanceCommand", params);
+  const adjustedAttendanceDate = new Date(params.AttendanceDate);
+  adjustedAttendanceDate.setHours(adjustedAttendanceDate.getHours() + 2);
 
   let createStudentCourseAttendancesUpdated: {
     StudentCourseId: number;
@@ -48,7 +49,7 @@ const updateStudentCourseAttendanceCommand = async (
             StudentCourseId: element.StudentCourseId,
             AttendanceValue: element.AttendanceValue || 0,
             UserId: params.UserId,
-            AttendanceDate: params.AttendanceDate,
+            AttendanceDate: adjustedAttendanceDate,
             AttendancePeriod: params.AttendancePeriod || 0,
           };
 
