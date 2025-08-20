@@ -3,12 +3,13 @@ import { CourseContentsMap } from "../courseTextbookViewModel";
 
 const prisma = new PrismaClient();
 
-type getCourseContentsByDayQueryParams = {
+type getStudentCourseContentsByDayQueryParams = {
+  StudentId: number;
   TextbookDate: Date;
 };
 
-const getCourseContentsByDayQuery = async (
-  params: getCourseContentsByDayQueryParams,
+const getStudentCourseContentsByDayQuery = async (
+  params: getStudentCourseContentsByDayQueryParams,
 ) => {
   const ajustedTextbookDate = new Date(params.TextbookDate);
   ajustedTextbookDate.setHours(ajustedTextbookDate.getHours() + 2);
@@ -22,6 +23,7 @@ const getCourseContentsByDayQuery = async (
 
   const query = await prisma.courseContents.findMany({
     where: {
+      Courses: { StudentCourses: { some: { StudentId: params.StudentId } } },
       ContentDate: {
         gte: textbookDateStart,
         lte: textbookDateEnd,
@@ -76,4 +78,4 @@ const getCourseContentsByDayQuery = async (
   return result;
 };
 
-export default getCourseContentsByDayQuery;
+export default getStudentCourseContentsByDayQuery;

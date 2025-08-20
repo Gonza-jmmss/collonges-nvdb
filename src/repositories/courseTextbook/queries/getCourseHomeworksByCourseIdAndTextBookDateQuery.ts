@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { CourseHomeworksByCourseIdAndTextBookDateMap } from "../courseTextbookViewModel";
+import { CourseHomeworksByCourseIdAndTextbookDateMap } from "../courseTextbookViewModel";
 
 const prisma = new PrismaClient();
 
@@ -11,8 +11,11 @@ type getCourseHomeworksByCourseIdAndTextBookDateQueryParams = {
 const getCourseHomeworksByCourseIdAndTextBookDateQuery = async (
   params: getCourseHomeworksByCourseIdAndTextBookDateQueryParams,
 ) => {
+  const ajustedTextbookDate = new Date(params.ReferenceDate);
+  ajustedTextbookDate.setHours(ajustedTextbookDate.getHours() + 2);
+
   // Normalize ReferenceDate to get full day range
-  const referenceDateStart = new Date(params.ReferenceDate);
+  const referenceDateStart = new Date(ajustedTextbookDate);
   referenceDateStart.setMilliseconds(0); // Set milliseconds to 0
 
   const referenceDateEnd = new Date(referenceDateStart);
@@ -27,10 +30,19 @@ const getCourseHomeworksByCourseIdAndTextBookDateQuery = async (
       },
     },
     orderBy: [{ Courses: { Name: "asc" } }],
+    include: {
+      Courses: {
+        select: {
+          CourseId: true,
+          Name: true,
+          CourseCode: true,
+        },
+      },
+    },
   });
 
   const result = query.map(
-    (courseHomework: CourseHomeworksByCourseIdAndTextBookDateMap) => ({
+    (courseHomework: CourseHomeworksByCourseIdAndTextbookDateMap) => ({
       CourseHomeworkId: courseHomework.CourseHomeworkId,
       CourseId: courseHomework.CourseId,
       UserId: courseHomework.UserId,

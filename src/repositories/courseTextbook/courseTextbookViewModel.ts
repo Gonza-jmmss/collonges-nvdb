@@ -58,6 +58,7 @@ export type CourseContentsMap = {
     })[];
   };
 };
+
 export type CourseHomeworksByCourseIdAndTextbookDateMap = {
   CourseId: number;
   UserId: number;
@@ -75,14 +76,48 @@ export type CourseHomeworksByCourseIdAndTextbookDateMap = {
   };
 };
 
-export type CourseHomeworksByCourseIdAndTextBookDateMap = {
+export type StudentCourseHomeworksByDayViewModel = {
   CourseHomeworkId: number;
   CourseId: number;
+  CourseCode: string | null;
+  CourseName: string;
   UserId: number;
+  UserName: string;
   HomeworkDate: Date;
   HomeworkDueDate: Date;
   Description: string;
   ReferenceDate: Date;
+};
+
+export type StudentCourseHomeworksByDayMap = {
+  CourseId: number;
+  UserId: number;
   UpdatedAt: Date | null;
   CreatedAt: Date;
+  CourseHomeworkId: number;
+  HomeworkDate: Date;
+  HomeworkDueDate: Date;
+  Description: string;
+  ReferenceDate: Date;
+  Users: {
+    UserId: number;
+    UserName: string;
+  };
+  Courses: {
+    CourseId: number;
+    Name: string;
+    CourseCode: string | null;
+  };
+};
+
+export type StudentHomeworkAmountsByTwoWeeks = {
+  CourseHomeworkId: number;
+  HomeworkDate: Date;
+  UserId: number;
+  UserName: string;
+};
+
+export type StudentHomeworkAmountsByTwoWeeksViewModel = {
+  HomeworkDueDate: Date;
+  Homeworks: StudentHomeworkAmountsByTwoWeeks[];
 };

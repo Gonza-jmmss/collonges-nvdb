@@ -11,8 +11,11 @@ type getCourseTextbookByCourseIdAndTextbookDateQueryParams = {
 const getCourseTextbookByCourseIdAndTextbookDateQuery = async (
   params: getCourseTextbookByCourseIdAndTextbookDateQueryParams,
 ) => {
+  const ajustedTextbookDate = new Date(params.ReferenceDate);
+  ajustedTextbookDate.setHours(ajustedTextbookDate.getHours() + 2);
+
   // Normalize ReferenceDate to get full day range
-  const referenceDateStart = new Date(params.ReferenceDate);
+  const referenceDateStart = new Date(ajustedTextbookDate);
   referenceDateStart.setMilliseconds(0); // Set milliseconds to 0
   // referenceDateStart.setSeconds(referenceDateStart.getSeconds() - 1); // Previous second to create a range
 

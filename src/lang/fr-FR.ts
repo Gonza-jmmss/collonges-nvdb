@@ -1085,12 +1085,30 @@ export default {
       attendanceValue: "Assiduité",
     },
   },
+  studentTextbook: {
+    tabs: {
+      contents: "Contenus du cours",
+      homeworks: "Devoirs",
+    },
+    closeDates: "Proche dates",
+  },
+  studentHomeworks: {
+    title: "Devoirs",
+    quantity: "Quantité de devoirs",
+    card: {
+      course: "Cours",
+      homeworkDate: "Doné",
+      userName: "Professeur(e)",
+      description: "Devoir",
+    },
+  },
   reports: {
     pageTitle: "Rapports",
     ifleStudentsNotes: {
       title: "Notes des étudiants IFLE",
       titlePage: "Notes des étudiants IFLE de",
-      secretariatName: "Marta Oliver",
+      secretaryName: "Marta Oliver",
+      directorName: "Gabriel Samperio",
       data: {
         studentName: "Nom de l'étudiant(e)",
         birthdate: "Date de naissance",
@@ -1118,6 +1136,7 @@ export default {
         titleWarning:
           "Ce document n'est pas valable sans le timbre sec officiel a empreinte",
         secretariat: "Le secrétariat :",
+        director: "Le directeur :",
         date: "Date :",
         data: {
           studentName: "Nom de l'étudiant(e) :",
@@ -1152,6 +1171,7 @@ export default {
         titleReport: "Official transcript of records",
         titleWarning: "Not valid without the official embossed stamp",
         secretariat: "The Registrar :",
+        director: "The director :",
         date: "Date :",
         data: {
           studentName: "Student's name :",
@@ -1183,7 +1203,8 @@ export default {
       },
     },
     ifleInscriptionAttestation: {
-      secretariatName: "Marta Oliver",
+      secretaryName: "Marta Oliver",
+      directorName: "Gabriel Samperio",
       dpfFrench: {
         exportPDF: "Inscription FR PDF",
         titleInstitute: "Institut de francais langue etrangere",
@@ -1194,6 +1215,7 @@ export default {
         titleWarning:
           "Ce document n'est pas valable sans le timbre sec officiel a empreinte",
         secretariat: "Le secrétariat :",
+        director: "Le directeur :",
         date: "Date :",
         data: {
           studentName: "Nom de l'étudiant(e) :",
@@ -1220,6 +1242,7 @@ export default {
         titleReport: "Official inscription",
         titleWarning: "Not valid without the official embossed stamp",
         secretariat: "The Registrar :",
+        director: "The director :",
         date: "Date :",
         data: {
           studentName: "Student's name :",
