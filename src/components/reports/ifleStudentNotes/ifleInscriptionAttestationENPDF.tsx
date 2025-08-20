@@ -9,6 +9,7 @@ import formatTablePDF from "@/functions/formatTablePDF";
 import formatDate from "@/functions/formatDate";
 import {
   signatureMarta,
+  signatureGaby,
   logoIFLE,
   logoCollonge,
   tamponIFLE,
@@ -396,26 +397,42 @@ export default function ifleInscriptionAttestationENPDF({
       //secretariat
       doc.text(
         t.reports.ifleInscriptionAttestation.dpfEnglish.secretariat,
-        140,
+        165,
         currentY,
       );
-      //secretariatName
+      //director
+      doc.text(
+        t.reports.ifleInscriptionAttestation.dpfEnglish.director,
+        120,
+        currentY,
+      );
+      //secretaryName
       doc.setTextColor(141, 154, 208);
       doc.setFont("helvetica", "normal");
       doc.text(
-        t.reports.ifleInscriptionAttestation.secretariatName,
-        160,
-        currentY + 40,
+        t.reports.ifleInscriptionAttestation.secretaryName,
+        168,
+        currentY + 28,
       );
       doc.setTextColor(0, 0, 0);
       currentY += 10 - spaceYAdjustment;
+      //directorName
+      doc.setTextColor(141, 154, 208);
+      doc.setFont("helvetica", "normal");
+      doc.text(
+        t.reports.ifleInscriptionAttestation.directorName,
+        120,
+        currentY + 18,
+      );
+      doc.setTextColor(0, 0, 0);
+      // currentY += spaceYAdjustment;
 
       //date
       const dateText = t.reports.ifleInscriptionAttestation.dpfEnglish.date;
       doc.text(
         t.reports.ifleInscriptionAttestation.dpfEnglish.date,
         leftmargin,
-        currentY,
+        currentY - 8,
       );
       const dateTextWithMargin =
         (doc.getStringUnitWidth(dateText) * doc.getFontSize()) /
@@ -424,17 +441,18 @@ export default function ifleInscriptionAttestationENPDF({
         2;
       const date = formatDate(new Date());
       doc.setFont("helvetica", "normal");
-      doc.text(date, dateTextWithMargin, currentY);
+      doc.text(date, dateTextWithMargin, currentY - 8);
 
-      //img signatureMarta
-      doc.addImage(signatureMarta, "PNG", 140, currentY - 8, 40, 35);
-      //img logoCollonge
+      //img logoCollong
       doc.addImage(logoCollonge, "PNG", leftmargin, 11, 30, 30);
       //img logoIFLE
       doc.addImage(logoIFLE, "PNG", rightmargin - 30, 10, 30, 30);
+      //img signatureMarta
+      doc.addImage(signatureMarta, "PNG", 160, currentY - 9, 29, 25);
+      //img signatureBagy
+      doc.addImage(signatureGaby, "PNG", 110, currentY - 18, 40, 35);
       //img tamponeIFLE
-      // doc.addImage(tamponIFLE, "PNG", 80, 275, 50, 10);
-      doc.addImage(tamponIFLE, "PNG", 60, currentY + 15, 50, 10);
+      doc.addImage(tamponIFLE, "PNG", 30, currentY + 5, 50, 10);
 
       // // guideLine for the logos /////////////////////////
       // doc.line(leftmargin, 30, leftmargin + 5, 30);
@@ -450,9 +468,9 @@ export default function ifleInscriptionAttestationENPDF({
       // // guideLine for the logos /////////////////////////
 
       // const fileName = `English transcript ${studentName} ${studentNotesData.CourseNotes[0].ScholarYear} ${studentNotesData.CourseNotes[0].Quarter}`;
-      const fileName = `Transcript T${studentNotesData.CourseNotes[studentNotesData.CourseNotes.length - 1].Quarter} ${studentNotesData.CourseNotes[studentNotesData.CourseNotes.length - 1].ScholarYear}  ${studentName} ${CollegeAbbreviationText}`;
+      const fileName = `Inscription T${studentNotesData.CourseNotes[studentNotesData.CourseNotes.length - 1].Quarter} ${studentNotesData.CourseNotes[studentNotesData.CourseNotes.length - 1].ScholarYear}  ${studentName} ${CollegeAbbreviationText}`;
       doc.output("dataurlnewwindow");
-      //   doc.save(fileName);
+      doc.save(fileName);
     } catch (error) {
       console.log(error);
     }

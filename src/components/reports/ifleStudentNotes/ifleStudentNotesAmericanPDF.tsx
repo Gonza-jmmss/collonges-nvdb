@@ -9,6 +9,7 @@ import formatTablePDF from "@/functions/formatTablePDF";
 import formatDate from "@/functions/formatDate";
 import {
   signatureMarta,
+  signatureGaby,
   logoIFLE,
   logoCollonge,
   tamponIFLE,
@@ -439,22 +440,30 @@ export default function ifleStudentNotesAmericanPDF({
       //secretariat
       doc.text(
         t.reports.ifleStudentsNotes.dpfEnglish.secretariat,
-        140,
+        165,
         currentY,
       );
-      //secretariatName
+      //director
+      doc.text(t.reports.ifleStudentsNotes.dpfEnglish.director, 120, currentY);
+      //secretaryName
       doc.setTextColor(141, 154, 208);
       doc.setFont("helvetica", "normal");
-      doc.text(t.reports.ifleStudentsNotes.secretariatName, 160, currentY + 40);
+      doc.text(t.reports.ifleStudentsNotes.secretaryName, 168, currentY + 28);
       doc.setTextColor(0, 0, 0);
       currentY += 10 - spaceYAdjustment;
+      //directorName
+      doc.setTextColor(141, 154, 208);
+      doc.setFont("helvetica", "normal");
+      doc.text(t.reports.ifleStudentsNotes.directorName, 120, currentY + 18);
+      doc.setTextColor(0, 0, 0);
+      // currentY += spaceYAdjustment;
 
       //date
       const dateText = t.reports.ifleStudentsNotes.dpfEnglish.date;
       doc.text(
         t.reports.ifleStudentsNotes.dpfEnglish.date,
         leftmargin,
-        currentY,
+        currentY - 8,
       );
       const dateTextWithMargin =
         (doc.getStringUnitWidth(dateText) * doc.getFontSize()) /
@@ -463,17 +472,18 @@ export default function ifleStudentNotesAmericanPDF({
         2;
       const date = formatDate(new Date());
       doc.setFont("helvetica", "normal");
-      doc.text(date, dateTextWithMargin, currentY);
+      doc.text(date, dateTextWithMargin, currentY - 8);
 
-      //img signatureMarta
-      doc.addImage(signatureMarta, "PNG", 140, currentY - 8, 40, 35);
-      //img logoCollonge
+      //img logoCollong
       doc.addImage(logoCollonge, "PNG", leftmargin, 11, 30, 30);
       //img logoIFLE
       doc.addImage(logoIFLE, "PNG", rightmargin - 30, 10, 30, 30);
+      //img signatureMarta
+      doc.addImage(signatureMarta, "PNG", 160, currentY - 9, 29, 25);
+      //img signatureBagy
+      doc.addImage(signatureGaby, "PNG", 110, currentY - 18, 40, 35);
       //img tamponeIFLE
-      // doc.addImage(tamponIFLE, "PNG", 80, 275, 50, 10);
-      doc.addImage(tamponIFLE, "PNG", 60, currentY + 15, 50, 10);
+      doc.addImage(tamponIFLE, "PNG", 30, currentY + 5, 50, 10);
 
       // // guideLine for the logos /////////////////////////
       // doc.line(leftmargin, 30, leftmargin + 5, 30);
