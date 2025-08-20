@@ -122,8 +122,8 @@ export default function StudentForm({
           action !== "create" ? (studentData?.Student.IsEnabled ?? true) : true,
         YearPeriodId:
           action !== "create"
-            ? (studentData?.Student.YearPeriodId ?? null)
-            : null,
+            ? (studentData?.Student.YearPeriodId ?? yearPeriodIdParam)
+            : yearPeriodIdParam,
         CreditsType:
           action !== "create"
             ? (studentData?.Student.CreditsType ?? null)
