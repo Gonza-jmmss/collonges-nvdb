@@ -13,8 +13,11 @@ type getStudentCourseAttendancesByDayAndStudentIdQueryParams = {
 const getStudentCourseAttendancesByDayAndStudentIdQuery = async (
   params: getStudentCourseAttendancesByDayAndStudentIdQueryParams,
 ) => {
+  const adjustedAttendanceDate = new Date(params.AttendanceDate);
+  adjustedAttendanceDate.setHours(adjustedAttendanceDate.getHours() + 2);
+
   // Normalize AttendanceDate to get full day range
-  const attendanceDateStart = new Date(params.AttendanceDate);
+  const attendanceDateStart = new Date(adjustedAttendanceDate);
   attendanceDateStart.setUTCHours(0, 0, 0, 0);
 
   const attendanceDateEnd = new Date(attendanceDateStart);

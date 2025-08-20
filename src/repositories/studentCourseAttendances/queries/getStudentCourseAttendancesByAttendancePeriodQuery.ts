@@ -12,8 +12,11 @@ type getStudentCourseAttendancesByAttendancePeriodQueryParams = {
 const getStudentCourseAttendancesByAttendancePeriodQuery = async (
   params: getStudentCourseAttendancesByAttendancePeriodQueryParams,
 ) => {
+  const adjustedAttendanceDate = new Date(params.AttendanceDate);
+  adjustedAttendanceDate.setHours(adjustedAttendanceDate.getHours() + 2);
+
   // Normalize `AttendanceDate` by truncating milliseconds
-  const attendaceDateStart = new Date(params.AttendanceDate);
+  const attendaceDateStart = new Date(adjustedAttendanceDate);
   attendaceDateStart.setMilliseconds(0); // Set milliseconds to 0
 
   const attendaceDateEnd = new Date(attendaceDateStart);
