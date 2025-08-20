@@ -20,7 +20,7 @@ export default async function StudentGradesPage() {
   }
 
   return (
-    <main className="mt-3 w-[92vw] sm:w-[80vw]">
+    <main className="relative mt-3 w-[92vw] sm:w-[80vw]">
       <Button asChild className={`absolute -left-16 -top-1`} variant="ghost">
         <Link href={`/studentHome`}>
           <Icon name={"MdArrowBack"} className="text-xl" />
