@@ -16,6 +16,9 @@ type StudentCoursesMap = z.infer<typeof StudentCourseGrade>;
 const createStudentCourseGradesCommand = async (
   params: StudentCourseGradeParams,
 ) => {
+  const ajustedActivityDate = new Date(params.ActivityDate);
+  ajustedActivityDate.setHours(ajustedActivityDate.getHours() + 2);
+
   let studentCourseGradesCreated: {
     GradeCoefficientId: number;
     UserId: number;
@@ -47,7 +50,7 @@ const createStudentCourseGradesCommand = async (
             GradeCoefficientId: params.GradeCoefficientId || 0,
             UserId: params.UserId || 0,
             Description: params.Description || "",
-            ActivityDate: params.ActivityDate,
+            ActivityDate: ajustedActivityDate,
           };
 
           // Use the transaction client (tx) instead of prisma

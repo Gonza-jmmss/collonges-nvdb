@@ -16,7 +16,8 @@ type StudentCoursesMap = z.infer<typeof StudentCourseGrade>;
 const updateStudentCourseGradesCommand = async (
   params: StudentCourseGradeParams,
 ) => {
-  console.log("updateStudentCourseGradesCommand", params);
+  const ajustedActivityDate = new Date(params.ActivityDate);
+  ajustedActivityDate.setHours(ajustedActivityDate.getHours() + 2);
 
   let studentCourseGradesUpdated: {
     GradeCoefficientId: number;
@@ -49,7 +50,7 @@ const updateStudentCourseGradesCommand = async (
             GradeCoefficientId: params.GradeCoefficientId || 0,
             UserId: params.UserId || 0,
             Description: params.Description || "",
-            ActivityDate: params.ActivityDate,
+            ActivityDate: ajustedActivityDate,
           };
 
           // if Student has no StudentCourseGeadeId, create new StudentCourseGeade
