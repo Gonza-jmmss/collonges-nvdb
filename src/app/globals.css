@@ -132,12 +132,11 @@ input::-webkit-inner-spin-button {
 
 
 /* TEXT EDITOR */
-
 .codex-editor {
-  padding-top: 1rem;
-  padding-left: 4.5rem;
-  padding-right: 2rem;
-  padding-bottom: 1rem;
+  padding-top: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 0.5rem;
 }
 
 .codex-editor__redactor {
@@ -257,6 +256,16 @@ h6.ce-header {
   color: #9ca3af;
   font-style: italic;
   pointer-events: none;
+}
+
+/* Desktop */
+@media only screen and (min-width : 640px) {
+  .codex-editor {
+    padding-top: 1rem;
+    padding-left: 4.5rem;
+    padding-right: 2rem;
+    padding-bottom: 1rem;
+  }
 }
 
 /* TEXT EDITOR */
