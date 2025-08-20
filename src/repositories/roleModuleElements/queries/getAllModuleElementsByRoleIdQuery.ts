@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 const getAllModuleElementsByRoleIdQuery = async (
   RoleId: number,
-  moduleId: number,
+  ModuleId: number,
 ) => {
   const query = await prisma.roleModuleElements.findMany({
     orderBy: {
@@ -17,7 +17,7 @@ const getAllModuleElementsByRoleIdQuery = async (
     },
     where: {
       RoleId: { equals: RoleId },
-      ModuleElements: { ModuleId: moduleId },
+      ModuleElements: { ModuleId: ModuleId },
     },
     include: {
       ModuleElements: true,

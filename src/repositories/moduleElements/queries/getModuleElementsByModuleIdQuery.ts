@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 
 type getModuleElementsByModuleIdQueryParams = {
   ModuleId: number;
+  RoleId: number;
 };
 
 const getModuleElementsByModuleIdQuery = async (
@@ -18,7 +19,10 @@ const getModuleElementsByModuleIdQuery = async (
         Location: { sort: "asc", nulls: "last" },
       },
     ],
-    where: { ModuleId: params.ModuleId },
+    where: {
+      Modules: { RoleModuleElements: { every: { RoleId: params.RoleId } } },
+      ModuleId: params.ModuleId,
+    },
   });
 
   const res = query.map((moduleElement: ModuleElementViewModel) => ({

@@ -4,7 +4,7 @@
 import SidebarComponent from "@/components/sidebar/sidebarComponent";
 import getAllModulesByRoleIdQuery from "@/repositories/roleModuleElements/queries/getAllModulesByRoleIdQuery";
 import getShortcutRoleModuleElementsByRoleQuery from "@/repositories/roleModuleElements/queries/getShortcutRoleModuleElementsByRoleQuery";
-import getModuleElementsByModuleIdQuery from "@/repositories/moduleElements/queries/getModuleElementsByModuleIdQuery";
+import getAllModuleElementsByRoleIdQuery from "@/repositories/roleModuleElements/queries/getAllModuleElementsByRoleIdQuery";
 import { ModulesViewModel } from "@/repositories/modules/modulesViewModel";
 import { ShortcutRoleModuleElementsViewModel } from "@/repositories/roleModuleElements/roleModuleElementsViewModel";
 import { ModuleElementsByModelIdViewModel } from "@/repositories/moduleElements/moduleElementsViewModel";
@@ -22,10 +22,10 @@ export default async function Sidebar({
 
   if (session) {
     modules = await getAllModulesByRoleIdQuery(session.user.userData.RoleId);
-    studentModuleElements = await getModuleElementsByModuleIdQuery({
-      ModuleId:
-        modules.find((x) => x.Name === "Accueil étudiant")?.ModuleId || 0,
-    });
+    studentModuleElements = await getAllModuleElementsByRoleIdQuery(
+      session.user.userData.RoleId,
+      modules.find((x) => x.Path === "/studentHome")?.ModuleId || 0,
+    );
     shortcuts = await getShortcutRoleModuleElementsByRoleQuery({
       RoleId: session.user.userData.RoleId,
     });
