@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import createCourseTextbookCommand from "@/repositories/courseTextbook/commands/createCourseTextbookCommand";
 import updateCourseTextbookCoommand from "@/repositories/courseTextbook/commands/updateCourseTextbookCoommand";
 import { CourseTextbookViewModel } from "@/repositories/courseTextbook/courseTextbookViewModel";
@@ -52,6 +52,12 @@ export default function CourseTextbookForm({
 
   const [isPending, setIsPending] = useState(false);
 
+  const contentDocumentInputRef = useRef<HTMLInputElement | null>(null);
+  // Documents that already exist on server (from DB)
+  const [originalDocs, setOriginalDocs] = useState<string[]>([]);
+  // New documents selected (not yet uploaded)
+  const [selectedDocs, setSelectedDocs] = useState<File[]>([]);
+
   const textBookDateParam = new Date(urlParams?.textbookDate as string);
   const levelIdParam =
     urlParams?.levelId !== null ? parseInt(urlParams?.levelId as string) : null;
@@ -80,6 +86,8 @@ export default function CourseTextbookForm({
         action !== "create"
           ? (courseContentData?.ReferenceDate ?? dateNow)
           : dateNow,
+      Documents:
+        action !== "create" ? (courseContentData?.Documents ?? []) : [],
       Homeworks:
         action !== "create"
           ? (courseContentData?.Homeworks?.map((homework) => ({
@@ -96,10 +104,82 @@ export default function CourseTextbookForm({
     onSubmit: async ({ value }) => {
       // console.log("formData", value);
       setIsPending(true);
-      action === "create" && createCourseTextbook(value);
-      action === "edit" && updateCourseTextbook(value);
+
+      try {
+        // Handle documents upload/deletion logic here
+        await handleDocumentOperations(value);
+
+        // Then proceed with courseContent creation/update
+        action === "create" && (await createCourseTextbook(value));
+        action === "edit" && (await updateCourseTextbook(value));
+      } catch (error) {
+        console.error("Form submission error:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: `${error}`,
+        });
+        setIsPending(false);
+      }
     },
   });
+
+  const handleDocumentOperations = async (
+    formData: CourseAttendanceFormData,
+  ) => {
+    const hasNewDocs = selectedDocs.length > 0;
+
+    try {
+      let uploadedDocs: string[] = [];
+
+      // 1. Upload new documents (if any)
+      if (hasNewDocs) {
+        console.log("Uploading new documents...");
+        const uploadFormData = new FormData();
+        selectedDocs.forEach((file) => uploadFormData.append("files", file));
+
+        const uploadResponse = await fetch("/api/documents/upload", {
+          method: "POST",
+          body: uploadFormData,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error("Documents upload failed");
+        }
+
+        const { files } = await uploadResponse.json();
+        uploadedDocs = files.map((f: any) => f.fileName);
+      }
+
+      // 2. Handle deletions (compare originalDocs vs current existingDocs state)
+      const formDocs = form.getFieldValue("Documents") || [];
+      const deletedDocs = formDocs.filter((doc) => !originalDocs.includes(doc));
+
+      if (deletedDocs.length > 0) {
+        console.log("Deleting docs:", deletedDocs);
+        await fetch("/api/documents/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ files: deletedDocs }),
+        });
+      }
+
+      // 3. Merge current existing docs with new uploads
+      const updatedDocs = [...originalDocs, ...uploadedDocs];
+
+      // 4. Update form data
+      formData.Documents = updatedDocs;
+
+      // 5. Update local state for next round
+      setOriginalDocs(updatedDocs);
+      setSelectedDocs([]); // clear new docs
+
+      console.log("Documents updated:", updatedDocs);
+    } catch (error) {
+      console.error("Document operations error:", error);
+      throw error;
+    }
+  };
 
   const createCourseTextbook = async (formData: CourseAttendanceFormData) => {
     try {
@@ -154,6 +234,31 @@ export default function CourseTextbookForm({
       setIsPending(false);
     }
   };
+
+  const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+
+    const newFiles = Array.from(e.target.files);
+
+    setSelectedDocs((prev) => [...prev, ...newFiles]);
+
+    // reset so the same file can be re-selected
+    e.target.value = "";
+  };
+
+  // remove a new file
+  const removeSelectedDoc = (index: number) => {
+    setSelectedDocs((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // remove an existing stored file (by name)
+  const removeExistingDoc = (docName: string) => {
+    setOriginalDocs((prev) => prev.filter((d) => d !== docName));
+  };
+
+  useEffect(() => {
+    setOriginalDocs(form.getFieldValue("Documents") || []);
+  }, []);
 
   const handleUrlParameterChange = (key: string, value: string) => {
     const currentParams = new URLSearchParams(window.location.search);
@@ -327,7 +432,73 @@ export default function CourseTextbookForm({
             )}
           />
         </div>
-        {/* <pre>{JSON.stringify(form.getFieldValue("Content"))}</pre> */}
+        <div>
+          {action === "view" ? (
+            <>
+              <span>{t.courseTextbooks.documents}</span>
+            </>
+          ) : (
+            <>
+              <input
+                ref={contentDocumentInputRef}
+                className="hidden"
+                type="file"
+                multiple
+                onChange={handleDocumentChange}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                className="flex space-x-2"
+                onClick={() => contentDocumentInputRef.current?.click()}
+              >
+                <Icon name="MdCloudUpload" className="text-3xl" />
+                <span>{t.courseTextbooks.documents}</span>
+              </Button>
+            </>
+          )}
+        </div>
+        <div className="col-span-1 -mt-4 space-y-1 sm:col-span-2">
+          <div className="flex flex-wrap space-x-3 space-y-3">
+            <div />
+            {originalDocs.map((doc, idx) => (
+              <div
+                key={idx}
+                className="flex items-center space-x-2 rounded-md border p-1"
+              >
+                <a
+                  href={`/api/documents/${encodeURIComponent(doc)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {doc.slice(14)}
+                </a>
+                {action !== "view" && (
+                  <Icon
+                    name="MdClose"
+                    className="text-lg hover:cursor-pointer hover:text-primary"
+                    onClick={() => removeExistingDoc(doc)}
+                  />
+                )}
+              </div>
+            ))}
+            {selectedDocs.map((file, idx) => (
+              <div
+                key={idx}
+                className="flex items-center space-x-2 rounded-md border p-1"
+              >
+                <span>{file.name}</span>
+                {action !== "view" && (
+                  <Icon
+                    name="MdClose"
+                    className="text-lg hover:cursor-pointer hover:text-primary"
+                    onClick={() => removeSelectedDoc(idx)}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="col-span-1 space-y-1 md:col-span-2">
           <form.Field
             name="Homeworks"

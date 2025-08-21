@@ -13,13 +13,17 @@ const createCourseTextbookCommand = async (params: courseContentParams) => {
     const ajustedContentDate = new Date(params.ContentDate);
     ajustedContentDate.setHours(ajustedContentDate.getHours() + 2);
 
+    const ajustedReferenceDate = new Date(params.ReferenceDate);
+    ajustedReferenceDate.setHours(ajustedReferenceDate.getHours() + 2);
+
     return prisma.$transaction(async (tx) => {
       const courseContentToCreate = {
         CourseId: params.CourseId,
         UserId: params.UserId,
         ContentDate: ajustedContentDate,
         Content: params.Content,
-        ReferenceDate: params.ReferenceDate,
+        ReferenceDate: ajustedReferenceDate,
+        Documents: params.Documents?.toString(),
       };
 
       const courseContentCreated = await tx.courseContents.create({

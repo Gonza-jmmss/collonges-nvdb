@@ -55,11 +55,11 @@ const updateCourseTextbookCoommand = async (params: courseContentParams) => {
   // console.log("courseHomeworksToUpdate", courseHomeworksToUpdate);
   // // return 1;
 
+  const ajustedContentDate = new Date(params.ContentDate);
+  ajustedContentDate.setHours(ajustedContentDate.getHours() + 2);
+
   // transaction
   try {
-    const ajustedContentDate = new Date(params.ContentDate);
-    ajustedContentDate.setHours(ajustedContentDate.getHours() + 2);
-
     return await prisma.$transaction(async (tx) => {
       // update courseContenu
       await tx.courseContents.update({
@@ -69,6 +69,7 @@ const updateCourseTextbookCoommand = async (params: courseContentParams) => {
           UserId: params.UserId,
           ContentDate: ajustedContentDate,
           Content: params.Content,
+          Documents: params.Documents?.toString(),
         },
       });
 

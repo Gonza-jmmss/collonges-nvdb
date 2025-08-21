@@ -47,7 +47,7 @@ export async function GET(
       );
     }
 
-    return new NextResponse(imageBuffer, {
+    return new NextResponse(imageBuffer.toString(), {
       headers: {
         "Content-Type": contentType,
         "Content-Length": stats.size.toString(),

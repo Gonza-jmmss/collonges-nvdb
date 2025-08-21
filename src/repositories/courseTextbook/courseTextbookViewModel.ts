@@ -7,6 +7,7 @@ export type CourseTextbookViewModel = {
   ContentDate: Date;
   Content: string;
   ReferenceDate: Date;
+  Documents: string[];
   Homeworks: {
     CourseHomeworkId: number;
     CourseId: number;

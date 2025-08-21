@@ -975,6 +975,7 @@ export default {
     title: "Cahier de texte",
     courseTextbook: "Cahier de texte",
     create: "Créer une cahier de texte",
+    documents: "Documents",
     columns: {
       courseCode: "Code",
       courseName: "Cours",

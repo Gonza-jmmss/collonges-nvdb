@@ -18,4 +18,5 @@ export const CourseContentSchema = z.object({
   Content: z.string(),
   ReferenceDate: z.date(),
   Homeworks: z.array(CourseHomework).nullable(),
+  Documents: z.array(z.string()).nullable(),
 });
