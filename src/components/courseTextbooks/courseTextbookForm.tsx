@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import createCourseTextbookCommand from "@/repositories/courseTextbook/commands/createCourseTextbookCommand";
 import updateCourseTextbookCoommand from "@/repositories/courseTextbook/commands/updateCourseTextbookCoommand";
 import { CourseTextbookViewModel } from "@/repositories/courseTextbook/courseTextbookViewModel";
@@ -23,6 +23,8 @@ import { OutputData } from "@editorjs/editorjs";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import frFR from "@/lang/fr-FR";
+import formatDate from "@/functions/formatDate";
+import formatDateTime from "@/functions/formatDateTime";
 
 type CourseAttendanceFormData = z.infer<typeof CourseContentSchema>;
 
@@ -58,10 +60,13 @@ export default function CourseTextbookForm({
   // New documents selected (not yet uploaded)
   const [selectedDocs, setSelectedDocs] = useState<File[]>([]);
 
+  const [homeworkSelectedDocs, setHomeworkSelectedDocs] = useState<
+    Record<number, File[]>
+  >({});
+
   const textBookDateParam = new Date(urlParams?.textbookDate as string);
   const levelIdParam =
     urlParams?.levelId !== null ? parseInt(urlParams?.levelId as string) : null;
-  const courseIdParam = parseInt(urlParams?.courseId as string);
 
   const dateNow = new Date();
 
@@ -87,7 +92,7 @@ export default function CourseTextbookForm({
           ? (courseContentData?.ReferenceDate ?? dateNow)
           : dateNow,
       Documents:
-        action !== "create" ? (courseContentData?.Documents ?? []) : [],
+        action !== "create" ? (courseContentData?.Documents ?? []) : null,
       Homeworks:
         action !== "create"
           ? (courseContentData?.Homeworks?.map((homework) => ({
@@ -98,6 +103,7 @@ export default function CourseTextbookForm({
               HomeworkDueDate: homework.HomeworkDueDate,
               Description: homework.Description,
               ReferenceDate: dateNow,
+              Documents: homework.Documents,
             })) ?? null)
           : null,
     },
@@ -108,6 +114,20 @@ export default function CourseTextbookForm({
       try {
         // Handle documents upload/deletion logic here
         await handleDocumentOperations(value);
+
+        if (value.Homeworks) {
+          for (let idx = 0; idx < value.Homeworks.length; idx++) {
+            const homework = value.Homeworks[idx];
+            if (homework.Documents !== null) {
+              await handleHomeworkDocumentOperations(
+                value,
+                idx,
+                homeworkSelectedDocs[idx],
+                homework.Documents,
+              );
+            }
+          }
+        }
 
         // Then proceed with courseContent creation/update
         action === "create" && (await createCourseTextbook(value));
@@ -171,13 +191,68 @@ export default function CourseTextbookForm({
       formData.Documents = updatedDocs;
 
       // 5. Update local state for next round
-      setOriginalDocs(updatedDocs);
-      setSelectedDocs([]); // clear new docs
+      // setOriginalDocs(updatedDocs);
+      // setSelectedDocs([]); // clear new docs
 
       console.log("Documents updated:", updatedDocs);
     } catch (error) {
       console.error("Document operations error:", error);
       throw error;
+    }
+  };
+
+  const handleHomeworkDocumentOperations = async (
+    formData: CourseAttendanceFormData,
+    homeworkIndex: number,
+    selectedHomeworkDocs: File[],
+    originalHomeworkDocs: string[],
+  ) => {
+    const hasNewDocs = selectedHomeworkDocs && selectedHomeworkDocs.length > 0;
+
+    try {
+      let uploadedDocs: string[] = [];
+
+      if (hasNewDocs) {
+        const uploadFormData = new FormData();
+        selectedHomeworkDocs.forEach((file) =>
+          uploadFormData.append("files", file),
+        );
+
+        const uploadResponse = await fetch("/api/documents/upload", {
+          method: "POST",
+          body: uploadFormData,
+        });
+
+        if (!uploadResponse.ok) throw new Error("Homework docs upload failed");
+
+        const { files } = await uploadResponse.json();
+        uploadedDocs = files.map((f: any) => f.fileName);
+      }
+
+      // 2. Handle deletions
+      const formDocs =
+        form.getFieldValue(`Homeworks[${homeworkIndex}].Documents`) || [];
+      const deletedDocs = originalHomeworkDocs.filter(
+        (doc) => !formDocs.includes(doc),
+      );
+
+      if (deletedDocs.length > 0) {
+        await fetch("/api/documents/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ files: deletedDocs }),
+        });
+      }
+
+      // 3. Merge docs
+      const updatedDocs = [...formDocs, ...uploadedDocs];
+      if (formData.Homeworks)
+        formData.Homeworks[homeworkIndex].Documents = updatedDocs;
+
+      console.log(`Homework ${homeworkIndex} Documents updated:`, updatedDocs);
+    } catch (err) {
+      console.error("Homework document operations error:", err);
+      throw err;
     }
   };
 
@@ -190,7 +265,7 @@ export default function CourseTextbookForm({
       }
       toast({
         title: `${t.courseTextbooks.notifications.createSuccess}`,
-        description: `${t.courseTextbooks.title} : ${courses.find((x) => x.CourseId === courseIdParam)?.CourseCode} - ${courses.find((x) => x.CourseId === courseIdParam)?.Name}}`,
+        description: `${t.courseTextbooks.title} : ${courses.find((x) => x.CourseId === formData.CourseId)?.CourseCode} - ${courses.find((x) => x.CourseId === formData.CourseId)?.Name} | ${formatDate(formData.ContentDate)}}`,
       });
 
       router.push(
@@ -217,7 +292,7 @@ export default function CourseTextbookForm({
       }
       toast({
         title: `${t.courseTextbooks.notifications.updateSuccess}`,
-        description: `${t.courseTextbooks.title} : ${courses.find((x) => x.CourseId === courseIdParam)?.CourseCode} - ${courses.find((x) => x.CourseId === courseIdParam)?.Name}`,
+        description: `${t.courseTextbooks.title} : ${courses.find((x) => x.CourseId === formData.CourseId)?.CourseCode} - ${courses.find((x) => x.CourseId === formData.CourseId)?.Name} | ${formatDate(formData.ContentDate)}}`,
       });
 
       router.push(
@@ -259,6 +334,37 @@ export default function CourseTextbookForm({
   useEffect(() => {
     setOriginalDocs(form.getFieldValue("Documents") || []);
   }, []);
+
+  const handleHomeworkDocumentChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    hwIndex: number,
+  ) => {
+    if (!e.target.files) return;
+    const newFiles = Array.from(e.target.files);
+
+    setHomeworkSelectedDocs((prev) => ({
+      ...prev,
+      [hwIndex]: [...(prev[hwIndex] || []), ...newFiles],
+    }));
+
+    e.target.value = "";
+  };
+
+  const removeHomeworkSelectedDoc = (hwIndex: number, fileIndex: number) => {
+    setHomeworkSelectedDocs((prev) => ({
+      ...prev,
+      [hwIndex]: (prev[hwIndex] || []).filter((_, i) => i !== fileIndex),
+    }));
+  };
+
+  const removeHomeworkExistingDoc = (hwIndex: number, docName: string) => {
+    const currentDocs =
+      form.getFieldValue(`Homeworks[${hwIndex}].Documents`) || [];
+    form.setFieldValue(
+      `Homeworks[${hwIndex}].Documents`,
+      currentDocs.filter((d: string) => d !== docName),
+    );
+  };
 
   const handleUrlParameterChange = (key: string, value: string) => {
     const currentParams = new URLSearchParams(window.location.search);
@@ -390,6 +496,7 @@ export default function CourseTextbookForm({
             name="Content"
             validators={{
               onSubmitAsync: (value) => {
+                console.log("validators", value);
                 if (
                   !value ||
                   value.value === null ||
@@ -414,12 +521,11 @@ export default function CourseTextbookForm({
               <>
                 <span>{t.courseContents.form.content}</span>
                 <TextEditor
-                  key={`editor-${form.getFieldValue("ReferenceDate")}`}
                   data={parseEditorData(field.state.value)}
                   onChange={(newData: OutputData) => {
                     field.handleChange(stringifyEditorData(newData));
                   }}
-                  editorBlock={"editorjs-content"}
+                  editorBlock={`editorjs-content-${formatDateTime(form.getFieldValue("ReferenceDate"))}`}
                   placeholder={t.courseContents.textEditor.placeholder}
                   disabled={action === "view"}
                 />
@@ -470,6 +576,7 @@ export default function CourseTextbookForm({
                   href={`/api/documents/${encodeURIComponent(doc)}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  download
                 >
                   {doc.slice(14)}
                 </a>
@@ -519,6 +626,7 @@ export default function CourseTextbookForm({
                           HomeworkDueDate: new Date(),
                           Description: "",
                           ReferenceDate: form.getFieldValue("ReferenceDate"),
+                          Documents: [],
                         })
                       }
                     >
@@ -641,6 +749,92 @@ export default function CourseTextbookForm({
                                 </>
                               )}
                             />
+                          </div>
+                          <div>
+                            {action === "view" ? (
+                              <>
+                                <span>{t.courseTextbooks.documents}</span>
+                              </>
+                            ) : (
+                              <>
+                                <input
+                                  id={`homework-file-${index}`}
+                                  className="hidden"
+                                  type="file"
+                                  multiple
+                                  onChange={(e) =>
+                                    handleHomeworkDocumentChange(e, index)
+                                  }
+                                />
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  className="flex space-x-2"
+                                  onClick={() =>
+                                    document
+                                      .getElementById(`homework-file-${index}`)
+                                      ?.click()
+                                  }
+                                >
+                                  <Icon
+                                    name="MdCloudUpload"
+                                    className="text-3xl"
+                                  />
+                                  <span>{t.courseTextbooks.documents}</span>
+                                </Button>
+                              </>
+                            )}
+                          </div>
+                          <div className="col-span-1 space-y-1 sm:col-span-2">
+                            <div className="flex flex-wrap space-x-3 space-y-3">
+                              <div />
+                              {/* Existing docs from DB */}
+                              {(homework.Documents || []).map((doc, idx) => (
+                                <div
+                                  key={idx}
+                                  className="flex items-center space-x-2 rounded-md border p-1"
+                                >
+                                  <a
+                                    href={`/api/documents/${encodeURIComponent(doc)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    download
+                                  >
+                                    {doc.slice(14)}
+                                  </a>
+                                  {action !== "view" && (
+                                    <Icon
+                                      name="MdClose"
+                                      className="text-lg hover:cursor-pointer hover:text-primary"
+                                      onClick={() =>
+                                        removeHomeworkExistingDoc(index, doc)
+                                      }
+                                    />
+                                  )}
+                                </div>
+                              ))}
+
+                              {/* New files not uploaded yet */}
+                              {(homeworkSelectedDocs[index] || []).map(
+                                (file, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="flex items-center space-x-2 rounded-md border p-1"
+                                  >
+                                    <span>{file.name}</span>
+                                    {action !== "view" && (
+                                      <Icon
+                                        name="MdClose"
+                                        className="text-lg hover:cursor-pointer hover:text-primary"
+                                        onClick={() =>
+                                          removeHomeworkSelectedDoc(index, idx)
+                                        }
+                                      />
+                                    )}
+                                  </div>
+                                ),
+                              )}
+                            </div>
                           </div>
                         </>
                       )}

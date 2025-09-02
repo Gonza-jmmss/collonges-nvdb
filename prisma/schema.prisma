@@ -512,6 +512,7 @@ model CourseHomeworks {
   UpdatedAt        DateTime?
   CreatedAt        DateTime  @default(now())
   ReferenceDate    DateTime
+  Documents        String?   @db.NVarChar(Max)
   Courses          Courses   @relation(fields: [CourseId], references: [CourseId], onUpdate: NoAction, map: "FK_CourseHomeworks_Courses")
   Users            Users     @relation(fields: [UserId], references: [UserId], onUpdate: NoAction, map: "FK_CourseHomeworks_Users")
 

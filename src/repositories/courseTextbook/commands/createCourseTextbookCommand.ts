@@ -37,6 +37,7 @@ const createCourseTextbookCommand = async (params: courseContentParams) => {
         HomeworkDueDate: Date;
         Description: string;
         ReferenceDate: Date;
+        Documents: string | null;
       }[] = [];
 
       if (params.Homeworks && params.Homeworks.length > 0) {
@@ -55,7 +56,8 @@ const createCourseTextbookCommand = async (params: courseContentParams) => {
             HomeworkDate: ajustedHomeworkDate,
             HomeworkDueDate: ajustedHomeworkDueDate,
             Description: element.Description,
-            ReferenceDate: element.ReferenceDate,
+            ReferenceDate: ajustedReferenceDate,
+            Documents: element.Documents?.toString() || null,
           });
         });
       }

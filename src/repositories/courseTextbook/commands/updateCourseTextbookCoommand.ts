@@ -92,6 +92,7 @@ const updateCourseTextbookCoommand = async (params: courseContentParams) => {
                 HomeworkDueDate: ajustedHomeworkDueDate,
                 Description: element.Description,
                 ReferenceDate: element.ReferenceDate,
+                Documents: element.Documents?.toString(),
               },
             });
           }),
@@ -122,6 +123,7 @@ const updateCourseTextbookCoommand = async (params: courseContentParams) => {
                 HomeworkDate: element.HomeworkDate,
                 HomeworkDueDate: element.HomeworkDueDate,
                 Description: element.Description,
+                Documents: element.Documents?.toString(),
               },
             });
           }),

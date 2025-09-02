@@ -8,6 +8,12 @@ export const CourseHomework = z.object({
   HomeworkDueDate: z.date(),
   Description: z.string(),
   ReferenceDate: z.date(),
+  // Documents: z.array(z.string()).nullable(),
+  Documents: z
+    .array(z.string())
+    .nullable()
+    .default([])
+    .transform((val) => val ?? []),
 });
 
 export const CourseContentSchema = z.object({

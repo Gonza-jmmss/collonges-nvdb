@@ -16,6 +16,7 @@ export type CourseTextbookViewModel = {
     HomeworkDueDate: Date;
     Description: string;
     ReferenceDate: Date;
+    Documents: string[];
   }[];
 };
 
@@ -70,6 +71,7 @@ export type CourseHomeworksByCourseIdAndTextbookDateMap = {
   HomeworkDueDate: Date;
   Description: string;
   ReferenceDate: Date;
+  Documents: string | null;
   Courses: {
     CourseId: number;
     Name: string;
