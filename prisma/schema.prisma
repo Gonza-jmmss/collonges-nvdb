@@ -435,6 +435,7 @@ model GradeCoefficients {
   UpdatedAt           DateTime?
   CreatedAt           DateTime              @default(now())
   IsEnabled           Boolean
+  CoefficientPeriod   Int
   StudentCourseGrades StudentCourseGrades[]
 
   @@schema("Courses")
