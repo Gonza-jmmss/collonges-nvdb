@@ -1,7 +1,7 @@
 export type ScholarPeriodsViewModel = {
   ScholarPeriodId: number;
   Name: string;
-  Number: number | null;
+  Number: number;
   FromDate: Date | null;
   ToDate: Date | null;
   IsActive: boolean;
@@ -21,7 +21,7 @@ export type ScholarPeriodsViewModel = {
 export type ScholarPeriodMap = {
   ScholarPeriodId: number;
   Name: string;
-  Number: number | null;
+  Number: number;
   FromDate: Date | null;
   ToDate: Date | null;
   IsActive: boolean;
@@ -42,7 +42,7 @@ export type ScholarPeriodMap = {
 export type ScholarPeriodsByScholarYearIdMap = {
   ScholarPeriodId: number;
   Name: string;
-  Number: number | null;
+  Number: number;
   FromDate: Date | null;
   ToDate: Date | null;
   IsActive: boolean;
@@ -54,7 +54,7 @@ export type ScholarPeriodsByScholarYearIdMap = {
 export type ScholarPeriodTableMap = {
   ScholarPeriodId: number;
   Name: string;
-  Number: number | null;
+  Number: number;
   FromDate: Date | null;
   ToDate: Date | null;
   IsActive: boolean;

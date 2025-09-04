@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import Combobox from "@/components/common/combobox";
 import DateInput from "@/components/common/dateInput";
 import ToggleButton from "@/components/common/toggleButton";
+import enumToArray from "@/functions/enumToArray";
+import { PeriodEnum } from "@/enum/periodEnum";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
@@ -45,7 +47,7 @@ export default function ScholarPeriodForm({
           ? (scholarPeriodData?.ScholarPeriodId ?? null)
           : null,
       Name: action !== "create" ? (scholarPeriodData?.Name ?? "") : "",
-      Number: action !== "create" ? (scholarPeriodData?.Number ?? 0) : 0,
+      Number: action !== "create" ? (scholarPeriodData?.Number ?? 1) : 1,
       FromDate:
         action !== "create" ? (scholarPeriodData?.FromDate ?? null) : null,
       ToDate: action !== "create" ? (scholarPeriodData?.ToDate ?? null) : null,
@@ -148,7 +150,7 @@ export default function ScholarPeriodForm({
         />
       </div>
       <div className="col-span-1 space-y-1">
-        <form.Field
+        {/* <form.Field
           name="Number"
           children={(field) => (
             <>
@@ -164,6 +166,45 @@ export default function ScholarPeriodForm({
                 disabled={action === "view"}
                 required
               />
+            </>
+          )}
+        /> */}
+        <form.Field
+          name={`Number`}
+          validators={{
+            onSubmitAsync: (value) => {
+              if (value === null || value === undefined) {
+                return t.scholarPeriods.validations.numbertValidation;
+              }
+              return z.number().min(0).safeParse(value.value).success
+                ? undefined
+                : t.scholarPeriods.validations.numbertValidation;
+            },
+          }}
+          children={(field) => (
+            <>
+              <span>{t.scholarPeriods.form.number}</span>
+              <div className="flex flex-col space-y-1">
+                <Combobox
+                  options={enumToArray(PeriodEnum).slice(1)}
+                  textAttribute="value"
+                  valueAttribute="key"
+                  placeholder={t.scholarPeriods.form.number}
+                  itemSelected={enumToArray(PeriodEnum).find(
+                    (x) => x.key === field.state.value,
+                  )}
+                  setItemSelected={(x: { key: number }) =>
+                    field.handleChange(x && x.key)
+                  }
+                  notClearable
+                  disabled={action === "view"}
+                />
+                <div className="text-xs text-red-500">
+                  {field.state.meta.errors
+                    ? field.state.meta.errors.join(", ")
+                    : null}
+                </div>
+              </div>
             </>
           )}
         />
