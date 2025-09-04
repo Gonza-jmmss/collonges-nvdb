@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import Modal from "@/components/common/modal";
 import Icon from "@/components/common/icon";
 import formatDate from "@/functions/formatDate";
+import { PeriodEnum } from "@/enum/periodEnum";
 import { useToast } from "@/hooks/use-toast";
 import { ScholarPeriodsViewModel } from "@/repositories/scholarPeriods/scholarPeriodsViewModel";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -73,6 +74,7 @@ export default function ScholarPeriodsTable({
         id: "Number",
         header: () => <Header text={t.scholarPeriods.columns.number} />,
         filterFn: "equalsString",
+        cell: ({ row }) => PeriodEnum[row.original.Number],
       },
       {
         accessorKey: "FromDate",
@@ -93,9 +95,13 @@ export default function ScholarPeriodsTable({
       {
         accessorKey: "IsActive",
         id: "IsActive",
-        cell: (x) => (x.getValue() == 1 ? t.shared.yes : t.shared.no),
         header: () => <Header text={t.scholarPeriods.columns.isActive} />,
         filterFn: "includesStringSensitive",
+        cell: (row) => (
+          <span className={`${row.getValue() == 1 ? "text-green-600" : ""}`}>
+            {row.getValue() == 1 ? t.shared.yes : t.shared.no}
+          </span>
+        ),
       },
       {
         accessorKey: "ScholarYearName",
