@@ -65,9 +65,13 @@ export default function StudentsTable({
       {
         accessorKey: "IsACA",
         id: "IsACA",
-        cell: (x) => (x.getValue() == 1 ? t.shared.yes : t.shared.no),
         header: () => <Header text={t.students.columns.isACA} />,
         filterFn: "includesStringSensitive",
+        cell: (row) => (
+          <span className={`${row.getValue() == 1 ? "text-green-600" : ""}`}>
+            {row.getValue() == 1 ? t.shared.yes : t.shared.no}
+          </span>
+        ),
       },
       // {
       //   accessorKey: "actions",

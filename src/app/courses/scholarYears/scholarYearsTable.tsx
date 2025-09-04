@@ -77,8 +77,12 @@ export default function ScholarYearsTable({
       {
         accessorKey: "IsActive",
         id: "IsActive",
-        cell: (x) => (x.getValue() == 1 ? t.shared.yes : t.shared.no),
         header: () => <Header text={t.scholarYears.columns.isActive} />,
+        cell: (row) => (
+          <span className={`${row.getValue() == 1 ? "text-green-600" : ""}`}>
+            {row.getValue() == 1 ? t.shared.yes : t.shared.no}
+          </span>
+        ),
         filterFn: "includesStringSensitive",
       },
       {

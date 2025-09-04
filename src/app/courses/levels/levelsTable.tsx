@@ -118,8 +118,12 @@ export default function LevelsTable({
       {
         accessorKey: "IsEnabled",
         id: "IsEnabled",
-        cell: (x) => (x.getValue() == 1 ? t.shared.yes : t.shared.no),
         header: () => <Header text={t.levels.columns.isEnabled} />,
+        cell: (row) => (
+          <span className={`${row.getValue() == 1 ? "text-green-600" : ""}`}>
+            {row.getValue() == 1 ? t.shared.yes : t.shared.no}
+          </span>
+        ),
         filterFn: "includesStringSensitive",
       },
       {
