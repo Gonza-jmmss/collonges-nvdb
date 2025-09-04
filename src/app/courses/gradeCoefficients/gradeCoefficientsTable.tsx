@@ -8,8 +8,11 @@ import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
+import Combobox from "@/components/common/combobox";
 import DeleteModal from "@/components/common/deleteModal";
 import ToggleButton from "@/components/common/toggleButton";
+import enumToArray from "@/functions/enumToArray";
+import { CoefficientPeriodEnum } from "@/enum/coefficientPeriodEnum";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { GradeCoefficientsViewModel } from "@/repositories/gradeCoefficients/gradeCoefficientsViewModel";
 import { useToast } from "@/hooks/use-toast";
@@ -19,12 +22,14 @@ import frFR from "@/lang/fr-FR";
 export default function GradeCoefficientsTable({
   gradeCoefficients,
   isEnabledSelected,
+  coefficientPeriodSelected,
   pageIndex,
   pageSize,
   urlParams,
 }: {
   gradeCoefficients: GradeCoefficientsViewModel[];
   isEnabledSelected: boolean;
+  coefficientPeriodSelected: number;
   pageIndex: number;
   pageSize: number;
   urlParams?: { [key: string]: string | string[] | undefined };
@@ -74,9 +79,13 @@ export default function GradeCoefficientsTable({
       {
         accessorKey: "IsEnabled",
         id: "IsEnabled",
-        cell: (x) => (x.getValue() == 1 ? t.shared.yes : t.shared.no),
         header: () => <Header text={t.gradeCoefficients.columns.isEnabled} />,
         filterFn: "includesStringSensitive",
+        cell: (row) => (
+          <span className={`${row.getValue() == 1 ? "text-green-600" : ""}`}>
+            {row.getValue() == 1 ? t.shared.yes : t.shared.no}
+          </span>
+        ),
         size: 10,
       },
       {
@@ -185,6 +194,21 @@ export default function GradeCoefficientsTable({
   return (
     <div>
       <div className="flex items-center justify-end space-x-5">
+        <div className="w-[12rem]">
+          <Combobox
+            options={enumToArray(CoefficientPeriodEnum)}
+            textAttribute="value"
+            valueAttribute="key"
+            placeholder={" "}
+            itemSelected={enumToArray(CoefficientPeriodEnum).find(
+              (x) => x.key === coefficientPeriodSelected,
+            )}
+            setItemSelected={(x: { key: number }) => {
+              handleUrlParameterChange("coefficientPeriod", `${x.key}`);
+            }}
+            notClearable
+          />
+        </div>
         <div className="w-[25rem]">
           <ToggleButton
             options={[

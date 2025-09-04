@@ -27,6 +27,7 @@ export default {
     grades: "Notes",
     attendances: "Assiduité",
     courseTextbooks: "Cahier de texte",
+    textbooks: "Cahier de texte",
   },
   shortcuts: {
     transcripts: "Relevés de notes",
@@ -510,6 +511,9 @@ export default {
       isActive: "Actif",
       scholarYearId: "Année",
     },
+    validations: {
+      numbertValidation: "Le trimestre est obligatoire",
+    },
     notifications: {
       createSuccess: "Période scolaire créée avec succès",
       createError:
@@ -682,6 +686,10 @@ export default {
       name: "Coefficients de note",
       coefficient: "Pourcentage",
       isEnabled: "Actif",
+      coefficientPeriod: "Période",
+    },
+    validations: {
+      coefficientPeriodValidation: "La période est obligatoire",
     },
     notifications: {
       createSuccess: "Coefficient de note créé avec succès",
@@ -976,7 +984,8 @@ export default {
     courseTextbook: "Cahier de texte",
     create: "Créer une cahier de texte",
     documents: "Documents",
-    columns: {
+    columns: { levelName: "Niveaux" },
+    columnsExtended: {
       courseCode: "Code",
       courseName: "Cours",
       userName: "Professeur(e)",
@@ -1087,11 +1096,27 @@ export default {
     },
   },
   studentTextbook: {
+    title: "Cahier de texte",
     tabs: {
       contents: "Contenus du cours",
       homeworks: "Devoirs",
     },
     closeDates: "Proche dates",
+  },
+  studentCourseContent: {
+    homeworks: "Devoirs",
+    content: {
+      course: "Cours",
+      level: "Niveau scolaire",
+      contentDate: "Date",
+      content: "Contenu de cours",
+      documents: "Documents",
+    },
+    homework: {
+      homeworkDueDate: "Date d'échéance",
+      description: "Devoir",
+      documents: "Documents",
+    },
   },
   studentHomeworks: {
     title: "Devoirs",
@@ -1101,6 +1126,7 @@ export default {
       homeworkDate: "Doné",
       userName: "Professeur(e)",
       description: "Devoir",
+      documents: "Documents",
     },
   },
   reports: {

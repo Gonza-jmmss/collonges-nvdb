@@ -9,6 +9,9 @@ import { useForm } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ToggleButton from "@/components/common/toggleButton";
+import Combobox from "@/components/common/combobox";
+import enumToArray from "@/functions/enumToArray";
+import { CoefficientPeriodEnum } from "@/enum/coefficientPeriodEnum";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
@@ -56,6 +59,10 @@ export default function GradeCoefficientForm({
           : 0,
       IsEnabled:
         action !== "create" ? (gradeCoefficientData?.IsEnabled ?? true) : true,
+      CoefficientPeriod:
+        action !== "create"
+          ? (gradeCoefficientData?.CoefficientPeriod ?? 0)
+          : 0,
     },
     onSubmit: async ({ value }) => {
       // console.log("formData", value);
@@ -144,6 +151,48 @@ export default function GradeCoefficientForm({
                 disabled={action === "view"}
                 required
               />
+            </>
+          )}
+        />
+      </div>
+      <div className="col-span-1 space-y-1">
+        <form.Field
+          name={`CoefficientPeriod`}
+          validators={{
+            onSubmitAsync: (value) => {
+              if (value === null || value === undefined) {
+                return t.gradeCoefficients.validations
+                  .coefficientPeriodValidation;
+              }
+              return z.number().min(0).safeParse(value.value).success
+                ? undefined
+                : t.gradeCoefficients.validations.coefficientPeriodValidation;
+            },
+          }}
+          children={(field) => (
+            <>
+              <span>{t.gradeCoefficients.form.coefficientPeriod}</span>
+              <div className="flex flex-col space-y-1">
+                <Combobox
+                  options={enumToArray(CoefficientPeriodEnum)}
+                  textAttribute="value"
+                  valueAttribute="key"
+                  placeholder={" "}
+                  itemSelected={enumToArray(CoefficientPeriodEnum).find(
+                    (x) => x.key === field.state.value,
+                  )}
+                  setItemSelected={(x: { key: number }) =>
+                    field.handleChange(x && x.key)
+                  }
+                  notClearable
+                  disabled={action === "view"}
+                />
+                <div className="text-xs text-red-500">
+                  {field.state.meta.errors
+                    ? field.state.meta.errors.join(", ")
+                    : null}
+                </div>
+              </div>
             </>
           )}
         />

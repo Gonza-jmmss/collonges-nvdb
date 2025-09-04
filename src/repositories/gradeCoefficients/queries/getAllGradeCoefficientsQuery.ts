@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 
 type getAllGradeCoefficientsQueryParamsType = {
   IsEnabled: boolean;
+  CoefficientPeriod: number;
 };
 
 const getAllGradeCoefficientsQuery = cache(
@@ -15,6 +16,7 @@ const getAllGradeCoefficientsQuery = cache(
     const query = await prisma.gradeCoefficients.findMany({
       where: {
         IsEnabled: params.IsEnabled,
+        CoefficientPeriod: params.CoefficientPeriod,
       },
     });
 
@@ -24,6 +26,7 @@ const getAllGradeCoefficientsQuery = cache(
       CoefficientNumber: Number(gradeCoefficient.Coefficient) * 100,
       CoefficientNumberText: `${Number(gradeCoefficient.Coefficient) * 100}%`,
       IsEnabled: gradeCoefficient.IsEnabled,
+      CoefficientPeriod: gradeCoefficient.CoefficientPeriod,
     }));
 
     return res;

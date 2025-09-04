@@ -63,6 +63,7 @@ export default async function Page({
 
   const gradeCoefficients = await getAllGradeCoefficientsQuery({
     IsEnabled: true,
+    CoefficientPeriod: periodNumberParam === 4 ? 1 : 0,
   });
 
   //   const pagetitle = `${`${t.shared[action as keyof typeof t.shared]} ${t.studentCourseGrades.studentCourseGrade}

@@ -24,8 +24,13 @@ export default async function GradeCoefficientsPage({
       ? true
       : searchParams.isEnabled === "true";
 
+  const coefficientPeriodParam = searchParams?.coefficientPeriod
+    ? parseInt(searchParams.coefficientPeriod as string)
+    : 0;
+
   const gradeCoefficients = await getAllGradeCoefficientsQuery({
     IsEnabled: isEnabledParam,
+    CoefficientPeriod: coefficientPeriodParam,
   });
 
   return (
@@ -43,6 +48,7 @@ export default async function GradeCoefficientsPage({
       <GradeCoefficientsTable
         gradeCoefficients={gradeCoefficients}
         isEnabledSelected={isEnabledParam}
+        coefficientPeriodSelected={coefficientPeriodParam}
         pageIndex={pageIndex}
         pageSize={pageSize}
         urlParams={searchParams}

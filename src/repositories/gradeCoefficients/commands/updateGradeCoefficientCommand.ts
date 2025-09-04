@@ -19,6 +19,7 @@ const updateGradeCoefficientCommand = async (
       Name: params.Name,
       Coefficient: params.Coefficient / 100,
       IsEnabled: params.IsEnabled,
+      CoefficientPeriod: params.CoefficientPeriod,
     },
   });
 };

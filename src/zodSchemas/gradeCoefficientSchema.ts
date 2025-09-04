@@ -5,4 +5,5 @@ export const GradeCoefficientSchema = z.object({
   Name: z.string(),
   Coefficient: z.number(),
   IsEnabled: z.boolean(),
+  CoefficientPeriod: z.number(),
 });

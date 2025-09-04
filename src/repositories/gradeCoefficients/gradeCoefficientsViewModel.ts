@@ -6,6 +6,7 @@ export type GradeCoefficientsViewModel = {
   CoefficientNumber: number;
   CoefficientNumberText?: string;
   IsEnabled: boolean;
+  CoefficientPeriod: number;
 };
 
 export type GradeCoefficientsMap = {
@@ -15,4 +16,5 @@ export type GradeCoefficientsMap = {
   UpdatedAt: Date | null;
   CreatedAt: Date;
   IsEnabled: boolean;
+  CoefficientPeriod: number;
 };
