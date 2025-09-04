@@ -7,7 +7,7 @@ import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import CalendarInput from "@/components/common/calendarInput";
 import { Button } from "@/components/ui/button";
-import { attendanceValueEnum } from "@/enum/attendanceValueEnum";
+import { AttendanceValueEnum } from "@/enum/attendanceValueEnum";
 import formatDate from "@/functions/formatDate";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 
@@ -87,9 +87,9 @@ export default function StudentAttendancesByDayTable({
         ),
         cell: ({ row }) => (
           <span
-            className={`${row.original.AttendanceValue === attendanceValueEnum.Présent ? "text-green-600" : row.original.AttendanceValue === attendanceValueEnum.Absent ? "text-red-600" : row.original.AttendanceValue === attendanceValueEnum.Retard ? "text-yellow-600" : ""}`}
+            className={`${row.original.AttendanceValue === AttendanceValueEnum.Présent ? "text-green-600" : row.original.AttendanceValue === AttendanceValueEnum.Absent ? "text-red-600" : row.original.AttendanceValue === AttendanceValueEnum.Retard ? "text-yellow-600" : ""}`}
           >
-            {attendanceValueEnum[row.original.AttendanceValue]}
+            {AttendanceValueEnum[row.original.AttendanceValue]}
           </span>
         ),
         filterFn: "equalsString",
@@ -144,9 +144,9 @@ export default function StudentAttendancesByDayTable({
               <div>
                 <span className="text-xs font-semibold">{`${t.studentAttendances.columnsByCourseExtended.attendanceValue.toUpperCase()}: `}</span>
                 <span
-                  className={`text-xs ${row.original.AttendanceValue === attendanceValueEnum.Présent ? "text-green-600" : row.original.AttendanceValue === attendanceValueEnum.Absent ? "text-red-600" : row.original.AttendanceValue === attendanceValueEnum.Retard ? "text-yellow-600" : ""}`}
+                  className={`text-xs ${row.original.AttendanceValue === AttendanceValueEnum.Présent ? "text-green-600" : row.original.AttendanceValue === AttendanceValueEnum.Absent ? "text-red-600" : row.original.AttendanceValue === AttendanceValueEnum.Retard ? "text-yellow-600" : ""}`}
                 >
-                  {attendanceValueEnum[row.original.AttendanceValue]}
+                  {AttendanceValueEnum[row.original.AttendanceValue]}
                 </span>
               </div>
             </div>

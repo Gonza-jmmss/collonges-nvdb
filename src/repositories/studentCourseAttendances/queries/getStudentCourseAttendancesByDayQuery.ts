@@ -106,7 +106,7 @@ const getStudentCourseAttendancesByDayQuery = async (
       // Course has no levels - add to the "without level" group
       if (!coursesWithoutLevel) {
         coursesWithoutLevel = {
-          LevelName: "Cours sans neveau",
+          LevelName: "Cours optionneles",
           LevelCourses: [],
           Attendances: [],
         };

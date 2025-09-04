@@ -277,7 +277,7 @@ export default function AttendancesByDayTable({
               )
             }
           >
-            <span>{t.studentCourseGrades.create}</span>
+            <span>{t.studentCourseAttendances.create}</span>
           </Button>
         </div>
       </div>

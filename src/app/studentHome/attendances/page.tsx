@@ -60,16 +60,6 @@ export default async function StudentAttendancesPage({
 
   const tabs = [
     {
-      id: "StudentAttendancesByCourseTable",
-      title: t.studentAttendances.tabs.orderedByCourse,
-      body: (
-        <StudentAttendancesByCourseTable
-          attendancesData={attendacesByCourse}
-          urlParams={searchParams}
-        />
-      ),
-    },
-    {
       id: "StudentAttendancesByDayTable",
       title: t.studentAttendances.tabs.orderedByDay,
       body: (
@@ -80,6 +70,16 @@ export default async function StudentAttendancesPage({
           tabValue="StudentAttendancesByDayTable"
           pageIndex={pageIndex}
           pageSize={pageSize}
+          urlParams={searchParams}
+        />
+      ),
+    },
+    {
+      id: "StudentAttendancesByCourseTable",
+      title: t.studentAttendances.tabs.orderedByCourse,
+      body: (
+        <StudentAttendancesByCourseTable
+          attendancesData={attendacesByCourse}
           urlParams={searchParams}
         />
       ),

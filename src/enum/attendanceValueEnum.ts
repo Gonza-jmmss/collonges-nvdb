@@ -1,11 +1,11 @@
-export enum attendanceValueEnum {
+export enum AttendanceValueEnum {
   "Présent",
   "Absent",
   "Retard",
   "Excusé",
 }
 
-export enum attendanceValueAbbreviationEnum {
+export enum AttendanceValueAbbreviationEnum {
   "P",
   "A",
   "R",

@@ -2,7 +2,7 @@
 
 import { PrismaClient } from "@prisma/client";
 import getStudentCourseAttendancesByStudentCourseIdQuery from "@/repositories/studentCourseAttendances/queries/getStudentCourseAttendancesByStudentCourseIdQuery";
-import { attendanceValueEnum } from "@/enum/attendanceValueEnum";
+import { AttendanceValueEnum } from "@/enum/attendanceValueEnum";
 
 const prisma = new PrismaClient();
 
@@ -70,12 +70,12 @@ const calculateAttendanceScore = (
     studentCourseAttendances.forEach((studentCourseAttendance) => {
       if (
         studentCourseAttendance.AttendanceValue ===
-        attendanceValueEnum["Absent"]
+        AttendanceValueEnum["Absent"]
       ) {
         count = count + studentCourseAttendance.AttendanceValueCount;
       } else if (
         studentCourseAttendance.AttendanceValue ===
-        attendanceValueEnum["Retard"]
+        AttendanceValueEnum["Retard"]
       ) {
         count =
           count + Math.trunc(studentCourseAttendance.AttendanceValueCount / 3);

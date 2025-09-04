@@ -14,8 +14,8 @@ import { Input } from "@/components/ui/input";
 import Combobox from "@/components/common/combobox";
 import CalendarInput from "@/components/common/calendarInput";
 import enumToArray from "@/functions/enumToArray";
-import { attendanceValueAbbreviationEnum } from "@/enum/attendanceValueEnum";
-import { attendancePeriodEnum } from "@/enum/attendancePeriodEnum";
+import { AttendanceValueAbbreviationEnum } from "@/enum/attendanceValueEnum";
+import { AttendancePeriodEnum } from "@/enum/attendancePeriodEnum";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -199,7 +199,7 @@ export default function StudentCourseAttendanceForm({
       const mappedStuents = studentByCouse.map((student) => ({
         StudentCourseAttendanceId: null,
         StudentCourseId: student.StudentCourseId,
-        AttendanceValue: null,
+        AttendanceValue: 0,
         AttendancePeriod: null,
       }));
 
@@ -338,11 +338,11 @@ export default function StudentCourseAttendanceForm({
                 <span>{t.studentCourseAttendances.form.attendancePeriod}</span>
                 <div className="flex space-x-3">
                   <Combobox
-                    options={enumToArray(attendancePeriodEnum)}
+                    options={enumToArray(AttendancePeriodEnum)}
                     textAttribute="value"
                     valueAttribute="key"
                     placeholder={" "}
-                    itemSelected={enumToArray(attendancePeriodEnum).find(
+                    itemSelected={enumToArray(AttendancePeriodEnum).find(
                       (x) => x.key === field.state.value,
                     )}
                     setItemSelected={(x: { key: number }) =>
@@ -442,13 +442,13 @@ export default function StudentCourseAttendanceForm({
                                 <div className="flex flex-col space-y-1">
                                   <Combobox
                                     options={enumToArray(
-                                      attendanceValueAbbreviationEnum,
+                                      AttendanceValueAbbreviationEnum,
                                     )}
                                     textAttribute="value"
                                     valueAttribute="key"
                                     placeholder={" "}
                                     itemSelected={enumToArray(
-                                      attendanceValueAbbreviationEnum,
+                                      AttendanceValueAbbreviationEnum,
                                     ).find((x) => x.key === field.state.value)}
                                     setItemSelected={(x: { key: number }) =>
                                       field.handleChange(x && x.key)
