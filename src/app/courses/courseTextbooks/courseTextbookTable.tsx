@@ -2,7 +2,10 @@
 
 import { useState, useMemo } from "react";
 import deleteCourseTextbookCoommand from "@/repositories/courseTextbook/commands/deleteCourseTextbookCommand";
-import { CourseContentsViewModel } from "@/repositories/courseTextbook/courseTextbookViewModel";
+import {
+  CourseContentsByDayViewModel,
+  CourseTextbooksByDay,
+} from "@/repositories/courseTextbook/courseTextbookViewModel";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
@@ -20,14 +23,12 @@ import frFR from "@/lang/fr-FR";
 export default function CourseTextbookTable({
   courseTextbooksData,
   textbookDateSelected,
-  courseIdSelected,
   pageIndex,
   pageSize,
   urlParams,
 }: {
-  courseTextbooksData: CourseContentsViewModel[];
+  courseTextbooksData: CourseContentsByDayViewModel[];
   textbookDateSelected: Date;
-  courseIdSelected: number;
   pageIndex: number;
   pageSize: number;
   urlParams?: { [key: string]: string | string[] | undefined };
@@ -43,19 +44,59 @@ export default function CourseTextbookTable({
 
   const [openModal, setOpenModal] = useState(false);
   const [textbookToDelete, setTextbookToDelete] =
-    useState<CourseContentsViewModel | null>();
+    useState<CourseTextbooksByDay | null>();
 
   const closeModal = () => {
     setOpenModal(false);
     setTextbookToDelete(null);
   };
 
-  const columns = useMemo<ColumnDef<CourseContentsViewModel, any>[]>(
+  const columns = useMemo<ColumnDef<CourseContentsByDayViewModel, any>[]>(
+    () => [
+      {
+        accessorKey: "",
+        id: "1",
+        header: () => <Header text="" />,
+        cell: ({ row }) => (
+          <div
+            style={{
+              paddingLeft: `${row.depth * 2}rem`,
+            }}
+            onClick={(event) => event.stopPropagation()}
+          >
+            {row.original.CourseTextbooks.length > 0 && row.getCanExpand() ? (
+              <div onClick={row.getToggleExpandedHandler()}>
+                {row.getIsExpanded() ? (
+                  <Icon name="MdArrowDownward" className="cursor-pointer" />
+                ) : (
+                  <Icon name="MdArrowForward" className="cursor-pointer" />
+                )}
+              </div>
+            ) : (
+              <Icon name="MdHorizontalRule" />
+            )}
+          </div>
+        ),
+        size: 5,
+      },
+      {
+        accessorKey: "LevelName",
+        id: "LevelName",
+        header: () => <Header text={t.courseTextbooks.columns.levelName} />,
+        filterFn: "equalsString",
+      },
+    ],
+    [],
+  );
+
+  const columnsExtended = useMemo<ColumnDef<CourseTextbooksByDay, any>[]>(
     () => [
       {
         accessorKey: "CourseCode",
         id: "CourseCode",
-        header: () => <Header text={t.courseTextbooks.columns.courseCode} />,
+        header: () => (
+          <Header text={t.courseTextbooks.columnsExtended.courseCode} />
+        ),
         filterFn: "equalsString",
         cell: (x) =>
           x.getValue().includes("/") ? x.getValue().slice(0, -2) : x.getValue(),
@@ -64,29 +105,18 @@ export default function CourseTextbookTable({
       {
         accessorKey: "CourseName",
         id: "CourseName",
-        header: () => <Header text={t.courseTextbooks.columns.courseName} />,
+        header: () => (
+          <Header text={t.courseTextbooks.columnsExtended.courseName} />
+        ),
         filterFn: "equalsString",
         size: 300,
       },
       {
         accessorKey: "UserName",
         id: "UserName",
-        header: () => <Header text={t.courseTextbooks.columns.userName} />,
-        filterFn: "equalsString",
-      },
-      // {
-      //   accessorKey: "ReferenceDate",
-      //   id: "ReferenceDate",
-      //   header: () => <Header text={t.courseTextbooks.columns.contentDate} />,
-      //   filterFn: "equalsString",
-      //   cell: ({ row }) => (
-      //     <span>{formatDateTime(row.original.ContentDate)}</span>
-      //   ),
-      // },
-      {
-        accessorKey: "LevelName",
-        id: "LevelName",
-        header: () => <Header text={t.courseTextbooks.columns.levelName} />,
+        header: () => (
+          <Header text={t.courseTextbooks.columnsExtended.userName} />
+        ),
         filterFn: "equalsString",
       },
       {
@@ -126,36 +156,92 @@ export default function CourseTextbookTable({
   );
 
   const deleteCourseTextbook = async (
-    courseTextbook: CourseContentsViewModel | null,
+    courseTextbook: CourseTextbooksByDay | null,
   ) => {
-    try {
-      if (courseTextbook) {
-        const courseTextbookToDelete = {
-          CourseId: courseTextbook.CourseId,
-          ReferenceDate: courseTextbook.ReferenceDate,
-        };
-        const response = await deleteCourseTextbookCoommand(
-          courseTextbookToDelete,
-        );
+    console.log("courseTextbook", courseTextbook);
+    // try {
+    //   if (courseTextbook) {
+    //     const courseTextbookToDelete = {
+    //       CourseId: courseTextbook.CourseId,
+    //       ReferenceDate: courseTextbook.ReferenceDate,
+    //     };
+    //     const response = await deleteCourseTextbookCoommand(
+    //       courseTextbookToDelete,
+    //     );
 
-        if (!response) {
-          throw new Error(`${t.courseTextbooks.notifications.deleteFailure}`);
-        }
-        toast({
-          title: `${t.courseTextbooks.notifications.deleteSuccess}`,
-          description: `${t.courseTextbooks.title} : ${textbookToDelete && `${textbookToDelete.CourseCode} ${textbookToDelete.CourseName} - ${formatDate(textbookToDelete.ContentDate)}`}`,
-        });
-        router.refresh();
-        closeModal();
-      }
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: `${t.courseTextbooks.notifications.deleteError}`,
-        description: `${error}`,
-      });
-    }
+    //     if (!response) {
+    //       throw new Error(`${t.courseTextbooks.notifications.deleteFailure}`);
+    //     }
+    //     toast({
+    //       title: `${t.courseTextbooks.notifications.deleteSuccess}`,
+    //       description: `${t.courseTextbooks.title} : ${textbookToDelete && `${textbookToDelete.CourseCode} ${textbookToDelete.CourseName} - ${formatDate(textbookToDelete.ContentDate)}`}`,
+    //     });
+    //     router.refresh();
+    //     closeModal();
+    //   }
+    // } catch (error) {
+    //   toast({
+    //     variant: "destructive",
+    //     title: `${t.courseTextbooks.notifications.deleteError}`,
+    //     description: `${error}`,
+    //   });
+    // }
   };
+
+  // const handleHomeworkDocumentOperations = async (
+  //   formData: CourseAttendanceFormData,
+  //   homeworkIndex: number,
+  //   selectedHomeworkDocs: File[],
+  //   originalHomeworkDocs: string[],
+  // ) => {
+  //   const hasNewDocs = selectedHomeworkDocs && selectedHomeworkDocs.length > 0;
+
+  //   try {
+  //     let uploadedDocs: string[] = [];
+
+  //     if (hasNewDocs) {
+  //       const uploadFormData = new FormData();
+  //       selectedHomeworkDocs.forEach((file) =>
+  //         uploadFormData.append("files", file),
+  //       );
+
+  //       const uploadResponse = await fetch("/api/documents/upload", {
+  //         method: "POST",
+  //         body: uploadFormData,
+  //       });
+
+  //       if (!uploadResponse.ok) throw new Error("Homework docs upload failed");
+
+  //       const { files } = await uploadResponse.json();
+  //       uploadedDocs = files.map((f: any) => f.fileName);
+  //     }
+
+  //     // 2. Handle deletions
+  //     const formDocs =
+  //       form.getFieldValue(`Homeworks[${homeworkIndex}].Documents`) || [];
+  //     const deletedDocs = originalHomeworkDocs.filter(
+  //       (doc) => !formDocs.includes(doc),
+  //     );
+
+  //     if (deletedDocs.length > 0) {
+  //       await fetch("/api/documents/delete", {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({ files: deletedDocs }),
+  //       });
+  //     }
+
+  //     // 3. Merge docs
+  //     const updatedDocs = [...formDocs, ...uploadedDocs];
+  //     if (formData.Homeworks)
+  //       formData.Homeworks[homeworkIndex].Documents = updatedDocs;
+
+  //     console.log(`Homework ${homeworkIndex} Documents updated:`, updatedDocs);
+  //   } catch (err) {
+  //     console.error("Homework document operations error:", err);
+  //     throw err;
+  //   }
+  // };
 
   const handleUrlParameterChange = (key: string, value: string) => {
     const currentParams = new URLSearchParams(window.location.search);
@@ -227,11 +313,20 @@ export default function CourseTextbookTable({
           className=""
           pageIndexParam={pageIndex}
           pageSizeParam={pageSize}
-          onRowClick={(row) =>
-            router.push(
-              `/courses/courseTextbooks/${row.CourseContentId}?action="view"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.CourseId}&textbookDate=${row.ContentDate.toUTCString()}&referenceDate=${row.ReferenceDate.toUTCString()}`,
-            )
-          }
+          expandable
+          expandedContent={(row) => (
+            <Table
+              columns={columnsExtended}
+              data={row.CourseTextbooks}
+              onRowClick={(row) =>
+                router.push(
+                  `/courses/courseTextbooks/${row.CourseContentId}?action="view"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.CourseId}&textbookDate=${row.ContentDate.toUTCString()}&referenceDate=${row.ReferenceDate.toUTCString()}`,
+                )
+              }
+              minimalMode
+              noBorders
+            />
+          )}
         />
         <DeleteModal
           openModal={openModal}

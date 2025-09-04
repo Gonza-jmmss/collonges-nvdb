@@ -25,13 +25,33 @@ export type CourseContentsViewModel = {
   CourseId: number;
   CourseName: string;
   CourseCode: string | null;
-  LevelId: number;
-  LevelName: string;
+  LevelId: number | null;
+  LevelName: string | null;
   UserId: number;
   UserName: string;
   ContentDate: Date;
   Content: string;
   ReferenceDate: Date;
+};
+
+export type CourseTextbooksByDay = {
+  CourseContentId: number;
+  CourseId: number;
+  CourseName: string;
+  CourseCode: string | null;
+  LevelId: number | null;
+  LevelName: string | null;
+  UserId: number;
+  UserName: string;
+  ContentDate: Date;
+  Content: string;
+  ReferenceDate: Date;
+};
+
+export type CourseContentsByDayViewModel = {
+  LevelName: string;
+  LevelCourses: { Level: string }[];
+  CourseTextbooks: CourseTextbooksByDay[];
 };
 
 export type CourseContentsMap = {
@@ -90,6 +110,7 @@ export type StudentCourseHomeworksByDayViewModel = {
   HomeworkDueDate: Date;
   Description: string;
   ReferenceDate: Date;
+  Documents: string[];
 };
 
 export type StudentCourseHomeworksByDayMap = {
@@ -102,6 +123,7 @@ export type StudentCourseHomeworksByDayMap = {
   HomeworkDueDate: Date;
   Description: string;
   ReferenceDate: Date;
+  Documents: string | null;
   Users: {
     UserId: number;
     UserName: string;
