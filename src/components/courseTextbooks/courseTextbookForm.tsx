@@ -1,30 +1,25 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import createCourseTextbookCommand from "@/repositories/courseTextbook/commands/createCourseTextbookCommand";
 import updateCourseTextbookCoommand from "@/repositories/courseTextbook/commands/updateCourseTextbookCoommand";
 import { CourseTextbookViewModel } from "@/repositories/courseTextbook/courseTextbookViewModel";
 import { CourseViewModel } from "@/repositories/courses/coursesViewModel";
 import { CurentLevelsViewModel } from "@/repositories/levels/levelsViewModel";
+import { ScholarPeriodsViewModel } from "@/repositories/scholarPeriods/scholarPeriodsViewModel";
 import { CourseContentSchema } from "@/zodSchemas/courseTextbookSchema";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
 import CalendarInput from "@/components/common/calendarInput";
-import Icon from "@/components/common/icon";
 import TextEditor from "@/components/common/textEditor";
-import {
-  parseEditorData,
-  stringifyEditorData,
-} from "@/functions/textEditorConvertions";
+import Icon from "@/components/common/icon";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { useToast } from "@/hooks/use-toast";
-import { OutputData } from "@editorjs/editorjs";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import frFR from "@/lang/fr-FR";
 import formatDate from "@/functions/formatDate";
-import formatDateTime from "@/functions/formatDateTime";
 
 type CourseAttendanceFormData = z.infer<typeof CourseContentSchema>;
 
@@ -32,6 +27,7 @@ export default function CourseTextbookForm({
   courseContentData,
   courses,
   levels,
+  scholarPeriods,
   tearcherId,
   pageIndexParam,
   pageSizeParam,
@@ -41,6 +37,7 @@ export default function CourseTextbookForm({
   courseContentData: CourseTextbookViewModel | null;
   courses: CourseViewModel[];
   levels: CurentLevelsViewModel[];
+  scholarPeriods: ScholarPeriodsViewModel[];
   tearcherId: number;
   pageIndexParam: number;
   pageSizeParam: number;
@@ -53,6 +50,7 @@ export default function CourseTextbookForm({
   const updateQuery = useUpdateQuery();
 
   const [isPending, setIsPending] = useState(false);
+  const [changePeriod, setChangePeriod] = useState(false);
 
   const contentDocumentInputRef = useRef<HTMLInputElement | null>(null);
   // Documents that already exist on server (from DB)
@@ -67,6 +65,7 @@ export default function CourseTextbookForm({
   const textBookDateParam = new Date(urlParams?.textbookDate as string);
   const levelIdParam =
     urlParams?.levelId !== null ? parseInt(urlParams?.levelId as string) : null;
+  const scholarPeriodIdParam = parseInt(urlParams?.scholarPeriodId as string);
 
   const dateNow = new Date();
 
@@ -189,10 +188,6 @@ export default function CourseTextbookForm({
 
       // 4. Update form data
       formData.Documents = updatedDocs;
-
-      // 5. Update local state for next round
-      // setOriginalDocs(updatedDocs);
-      // setSelectedDocs([]); // clear new docs
 
       console.log("Documents updated:", updatedDocs);
     } catch (error) {
@@ -366,6 +361,17 @@ export default function CourseTextbookForm({
     );
   };
 
+  const [scholarPeriodIdRender, setScholarPeriodIdRender] = useState(0);
+  useEffect(() => {
+    if (scholarPeriodIdRender > 0) {
+      if (courses.length > 0) {
+        handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
+      }
+    } else {
+      setScholarPeriodIdRender(1);
+    }
+  }, [urlParams?.scholarPeriodId]);
+
   const handleUrlParameterChange = (key: string, value: string) => {
     const currentParams = new URLSearchParams(window.location.search);
     currentParams.set(key, value);
@@ -391,64 +397,107 @@ export default function CourseTextbookForm({
       >
         <div className="col-span-1 md:col-span-2">
           <div>{t.courseContents.form.course}</div>
-          <div className="mt-1 flex flex-col space-y-5 md:flex-row md:space-x-3 md:space-y-0">
-            <Combobox
-              options={levels}
-              textAttribute="Name"
-              valueAttribute="LevelId"
-              placeholder={t.courseContents.form.level}
-              itemSelected={levels.find((x) => x.LevelId === levelIdParam)}
-              setItemSelected={(x: CurentLevelsViewModel) => {
-                handleUrlParameterChange("levelId", `${x ? x.LevelId : null}`);
-              }}
-              disabled={action === "view"}
-            />
-            <form.Field
-              name="CourseId"
-              validators={{
-                onSubmitAsync: (value) => {
-                  if (value === null || value === undefined) {
-                    return t.courseContents.validations.courseValidation;
-                  }
-                  return z.number().min(0).safeParse(value.value).success
-                    ? undefined
-                    : t.courseContents.validations.courseValidation;
-                },
-              }}
-              children={(field) => (
-                <>
+          {/* <div className="mt-1 flex flex-col space-y-5 md:flex-row md:space-x-3 md:space-y-0"> */}
+          <div className="mt-1 flex flex-col space-y-5 lg:flex-row lg:space-x-3 lg:space-y-0">
+            <div className="w-full min-w-44 lg:w-[20%]">
+              <Combobox
+                options={levels}
+                textAttribute="Name"
+                valueAttribute="LevelId"
+                placeholder={t.courseContents.form.level}
+                itemSelected={levels.find((x) => x.LevelId === levelIdParam)}
+                setItemSelected={(x: CurentLevelsViewModel) => {
+                  handleUrlParameterChange(
+                    "levelId",
+                    `${x ? x.LevelId : null}`,
+                  );
+                }}
+                disabled={action === "view"}
+              />
+            </div>
+            <div className="w-full lg:w-[70%] lg:min-w-[48%]">
+              <form.Field
+                name="CourseId"
+                validators={{
+                  onSubmitAsync: (value) => {
+                    if (value === null || value === undefined) {
+                      return t.courseContents.validations.courseValidation;
+                    }
+                    return z.number().min(0).safeParse(value.value).success
+                      ? undefined
+                      : t.courseContents.validations.courseValidation;
+                  },
+                }}
+                children={(field) => (
+                  <>
+                    <Combobox
+                      options={courses}
+                      textAttribute={["CourseCode", "Name"]}
+                      valueAttribute="CourseId"
+                      placeholder={t.courseContents.form.course}
+                      itemSelected={courses.find(
+                        (x) => x.CourseId === field.state.value,
+                      )}
+                      setItemSelected={(x: CourseViewModel) => {
+                        field.handleChange(x && x.CourseId);
+                        // handleUrlParameterChange("courseId", `${x.CourseId}`);
+                        form
+                          .getFieldValue("Homeworks")
+                          ?.map((devoir, index) =>
+                            form.setFieldValue(
+                              `Homeworks[${index}].CourseId`,
+                              x.CourseId,
+                            ),
+                          );
+                      }}
+                      disabled={action === "view"}
+                      notClearable
+                    />
+                    <div className="text-xs text-red-500">
+                      {field.state.meta.errors
+                        ? field.state.meta.errors.join(", ")
+                        : null}
+                    </div>
+                  </>
+                )}
+              />
+            </div>
+            <Button
+              type="button"
+              variant={changePeriod ? "default" : "outlineColored"}
+              onClick={() => setChangePeriod(!changePeriod)}
+            >
+              <span>{t.studentCourseGrades.changePeriod}</span>
+            </Button>
+          </div>
+          {/* SAPE */}
+          {changePeriod ? (
+            <>
+              <div className="flex w-full justify-end">
+                <div className="mt-3 w-full min-w-44 lg:w-[30%]">
                   <Combobox
-                    options={courses}
-                    textAttribute={["CourseCode", "Name"]}
-                    valueAttribute="CourseId"
-                    placeholder={t.courseContents.form.course}
-                    itemSelected={courses.find(
-                      (x) => x.CourseId === field.state.value,
+                    options={scholarPeriods}
+                    textAttribute="Name"
+                    valueAttribute="ScholarPeriodId"
+                    placeholder={t.studentCourses.filters.scholarPeriodId}
+                    itemSelected={scholarPeriods.find(
+                      (x) => x.ScholarPeriodId === scholarPeriodIdParam,
                     )}
-                    setItemSelected={(x: CourseViewModel) => {
-                      field.handleChange(x && x.CourseId);
-                      // handleUrlParameterChange("courseId", `${x.CourseId}`);
-                      form
-                        .getFieldValue("Homeworks")
-                        ?.map((devoir, index) =>
-                          form.setFieldValue(
-                            `Homeworks[${index}].CourseId`,
-                            x.CourseId,
-                          ),
-                        );
+                    setItemSelected={(x: ScholarPeriodsViewModel) => {
+                      handleUrlParameterChange("levelId", "null");
+                      handleUrlParameterChange(
+                        "scholarPeriodId",
+                        `${x.ScholarPeriodId}`,
+                      );
                     }}
-                    disabled={action === "view"}
                     notClearable
                   />
-                  <div className="text-xs text-red-500">
-                    {field.state.meta.errors
-                      ? field.state.meta.errors.join(", ")
-                      : null}
-                  </div>
-                </>
-              )}
-            />
-          </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
         <div className="col-span-1 space-y-1">
           <form.Field
@@ -496,36 +545,20 @@ export default function CourseTextbookForm({
             name="Content"
             validators={{
               onSubmitAsync: (value) => {
-                console.log("validators", value);
-                if (
-                  !value ||
-                  value.value === null ||
-                  value.value === undefined ||
-                  value.value.trim() === ""
-                ) {
+                if (value === null || value === undefined) {
                   return t.courseContents.validations.contentValidation;
                 }
-
-                // Validate that it's valid JSON if not empty
-                try {
-                  if (value.value.trim() !== "") {
-                    JSON.parse(value.value);
-                  }
-                  return undefined;
-                } catch (error) {
-                  return t.courseContents.validations.contentFormatValidation;
-                }
+                return z.string().min(1).safeParse(value.value).success
+                  ? undefined
+                  : t.courseContents.validations.contentValidation;
               },
             }}
             children={(field) => (
               <>
                 <span>{t.courseContents.form.content}</span>
                 <TextEditor
-                  data={parseEditorData(field.state.value)}
-                  onChange={(newData: OutputData) => {
-                    field.handleChange(stringifyEditorData(newData));
-                  }}
-                  editorBlock={`editorjs-content-${formatDateTime(form.getFieldValue("ReferenceDate"))}`}
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e)}
                   placeholder={t.courseContents.textEditor.placeholder}
                   disabled={action === "view"}
                 />
@@ -538,74 +571,83 @@ export default function CourseTextbookForm({
             )}
           />
         </div>
-        <div>
-          {action === "view" ? (
-            <>
-              <span>{t.courseTextbooks.documents}</span>
-            </>
-          ) : (
-            <>
-              <input
-                ref={contentDocumentInputRef}
-                className="hidden"
-                type="file"
-                multiple
-                onChange={handleDocumentChange}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                className="flex space-x-2"
-                onClick={() => contentDocumentInputRef.current?.click()}
-              >
-                <Icon name="MdCloudUpload" className="text-3xl" />
-                <span>{t.courseTextbooks.documents}</span>
-              </Button>
-            </>
-          )}
-        </div>
-        <div className="col-span-1 -mt-4 space-y-1 sm:col-span-2">
-          <div className="flex flex-wrap space-x-3 space-y-3">
-            <div />
-            {originalDocs.map((doc, idx) => (
-              <div
-                key={idx}
-                className="flex items-center space-x-2 rounded-md border p-1"
-              >
-                <a
-                  href={`/api/documents/${encodeURIComponent(doc)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download
-                >
-                  {doc.slice(14)}
-                </a>
-                {action !== "view" && (
-                  <Icon
-                    name="MdClose"
-                    className="text-lg hover:cursor-pointer hover:text-primary"
-                    onClick={() => removeExistingDoc(doc)}
+        {action !== "view" ||
+        (form.getFieldValue("Documents") || []).length > 0 ? (
+          <>
+            <div>
+              {action === "view" ? (
+                <>
+                  <span>{t.courseTextbooks.documents}</span>
+                </>
+              ) : (
+                <>
+                  <input
+                    ref={contentDocumentInputRef}
+                    className="hidden"
+                    type="file"
+                    multiple
+                    onChange={handleDocumentChange}
                   />
-                )}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="flex space-x-2"
+                    onClick={() => contentDocumentInputRef.current?.click()}
+                  >
+                    <Icon name="MdCloudUpload" className="text-3xl" />
+                    <span>{t.courseTextbooks.documents}</span>
+                  </Button>
+                </>
+              )}
+            </div>
+            <div className="col-span-1 -mt-4 space-y-1 sm:col-span-2">
+              <div className="flex flex-wrap space-x-3 space-y-3">
+                <div />
+                {originalDocs.map((doc, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center space-x-2 rounded-md border p-1 hover:border-primary"
+                  >
+                    <a
+                      href={`/api/documents/${encodeURIComponent(doc)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-1"
+                      download
+                    >
+                      <Icon name="MdSimCardDownload" className="text-lg" />
+                      <span>{doc.slice(14)}</span>
+                    </a>
+                    {action !== "view" && (
+                      <Icon
+                        name="MdClose"
+                        className="text-lg hover:cursor-pointer hover:text-primary"
+                        onClick={() => removeExistingDoc(doc)}
+                      />
+                    )}
+                  </div>
+                ))}
+                {selectedDocs.map((file, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center space-x-2 rounded-md border p-1"
+                  >
+                    <span>{file.name}</span>
+                    {action !== "view" && (
+                      <Icon
+                        name="MdClose"
+                        className="text-lg hover:cursor-pointer hover:text-primary"
+                        onClick={() => removeSelectedDoc(idx)}
+                      />
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
-            {selectedDocs.map((file, idx) => (
-              <div
-                key={idx}
-                className="flex items-center space-x-2 rounded-md border p-1"
-              >
-                <span>{file.name}</span>
-                {action !== "view" && (
-                  <Icon
-                    name="MdClose"
-                    className="text-lg hover:cursor-pointer hover:text-primary"
-                    onClick={() => removeSelectedDoc(idx)}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
         <div className="col-span-1 space-y-1 md:col-span-2">
           <form.Field
             name="Homeworks"
@@ -701,26 +743,17 @@ export default function CourseTextbookForm({
                               name={`Homeworks[${index}].Description`}
                               validators={{
                                 onSubmitAsync: (value) => {
-                                  if (
-                                    !value ||
-                                    value.value === null ||
-                                    value.value === undefined ||
-                                    value.value.trim() === ""
-                                  ) {
+                                  if (value === null || value === undefined) {
                                     return t.courseHomeworks.validations
                                       .descriptionValidation;
                                   }
-
-                                  // Validate that it's valid JSON if not empty
-                                  try {
-                                    if (value.value.trim() !== "") {
-                                      JSON.parse(value.value);
-                                    }
-                                    return undefined;
-                                  } catch (error) {
-                                    return t.courseHomeworks.validations
-                                      .descriptionValidation;
-                                  }
+                                  return z
+                                    .string()
+                                    .min(1)
+                                    .safeParse(value.value).success
+                                    ? undefined
+                                    : t.courseHomeworks.validations
+                                        .descriptionValidation;
                                 },
                               }}
                               children={(field) => (
@@ -729,15 +762,10 @@ export default function CourseTextbookForm({
                                     {t.courseHomeworks.form.description}
                                   </span>
                                   <TextEditor
-                                    data={parseEditorData(field.state.value)}
-                                    onChange={(newData: OutputData) => {
-                                      field.handleChange(
-                                        stringifyEditorData(newData),
-                                      );
-                                    }}
-                                    editorBlock={`editorjs-homework${index}`}
+                                    value={field.state.value}
+                                    onChange={(e) => field.handleChange(e)}
                                     placeholder={
-                                      t.courseHomeworks.textEditor.placeholder
+                                      t.courseContents.textEditor.placeholder
                                     }
                                     disabled={action === "view"}
                                   />
@@ -750,92 +778,118 @@ export default function CourseTextbookForm({
                               )}
                             />
                           </div>
-                          <div>
-                            {action === "view" ? (
-                              <>
-                                <span>{t.courseTextbooks.documents}</span>
-                              </>
-                            ) : (
-                              <>
-                                <input
-                                  id={`homework-file-${index}`}
-                                  className="hidden"
-                                  type="file"
-                                  multiple
-                                  onChange={(e) =>
-                                    handleHomeworkDocumentChange(e, index)
-                                  }
-                                />
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  className="flex space-x-2"
-                                  onClick={() =>
-                                    document
-                                      .getElementById(`homework-file-${index}`)
-                                      ?.click()
-                                  }
-                                >
-                                  <Icon
-                                    name="MdCloudUpload"
-                                    className="text-3xl"
-                                  />
-                                  <span>{t.courseTextbooks.documents}</span>
-                                </Button>
-                              </>
-                            )}
-                          </div>
-                          <div className="col-span-1 space-y-1 sm:col-span-2">
-                            <div className="flex flex-wrap space-x-3 space-y-3">
-                              <div />
-                              {/* Existing docs from DB */}
-                              {(homework.Documents || []).map((doc, idx) => (
-                                <div
-                                  key={idx}
-                                  className="flex items-center space-x-2 rounded-md border p-1"
-                                >
-                                  <a
-                                    href={`/api/documents/${encodeURIComponent(doc)}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    download
-                                  >
-                                    {doc.slice(14)}
-                                  </a>
-                                  {action !== "view" && (
-                                    <Icon
-                                      name="MdClose"
-                                      className="text-lg hover:cursor-pointer hover:text-primary"
-                                      onClick={() =>
-                                        removeHomeworkExistingDoc(index, doc)
+                          {action !== "view" ||
+                          (
+                            form.getFieldValue(
+                              `Homeworks[${index}].Documents`,
+                            ) || []
+                          ).length > 0 ? (
+                            <>
+                              <div>
+                                {action === "view" ? (
+                                  <>
+                                    <span>{t.courseTextbooks.documents}</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <input
+                                      id={`homework-file-${index}`}
+                                      className="hidden"
+                                      type="file"
+                                      multiple
+                                      onChange={(e) =>
+                                        handleHomeworkDocumentChange(e, index)
                                       }
                                     />
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      className="flex space-x-2"
+                                      onClick={() =>
+                                        document
+                                          .getElementById(
+                                            `homework-file-${index}`,
+                                          )
+                                          ?.click()
+                                      }
+                                    >
+                                      <Icon
+                                        name="MdCloudUpload"
+                                        className="text-3xl"
+                                      />
+                                      <span>{t.courseTextbooks.documents}</span>
+                                    </Button>
+                                  </>
+                                )}
+                              </div>
+                              <div className="col-span-1 space-y-1 sm:col-span-2">
+                                <div className="flex flex-wrap space-x-3 space-y-3">
+                                  <div />
+                                  {/* Existing docs from DB */}
+                                  {(homework.Documents || []).map(
+                                    (doc, idx) => (
+                                      <div
+                                        key={idx}
+                                        className="flex items-center space-x-2 rounded-md border p-1 hover:border-primary"
+                                      >
+                                        <a
+                                          href={`/api/documents/${encodeURIComponent(doc)}`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="flex items-center space-x-1"
+                                          download
+                                        >
+                                          <Icon
+                                            name="MdSimCardDownload"
+                                            className="text-lg"
+                                          />
+                                          <span>{doc.slice(14)}</span>
+                                        </a>
+                                        {action !== "view" && (
+                                          <Icon
+                                            name="MdClose"
+                                            className="text-lg hover:cursor-pointer hover:text-primary"
+                                            onClick={() =>
+                                              removeHomeworkExistingDoc(
+                                                index,
+                                                doc,
+                                              )
+                                            }
+                                          />
+                                        )}
+                                      </div>
+                                    ),
+                                  )}
+
+                                  {/* New files not uploaded yet */}
+                                  {(homeworkSelectedDocs[index] || []).map(
+                                    (file, idx) => (
+                                      <div
+                                        key={idx}
+                                        className="flex items-center space-x-2 rounded-md border p-1"
+                                      >
+                                        <span>{file.name}</span>
+                                        {action !== "view" && (
+                                          <Icon
+                                            name="MdClose"
+                                            className="text-lg hover:cursor-pointer hover:text-primary"
+                                            onClick={() =>
+                                              removeHomeworkSelectedDoc(
+                                                index,
+                                                idx,
+                                              )
+                                            }
+                                          />
+                                        )}
+                                      </div>
+                                    ),
                                   )}
                                 </div>
-                              ))}
-
-                              {/* New files not uploaded yet */}
-                              {(homeworkSelectedDocs[index] || []).map(
-                                (file, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="flex items-center space-x-2 rounded-md border p-1"
-                                  >
-                                    <span>{file.name}</span>
-                                    {action !== "view" && (
-                                      <Icon
-                                        name="MdClose"
-                                        className="text-lg hover:cursor-pointer hover:text-primary"
-                                        onClick={() =>
-                                          removeHomeworkSelectedDoc(index, idx)
-                                        }
-                                      />
-                                    )}
-                                  </div>
-                                ),
-                              )}
-                            </div>
-                          </div>
+                              </div>
+                            </>
+                          ) : (
+                            <></>
+                          )}
                         </>
                       )}
                     </div>
