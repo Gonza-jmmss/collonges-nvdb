@@ -133,7 +133,7 @@ export default function TableComponent<T>({
 
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: pageIndexParam !== undefined ? pageIndexParam : 0,
-    pageSize: pageSizeParam !== undefined ? pageSizeParam : 10,
+    pageSize: pageSizeParam !== undefined ? Math.max(pageSizeParam, 10) : 10,
   });
 
   const table = useReactTable({
@@ -262,7 +262,7 @@ export default function TableComponent<T>({
                     </TableRow>
                     {row.getIsExpanded() && (
                       <TableRow>
-                        <TableCell colSpan={row.getAllCells().length}>
+                        <TableCell>
                           <div>
                             {typeof expandedContent === "function"
                               ? expandedContent(row.original)
@@ -526,7 +526,7 @@ export default function TableComponent<T>({
                   (x) => x.value === table.getState().pagination.pageSize,
                 )}
                 setItemSelected={(x: { value: number }) =>
-                  table.setPageSize(x.value)
+                  table.setPageSize(x.value < 10 ? 10 : x.value)
                 }
               />
             </div>
