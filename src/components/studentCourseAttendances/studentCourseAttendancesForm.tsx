@@ -7,6 +7,7 @@ import { StudentCourseAttendancesByCourseIdViewModel } from "@/repositories/stud
 import { CourseViewModel } from "@/repositories/courses/coursesViewModel";
 import { CurentLevelsViewModel } from "@/repositories/levels/levelsViewModel";
 import { StudentsByCourseIdViewModel } from "@/repositories/studentCourses/studentCoursesViewModel";
+import { ScholarPeriodsViewModel } from "@/repositories/scholarPeriods/scholarPeriodsViewModel";
 import { StudentCourseAttendancesSchema } from "@/zodSchemas/studentCoursesAttendancesSchema";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,7 @@ export default function StudentCourseAttendanceForm({
   studentCourseAttendanceData,
   courses,
   levels,
+  scholarPeriods,
   studentByCouse,
   tearcherId,
   pageIndexParam,
@@ -40,6 +42,7 @@ export default function StudentCourseAttendanceForm({
   studentCourseAttendanceData: StudentCourseAttendancesByCourseIdViewModel | null;
   courses: CourseViewModel[];
   levels: CurentLevelsViewModel[];
+  scholarPeriods: ScholarPeriodsViewModel[];
   studentByCouse: StudentsByCourseIdViewModel[];
   tearcherId: number;
   pageIndexParam: number;
@@ -53,13 +56,14 @@ export default function StudentCourseAttendanceForm({
   const updateQuery = useUpdateQuery();
 
   const [otherPeriod, setOtherPeriod] = useState(false);
-
   const [isPending, setIsPending] = useState(false);
+  const [changePeriod, setChangePeriod] = useState(false);
 
   const attendanceDateParam = new Date(urlParams?.attendanceDate as string);
   const levelIdParam =
     urlParams?.levelId !== null ? parseInt(urlParams?.levelId as string) : null;
   const courseIdParam = parseInt(urlParams?.courseId as string);
+  const scholarPeriodIdParam = parseInt(urlParams?.scholarPeriodId as string);
   const tabParam = urlParams?.tab as string;
 
   const form = useForm<StudentCourseAttendanceFormData>({
@@ -171,16 +175,16 @@ export default function StudentCourseAttendanceForm({
     updateQuery(Object.fromEntries(currentParams));
   };
 
-  const [periodNumberRender, setPeriodNumberRender] = useState(0);
-  useEffect(() => {
-    if (periodNumberRender > 0) {
-      if (courses.length > 0) {
-        handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
-      }
-    } else {
-      setPeriodNumberRender(1);
-    }
-  }, [urlParams?.periodNumber]);
+  // const [periodNumberRender, setPeriodNumberRender] = useState(0);
+  // useEffect(() => {
+  //   if (periodNumberRender > 0) {
+  //     if (courses.length > 0) {
+  //       handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
+  //     }
+  //   } else {
+  //     setPeriodNumberRender(1);
+  //   }
+  // }, [urlParams?.periodNumber]);
 
   const [levelIdRender, setLevelIdRender] = useState(0);
   useEffect(() => {
@@ -192,6 +196,17 @@ export default function StudentCourseAttendanceForm({
       setLevelIdRender(1);
     }
   }, [urlParams?.levelId]);
+
+  const [scholarPeriodIdRender, setScholarPeriodIdRender] = useState(0);
+  useEffect(() => {
+    if (scholarPeriodIdRender > 0) {
+      if (courses.length > 0) {
+        handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
+      }
+    } else {
+      setScholarPeriodIdRender(1);
+    }
+  }, [urlParams?.scholarPeriodId]);
 
   useEffect(() => {
     if (studentByCouse && action === "create") {
@@ -257,31 +272,72 @@ export default function StudentCourseAttendanceForm({
       >
         <div className="col-span-1 md:col-span-2">
           <div>{t.studentCourseAttendances.form.course}</div>
-          <div className="mt-1 flex flex-col space-y-5 md:flex-row md:space-x-3 md:space-y-0">
-            <Combobox
-              options={levels}
-              textAttribute="Name"
-              valueAttribute="LevelId"
-              placeholder={t.studentCourseAttendances.form.level}
-              itemSelected={levels.find((x) => x.LevelId === levelIdParam)}
-              setItemSelected={(x: CurentLevelsViewModel) => {
-                handleUrlParameterChange("levelId", `${x ? x.LevelId : null}`);
-              }}
-              disabled={action !== "create"}
-            />
-            <Combobox
-              options={courses}
-              textAttribute={["CourseCode", "Name"]}
-              valueAttribute="CourseId"
-              placeholder={t.studentCourseAttendances.form.course}
-              itemSelected={courses.find((x) => x.CourseId === courseIdParam)}
-              setItemSelected={(x: CourseViewModel) => {
-                handleUrlParameterChange("courseId", `${x.CourseId}`);
-              }}
-              disabled={action !== "create"}
-              notClearable
-            />
+          <div className="mt-1 flex flex-col space-y-5 lg:flex-row lg:space-x-3 lg:space-y-0">
+            <div className="w-full min-w-44 lg:w-[20%]">
+              <Combobox
+                options={levels}
+                textAttribute="Name"
+                valueAttribute="LevelId"
+                placeholder={t.studentCourseAttendances.form.level}
+                itemSelected={levels.find((x) => x.LevelId === levelIdParam)}
+                setItemSelected={(x: CurentLevelsViewModel) => {
+                  handleUrlParameterChange(
+                    "levelId",
+                    `${x ? x.LevelId : null}`,
+                  );
+                }}
+                disabled={action !== "create"}
+              />
+            </div>
+            <div className="w-full lg:w-[70%] lg:min-w-[48%]">
+              <Combobox
+                options={courses}
+                textAttribute={["CourseCode", "Name"]}
+                valueAttribute="CourseId"
+                placeholder={t.studentCourseAttendances.form.course}
+                itemSelected={courses.find((x) => x.CourseId === courseIdParam)}
+                setItemSelected={(x: CourseViewModel) => {
+                  handleUrlParameterChange("courseId", `${x.CourseId}`);
+                }}
+                disabled={action !== "create"}
+                notClearable
+              />
+            </div>
+            <Button
+              type="button"
+              variant={changePeriod ? "default" : "outlineColored"}
+              onClick={() => setChangePeriod(!changePeriod)}
+            >
+              <span>{t.studentCourseGrades.changePeriod}</span>
+            </Button>
           </div>
+          {changePeriod ? (
+            <>
+              <div className="flex w-full justify-end">
+                <div className="mt-3 w-full min-w-44 lg:w-[30%]">
+                  <Combobox
+                    options={scholarPeriods}
+                    textAttribute="Name"
+                    valueAttribute="ScholarPeriodId"
+                    placeholder={t.studentCourses.filters.scholarPeriodId}
+                    itemSelected={scholarPeriods.find(
+                      (x) => x.ScholarPeriodId === scholarPeriodIdParam,
+                    )}
+                    setItemSelected={(x: ScholarPeriodsViewModel) => {
+                      handleUrlParameterChange("levelId", "null");
+                      handleUrlParameterChange(
+                        "scholarPeriodId",
+                        `${x.ScholarPeriodId}`,
+                      );
+                    }}
+                    notClearable
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
         <div className="col-span-1 space-y-1">
           <form.Field
@@ -341,7 +397,9 @@ export default function StudentCourseAttendanceForm({
                     options={enumToArray(AttendancePeriodEnum)}
                     textAttribute="value"
                     valueAttribute="key"
-                    placeholder={" "}
+                    placeholder={
+                      t.studentCourseAttendances.form.attendancePeriod
+                    }
                     itemSelected={enumToArray(AttendancePeriodEnum).find(
                       (x) => x.key === field.state.value,
                     )}

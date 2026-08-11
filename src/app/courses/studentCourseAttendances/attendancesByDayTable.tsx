@@ -6,12 +6,14 @@ import {
   StudentCourseAttendancesByDayViewModel,
   StudentCourseAttendancesByDay,
 } from "@/repositories/studentCourseAttendances/StudentCourseAttendancesViewModel";
+import { ScholarPeriodsViewModel } from "@/repositories/scholarPeriods/scholarPeriodsViewModel";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import DeleteModal from "@/components/common/deleteModal";
 import Icon from "@/components/common/icon";
 import CalendarInput from "@/components/common/calendarInput";
+import Combobox from "@/components/common/combobox";
 import { Button } from "@/components/ui/button";
 import formatDate from "@/functions/formatDate";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -22,8 +24,10 @@ import frFR from "@/lang/fr-FR";
 export default function AttendancesByDayTable({
   attendancesData,
   selectedAttendanceDate,
-  periodNumberSelected,
+  // periodNumberSelected,
   courseIdSelected,
+  // scholarPeriods,
+  scholarPeriodSelected,
   tabValue,
   pageIndex,
   pageSize,
@@ -31,8 +35,10 @@ export default function AttendancesByDayTable({
 }: {
   attendancesData: StudentCourseAttendancesByDayViewModel[];
   selectedAttendanceDate: Date;
-  periodNumberSelected: number;
+  // periodNumberSelected: number;
   courseIdSelected: number;
+  // scholarPeriods: ScholarPeriodsViewModel[];
+  scholarPeriodSelected: number;
   tabValue: string;
   pageIndex: number;
   pageSize: number;
@@ -46,6 +52,8 @@ export default function AttendancesByDayTable({
 
   const getPageIndexParam = searchParams.get("pageIndex");
   const getPageSizeParam = searchParams.get("pageSize");
+
+  const [changePeriod, setChangePeriod] = useState(false);
 
   const [openModal, setOpenModal] = useState(false);
   const [
@@ -113,6 +121,10 @@ export default function AttendancesByDayTable({
           />
         ),
         filterFn: "equalsString",
+        cell: (row) =>
+          row.getValue().includes("/")
+            ? row.getValue().slice(0, -2)
+            : row.getValue(),
         size: 100,
       },
       {
@@ -162,10 +174,14 @@ export default function AttendancesByDayTable({
             <Icon
               name="MdEdit"
               className="cursor-pointer text-xl hover:text-primary"
-              onClick={() =>
-                router.push(
-                  `/courses/studentCourseAttendances/${row.original.CourseId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.original.CourseId}&periodNumber=${periodNumberSelected}&attendanceDate=${row.original.AttendanceDate.toUTCString()}&AttendancePeriod=${row.original.AttendancePeriod}&tab=${tabValue}`,
-                )
+              onClick={
+                () =>
+                  router.push(
+                    `/courses/studentCourseAttendances/${row.original.CourseId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.original.CourseId}&attendanceDate=${row.original.AttendanceDate.toUTCString()}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&AttendancePeriod=${row.original.AttendancePeriod}&tab=${tabValue}`,
+                  )
+                // router.push(
+                //   `/courses/studentCourseAttendances/${row.original.CourseId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.original.CourseId}&periodNumber=${periodNumberSelected}&attendanceDate=${row.original.AttendanceDate.toUTCString()}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&AttendancePeriod=${row.original.AttendancePeriod}&tab=${tabValue}`,
+                // )
               }
             />
             <Icon
@@ -180,7 +196,8 @@ export default function AttendancesByDayTable({
         ),
       },
     ],
-    [getPageIndexParam, getPageSizeParam, periodNumberSelected],
+    [getPageIndexParam, getPageSizeParam],
+    // [getPageIndexParam, getPageSizeParam, periodNumberSelected],
   );
 
   const deleteStudentCourseAttendance = async (
@@ -268,18 +285,59 @@ export default function AttendancesByDayTable({
                 }}
               />
             </div>
+            {/* <Button
+              variant={changePeriod ? "default" : "outlineColored"}
+              onClick={() => setChangePeriod(!changePeriod)}
+            >
+              <span>{t.studentCourseAttendances.changePeriod}</span>
+            </Button> */}
           </div>
           <Button
             variant="outlineColored"
-            onClick={() =>
-              router.push(
-                `/courses/studentCourseAttendances/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${courseIdSelected}&periodNumber=${periodNumberSelected}&attendanceDate=${selectedAttendanceDate}&tab=${tabValue}`,
-              )
+            onClick={
+              () =>
+                router.push(
+                  `/courses/studentCourseAttendances/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${courseIdSelected}d&attendanceDate=${selectedAttendanceDate}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&tab=${tabValue}`,
+                )
+              // router.push(
+              //   `/courses/studentCourseAttendances/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${courseIdSelected}&periodNumber=${periodNumberSelected}&attendanceDate=${selectedAttendanceDate}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&tab=${tabValue}`,
+              // )
             }
           >
             <span>{t.studentCourseAttendances.create}</span>
           </Button>
         </div>
+        {/* {changePeriod ? (
+          <>
+            <div className="mt-5">
+              <div className="flex items-center justify-between space-x-5">
+                <div className="w-[15rem]">
+                  <Combobox
+                    options={scholarPeriods}
+                    textAttribute="Name"
+                    valueAttribute="ScholarPeriodId"
+                    placeholder={
+                      t.studentCourseAttendances.filters.scholarPeriodId
+                    }
+                    itemSelected={scholarPeriods.find(
+                      (x) => x.ScholarPeriodId === scholarPeriodSelected,
+                    )}
+                    setItemSelected={(x: ScholarPeriodsViewModel) => {
+                      handleUrlParameterChange(
+                        "scholarPeriodId",
+                        `${x.ScholarPeriodId}`,
+                      );
+                      handleUrlParameterChange("courseId", `0`);
+                    }}
+                    notClearable
+                  />
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <></>
+        )} */}
       </div>
       <Table
         columns={columns}
@@ -292,11 +350,16 @@ export default function AttendancesByDayTable({
           <Table
             columns={columnsExtended}
             data={row.Attendances}
-            onRowClick={(row) =>
-              router.push(
-                `/courses/studentCourseAttendances/${row.CourseId}?action="view"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.CourseId}&periodNumber=${periodNumberSelected}&attendanceDate=${row.AttendanceDate.toUTCString()}&AttendancePeriod=${row.AttendancePeriod}&tab=${tabValue}`,
-              )
+            onRowClick={
+              (row) =>
+                router.push(
+                  `/courses/studentCourseAttendances/${row.CourseId}?action="view"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.CourseId}&attendanceDate=${row.AttendanceDate.toUTCString()}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&AttendancePeriod=${row.AttendancePeriod}&tab=${tabValue}`,
+                )
+              // router.push(
+              //   `/courses/studentCourseAttendances/${row.CourseId}?action="view"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.CourseId}&periodNumber=${periodNumberSelected}&attendanceDate=${row.AttendanceDate.toUTCString()}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&AttendancePeriod=${row.AttendancePeriod}&tab=${tabValue}`,
+              // )
             }
+            pageSizeParam={row.Attendances.length}
             minimalMode
             noBorders
           />

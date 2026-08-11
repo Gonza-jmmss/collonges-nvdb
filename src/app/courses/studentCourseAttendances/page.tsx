@@ -4,6 +4,7 @@ import getCoursesByTeacherQuery from "@/repositories/courses/queries/getCoursesB
 import getCurrentScholarPeriodQuery from "@/repositories/scholarPeriods/queries/getCurrentScholarPeriod";
 import getStudentCourseAttendancesByDayQuery from "@/repositories/studentCourseAttendances/queries/getStudentCourseAttendancesByDayQuery";
 import getStudentCourseAttendancesByStudentQuery from "@/repositories/studentCourseAttendances/queries/getStudentCourseAttendancesByStudentQuery";
+import getAllScholarPeriodsTableQuery from "@/repositories/scholarPeriods/queries/getAllScholarPeriodsTableQuery";
 import { TabsComponent } from "@/components/common/tabs";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
@@ -31,20 +32,32 @@ export default async function StudentCourseAttendacesPage({
     ? new Date(searchParams.attendanceDate as string)
     : new Date();
 
-  const currentScholarPeriod = await getCurrentScholarPeriodQuery();
-
-  const periodNumberSelected = searchParams?.periodNumber
-    ? parseInt(searchParams.periodNumber as string)
-    : currentScholarPeriod.Number;
-
   const levelIdSelected = searchParams?.levelId
     ? searchParams.levelId !== "null"
       ? parseInt(searchParams.levelId as string)
       : null
     : null;
 
+  // const currentScholarPeriod = await getCurrentScholarPeriodQuery();
+
+  // const periodNumberSelected = searchParams?.periodNumber
+  //   ? parseInt(searchParams.periodNumber as string)
+  //   : currentScholarPeriod.Number;
+
+  const scholarPeriods = await getAllScholarPeriodsTableQuery();
+
+  const scholarPeriodIdParam =
+    searchParams.scholarPeriodId && searchParams.scholarPeriodId !== "null"
+      ? parseInt(searchParams.scholarPeriodId as string)
+      : scholarPeriods[0].ScholarPeriodId;
+
+  const periodNumberSelected =
+    scholarPeriods.find((x) => x.ScholarPeriodId === scholarPeriodIdParam)
+      ?.Number ?? scholarPeriods[0].Number;
+
   const courses = await getCoursesByTeacherQuery({
     IsEnabled: true,
+    // Period: periodNumberSelected,
     Period: periodNumberSelected,
     RoreName: session ? session.user.userData.Roles.Name : "",
     UserId: session ? parseInt(session.user.id) : 0,
@@ -61,12 +74,14 @@ export default async function StudentCourseAttendacesPage({
   const studentCourseAttendanceByDay =
     await getStudentCourseAttendancesByDayQuery({
       AttendanceDate: attendanceDateParam,
-      PeriodNumber: periodNumberSelected,
+      // PeriodNumber: periodNumberSelected,
+      // ScholarPeriodId: scholarPeriodIdParam,
     });
 
   const studentCourseAttendanceByStudent =
     await getStudentCourseAttendancesByStudentQuery({
-      PeriodNumber: periodNumberSelected,
+      // PeriodNumber: periodNumberSelected,
+      ScholarPeriodId: scholarPeriodIdParam,
     });
 
   const tabs = [
@@ -77,7 +92,9 @@ export default async function StudentCourseAttendacesPage({
         <AttendancesByDayTable
           attendancesData={studentCourseAttendanceByDay}
           selectedAttendanceDate={attendanceDateParam}
-          periodNumberSelected={periodNumberSelected}
+          // periodNumberSelected={periodNumberSelected}
+          // scholarPeriods={scholarPeriods}
+          scholarPeriodSelected={scholarPeriodIdParam}
           courseIdSelected={courseIdSelected}
           tabValue="StudentCourseAttendancesByDayTable"
           pageIndex={pageIndex}
@@ -92,7 +109,9 @@ export default async function StudentCourseAttendacesPage({
       body: (
         <AttendancesByStudentTable
           attendancesData={studentCourseAttendanceByStudent}
-          periodNumberSelected={periodNumberSelected}
+          // periodNumberSelected={periodNumberSelected}
+          scholarPeriods={scholarPeriods}
+          scholarPeriodSelected={scholarPeriodIdParam}
           tabValue="StudentCourseAttendancesByStudentTable"
           pageIndex={pageIndex}
           pageSize={pageSize}

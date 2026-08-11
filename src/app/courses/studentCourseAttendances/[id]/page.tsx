@@ -4,8 +4,10 @@
 import getStudentCourseAttendancesByCourseIdQuery from "@/repositories/studentCourseAttendances/queries/getStudentCourseAttendancesByCourseIdQuery";
 import StudentCourseAttendanceForm from "@/components/studentCourseAttendances/studentCourseAttendancesForm";
 import getCoursesByTeacherQuery from "@/repositories/courses/queries/getCoursesByTeacherQuery";
-import getCurrentLevelsQuery from "@/repositories/levels/queries/getCurrentLevelsQuery";
+// import getCurrentLevelsQuery from "@/repositories/levels/queries/getCurrentLevelsQuery";
+import getAllLevelsQuery from "@/repositories/levels/queries/getAllLevelsQuery";
 import getStudentsByCourseIdQuery from "@/repositories/studentCourses/queries/getStudentsByCourseIdQuery";
+import getAllScholarPeriodsTableQuery from "@/repositories/scholarPeriods/queries/getAllScholarPeriodsTableQuery";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
@@ -30,7 +32,8 @@ export default async function Page({
 
   const action = (searchParams.action as string).replace(/"/g, "");
 
-  const periodNumberParam = parseInt(searchParams.periodNumber as string);
+  // const periodNumberParam = parseInt(searchParams.periodNumber as string);
+  const scholarPeriodIdParam = parseInt(searchParams.scholarPeriodId as string);
   //   // const levelIdParam = parseInt(searchParams.levelId as string) || null;
   const levelIdParam = parseInt(searchParams.levelId as string) || null;
 
@@ -55,21 +58,47 @@ export default async function Page({
     studentCourseAttendance = null;
   }
 
+  const scholarPeriods = await getAllScholarPeriodsTableQuery();
+
+  const periodNumberSelected =
+    scholarPeriods.find((x) => x.ScholarPeriodId === scholarPeriodIdParam)
+      ?.Number ?? scholarPeriods[0].Number;
+
   const courses = await getCoursesByTeacherQuery({
     IsEnabled: true,
-    Period: periodNumberParam,
+    Period: periodNumberSelected,
+    // Period: periodNumberParam,
     RoreName: session ? session.user.userData.Roles.Name : "",
     UserId: session ? parseInt(session.user.id) : 0,
     LevelId: levelIdParam,
   });
 
-  const levels = await getCurrentLevelsQuery();
-
-  const studentByCouse = await getStudentsByCourseIdQuery({
-    CourseId: courseIdParam,
-    PeriodNumber: periodNumberParam,
+  // const levels = await getCurrentLevelsQuery();
+  const levels = await getAllLevelsQuery({
+    IsEnabled: true,
+    PeriodNumber: periodNumberSelected,
   });
 
+  // const studentByCouse = await getStudentsByCourseIdQuery({
+  //   CourseId: courseIdParam,
+  //   PeriodNumber: periodNumberParam,
+  //   Action: action,
+  // });
+  const studentByCouse =
+    action === "create"
+      ? await getStudentsByCourseIdQuery({
+          CourseId: courseIdParam,
+          PeriodNumber: periodNumberSelected,
+          // PeriodNumber: periodNumberParam,
+          Action: action,
+        })
+      : await getStudentsByCourseIdQuery({
+          CourseId: courseIdParam,
+          PeriodNumber: periodNumberSelected,
+          // PeriodNumber: periodNumberParam,
+          Action: action,
+          AttendanceDate: studentCourseAttendance?.AttendanceDate,
+        });
   //   const pagetitle = `${`${t.shared[action as keyof typeof t.shared]} ${t.studentCourseGrades.studentCourseGrade}
   //     ${action != "create" ? `: ${studentCourseGrade ? studentCourseGrade.Name : ""}` : ""}`}`;
   const pagetitle = `${`${t.shared[action as keyof typeof t.shared]} ${t.studentCourseAttendances.studentCourseAttendance} 
@@ -79,7 +108,7 @@ export default async function Page({
     <main className="relative mt-5 flex justify-center">
       <Button asChild className={`absolute -left-16 top-3`} variant="ghost">
         <Link
-          href={`/courses/studentCourseAttendances?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&attendanceDate=${attendanceDateParam.toUTCString()}&tab=${tabParam}`}
+          href={`/courses/studentCourseAttendances?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&attendanceDate=${attendanceDateParam.toUTCString()}${scholarPeriodIdParam ? `&scholarPeriodId=${scholarPeriodIdParam}` : ""}&tab=${tabParam}`}
         >
           <Icon name={"MdArrowBack"} className="text-xl" />
         </Link>
@@ -94,6 +123,7 @@ export default async function Page({
             studentCourseAttendanceData={studentCourseAttendance}
             courses={courses}
             levels={levels}
+            scholarPeriods={scholarPeriods}
             studentByCouse={studentByCouse}
             tearcherId={session ? parseInt(session.user.id) : 0}
             pageIndexParam={pageIndexParam}

@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import getActiveScholarYearQuery from "@/repositories/scholarYears/queries/getActiveScholarYearQuery";
+// import getActiveScholarYearQuery from "@/repositories/scholarYears/queries/getActiveScholarYearQuery";
 import {
   StudentCourseAttendancesByDayViewModel,
   StudentCourseAttendancesByDay,
@@ -10,8 +10,13 @@ const prisma = new PrismaClient();
 
 type getStudentCourseAttendancesByDayQueryParams = {
   AttendanceDate: Date;
-  PeriodNumber: number;
+  // PeriodNumber: number;
+  // ScholarPeriodId: number;
 };
+
+// #################### //
+// Je laisse commenter la logique du « PeriodNumber » et « activeScholarYear » au cas où des bugs apparaîtraient
+// #################### //
 
 const getStudentCourseAttendancesByDayQuery = async (
   params: getStudentCourseAttendancesByDayQueryParams,
@@ -26,15 +31,16 @@ const getStudentCourseAttendancesByDayQuery = async (
   const attendanceDateEnd = new Date(attendanceDateStart);
   attendanceDateEnd.setUTCHours(23, 59, 59, 999);
 
-  const activeScholarYear = await getActiveScholarYearQuery();
+  // const activeScholarYear = await getActiveScholarYearQuery();
 
   const query = await prisma.studentCourseAttendances.findMany({
     where: {
       StudentCourses: {
-        ScholarPeriods: {
-          ScholarYearId: activeScholarYear.ScholarYearId,
-          Number: params.PeriodNumber,
-        },
+        // ScholarPeriods: {
+        //   // ScholarYearId: activeScholarYear.ScholarYearId,
+        //   // Number: params.PeriodNumber,
+        //   ScholarPeriodId: params.ScholarPeriodId,
+        // },
       },
       AttendanceDate: {
         gte: attendanceDateStart,
