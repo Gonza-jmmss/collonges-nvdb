@@ -21,6 +21,7 @@ export default {
     studentCourseGrades: "Notes",
     yearPeriods: "Périodes d'année",
     contactTypes: "Types de contacts",
+    colleges: "Universités",
     changePassword: "Modifier le mot de passe",
     studentCourseAttendances: "Assiduité",
     studentHome: "Accueil",
@@ -386,7 +387,7 @@ export default {
       columns: {
         information: "Identifiants",
         url: "URL",
-        urlValue: "http://srvifle:3128",
+        urlValue: "https://classifle.ifle.fr/",
         userName: "Nom d'utilisateur",
         password: "Mot de passe",
       },
@@ -723,6 +724,7 @@ export default {
     studentCourseGrades: "Notes",
     create: "Ajouter des notes",
     level: "Niveau scolaire",
+    changePeriod: "Changer trimestre",
     tabs: {
       orderedByActivity: "Trié par activité",
       orderedByStudent: "Trié par étudiant",
@@ -919,9 +921,13 @@ export default {
     title: "Page d'assiduité",
     studentCourseAttendance: "Assiduité",
     create: "Créer une Assiduité",
+    changePeriod: "Changer trimestre",
     tabs: {
       orderedByDay: "Trié par jour",
-      orderedByStudent: "Trié par étudiant",
+      orderedByStudent: "Trié par étudiantes",
+    },
+    filters: {
+      scholarPeriodId: "Période",
     },
     columnsByDay: {
       levelName: "Nuveau",
@@ -982,7 +988,7 @@ export default {
   courseTextbooks: {
     title: "Cahier de texte",
     courseTextbook: "Cahier de texte",
-    create: "Créer une cahier de texte",
+    create: "Créer un cahier de texte",
     documents: "Documents",
     columns: { levelName: "Niveaux" },
     columnsExtended: {
