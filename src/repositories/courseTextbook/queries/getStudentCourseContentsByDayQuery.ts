@@ -66,8 +66,14 @@ const getStudentCourseContentsByDayQuery = async (
     CourseId: courseContent.CourseId,
     CourseName: courseContent.Courses.Name,
     CourseCode: courseContent.Courses.CourseCode,
-    LevelId: courseContent.Courses.LevelCourses[0].LevelId,
-    LevelName: courseContent.Courses.LevelCourses[0].Levels.Name,
+    LevelId:
+      courseContent.Courses.LevelCourses.length === 1
+        ? courseContent.Courses.LevelCourses[0].Levels.LevelId
+        : null,
+    LevelName:
+      courseContent.Courses.LevelCourses.length === 1
+        ? courseContent.Courses.LevelCourses[0].Levels.Name
+        : "",
     UserId: courseContent.UserId,
     UserName: courseContent.Users.UserName,
     ContentDate: courseContent.ContentDate,

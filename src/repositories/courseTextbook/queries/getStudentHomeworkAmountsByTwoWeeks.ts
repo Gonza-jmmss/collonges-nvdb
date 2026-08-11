@@ -19,10 +19,10 @@ const getStudentHomeworkAmountsByTwoWeeks = async (
   ajustedTextbookDate.setHours(ajustedTextbookDate.getHours() + 2);
 
   const textbookDateStart = new Date(ajustedTextbookDate);
-  textbookDateStart.setDate(textbookDateStart.getDate() - 7); // 7 days before
+  textbookDateStart.setDate(textbookDateStart.getDate() - 3); // 3 days before
 
   const textbookDateEnd = new Date(textbookDateStart);
-  textbookDateEnd.setDate(textbookDateEnd.getDate() + 14); // 14 days after
+  textbookDateEnd.setDate(textbookDateEnd.getDate() + 21); // 21 days after
 
   const query = await prisma.courseHomeworks.findMany({
     where: {

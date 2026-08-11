@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import deleteCourseTextbookCoommand from "@/repositories/courseTextbook/commands/deleteCourseTextbookCommand";
+import getCourseTexbookDocumentsQuery from "@/repositories/courseTextbook/queries/getCourseTexbookDocumentsQuery";
 import {
   CourseContentsByDayViewModel,
   CourseTextbooksByDay,
@@ -23,12 +24,14 @@ import frFR from "@/lang/fr-FR";
 export default function CourseTextbookTable({
   courseTextbooksData,
   textbookDateSelected,
+  scholarPeriodSelected,
   pageIndex,
   pageSize,
   urlParams,
 }: {
   courseTextbooksData: CourseContentsByDayViewModel[];
   textbookDateSelected: Date;
+  scholarPeriodSelected: number;
   pageIndex: number;
   pageSize: number;
   urlParams?: { [key: string]: string | string[] | undefined };
@@ -134,7 +137,7 @@ export default function CourseTextbookTable({
               className="cursor-pointer text-xl hover:text-primary"
               onClick={() =>
                 router.push(
-                  `/courses/courseTextbooks/${row.original.CourseContentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.original.CourseId}&textbookDate=${row.original.ContentDate.toUTCString()}&referenceDate=${row.original.ReferenceDate.toUTCString()}`,
+                  `/courses/courseTextbooks/${row.original.CourseContentId}?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.original.CourseId}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&textbookDate=${row.original.ContentDate.toUTCString()}&referenceDate=${row.original.ReferenceDate.toUTCString()}`,
                 )
               }
             />
@@ -158,90 +161,48 @@ export default function CourseTextbookTable({
   const deleteCourseTextbook = async (
     courseTextbook: CourseTextbooksByDay | null,
   ) => {
-    console.log("courseTextbook", courseTextbook);
-    // try {
-    //   if (courseTextbook) {
-    //     const courseTextbookToDelete = {
-    //       CourseId: courseTextbook.CourseId,
-    //       ReferenceDate: courseTextbook.ReferenceDate,
-    //     };
-    //     const response = await deleteCourseTextbookCoommand(
-    //       courseTextbookToDelete,
-    //     );
+    if (textbookToDelete) {
+      const documents = await getCourseTexbookDocumentsQuery({
+        CourseId: textbookToDelete.CourseId,
+        ReferenceDate: textbookToDelete.ReferenceDate,
+      });
 
-    //     if (!response) {
-    //       throw new Error(`${t.courseTextbooks.notifications.deleteFailure}`);
-    //     }
-    //     toast({
-    //       title: `${t.courseTextbooks.notifications.deleteSuccess}`,
-    //       description: `${t.courseTextbooks.title} : ${textbookToDelete && `${textbookToDelete.CourseCode} ${textbookToDelete.CourseName} - ${formatDate(textbookToDelete.ContentDate)}`}`,
-    //     });
-    //     router.refresh();
-    //     closeModal();
-    //   }
-    // } catch (error) {
-    //   toast({
-    //     variant: "destructive",
-    //     title: `${t.courseTextbooks.notifications.deleteError}`,
-    //     description: `${error}`,
-    //   });
-    // }
+      if (documents.Documents.length > 0) {
+        await fetch("/api/documents/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ files: documents.Documents }),
+        });
+      }
+    }
+    try {
+      if (courseTextbook) {
+        const courseTextbookToDelete = {
+          CourseId: courseTextbook.CourseId,
+          ReferenceDate: courseTextbook.ReferenceDate,
+        };
+        const response = await deleteCourseTextbookCoommand(
+          courseTextbookToDelete,
+        );
+
+        if (!response) {
+          throw new Error(`${t.courseTextbooks.notifications.deleteFailure}`);
+        }
+        toast({
+          title: `${t.courseTextbooks.notifications.deleteSuccess}`,
+          description: `${t.courseTextbooks.title} : ${textbookToDelete && `${textbookToDelete.CourseCode} ${textbookToDelete.CourseName} - ${formatDate(textbookToDelete.ContentDate)}`}`,
+        });
+        router.refresh();
+        closeModal();
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: `${t.courseTextbooks.notifications.deleteError}`,
+        description: `${error}`,
+      });
+    }
   };
-
-  // const handleHomeworkDocumentOperations = async (
-  //   formData: CourseAttendanceFormData,
-  //   homeworkIndex: number,
-  //   selectedHomeworkDocs: File[],
-  //   originalHomeworkDocs: string[],
-  // ) => {
-  //   const hasNewDocs = selectedHomeworkDocs && selectedHomeworkDocs.length > 0;
-
-  //   try {
-  //     let uploadedDocs: string[] = [];
-
-  //     if (hasNewDocs) {
-  //       const uploadFormData = new FormData();
-  //       selectedHomeworkDocs.forEach((file) =>
-  //         uploadFormData.append("files", file),
-  //       );
-
-  //       const uploadResponse = await fetch("/api/documents/upload", {
-  //         method: "POST",
-  //         body: uploadFormData,
-  //       });
-
-  //       if (!uploadResponse.ok) throw new Error("Homework docs upload failed");
-
-  //       const { files } = await uploadResponse.json();
-  //       uploadedDocs = files.map((f: any) => f.fileName);
-  //     }
-
-  //     // 2. Handle deletions
-  //     const formDocs =
-  //       form.getFieldValue(`Homeworks[${homeworkIndex}].Documents`) || [];
-  //     const deletedDocs = originalHomeworkDocs.filter(
-  //       (doc) => !formDocs.includes(doc),
-  //     );
-
-  //     if (deletedDocs.length > 0) {
-  //       await fetch("/api/documents/delete", {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify({ files: deletedDocs }),
-  //       });
-  //     }
-
-  //     // 3. Merge docs
-  //     const updatedDocs = [...formDocs, ...uploadedDocs];
-  //     if (formData.Homeworks)
-  //       formData.Homeworks[homeworkIndex].Documents = updatedDocs;
-
-  //     console.log(`Homework ${homeworkIndex} Documents updated:`, updatedDocs);
-  //   } catch (err) {
-  //     console.error("Homework document operations error:", err);
-  //     throw err;
-  //   }
-  // };
 
   const handleUrlParameterChange = (key: string, value: string) => {
     const currentParams = new URLSearchParams(window.location.search);
@@ -300,7 +261,7 @@ export default function CourseTextbookTable({
             variant="outlineColored"
             onClick={() =>
               router.push(
-                `/courses/courseTextbooks/create?action="create"&pageIndex=${pageIndex}&pageSize=${pageSize}&textbookDate=${textbookDateSelected.toUTCString()}`,
+                `/courses/courseTextbooks/create?action="create"&pageIndex=${pageIndex}&pageSize=${pageSize}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&textbookDate=${textbookDateSelected.toUTCString()}`,
               )
             }
           >
@@ -320,9 +281,10 @@ export default function CourseTextbookTable({
               data={row.CourseTextbooks}
               onRowClick={(row) =>
                 router.push(
-                  `/courses/courseTextbooks/${row.CourseContentId}?action="view"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.CourseId}&textbookDate=${row.ContentDate.toUTCString()}&referenceDate=${row.ReferenceDate.toUTCString()}`,
+                  `/courses/courseTextbooks/${row.CourseContentId}?action="view"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&courseId=${row.CourseId}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&textbookDate=${row.ContentDate.toUTCString()}&referenceDate=${row.ReferenceDate.toUTCString()}`,
                 )
               }
+              pageSizeParam={row.CourseTextbooks.length}
               minimalMode
               noBorders
             />

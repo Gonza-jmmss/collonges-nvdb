@@ -146,3 +146,16 @@ export type StudentHomeworkAmountsByTwoWeeksViewModel = {
   HomeworkDueDate: Date;
   Homeworks: StudentHomeworkAmountsByTwoWeeks[];
 };
+
+export type courseHomeworksDocumentsMap = {
+  CourseId: number;
+  UserId: number;
+  UpdatedAt: Date | null;
+  CreatedAt: Date;
+  ReferenceDate: Date;
+  Documents: string | null;
+  CourseHomeworkId: number;
+  HomeworkDate: Date;
+  HomeworkDueDate: Date;
+  Description: string;
+};

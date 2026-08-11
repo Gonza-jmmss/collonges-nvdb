@@ -23,7 +23,7 @@ const createCourseTextbookCommand = async (params: courseContentParams) => {
         ContentDate: ajustedContentDate,
         Content: params.Content,
         ReferenceDate: ajustedReferenceDate,
-        Documents: params.Documents?.toString(),
+        Documents: params.Documents?.toString() || null,
       };
 
       const courseContentCreated = await tx.courseContents.create({
@@ -54,7 +54,9 @@ const createCourseTextbookCommand = async (params: courseContentParams) => {
             CourseId: element.CourseId,
             UserId: element.UserId,
             HomeworkDate: ajustedHomeworkDate,
-            HomeworkDueDate: ajustedHomeworkDueDate,
+            HomeworkDueDate: new Date(
+              ajustedHomeworkDueDate.setHours(2, 0, 0, 0),
+            ),
             Description: element.Description,
             ReferenceDate: ajustedReferenceDate,
             Documents: element.Documents?.toString() || null,

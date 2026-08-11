@@ -59,6 +59,7 @@ const getStudentCourseHomeworksByDayQuery = async (
       HomeworkDueDate: courseHomework.HomeworkDueDate,
       Description: courseHomework.Description,
       ReferenceDate: courseHomework.ReferenceDate,
+      Documents: courseHomework.Documents?.split(",") || [],
     }),
   );
 

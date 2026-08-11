@@ -2,6 +2,7 @@ import CourseTextbookTable from "./courseTextbookTable";
 import getCourseContentsByDayQuery from "@/repositories/courseTextbook/queries/getCourseContentsByDayQuery";
 import getCoursesByTeacherQuery from "@/repositories/courses/queries/getCoursesByTeacherQuery";
 import getCurrentScholarPeriodQuery from "@/repositories/scholarPeriods/queries/getCurrentScholarPeriod";
+import getAllScholarPeriodsTableQuery from "@/repositories/scholarPeriods/queries/getAllScholarPeriodsTableQuery";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -28,22 +29,27 @@ export default async function CourseTextbooksPage({
     ? new Date(searchParams.textbookDate as string)
     : new Date();
 
-  const currentScholarPeriod = await getCurrentScholarPeriodQuery();
+  // const currentScholarPeriod = await getCurrentScholarPeriodQuery();
+
+  const scholarPeriods = await getAllScholarPeriodsTableQuery();
+
+  const scholarPeriodIdParam =
+    searchParams.scholarPeriodId && searchParams.scholarPeriodId !== "null"
+      ? parseInt(searchParams.scholarPeriodId as string)
+      : scholarPeriods[0].ScholarPeriodId;
+
+  const periodNumberSelected =
+    scholarPeriods.find((x) => x.ScholarPeriodId === scholarPeriodIdParam)
+      ?.Number ?? scholarPeriods[0].Number;
 
   const courses = await getCoursesByTeacherQuery({
     IsEnabled: true,
-    Period: currentScholarPeriod.Number,
+    Period: periodNumberSelected,
+    // Period: currentScholarPeriod.Number,
     RoreName: session ? session.user.userData.Roles.Name : "",
     UserId: session ? parseInt(session.user.id) : 0,
     LevelId: null,
   });
-
-  const courseIdSelected =
-    searchParams?.courseId === undefined || searchParams?.courseId === "0"
-      ? courses.length > 0
-        ? courses[0].CourseId
-        : 0
-      : parseInt(searchParams.courseId as string);
 
   const courseContents = await getCourseContentsByDayQuery({
     TextbookDate: textbookDateParam,
@@ -62,7 +68,7 @@ export default async function CourseTextbooksPage({
       <CourseTextbookTable
         courseTextbooksData={courseContents}
         textbookDateSelected={textbookDateParam}
-        courseIdSelected={courseIdSelected}
+        scholarPeriodSelected={scholarPeriodIdParam}
         pageIndex={pageIndex}
         pageSize={pageSize}
         urlParams={searchParams}
