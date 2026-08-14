@@ -23,14 +23,14 @@ export default function StudentUserCreadentialsPDF({
       value: "UserName",
       name: t.students.studentUserCredentialsPDF.columns.information,
       cell: (row: any) =>
-        `${t.students.studentUserCredentialsPDF.columns.url}:  ${t.students.studentUserCredentialsPDF.columns.urlValue}\n${t.students.studentUserCredentialsPDF.columns.userName}:  ${row.UserName}\n${t.students.studentUserCredentialsPDF.columns.password}:  ${row.UserFirstName.split(" ")[0]}.${row.StudentId}`,
+        `${t.students.studentUserCredentialsPDF.columns.url}:  ${t.students.studentUserCredentialsPDF.columns.urlValue}\n${t.students.studentUserCredentialsPDF.columns.userName}:  ${row.UserName}\n${t.students.studentUserCredentialsPDF.columns.password}:  ${row.UserFirstName.trim().split(" ")[0]}.${row.StudentId}`,
     },
     {
       value: "UserFirstName",
       name: t.students.studentUserCredentialsPDF.columns.information,
       cell: (row: any) => {
         return row.UserName2
-          ? `${t.students.studentUserCredentialsPDF.columns.url}:  ${t.students.studentUserCredentialsPDF.columns.urlValue}\n${t.students.studentUserCredentialsPDF.columns.userName}:  ${row.UserName2}\n${t.students.studentUserCredentialsPDF.columns.password}:  ${row.UserFirstName2.split(" ")[0]}.${row.StudentId2}`
+          ? `${t.students.studentUserCredentialsPDF.columns.url}:  ${t.students.studentUserCredentialsPDF.columns.urlValue}\n${t.students.studentUserCredentialsPDF.columns.userName}:  ${row.UserName2}\n${t.students.studentUserCredentialsPDF.columns.password}:  ${row.UserFirstName2.trim().split(" ")[0]}.${row.StudentId2}`
           : "";
       },
     },

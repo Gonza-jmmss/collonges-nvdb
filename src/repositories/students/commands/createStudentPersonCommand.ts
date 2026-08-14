@@ -80,8 +80,8 @@ const createStudentPersonCommand = async (params: StudentParams) => {
       // Create a user for the student
       if (studentRole !== undefined) {
         const studentUser = {
-          UserName: `${params.Person.FirstName?.split(" ")[0]}.${params.Person.LastName?.split(" ")[0]}`,
-          Password: `${params.Person.FirstName?.split(" ")[0]}.${createStudent.StudentId}`,
+          UserName: `${params.Person.FirstName?.trim().split(" ")[0]}.${params.Person.LastName?.trim().split(" ")[0]}`,
+          Password: `${params.Person.FirstName?.trim().split(" ")[0]}.${createStudent.StudentId}`,
           RoleId: studentRole.RoleId,
           IsEnabled: true,
           StudentId: createStudent.StudentId,
