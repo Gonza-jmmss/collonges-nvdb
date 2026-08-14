@@ -157,8 +157,6 @@ export default function ModuleForm({
           name="Icon"
           validators={{
             onChange: ({ value }) => {
-              console.log("isValidIconName", !isValidIconName(value));
-              console.log("value", value);
               if (!isValidIconName(value)) {
                 return t.modules.validations.iconValidation;
               }
