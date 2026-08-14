@@ -10,14 +10,26 @@ import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import Icon from "@/components/common/icon";
 import formatDate from "@/functions/formatDate";
+import { useSearchParams } from "next/navigation";
 import frFR from "@/lang/fr-FR";
 
 export default function StudentCourses({
   courses,
+  pageIndex,
+  pageSize,
+  urlParams,
 }: {
   courses: StudentCourseGradesByStudentIdViewModel[];
+  pageIndex: number;
+  pageSize: number;
+  urlParams?: { [key: string]: string | string[] | undefined };
 }) {
   const t = frFR;
+
+  const searchParams = useSearchParams();
+
+  const getPageIndexParam = searchParams.get("pageIndex");
+  const getPageSizeParam = searchParams.get("pageSize");
 
   const columns = useMemo<
     ColumnDef<StudentCourseGradesByStudentIdViewModel, any>[]
@@ -62,6 +74,10 @@ export default function StudentCourses({
         id: "CourseCode",
         header: () => <Header text={t.studentProfile.columns.courseCode} />,
         filterFn: "equalsString",
+        cell: (row) =>
+          row.getValue().includes("/")
+            ? row.getValue().slice(0, -2)
+            : row.getValue(),
       },
       {
         accessorKey: "Grade",
@@ -105,7 +121,7 @@ export default function StudentCourses({
       //   filterFn: "equalsString",
       // },
     ],
-    [],
+    [getPageIndexParam, getPageSizeParam],
   );
 
   const columnsExtended = useMemo<
@@ -280,12 +296,14 @@ export default function StudentCourses({
           <Table
             columns={columns}
             data={courses}
+            pageIndexParam={pageIndex}
+            pageSizeParam={pageSize}
             expandable
-            minimalMode
             expandedContent={(row) => (
               <Table
                 columns={columnsExtended}
                 data={row.StudentCourseGrades}
+                pageSizeParam={row.StudentCourseGrades.length}
                 minimalMode
                 noBorders
               />
@@ -299,14 +317,14 @@ export default function StudentCourses({
           <Table
             columns={mobileColumns}
             data={courses}
-            // pageIndexParam={pageIndex}
-            // pageSizeParam={pageSize}
+            pageSizeParam={courses.length}
             expandable
             minimalMode
             expandedContent={(row) => (
               <Table
                 columns={mobileColumnsExtended}
                 data={row.StudentCourseGrades}
+                pageSizeParam={row.StudentCourseGrades.length}
                 minimalMode
                 noBorders
               />
