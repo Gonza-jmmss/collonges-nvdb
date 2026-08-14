@@ -160,6 +160,10 @@ export default function StudentCoursesTable({
         id: "CourseCode",
         header: () => <Header text={t.studentCourses.columns.courseCode} />,
         filterFn: "equalsString",
+        cell: (row) =>
+          row.getValue().includes("/")
+            ? row.getValue().slice(0, -2)
+            : row.getValue(),
         size: 30,
       },
       {
@@ -273,6 +277,7 @@ export default function StudentCoursesTable({
           <Table
             columns={columnsExtended}
             data={row.StudentCourses}
+            pageSizeParam={row.StudentCourses.length}
             minimalMode
             noBorders
           />

@@ -179,6 +179,7 @@ export default function TeacherCoursesTable({
           <Table
             columns={columnsExtended}
             data={row.TeacherCourses}
+            pageSizeParam={row.TeacherCourses.length}
             minimalMode
             noBorders
           />
