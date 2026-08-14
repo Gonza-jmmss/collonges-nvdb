@@ -73,7 +73,7 @@ export default function CalendarInput({
     // Try to parse the input as a date
     const parsedDate = new Date(newValue);
     if (isValidDate(parsedDate)) {
-      setDateValue(parsedDate);
+      setDateValue(new Date(parsedDate.setHours(2, 0, 0, 0)));
     }
   };
 
@@ -116,7 +116,7 @@ export default function CalendarInput({
             </Button>
           </PopoverTrigger>
           <PopoverContent
-            className="w-auto overflow-hidden p-0"
+            className="w-auto p-0"
             align="end"
             alignOffset={-8}
             sideOffset={10}
