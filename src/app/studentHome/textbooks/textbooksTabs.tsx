@@ -43,23 +43,23 @@ export default function StudentTextBooksTabs({
 
   const tabs = [
     {
-      id: "studentCourseContentTable",
-      title: t.studentTextbook.tabs.contents,
-      body: (
-        <StudentCourseContentTable
-          courseTextbooksData={courseTextbooksData}
-          tabValue="studentCourseContentTable"
-          //   urlParams={searchParams}
-        />
-      ),
-    },
-    {
       id: "studentCourseHomeworksVisualization",
       title: t.studentTextbook.tabs.homeworks,
       body: (
         <StudentCourseHomeworksVisualization
           courseHomeworksData={courseHomeworksData}
           tabValue="studentCourseHomeworksVisualization"
+          //   urlParams={searchParams}
+        />
+      ),
+    },
+    {
+      id: "studentCourseContentTable",
+      title: t.studentTextbook.tabs.contents,
+      body: (
+        <StudentCourseContentTable
+          courseTextbooksData={courseTextbooksData}
+          tabValue="studentCourseContentTable"
           //   urlParams={searchParams}
         />
       ),
@@ -91,7 +91,7 @@ export default function StudentTextBooksTabs({
       {/* Desktop */}
       <div className="hidden sm:mt-5 sm:block">
         <div className="flex justify-start space-x-3">
-          <div className="sticky top-36 flex h-auto w-32 flex-col space-y-3">
+          <div className="fixed flex h-auto w-32 flex-col space-y-3">
             <div className="w-32">
               <CalendarInput
                 variant="outlineColored"
@@ -119,7 +119,6 @@ export default function StudentTextBooksTabs({
                   )
                 }
               >
-                {/* <span>{formatDate(subtractDays(new Date(), 2 - i))}</span> */}
                 <div className="relative flex flex-col">
                   <span>{formatDate(subtractDays(new Date(), 2 - i))}</span>
                   <div className="absolute -left-[3.2rem] top-1 w-4 rounded-full bg-primary text-xs text-background">
@@ -169,8 +168,33 @@ export default function StudentTextBooksTabs({
                 </div>
               </Button>
             ))}
+            {/* {homeworksByTowWeeks.map((x, i) => (
+              <Button
+                key={i}
+                variant={
+                  formatDate(x.HomeworkDueDate) ===
+                  formatDate(textbookDateSelected)
+                    ? "default"
+                    : "outlineColored"
+                }
+                className=" "
+                onClick={() =>
+                  handleUrlParameterChange(
+                    "textbookDate",
+                    `${x.HomeworkDueDate.toISOString()}`,
+                  )
+                }
+              >
+                <div className="relative flex flex-col">
+                  <span>{formatDate(x.HomeworkDueDate)}</span>
+                  <div className="absolute -left-[3.2rem] top-1 w-4 rounded-full bg-primary text-xs text-background">
+                    <span>{x.Homeworks.length}</span>
+                  </div>
+                </div>
+              </Button>
+            ))} */}
           </div>
-          <div className="-mt-5 w-full">
+          <div className="-mt-5 w-full pl-32">
             <TabsComponent
               tabs={tabs}
               className="mt-5 w-full"
@@ -230,7 +254,6 @@ export default function StudentTextBooksTabs({
                     setOpenCloseDates(false);
                   }}
                 >
-                  {/* <span>{formatDate(subtractDays(new Date(), 2 - i))}</span> */}
                   <div className="relative flex flex-col">
                     <span>{formatDate(subtractDays(new Date(), 2 - i))}</span>
                     <div className="absolute -left-[5.2rem] top-1 w-4 rounded-full bg-primary text-xs text-background">
@@ -281,6 +304,32 @@ export default function StudentTextBooksTabs({
                   </div>
                 </Button>
               ))}
+              {/* {homeworksByTowWeeks.map((x, i) => (
+                <Button
+                  key={i}
+                  variant={
+                    formatDate(x.HomeworkDueDate) ===
+                    formatDate(textbookDateSelected)
+                      ? "default"
+                      : "outlineColored"
+                  }
+                  className=" "
+                  onClick={() => {
+                    handleUrlParameterChange(
+                      "textbookDate",
+                      `${x.HomeworkDueDate.toISOString()}`,
+                    );
+                    setOpenCloseDates(false);
+                  }}
+                >
+                  <div className="relative flex flex-col">
+                    <span>{formatDate(x.HomeworkDueDate)}</span>
+                    <div className="absolute -left-[3.2rem] top-1 w-4 rounded-full bg-primary text-xs text-background">
+                      <span>{x.Homeworks.length}</span>
+                    </div>
+                  </div>
+                </Button>
+              ))} */}
             </div>
           </div>
         </Modal>

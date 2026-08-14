@@ -7,11 +7,22 @@ import Link from "next/link";
 import frFR from "@/lang/fr-FR";
 import { auth } from "@/utils/auth";
 
-export default async function StudentGradesPage() {
+export default async function StudentGradesPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const t = frFR;
   const session = await auth();
 
   let courses: StudentCourseGradesByStudentIdViewModel[] = [];
+
+  const pageIndex = searchParams?.pageIndex
+    ? parseInt(searchParams.pageIndex as string)
+    : 0;
+  const pageSize = searchParams?.pageSize
+    ? parseInt(searchParams.pageSize as string)
+    : 10;
 
   if (session && session.user.userData.StudentId !== null) {
     courses = await getStudentCourseGradeByStudentIdQuery({
@@ -27,7 +38,12 @@ export default async function StudentGradesPage() {
         </Link>
       </Button>
       <div>
-        <StudentCourses courses={courses} />
+        <StudentCourses
+          courses={courses}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          urlParams={searchParams}
+        />
       </div>
       {/* <pre>{JSON.stringify(courses, null, 2)}</pre> */}
     </main>

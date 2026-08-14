@@ -46,11 +46,18 @@ export default async function StudentTextbooksPage({
 
   return (
     <main className="relative mt-3 w-[92vw] sm:w-[80vw]">
-      <Button asChild className={`absolute -left-16 -top-1`} variant="ghost">
+      <Button
+        asChild
+        className={`hidden sm:fixed sm:left-16 sm:top-14 sm:block lg:left-24`}
+        variant="ghost"
+      >
         <Link href={`/studentHome`}>
           <Icon name={"MdArrowBack"} className="text-xl" />
         </Link>
       </Button>
+      <div className="flex justify-between space-x-3">
+        <span className="text-xl font-semibold">{t.studentTextbook.title}</span>
+      </div>
       <StudentTextBooksTabs
         courseTextbooksData={courseContents}
         courseHomeworksData={studentHomework}

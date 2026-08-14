@@ -64,6 +64,10 @@ export default function StudentAttendancesByCourseTable({
           <Header text={t.studentAttendances.columnsByCourse.courseCode} />
         ),
         filterFn: "equalsString",
+        cell: (row) =>
+          row.getValue().includes("/")
+            ? row.getValue().slice(0, -2)
+            : row.getValue(),
         size: 100,
       },
       {
@@ -182,7 +186,12 @@ export default function StudentAttendancesByCourseTable({
                 <div className="flex space-x-5">
                   <div>
                     <span className="text-xs font-semibold">{`${t.studentAttendances.columnsByCourse.courseCode.toUpperCase()}: `}</span>
-                    <span className="text-xs">{row.original.CourseCode}</span>
+                    <span className="text-xs">
+                      {row.original.CourseCode &&
+                      row.original.CourseCode.includes("/")
+                        ? row.original.CourseCode.slice(0, -2)
+                        : row.original.CourseCode}
+                    </span>
                   </div>
                   <div>
                     <span className="text-xs font-semibold">{`${t.studentAttendances.columnsByCourse.attendanceScore.toUpperCase()}: `}</span>
@@ -280,6 +289,7 @@ export default function StudentAttendancesByCourseTable({
               <Table
                 columns={columnsExtended}
                 data={row.Attendances}
+                pageSizeParam={row.Attendances.length}
                 minimalMode
                 noBorders
               />
@@ -299,6 +309,7 @@ export default function StudentAttendancesByCourseTable({
               <Table
                 columns={mobileColumnsExtended}
                 data={row.Attendances}
+                pageSizeParam={row.Attendances.length}
                 minimalMode
                 noBorders
               />

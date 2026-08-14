@@ -55,7 +55,11 @@ export default async function Page({
     <main className="flex w-[92vw] sm:w-[80vw]">
       {/* Desktop */}
       <div className="hidden sm:relative sm:mt-5 sm:flex sm:w-full sm:justify-center">
-        <Button asChild className={`absolute -left-16 top-3`} variant="ghost">
+        <Button
+          asChild
+          className={`hidden sm:fixed sm:left-16 sm:top-20 sm:block lg:left-32`}
+          variant="ghost"
+        >
           <Link
             href={`/studentHome/textbooks?textbookDate=${textbookDateParam.toUTCString()}`}
           >

@@ -1,16 +1,17 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { StudentCourseAttendancesByDayAndStudentIdViewModel } from "@/repositories/studentCourseAttendances/StudentCourseAttendancesViewModel";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
 import CalendarInput from "@/components/common/calendarInput";
+import Modal from "@/components/common/modal";
 import { Button } from "@/components/ui/button";
 import { AttendanceValueEnum } from "@/enum/attendanceValueEnum";
 import formatDate from "@/functions/formatDate";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
-
+import { addDays } from "date-fns";
 import frFR from "@/lang/fr-FR";
 
 export default function StudentAttendancesByDayTable({
@@ -29,6 +30,8 @@ export default function StudentAttendancesByDayTable({
   const t = frFR;
   const updateQuery = useUpdateQuery();
 
+  const [openCloseDates, setOpenCloseDates] = useState(false);
+
   const columns = useMemo<
     ColumnDef<StudentCourseAttendancesByDayAndStudentIdViewModel, any>[]
   >(
@@ -40,6 +43,10 @@ export default function StudentAttendancesByDayTable({
           <Header text={t.studentAttendances.columnsByDay.courseCode} />
         ),
         filterFn: "equalsString",
+        cell: (row) =>
+          row.getValue().includes("/")
+            ? row.getValue().slice(0, -2)
+            : row.getValue(),
         size: 100,
       },
       {
@@ -121,7 +128,12 @@ export default function StudentAttendancesByDayTable({
             <div className="flex space-x-5">
               <div>
                 <span className="text-xs font-semibold">{`${t.studentAttendances.columnsByCourse.courseCode.toUpperCase()}: `}</span>
-                <span className="text-xs">{row.original.CourseCode}</span>
+                <span className="text-xs">
+                  {row.original.CourseCode &&
+                  row.original.CourseCode.includes("/")
+                    ? row.original.CourseCode.slice(0, -2)
+                    : row.original.CourseCode}
+                </span>
               </div>
               <div>
                 <span className="text-xs font-semibold">{`${t.studentAttendances.columnsByCourseExtended.userName.toUpperCase()}: `}</span>
@@ -231,7 +243,7 @@ export default function StudentAttendancesByDayTable({
           />
         </div> */}
 
-        <div className="flex justify-center space-x-3 overflow-hidden">
+        {/* <div className="flex justify-center space-x-3 overflow-hidden">
           {[...Array(4)].map((_, i) => (
             <Button
               key={i}
@@ -264,6 +276,22 @@ export default function StudentAttendancesByDayTable({
               handleUrlParameterChange("attendanceDate", `${x}`);
             }}
           />
+        </div> */}
+        <div className="flex space-x-2">
+          <Button
+            variant={"outlineColored"}
+            onClick={() => setOpenCloseDates(true)}
+          >
+            {t.studentTextbook.closeDates}
+          </Button>
+          <CalendarInput
+            variant="outlineColored"
+            dateValue={selectedAttendanceDate}
+            setDateValue={(x: Date) => {
+              handleUrlParameterChange("attendanceDate", `${new Date(x)}`);
+            }}
+            short
+          />
         </div>
 
         <div className="mt-3">
@@ -274,6 +302,61 @@ export default function StudentAttendancesByDayTable({
             minimalMode
           />
         </div>
+        <Modal
+          openModal={openCloseDates}
+          closeModal={() => setOpenCloseDates(false)}
+        >
+          <div className="flex w-full justify-center">
+            <div className="mt-3 flex h-auto w-48 flex-col space-y-3">
+              {[...Array(9)].map((_, i) => (
+                <Button
+                  key={i}
+                  variant={
+                    formatDate(subtractDays(new Date(), 8 - i)) ===
+                    formatDate(selectedAttendanceDate)
+                      ? "default"
+                      : "outlineColored"
+                  }
+                  className=" "
+                  onClick={() => {
+                    handleUrlParameterChange(
+                      "attendanceDate",
+                      `${subtractDays(new Date(), 8 - i).toISOString()}`,
+                    );
+                    setOpenCloseDates(false);
+                  }}
+                >
+                  <div className="relative flex flex-col">
+                    <span>{formatDate(subtractDays(new Date(), 8 - i))}</span>
+                  </div>
+                </Button>
+              ))}
+              {/* {[...Array(7)].map((_, i) => (
+                <Button
+                  key={i}
+                  variant={
+                    formatDate(addDays(new Date(), 1 + i)) ===
+                    formatDate(selectedAttendanceDate)
+                      ? "default"
+                      : "outlineColored"
+                  }
+                  className=" "
+                  onClick={() => {
+                    handleUrlParameterChange(
+                      "textbookDate",
+                      `${addDays(new Date(), 1 + i).toISOString()}`,
+                    );
+                    setOpenCloseDates(false);
+                  }}
+                >
+                  <div className="relative flex flex-col">
+                    <span>{formatDate(addDays(new Date(), 1 + i))}</span>
+                  </div>
+                </Button>
+              ))} */}
+            </div>
+          </div>
+        </Modal>
       </div>
       {/* <pre>{JSON.stringify(attendancesData, null, 2)}</pre> */}
     </>
