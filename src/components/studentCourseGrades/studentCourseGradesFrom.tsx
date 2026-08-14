@@ -1,26 +1,24 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import createStudentCourseGradesCommand from "@/repositories/studentCourseGrades/commands/createStudentCourseGradesCommand";
 import updateStudentCourseGradesCommand from "@/repositories/studentCourseGrades/commands/updateStudentCourseGradesCommand";
 import { StudentCourseGradesByCourseIdViewModel } from "@/repositories/studentCourseGrades/studentCourseGradesViewModel";
 import { CourseViewModel } from "@/repositories/courses/coursesViewModel";
 import { CurentLevelsViewModel } from "@/repositories/levels/levelsViewModel";
+import { ScholarPeriodsViewModel } from "@/repositories/scholarPeriods/scholarPeriodsViewModel";
 import { StudentsByCourseIdViewModel } from "@/repositories/studentCourses/studentCoursesViewModel";
 import { GradeCoefficientsViewModel } from "@/repositories/gradeCoefficients/gradeCoefficientsViewModel";
 import { StudentCourseGradeSchema } from "@/zodSchemas/studentCourseGradeSchema";
-import { useForm } from "@tanstack/react-form";
+import { useForm, useStore } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Combobox from "@/components/common/combobox";
 import Modal from "@/components/common/modal";
-import enumToArray from "@/functions/enumToArray";
-import { PeriodEnum } from "@/enum/periodEnum";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import { useToast } from "@/hooks/use-toast";
-import { useDebouncedAction } from "@/hooks/useDebouncedAction";
 import { useRouter } from "next/navigation";
-import { date, z } from "zod";
+import { z } from "zod";
 import frFR from "@/lang/fr-FR";
 
 type StudentCourseGradeFormData = z.infer<typeof StudentCourseGradeSchema>;
@@ -29,6 +27,7 @@ export default function StudentCourseGradesForm({
   studentCourseGradeData,
   courses,
   levels,
+  scholarPeriods,
   studentByCouse,
   gradeCoefficients,
   tearcherId,
@@ -40,6 +39,7 @@ export default function StudentCourseGradesForm({
   studentCourseGradeData: StudentCourseGradesByCourseIdViewModel | null;
   courses: CourseViewModel[];
   levels: CurentLevelsViewModel[];
+  scholarPeriods: ScholarPeriodsViewModel[];
   gradeCoefficients: GradeCoefficientsViewModel[];
   studentByCouse: StudentsByCourseIdViewModel[];
   tearcherId: number;
@@ -53,20 +53,18 @@ export default function StudentCourseGradesForm({
   const router = useRouter();
   const updateQuery = useUpdateQuery();
 
-  const { register, trigger } = useDebouncedAction<HTMLInputElement>((el) => {
-    el?.blur();
-    console.log("Auto-save triggered for grade:", el?.value);
-  }, 500);
+  const [changePeriod, setChangePeriod] = useState(false);
 
   const [isPending, setIsPending] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [confirmedStudentCourseGradeData, setConfirmedStudentCourseGradeData] =
     useState<StudentCourseGradeFormData | null>(null);
 
-  const periodNumberParam = parseInt(urlParams?.periodNumber as string);
+  // const periodNumberParam = parseInt(urlParams?.periodNumber as string);
   const levelIdParam =
     urlParams?.levelId !== null ? parseInt(urlParams?.levelId as string) : null;
   const courseIdParam = parseInt(urlParams?.courseId as string);
+  const scholarPeriodIdParam = parseInt(urlParams?.scholarPeriodId as string);
   const tabParam = urlParams?.tab as string;
 
   const form = useForm<StudentCourseGradeFormData>({
@@ -135,8 +133,11 @@ export default function StudentCourseGradesForm({
       });
 
       router.push(
-        `/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}&tab=${tabParam}`,
+        `/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}${scholarPeriodIdParam ? `&scholarPeriodId=${scholarPeriodIdParam}` : ""}&tab=${tabParam}`,
       );
+      // router.push(
+      //   `/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}${scholarPeriodIdParam ? `&scholarPeriodId=${scholarPeriodIdParam}` : ""}&tab=${tabParam}`,
+      // );
       router.refresh();
     } catch (error) {
       toast({
@@ -165,8 +166,11 @@ export default function StudentCourseGradesForm({
       });
 
       router.push(
-        `/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}&tab=${tabParam}`,
+        `/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}${scholarPeriodIdParam ? `&scholarPeriodId=${scholarPeriodIdParam}` : ""}&tab=${tabParam}`,
       );
+      // router.push(
+      //   `/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}${scholarPeriodIdParam ? `&scholarPeriodId=${scholarPeriodIdParam}` : ""}&tab=${tabParam}`,
+      // );
       router.refresh();
     } catch (error) {
       toast({
@@ -203,16 +207,16 @@ export default function StudentCourseGradesForm({
     updateQuery(Object.fromEntries(currentParams));
   };
 
-  const [periodNumberRender, setPeriodNumberRender] = useState(0);
-  useEffect(() => {
-    if (periodNumberRender > 0) {
-      if (courses.length > 0) {
-        handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
-      }
-    } else {
-      setPeriodNumberRender(1);
-    }
-  }, [urlParams?.periodNumber]);
+  // const [periodNumberRender, setPeriodNumberRender] = useState(0);
+  // useEffect(() => {
+  //   if (periodNumberRender > 0) {
+  //     if (courses.length > 0) {
+  //       handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
+  //     }
+  //   } else {
+  //     setPeriodNumberRender(1);
+  //   }
+  // }, [urlParams?.periodNumber]);
 
   const [levelIdRender, setLevelIdRender] = useState(0);
   useEffect(() => {
@@ -225,19 +229,16 @@ export default function StudentCourseGradesForm({
     }
   }, [urlParams?.levelId]);
 
+  const [scholarPeriodIdRender, setScholarPeriodIdRender] = useState(0);
   useEffect(() => {
-    if (studentByCouse && action === "create") {
-      // Map the existing student courses to the format expected by the form
-      const mappedStuents = studentByCouse.map((student) => ({
-        StudentCourseGradeId: null,
-        StudentCourseId: student.StudentCourseId,
-        Grade: NaN.toLocaleString(),
-      }));
-
-      // Set the StudentCourses field value
-      form.setFieldValue("StudentCourses", mappedStuents);
+    if (scholarPeriodIdRender > 0) {
+      if (courses.length > 0) {
+        handleUrlParameterChange("courseId", `${courses[0].CourseId}`);
+      }
+    } else {
+      setScholarPeriodIdRender(1);
     }
-  }, [studentByCouse, form.setFieldValue]);
+  }, [urlParams?.scholarPeriodId]);
 
   const eraseGrades = () => {
     // console.log("studentByCouse", form.getFieldValue("StudentCourses"));
@@ -262,43 +263,51 @@ export default function StudentCourseGradesForm({
   };
 
   useEffect(() => {
-    const formStudentCoursesIds = form
-      .getFieldValue("StudentCourses")
-      ?.map((x) => x.StudentCourseId);
-    const allStudentCoursesIds = studentByCouse.map((x) => x.StudentCourseId);
-
-    // First, make sure formStudentCoursesIds is not null or undefined
-    const existingIds = formStudentCoursesIds || [];
-
-    // Find the missing IDs (ones in allStudentCoursesIds but not in formStudentCoursesIds)
-    const missingIds = allStudentCoursesIds.filter(
-      (id) => !existingIds.includes(id),
-    );
-
-    // Create new StudentCourse objects for the missing IDs
-    // Each new object will have StudentCourseId and Grade: null
-    const newStudentCourses = missingIds.map((id) => ({
-      StudentCourseGradeId: null,
-      StudentCourseId: id,
-      Grade: "NaN",
-    }));
-
     // Get the current StudentCourses array from the form (or initialize with empty array)
     const currentStudentCourses = form.getFieldValue("StudentCourses") || [];
 
-    // Combine current StudentCourses with new ones
-    const updatedStudentCourses = [
-      ...currentStudentCourses,
-      ...newStudentCourses,
-    ];
+    // Build a lookup map of existing form entries keyed by StudentCourseId,
+    // so we can quickly check "do we already have this student in the form?"
+    // and re-use their existing Grade / StudentCourseGradeId instead of resetting them.
+    const currentById = new Map(
+      currentStudentCourses.map((sc) => [sc.StudentCourseId, sc]),
+    );
 
-    // Update the form with the combined array
-    form.setFieldValue("StudentCourses", updatedStudentCourses);
+    // Rebuild the StudentCourses array strictly from the current studentByCouse list
+    // (the students that belong to the currently selected course).
+    // This guarantees the form only ever contains students who are actually
+    // in the current course - anyone left over from a previously selected
+    // course gets dropped automatically since we're mapping over studentByCouse,
+    // not over currentStudentCourses.
+    const reconciled = studentByCouse.map((student) => {
+      // If this student already exists in the form, keep their existing data
+      // (preserves entered grades and StudentCourseGradeId when just re-rendering,
+      // e.g. in edit/view mode, or when the effect re-runs without a real course change).
+      const existing = currentById.get(student.StudentCourseId);
+
+      // Otherwise, this is a new student for this course, so create a fresh
+      // entry with no grade yet (NaN as a string, matching the rest of the form's convention).
+      return (
+        existing ?? {
+          StudentCourseGradeId: null,
+          StudentCourseId: student.StudentCourseId,
+          Grade: NaN.toLocaleString(),
+        }
+      );
+    });
+
+    // Push the reconciled list back into the form state, replacing the old array.
+    form.setFieldValue("StudentCourses", reconciled);
   }, [studentByCouse, form]);
+  // Re-run whenever the list of students for the course changes (e.g. course/level switch),
+  // or when the form instance itself changes.
 
-  // Sort alphabetically by student name
-  const sorted = [...(form.getFieldValue("StudentCourses") ?? [])].sort(
-    (a, b) => {
+  // Split and order the column alphabetically in a vertical order
+  const studentCourses =
+    useStore(form.store, (state) => state.values.StudentCourses) ?? [];
+
+  const sorted = useMemo(() => {
+    return [...studentCourses].sort((a, b) => {
       const nameA =
         studentByCouse.find((x) => x.StudentCourseId === a.StudentCourseId)
           ?.StudentName ?? "";
@@ -306,16 +315,18 @@ export default function StudentCourseGradesForm({
         studentByCouse.find((x) => x.StudentCourseId === b.StudentCourseId)
           ?.StudentName ?? "";
       return nameA.localeCompare(nameB);
-    },
-  );
+    });
+  }, [studentCourses, studentByCouse]);
 
-  // Split into columns
-  const colCount = 2;
-  const columns: (typeof sorted)[] = Array.from({ length: colCount }, () => []);
-  const chunkSize = Math.ceil(sorted.length / colCount);
-  for (let i = 0; i < colCount; i++) {
-    columns[i] = sorted.slice(i * chunkSize, (i + 1) * chunkSize);
-  }
+  const columns = useMemo(() => {
+    const colCount = 2;
+    const result = Array.from({ length: colCount }, () => [] as typeof sorted);
+    const chunkSize = Math.ceil(sorted.length / colCount);
+    for (let i = 0; i < colCount; i++) {
+      result[i] = sorted.slice(i * chunkSize, (i + 1) * chunkSize);
+    }
+    return result;
+  }, [sorted]);
 
   return (
     <>
@@ -329,49 +340,74 @@ export default function StudentCourseGradesForm({
       >
         <div className="col-span-2">
           <div>{t.studentCourseGrades.form.course}</div>
-          <div className="mt-1 flex flex-col space-y-5 md:flex-row md:space-x-3 md:space-y-0">
-            <Combobox
-              options={enumToArray(PeriodEnum)}
-              textAttribute="value"
-              valueAttribute="key"
-              placeholder={t.courses.form.periodNumber}
-              itemSelected={enumToArray(PeriodEnum).find(
-                (x) => x.key === periodNumberParam,
-              )}
-              setItemSelected={(x: { key: number }) => {
-                handleUrlParameterChange("periodNumber", `${x.key}`);
-              }}
-              disabled={action !== "create"}
-              notClearable
-            />
-            <Combobox
-              options={levels}
-              textAttribute="Name"
-              valueAttribute="LevelId"
-              placeholder={t.studentCourseGrades.level}
-              itemSelected={levels.find((x) => x.LevelId === levelIdParam)}
-              setItemSelected={(x: CurentLevelsViewModel) => {
-                handleUrlParameterChange("levelId", `${x ? x.LevelId : null}`);
-              }}
-              disabled={action !== "create"}
-            />
+          <div className="mt-1 flex flex-col space-y-5 lg:flex-row lg:space-x-3 lg:space-y-0">
+            <div className="w-full min-w-44 lg:w-[20%]">
+              <Combobox
+                options={levels}
+                textAttribute="Name"
+                valueAttribute="LevelId"
+                placeholder={t.studentCourseGrades.level}
+                itemSelected={levels.find((x) => x.LevelId === levelIdParam)}
+                setItemSelected={(x: CurentLevelsViewModel) => {
+                  handleUrlParameterChange(
+                    "levelId",
+                    `${x ? x.LevelId : null}`,
+                  );
+                }}
+                disabled={action !== "create"}
+              />
+            </div>
+            <div className="w-full lg:w-[70%] lg:min-w-[48%]">
+              <Combobox
+                options={courses}
+                textAttribute={["CourseCode", "Name"]}
+                valueAttribute="CourseId"
+                placeholder={t.studentCourseGrades.columnsByStudent.courseName}
+                itemSelected={courses.find((x) => x.CourseId === courseIdParam)}
+                setItemSelected={(x: CourseViewModel) => {
+                  handleUrlParameterChange("courseId", `${x.CourseId}`);
+                }}
+                disabled={action !== "create"}
+                notClearable
+              />
+            </div>
+            <Button
+              type="button"
+              variant={changePeriod ? "default" : "outlineColored"}
+              onClick={() => setChangePeriod(!changePeriod)}
+            >
+              <span>{t.studentCourseGrades.changePeriod}</span>
+            </Button>
           </div>
+          {changePeriod ? (
+            <>
+              <div className="flex w-full justify-end">
+                <div className="mt-3 w-full min-w-44 lg:w-[30%]">
+                  <Combobox
+                    options={scholarPeriods}
+                    textAttribute="Name"
+                    valueAttribute="ScholarPeriodId"
+                    placeholder={t.studentCourses.filters.scholarPeriodId}
+                    itemSelected={scholarPeriods.find(
+                      (x) => x.ScholarPeriodId === scholarPeriodIdParam,
+                    )}
+                    setItemSelected={(x: ScholarPeriodsViewModel) => {
+                      handleUrlParameterChange("levelId", "null");
+                      handleUrlParameterChange(
+                        "scholarPeriodId",
+                        `${x.ScholarPeriodId}`,
+                      );
+                    }}
+                    notClearable
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
         <div className="col-span-2">
-          <Combobox
-            options={courses}
-            textAttribute={["CourseCode", "Name"]}
-            valueAttribute="CourseId"
-            placeholder={t.studentCourseGrades.columnsByStudent.courseName}
-            itemSelected={courses.find((x) => x.CourseId === courseIdParam)}
-            setItemSelected={(x: CourseViewModel) => {
-              handleUrlParameterChange("courseId", `${x.CourseId}`);
-            }}
-            disabled={action !== "create"}
-            notClearable
-          />
-        </div>
-        <div className="col-span-1 space-y-1">
           <form.Field
             name="Description"
             children={(field) => (
@@ -463,82 +499,86 @@ export default function StudentCourseGradesForm({
                   </Button>
                 </div>
                 <div className="grid grid-cols-2 gap-5">
-                  {columns.map((col, colIdx) => (
-                    <div key={colIdx} className="flex flex-col space-y-5">
-                      {col.map((studentCourse, indexInCol) => (
-                        <div
-                          key={studentCourse.StudentCourseId}
-                          className="rounded-md border border-foreground/30 p-2"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="text-sm font-semibold">
-                              {
-                                studentByCouse.find(
-                                  (x) =>
-                                    x.StudentCourseId ===
-                                    studentCourse.StudentCourseId,
-                                )?.StudentName
-                              }
-                            </div>
-                            <div className="flex items-center space-x-2 text-sm">
-                              <form.Field
-                                name={`StudentCourses[${colIdx * Math.ceil(sorted.length / columns.length) + indexInCol}].Grade`}
-                                children={(field) => (
-                                  <>
-                                    <span>
-                                      {t.studentCourseGrades.form.grade}
-                                    </span>
-                                    <Input
-                                      ref={
-                                        register(
-                                          colIdx *
-                                            Math.ceil(
-                                              sorted.length / columns.length,
-                                            ) +
-                                            indexInCol,
-                                        ) ?? 0
-                                      }
-                                      type="number"
-                                      className="w-20 bg-background/30 text-center"
-                                      value={
-                                        field.state.value?.toLocaleString() ||
-                                        ""
-                                      }
-                                      onChange={(e) => {
-                                        let value = e.target.value;
+                  {columns &&
+                    columns.map((col, colIdx) => (
+                      <div key={colIdx} className="flex flex-col space-y-5">
+                        {col.map((studentCourse) => {
+                          const realIndex = studentCourses.findIndex(
+                            (sc) =>
+                              sc.StudentCourseId ===
+                              studentCourse.StudentCourseId,
+                          );
 
-                                        if (value.includes(".")) {
-                                          const parts = value.split(".");
-                                          if (parts[1].length > 2) {
-                                            value = `${parts[0]}.${parts[1].substring(0, 2)}`;
+                          return (
+                            <div
+                              key={studentCourse.StudentCourseId}
+                              className="rounded-md border border-foreground/30 p-2"
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="text-sm font-semibold">
+                                  {
+                                    studentByCouse.find(
+                                      (x) =>
+                                        x.StudentCourseId ===
+                                        studentCourse.StudentCourseId,
+                                    )?.StudentName
+                                  }
+                                </div>
+                                <div className="flex items-center space-x-2 text-sm">
+                                  <form.Field
+                                    name={`StudentCourses[${realIndex}].Grade`}
+                                    children={(field) => (
+                                      <>
+                                        <span>
+                                          {t.studentCourseGrades.form.grade}
+                                        </span>
+                                        <Input
+                                          type="number"
+                                          className="w-20 bg-background/30 text-center"
+                                          value={
+                                            field.state.value?.toLocaleString() ||
+                                            ""
                                           }
-                                        }
-
-                                        const numValue = parseFloat(value);
-                                        if (!isNaN(numValue) && numValue > 20) {
-                                          value = "20";
-                                        }
-
-                                        field.handleChange(value);
-                                        trigger(
-                                          colIdx *
-                                            Math.ceil(
-                                              sorted.length / columns.length,
-                                            ) +
-                                            indexInCol,
-                                        );
-                                      }}
-                                      disabled={action === "view"}
-                                    />
-                                  </>
-                                )}
-                              />
+                                          onWheel={(e) =>
+                                            e.currentTarget.blur()
+                                          }
+                                          onKeyDown={(e) => {
+                                            if (
+                                              e.key === "ArrowUp" ||
+                                              e.key === "ArrowDown"
+                                            ) {
+                                              e.preventDefault();
+                                            }
+                                          }}
+                                          onChange={(e) => {
+                                            let value = e.target.value;
+                                            if (value.includes(".")) {
+                                              const parts = value.split(".");
+                                              if (parts[1].length > 2) {
+                                                value = `${parts[0]}.${parts[1].substring(0, 2)}`;
+                                              }
+                                            }
+                                            const numValue = parseFloat(value);
+                                            if (
+                                              !isNaN(numValue) &&
+                                              numValue > 20
+                                            ) {
+                                              value = "20";
+                                            }
+                                            field.handleChange(value);
+                                          }}
+                                          disabled={action === "view"}
+                                        />
+                                      </>
+                                    )}
+                                  />
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ))}
+                          );
+                        })}
+                      </div>
+                    ))}
                 </div>
                 <div className="text-xs text-red-500">
                   {field.state.meta.errors
@@ -557,10 +597,14 @@ export default function StudentCourseGradesForm({
                 type="button"
                 variant={"secondary"}
                 className="w-[30%]"
-                onClick={() =>
-                  router.push(
-                    `/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}&tab=${tabParam}`,
-                  )
+                onClick={
+                  () =>
+                    router.push(
+                      `/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}${scholarPeriodIdParam ? `&scholarPeriodId=${scholarPeriodIdParam}` : ""}&tab=${tabParam}`,
+                    )
+                  // router.push(
+                  //   `/courses/studentCourseGrades?pageIndex=${pageIndexParam}&pageSize=${pageSizeParam}&periodNumber=${periodNumberParam}&levelId=${levelIdParam || null}&courseId=${courseIdParam}${scholarPeriodIdParam ? `&scholarPeriodId=${scholarPeriodIdParam}` : ""}&tab=${tabParam}`,
+                  // )
                 }
               >
                 {t.shared.cancel}

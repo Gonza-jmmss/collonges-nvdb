@@ -8,6 +8,7 @@ import {
 } from "@/repositories/studentCourseGrades/studentCourseGradesViewModel";
 import { CourseViewModel } from "@/repositories/courses/coursesViewModel";
 import { CurentLevelsViewModel } from "@/repositories/levels/levelsViewModel";
+import { ScholarPeriodsViewModel } from "@/repositories/scholarPeriods/scholarPeriodsViewModel";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import Header from "@/components/table/header";
@@ -30,6 +31,8 @@ export default function StudentCoruseGradesByActivityTable({
   courseIdSelected,
   levels,
   levelIdSelected,
+  scholarPeriods,
+  scholarPeriodSelected,
   tabValue,
   pageIndex,
   pageSize,
@@ -41,6 +44,8 @@ export default function StudentCoruseGradesByActivityTable({
   courseIdSelected: number;
   levels: CurentLevelsViewModel[];
   levelIdSelected: number | null;
+  scholarPeriods: ScholarPeriodsViewModel[];
+  scholarPeriodSelected: number;
   tabValue: string;
   pageIndex: number;
   pageSize: number;
@@ -54,6 +59,8 @@ export default function StudentCoruseGradesByActivityTable({
 
   const getPageIndexParam = searchParams.get("pageIndex");
   const getPageSizeParam = searchParams.get("pageSize");
+
+  const [changePeriod, setChangePeriod] = useState(false);
 
   const [openModal, setOpenModal] = useState(false);
   const [
@@ -172,7 +179,7 @@ export default function StudentCoruseGradesByActivityTable({
               onClick={() => {
                 row.row.original.Description !== null &&
                   router.push(
-                    `/courses/studentCourseGrades/edit?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&levelId=${levelIdSelected}&courseId=${row.row.original.CourseId}&description=${encodeURIComponent(row.row.original.Description)}&activityDate=${encodeURIComponent(row.row.original.ActivityDate.toUTCString())}&tab=${tabValue}`,
+                    `/courses/studentCourseGrades/edit?action="edit"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&levelId=${levelIdSelected}&courseId=${row.row.original.CourseId}${scholarPeriodSelected !== 0 ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&description=${encodeURIComponent(row.row.original.Description)}&activityDate=${encodeURIComponent(row.row.original.ActivityDate.toUTCString())}&tab=${tabValue}`,
                   );
               }}
             />
@@ -192,7 +199,7 @@ export default function StudentCoruseGradesByActivityTable({
         ),
       },
     ],
-    [getPageIndexParam, getPageSizeParam],
+    [scholarPeriodSelected, getPageIndexParam, getPageSizeParam],
   );
 
   const columnsExtended = useMemo<
@@ -289,22 +296,6 @@ export default function StudentCoruseGradesByActivityTable({
           <div />
           <div className="w-[12rem]">
             <Combobox
-              options={enumToArray(PeriodEnum).slice(1)}
-              textAttribute="value"
-              valueAttribute="key"
-              placeholder={t.courses.form.periodNumber}
-              itemSelected={enumToArray(PeriodEnum).find(
-                (x) => x.key === periodNumberSelected,
-              )}
-              setItemSelected={(x: { key: number }) => {
-                handleUrlParameterChange("periodNumber", `${x.key}`);
-                handleUrlParameterChange("courseId", `${0}`);
-              }}
-              notClearable
-            />
-          </div>
-          <div className="w-[12rem]">
-            <Combobox
               options={levels}
               textAttribute="Name"
               valueAttribute="LevelId"
@@ -333,13 +324,44 @@ export default function StudentCoruseGradesByActivityTable({
               notClearable
             />
           </div>
+          <Button
+            variant={changePeriod ? "default" : "outlineColored"}
+            onClick={() => setChangePeriod(!changePeriod)}
+          >
+            <span>{t.studentCourseGrades.changePeriod}</span>
+          </Button>
+          {changePeriod ? (
+            <>
+              <div className="w-[15rem]">
+                <Combobox
+                  options={scholarPeriods}
+                  textAttribute="Name"
+                  valueAttribute="ScholarPeriodId"
+                  placeholder={t.studentCourses.filters.scholarPeriodId}
+                  itemSelected={scholarPeriods.find(
+                    (x) => x.ScholarPeriodId === scholarPeriodSelected,
+                  )}
+                  setItemSelected={(x: ScholarPeriodsViewModel) => {
+                    handleUrlParameterChange(
+                      "scholarPeriodId",
+                      `${x.ScholarPeriodId}`,
+                    );
+                    handleUrlParameterChange("courseId", `0`);
+                  }}
+                  notClearable
+                />
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
         <Button
           variant="outlineColored"
           className="mt-3 xl:mt-0"
           onClick={() =>
             router.push(
-              `/courses/studentCourseGrades/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&levelId=${levelIdSelected}&courseId=${courseIdSelected}&tab=${tabValue}`,
+              `/courses/studentCourseGrades/create?action="create"&pageIndex=${getPageIndexParam}&pageSize=${getPageSizeParam}&periodNumber=${periodNumberSelected}&levelId=${levelIdSelected}&courseId=${courseIdSelected}${scholarPeriodSelected ? `&scholarPeriodId=${scholarPeriodSelected}` : ""}&tab=${tabValue}`,
             )
           }
         >
@@ -357,6 +379,7 @@ export default function StudentCoruseGradesByActivityTable({
           <Table
             columns={columnsExtended}
             data={row.Activities}
+            pageSizeParam={row.Activities.length}
             minimalMode
             noBorders
           />

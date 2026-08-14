@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import getActiveScholarYearQuery from "@/repositories/scholarYears/queries/getActiveScholarYearQuery";
+// import getActiveScholarYearQuery from "@/repositories/scholarYears/queries/getActiveScholarYearQuery";
 import {
   StudentCourseByStudentCourseMap,
   LevelCoursesMap,
@@ -12,31 +12,34 @@ const prisma = new PrismaClient();
 
 type getStudentCourseGradesByStudentCourseQueryParamsType = {
   CourseId: number;
-  PeriodNumber: number;
+  // PeriodNumber: number;
+  ScholarPeriodId: number;
 };
+
+// #################### //
+// Je laisse commenter la logique du « PeriodNumber » et « activeScholarYear » au cas où des bugs apparaîtraient
+// #################### //
 
 const getStudentCourseGradesByStudentCourseQuery = async (
   params: getStudentCourseGradesByStudentCourseQueryParamsType,
 ) => {
-  const activeScholarYear = await getActiveScholarYearQuery();
+  // const activeScholarYear = await getActiveScholarYearQuery();
 
   const query = await prisma.studentCourses.findMany({
     orderBy: { Students: { Persons: { AlternativeName: "asc" } } },
     where: {
       CourseId: params.CourseId,
-      Students: {
-        YearPeriods: {
-          ScholarYearId: activeScholarYear.ScholarYearId,
-          PeriodType:
-            params.PeriodNumber === PeriodEnum["Cours d'été"]
-              ? YearPeriodsEnum["Cours d'été"]
-              : YearPeriodsEnum["Année scolaire"],
-        },
-      },
+      //
+      //
       // ScholarPeriods: {
       //   ScholarYearId: activeScholarYear.ScholarYearId,
       //   Number: params.PeriodNumber,
       // },
+      ScholarPeriods: {
+        // ScholarYearId: activeScholarYear.ScholarYearId,
+        // Number: params.PeriodNumber,
+        ScholarPeriodId: params.ScholarPeriodId,
+      },
     },
     include: {
       Courses: {

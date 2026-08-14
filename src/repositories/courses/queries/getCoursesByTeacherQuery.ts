@@ -2,7 +2,6 @@
 
 import { PrismaClient } from "@prisma/client";
 import { CourseByTearcherMap } from "../coursesViewModel";
-
 const prisma = new PrismaClient();
 
 type getCoursesByTeacherQueryParamsType = {

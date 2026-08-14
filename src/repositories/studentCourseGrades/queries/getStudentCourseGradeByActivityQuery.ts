@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import getActiveScholarYearQuery from "@/repositories/scholarYears/queries/getActiveScholarYearQuery";
+// import getActiveScholarYearQuery from "@/repositories/scholarYears/queries/getActiveScholarYearQuery";
 import {
   StudentCourseGradeByActivityViewModel,
   StudentCourseGradeByActivity,
@@ -11,25 +11,32 @@ const prisma = new PrismaClient();
 
 type getStudentCourseGradeByActivityQueryParamsType = {
   CourseId: number;
-  PeriodNumber: number;
+  // PeriodNumber: number;
+  ScholarPeriodId: number;
 };
+
+// #################### //
+// Je laisse commenter la logique du « PeriodNumber » et « activeScholarYear » au cas où des bugs apparaîtraient
+// #################### //
 
 const getStudentCourseGradeByActivityQuery = async (
   params: getStudentCourseGradeByActivityQueryParamsType,
 ) => {
-  const activeScholarYear = await getActiveScholarYearQuery();
+  // const activeScholarYear = await getActiveScholarYearQuery();
 
   const query = await prisma.studentCourseGrades.findMany({
     where: {
       StudentCourses: {
         CourseId: params.CourseId,
         ScholarPeriods: {
-          ScholarYearId: activeScholarYear.ScholarYearId,
-          Number: params.PeriodNumber,
+          // ScholarYearId: activeScholarYear.ScholarYearId,
+          // Number: params.PeriodNumber,
+          ScholarPeriodId: params.ScholarPeriodId,
         },
       },
     },
     orderBy: [
+      { CreatedAt: "desc" },
       { StudentCourses: { Students: { Persons: { AlternativeName: "asc" } } } },
     ],
     include: {
@@ -72,7 +79,7 @@ const getStudentCourseGradeByActivityQuery = async (
   // Process each record
   query.forEach(
     (studentCourseGrade: StudentCourseGradesByGradeCoefficientMap) => {
-      const description = studentCourseGrade.Description || "Undefined";
+      const ActivityDate = studentCourseGrade.ActivityDate.toUTCString();
 
       // Create student course entry
       const studentEntry: StudentCourseGradeByActivity = {
@@ -87,8 +94,8 @@ const getStudentCourseGradeByActivityQuery = async (
       };
 
       // If this description is not in our map yet, create the base object
-      if (!groupMap[description]) {
-        groupMap[description] = {
+      if (!groupMap[ActivityDate]) {
+        groupMap[ActivityDate] = {
           CourseId: studentCourseGrade.StudentCourses.CourseId,
           Description: studentCourseGrade.Description,
           ActivityDate: studentCourseGrade.ActivityDate,
@@ -116,7 +123,7 @@ const getStudentCourseGradeByActivityQuery = async (
       }
 
       // Add student entry to the appropriate group
-      groupMap[description].Activities.push(studentEntry);
+      groupMap[ActivityDate].Activities.push(studentEntry);
     },
   );
 

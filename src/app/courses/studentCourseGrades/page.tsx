@@ -4,7 +4,8 @@ import getStudentCourseGrandesByStudentCourseQuery from "@/repositories/studentC
 import getStudentCourseGradeByActivityQuery from "@/repositories/studentCourseGrades/queries/getStudentCourseGradeByActivityQuery";
 import getCoursesByTeacherQuery from "@/repositories/courses/queries/getCoursesByTeacherQuery";
 import getAllLevelsQuery from "@/repositories/levels/queries/getAllLevelsQuery";
-import getCurrentScholarPeriodQuery from "@/repositories/scholarPeriods/queries/getCurrentScholarPeriod";
+// import getCurrentScholarPeriodQuery from "@/repositories/scholarPeriods/queries/getCurrentScholarPeriod";
+import getAllScholarPeriodsTableQuery from "@/repositories/scholarPeriods/queries/getAllScholarPeriodsTableQuery";
 import { TabsComponent } from "@/components/common/tabs";
 import Icon from "@/components/common/icon";
 import { Button } from "@/components/ui/button";
@@ -31,17 +32,28 @@ export default async function StudentCourseGradesPage({
       : 10
     : 10;
 
-  const currentScholarPeriod = await getCurrentScholarPeriodQuery();
-
-  const periodNumberSelected = searchParams?.periodNumber
-    ? parseInt(searchParams.periodNumber as string)
-    : currentScholarPeriod.Number;
-
   const levelIdSelected = searchParams?.levelId
     ? searchParams.levelId !== "null"
       ? parseInt(searchParams.levelId as string)
       : null
     : null;
+
+  const scholarPeriods = await getAllScholarPeriodsTableQuery();
+
+  const scholarPeriodIdParam =
+    searchParams.scholarPeriodId && searchParams.scholarPeriodId !== "null"
+      ? parseInt(searchParams.scholarPeriodId as string)
+      : scholarPeriods[0].ScholarPeriodId;
+
+  const periodNumberSelected =
+    scholarPeriods.find((x) => x.ScholarPeriodId === scholarPeriodIdParam)
+      ?.Number ?? scholarPeriods[0].Number;
+
+  // const currentScholarPeriod = await getCurrentScholarPeriodQuery();
+
+  //   const periodNumberSelected = searchParams?.periodNumber
+  // ? parseInt(searchParams.periodNumber as string)
+  // : currentScholarPeriod.Number;
 
   const courses = await getCoursesByTeacherQuery({
     IsEnabled: true,
@@ -61,13 +73,15 @@ export default async function StudentCourseGradesPage({
   const studentCourseGradesByStudentCourse =
     await getStudentCourseGrandesByStudentCourseQuery({
       CourseId: courseIdSelected,
-      PeriodNumber: periodNumberSelected,
+      // PeriodNumber: periodNumberSelected,
+      ScholarPeriodId: scholarPeriodIdParam,
     });
 
   const studentCourseGradesByActivity =
     await getStudentCourseGradeByActivityQuery({
       CourseId: courseIdSelected,
-      PeriodNumber: periodNumberSelected,
+      // PeriodNumber: periodNumberSelected,
+      ScholarPeriodId: scholarPeriodIdParam,
     });
 
   // const levels = await getCurrentLevelsQuery();
@@ -88,6 +102,8 @@ export default async function StudentCourseGradesPage({
           courseIdSelected={courseIdSelected}
           levels={levels}
           levelIdSelected={levelIdSelected}
+          scholarPeriods={scholarPeriods}
+          scholarPeriodSelected={scholarPeriodIdParam}
           tabValue="StudentCoruseGradesByActivityTable"
           pageIndex={pageIndex}
           pageSize={pageSize}
@@ -108,6 +124,8 @@ export default async function StudentCourseGradesPage({
           courseIdSelected={courseIdSelected}
           levels={levels}
           levelIdSelected={levelIdSelected}
+          scholarPeriods={scholarPeriods}
+          scholarPeriodSelected={scholarPeriodIdParam}
           tabValue="StudentCoruseGradesByStudentTable"
           pageIndex={pageIndex}
           pageSize={pageSize}
