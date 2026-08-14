@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/common/icon";
 import isValidIconName from "@/functions/isValidIconName";
 import { authenticate } from "@/lib/actions";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import frFR from "@/lang/fr-FR";
 
@@ -19,16 +20,40 @@ type LoginFormData = z.infer<typeof LoginSchema>;
 
 export default function LoginForm() {
   const t = frFR;
+  const router = useRouter();
+
+  const [isTransitionPending, startTransition] = useTransition();
+
   const [errorLogInMessage, setErrorLogInMessage] = useState<
     string | undefined
   >(undefined);
   const [isPending, setIsPending] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<LoginFormData>({
     defaultValues: {
       UserName: "",
       Password: "",
     },
+    // onSubmit: async ({ value }) => {
+    //   setIsPending(true);
+    //   setErrorLogInMessage(undefined);
+
+    //   const formDataToSubmit = new FormData();
+    //   formDataToSubmit.append("username", value.UserName);
+    //   formDataToSubmit.append("password", value.Password);
+
+    //   try {
+    //     const result = await authenticate(undefined, formDataToSubmit);
+    //     if (result) {
+    //       setErrorLogInMessage(result);
+    //     }
+    //   } catch (error) {
+    //     setErrorLogInMessage("An unexpected error occurred");
+    //   } finally {
+    //     setIsPending(false);
+    //   }
+    // },
     onSubmit: async ({ value }) => {
       setIsPending(true);
       setErrorLogInMessage(undefined);
@@ -41,6 +66,8 @@ export default function LoginForm() {
         const result = await authenticate(undefined, formDataToSubmit);
         if (result) {
           setErrorLogInMessage(result);
+        } else {
+          window.location.href = "/";
         }
       } catch (error) {
         setErrorLogInMessage("An unexpected error occurred");
@@ -103,12 +130,36 @@ export default function LoginForm() {
                   id="password"
                   name="password"
                   placeholder={`${t.login.password}`}
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   variant="lined"
                   className="w-full"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="flex items-center px-1 text-muted-foreground hover:text-foreground"
+                  tabIndex={-1}
+                  aria-label={
+                    showPassword
+                      ? "Masquer le mot de passe"
+                      : "Afficher le mot de passe"
+                  }
+                >
+                  <Icon
+                    name={
+                      showPassword
+                        ? isValidIconName("MdVisibilityOff")
+                          ? "MdVisibilityOff"
+                          : "MdOutlineNotInterested"
+                        : isValidIconName("MdVisibility")
+                          ? "MdVisibility"
+                          : "MdOutlineNotInterested"
+                    }
+                    className="text-xl"
+                  />
+                </button>
               </>
             )}
           />

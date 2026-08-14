@@ -19,11 +19,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className="dark overflow-auto">
       <body className={inter.className}>
-        {/* <SessionProvider
-          refetchInterval={5 * 60}
-          refetchOnWindowFocus={true}
-        > */}
-        <SessionProvider>
+        <SessionProvider session={session}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

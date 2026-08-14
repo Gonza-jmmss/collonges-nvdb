@@ -110,22 +110,6 @@ export const authConfig = {
       },
     }),
   ],
-  // cookies: {
-  //   sessionToken: {
-  //     name: "next-auth.session-token",
-  //     options: {
-  //       httpOnly: true,
-  //       sameSite: "lax",
-  //       path: "/",
-  //       secure: process.env.NODE_ENV === "production",
-  //       domain: process.env.COOKIE_DOMAIN || undefined,
-  //       // domain:
-  //       //   process.env.NODE_ENV === "production"
-  //       //     ? process.env.COOKIE_DOMAIN
-  //       //     : undefined,
-  //     },
-  //   },
-  // },
   cookies: {
     sessionToken: {
       name: "next-auth.session-token",
@@ -133,7 +117,7 @@ export const authConfig = {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: false,
+        secure: process.env.NODE_ENV === "production",
         domain: process.env.COOKIE_DOMAIN || undefined,
       },
     },
@@ -143,12 +127,13 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isOnLogin = nextUrl.pathname === "/login";
-      const userRoleName = auth?.user.userData.Roles.Name;
 
       // Redirect to login if not logged in and not already on the login page
       if (!isLoggedIn && !isOnLogin) {
         return Response.redirect(new URL("/login", nextUrl.origin));
       }
+
+      const userRoleName = auth?.user.userData.Roles.Name;
 
       // Redirect to home if logged in and on login page
       if (isLoggedIn && isOnLogin) {
@@ -158,42 +143,32 @@ export const authConfig = {
       }
 
       if (isLoggedIn && auth.user) {
-        try {
-          // Ensure userData exists before accessing it
-          if (!auth.user.userData || !auth.user.roleModules) {
-            console.error("Missing user data or role modules");
-            return Response.redirect(new URL("/login", nextUrl.origin));
-          }
-
-          // const userRole = auth.user;
-          const path = nextUrl.pathname;
-
-          // get path without last "/create" or "/(any number)"
-          const extractBasePath = (path: string) => {
-            const match = path.match(/^(.*?)(\/(?:create|edit|\d+))$/);
-            return match ? match[1] : path;
-          };
-
-          const hasPermission = auth.user.roleModules.some(
-            (element) =>
-              element.RoleId === auth.user.userData.RoleId &&
-              element.Path === extractBasePath(path),
-          );
-
-          if (!hasPermission) {
-            console.log("Access denied for path:", path);
-            return userRoleName === "Étudiant"
-              ? Response.redirect(new URL("/studentHome", nextUrl.origin))
-              : Response.redirect(new URL("/", nextUrl.origin));
-          }
-
-          console.log("Access granted for path:", path);
-          return true;
-        } catch (error) {
-          console.error("Error checking permissions:", error);
-          // On error, redirect to error page or home
-          return Response.redirect(new URL("/error", nextUrl.origin));
+        if (!auth.user?.userData || !auth.user?.roleModules) {
+          return Response.redirect(new URL("/", nextUrl.origin));
         }
+
+        // const userRole = auth.user;
+        const path = nextUrl.pathname;
+
+        // get path without last "/create" or "/(any number)"
+        const extractBasePath = (path: string) => {
+          const match = path.match(/^(.*?)(\/(?:create|edit|\d+))$/);
+          return match ? match[1] : path;
+        };
+
+        const hasPermission = auth.user.roleModules.some(
+          (element) =>
+            element.RoleId === auth.user.userData.RoleId &&
+            element.Path === extractBasePath(path),
+        );
+
+        if (!hasPermission) {
+          return userRoleName === "Étudiant"
+            ? Response.redirect(new URL("/studentHome", nextUrl.origin))
+            : Response.redirect(new URL("/", nextUrl.origin));
+        }
+
+        return true;
       }
 
       return true;

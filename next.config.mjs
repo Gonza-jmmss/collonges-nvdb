@@ -3,7 +3,11 @@
 const nextConfig = {
   output: "standalone",
   experimental: {
-    serverActions: true,
+    // serverActions: true,
+    staleTimes: {
+      dynamic: 0,
+      static: 0,
+    },
   },
   // images: {
   //   domains: ["localhost"],

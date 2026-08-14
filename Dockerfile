@@ -50,6 +50,8 @@ COPY --from=builder /app/prisma ./prisma
 
 # Create the images directory with proper permissions
 RUN mkdir -p /app/images && chown -R nextjs:nodejs /app/images
+# Create the documents directory with proper permissions
+RUN mkdir -p /app/documents && chown -R nextjs:nodejs /app/documents
 
 # Set the correct permissions
 RUN chown -R nextjs:nodejs .
@@ -64,13 +66,27 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# PROD
+# PROD url
+# ENV NODE_ENV=production
+# ENV NEXTAUTH_URL="http://srvifle:3128"
+# ENV NEXT_PUBLIC_NEXTAUTH_URL="http://srvifle:3128"
+# ENV NEXTAUTH_URL_INTERNAL="http://localhost:3000"
+# ENV COOKIE_DOMAIN="srvifle"
+# ENV NEXT_PUBLIC_URL="http://srvifle:3128"
 ENV NODE_ENV=production
-ENV NEXTAUTH_URL="http://srvifle:3128"
-ENV NEXT_PUBLIC_NEXTAUTH_URL="http://srvifle:3128"
+ENV NEXTAUTH_URL="https://classifle.ifle.fr"
+ENV NEXT_PUBLIC_NEXTAUTH_URL="https://classifle.ifle.fr"
 ENV NEXTAUTH_URL_INTERNAL="http://localhost:3000"
-ENV COOKIE_DOMAIN="srvifle"
-ENV NEXT_PUBLIC_URL="http://srvifle:3128"
+ENV COOKIE_DOMAIN=""
+ENV NEXT_PUBLIC_URL="https://classifle.ifle.fr"
+
+# PROD ip
+# ENV NODE_ENV=production
+# ENV NEXTAUTH_URL="http://192.168.254.11:3130"
+# ENV NEXT_PUBLIC_NEXTAUTH_URL="http://192.168.254.11:3130"
+# ENV NEXTAUTH_URL_INTERNAL="http://localhost:3000"
+# ENV COOKIE_DOMAIN=""
+# ENV NEXT_PUBLIC_URL="http://192.168.254.11:3130"
 
 # SERVER TEST
 # ENV NODE_ENV=test

@@ -12,8 +12,9 @@ export async function authenticate(
     await signIn("credentials", {
       username: formData.get("username"),
       password: formData.get("password"),
-      redirectTo: "/",
+      redirect: false, // don't redirect server-side
     });
+    return undefined; // success, no error
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
