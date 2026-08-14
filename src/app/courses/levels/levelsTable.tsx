@@ -199,6 +199,10 @@ export default function LevelsTable({
         id: "CourseCode",
         header: () => <Header text={t.levels.expanded.courseCode} />,
         filterFn: "equalsString",
+        cell: (row) =>
+          row.getValue().includes("/")
+            ? row.getValue().slice(0, -2)
+            : row.getValue(),
         size: 30,
       },
     ],
@@ -316,6 +320,7 @@ export default function LevelsTable({
           <Table
             columns={columnsExtended}
             data={row.LevelCourses}
+            pageSizeParam={row.LevelCourses.length}
             minimalMode
             noBorders
           />
