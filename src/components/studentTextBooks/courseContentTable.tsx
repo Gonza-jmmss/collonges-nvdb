@@ -26,7 +26,9 @@ export default function StudentCourseContentTable({
       {
         accessorKey: "CourseCode",
         id: "CourseCode",
-        header: () => <Header text={t.courseTextbooks.columns.courseCode} />,
+        header: () => (
+          <Header text={t.courseTextbooks.columnsExtended.courseCode} />
+        ),
         filterFn: "equalsString",
         cell: (x) =>
           x.getValue().includes("/") ? x.getValue().slice(0, -2) : x.getValue(),
@@ -35,20 +37,26 @@ export default function StudentCourseContentTable({
       {
         accessorKey: "CourseName",
         id: "CourseName",
-        header: () => <Header text={t.courseTextbooks.columns.courseName} />,
+        header: () => (
+          <Header text={t.courseTextbooks.columnsExtended.courseName} />
+        ),
         filterFn: "equalsString",
         size: 300,
       },
       {
         accessorKey: "UserName",
         id: "UserName",
-        header: () => <Header text={t.courseTextbooks.columns.userName} />,
+        header: () => (
+          <Header text={t.courseTextbooks.columnsExtended.userName} />
+        ),
         filterFn: "equalsString",
       },
       {
         accessorKey: "LevelName",
         id: "LevelName",
-        header: () => <Header text={t.courseTextbooks.columns.levelName} />,
+        header: () => (
+          <Header text={t.courseTextbooks.columnsExtended.levelName} />
+        ),
         filterFn: "equalsString",
       },
     ],
@@ -65,13 +73,13 @@ export default function StudentCourseContentTable({
           <div>
             <div className="flex space-x-2">
               <span className="text-sm font-semibold">
-                {t.courseTextbooks.columns.courseName}:
+                {t.courseTextbooks.columnsExtended.courseName}:
               </span>
               <span className="text-sm">{`${row.original.CourseName}`}</span>
             </div>
             <div className="flex space-x-2">
               <span className="text-sm font-semibold">
-                {t.courseTextbooks.columns.courseCode}:
+                {t.courseTextbooks.columnsExtended.courseCode}:
               </span>
               <span className="text-sm">{`${row.original.CourseCode}`}</span>
               <span className="text-sm font-semibold">
@@ -81,7 +89,7 @@ export default function StudentCourseContentTable({
             </div>
             <div className="flex space-x-2">
               <span className="text-sm font-semibold">
-                {t.courseTextbooks.columns.userName}:
+                {t.courseTextbooks.columnsExtended.userName}:
               </span>
               <span className="text-sm">{row.original.UserName}</span>
             </div>

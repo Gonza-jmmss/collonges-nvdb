@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { StudentCourseHomeworksByDayViewModel } from "@/repositories/courseTextbook/courseTextbookViewModel";
 import TextEditor from "@/components/common/textEditor";
-import { parseEditorData } from "@/functions/textEditorConvertions";
+import Icon from "@/components/common/icon";
 import formatDate from "@/functions/formatDate";
 import { useUpdateQuery } from "@/hooks/useUpdateQuery";
 import frFR from "@/lang/fr-FR";
@@ -70,16 +70,39 @@ export default function StudentCourseHomeworksVisualization({
               </span>
               <div className="w-full">
                 <TextEditor
-                  data={parseEditorData(homework.Description)}
+                  value={homework.Description}
                   onChange={() => {}}
-                  editorBlock={`editorjs-homework${homework.CourseHomeworkId}`}
                   placeholder={t.courseContents.textEditor.placeholder}
                   disabled={true}
                 />
               </div>
             </div>
+            {homework.Documents.length > 0 && (
+              <div className="mt-2 flex flex-col">
+                <span className="text-sm font-semibold sm:text-base">
+                  {t.studentHomeworks.card.documents}:
+                </span>
+                <div className="flex flex-wrap space-x-3 space-y-3">
+                  <div />
+                  {homework.Documents.map((doc, idx) => (
+                    <a
+                      key={idx}
+                      href={`/api/documents/${encodeURIComponent(doc)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-1 overflow-hidden rounded-md border p-1 hover:border-primary"
+                      download
+                    >
+                      <Icon name="MdSimCardDownload" className="text-lg" />
+                      <span>{doc.slice(14)}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ))}
+        {/* <pre>{JSON.stringify(courseHomeworksData, null, 2)}</pre> */}
       </div>
       {/* Mobile */}
       {/* <div className="flex flex-col space-y-2 sm:hidden">
